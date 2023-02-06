@@ -13,8 +13,14 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const Register = () => {
+  //*#region constants
+  const { t, i18n } = useTranslation();
+  //#endregion
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -23,20 +29,22 @@ const Register = () => {
             <CCard className="mx-4">
               <CCardBody className="p-4">
                 <CForm>
-                  <h1>Register</h1>
-                  <p className="text-medium-emphasis">Create your account</p>
+                  <h1>{t("Register")}</h1>
+                  <p className="text-medium-emphasis">
+                    {t("CreateYourAccount")}
+                  </p>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Username"
+                      placeholder={t("Username")}
                       autoComplete="username"
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
-                    <CFormInput placeholder="Email" autoComplete="email" />
+                    <CFormInput placeholder={t("Email")} autoComplete="email" />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
@@ -44,7 +52,7 @@ const Register = () => {
                     </CInputGroupText>
                     <CFormInput
                       type="password"
-                      placeholder="Password"
+                      placeholder={t("Password")}
                       autoComplete="new-password"
                     />
                   </CInputGroup>
@@ -54,17 +62,25 @@ const Register = () => {
                     </CInputGroupText>
                     <CFormInput
                       type="password"
-                      placeholder="Repeat password"
+                      placeholder={t("RepeatPassword")}
                       autoComplete="new-password"
                     />
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton color="success">Create Account</CButton>
+                    <CButton color="success">{t("CreateAccount")}</CButton>
                   </div>
                 </CForm>
+                <Link to="/login">
+                  <CButton color="link" className="mt-4 d-block mx-auto">
+                    {t("BackToLogin") + "?"}
+                  </CButton>
+                </Link>
               </CCardBody>
             </CCard>
           </CCol>
+        </CRow>
+        <CRow>
+          <CCol xs={6} className="text-right"></CCol>
         </CRow>
       </CContainer>
     </div>
