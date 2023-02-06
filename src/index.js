@@ -1,11 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import store from "./store/store.js";
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./hooks/auth";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// import i18n (needs to be bundled ;))
+import "./i18n";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <Provider store={store}>
+    <BrowserRouter>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </BrowserRouter>
+  </Provider>
 );
