@@ -1,3 +1,16 @@
 {
-  "ChangeTheme": "Change Theme"
+  "Login": "Login",
+  "SignInToYourAccount": "Sign In to your account",
+  "Username": "Username",
+  "Password": "Password",
+  "ForgotPassword": "Forgot Password",
+  "SignUp": "Sign up",
+  "RegisterNow": "Register Now",
+  "Register": "Register",
+  "CreateYourAccunt": "Create your account",
+  "Email": "Email",
+  "RepeatPassword": "Repeat password",
+  "CreateAccount": "Create Account",
+  "BackToLogin": "Back to login",
+  "RegisterNowByClickingButtonBelowToHaveAccessInTheFacultyEvaluationSystem": "Register now by clicking button below to have access in the Faculty Evaluation System"
 }

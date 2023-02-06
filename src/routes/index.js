@@ -1,5 +1,8 @@
 import React from "react";
-import { Routes, Route, useRoutes } from "react-router-dom";
+import { useRoutes } from "react-router-dom";
+
+import Public from "./public";
+import Private from "./private";
 
 const Layout = React.lazy(() => import("../components/Layout"));
 
@@ -13,7 +16,11 @@ const AppRoutes = () => {
   const routes = useRoutes([
     {
       path: "/",
-      element: <Layout />,
+      element: (
+        <Private>
+          <Layout />
+        </Private>
+      ),
       children: [
         {
           index: true,
@@ -24,11 +31,19 @@ const AppRoutes = () => {
     },
     {
       path: "/login",
-      element: <Login />,
+      element: (
+        <Public>
+          <Login />
+        </Public>
+      ),
     },
     {
       path: "/register",
-      element: <Register />,
+      element: (
+        <Public>
+          <Register />
+        </Public>
+      ),
     },
     {
       path: "*",
@@ -37,18 +52,6 @@ const AppRoutes = () => {
   ]);
 
   return routes;
-
-  return (
-    <Routes>
-      <Route path="*" element={<Page404 />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-      </Route>
-    </Routes>
-  );
 };
 
 export default AppRoutes;

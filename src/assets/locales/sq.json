@@ -1,3 +1,15 @@
 {
-  "ChangeTheme": "Ndrysho Temen"
+  "Login": "Identifikohu",
+  "SignInToYourAccount": "Hyni në llogarinë tuaj",
+  "Username": "Emri i përdoruesit",
+  "Password": "Fjalëkalimi",
+  "ForgotPassword": "Keni harruar fjalëkalimin",
+  "SignUp": "Regjistrohu",
+  "RegisterNow": "Regjistrohu Tani",
+  "CreateYourAccunt": "Create your account",
+  "Email": "Email",
+  "RepeatPassword": "Përsëritni fjalëkalimin",
+  "CreateAccount": "Krijo llogari",
+  "BackToLogin": "Kthehu te identifikimi",
+  "RegisterNowByClickingButtonBelowToHaveAccessInTheFacultyEvaluationSystem": "Regjistrohu tani duke klikuar butonin më poshtë për të pasur akses në Sistemin e Vlerësimit të Fakultetit"
 }

@@ -5,3 +5,14 @@
   will-change: auto;
   @include transition(padding 0.15s);
 }
+
+.mx-auto {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+@media (max-width: 992px) {
+  .card-group {
+    flex-direction: column;
+  }
+}
