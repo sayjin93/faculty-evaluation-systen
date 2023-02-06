@@ -10,12 +10,9 @@ const sidebarSlice = createSlice({
     changeState: (state, action) => {
       state.show = action.payload;
     },
-    changeUnfoldable: (state) => {
-      state.unfoldable = !state.unfoldable;
-    },
   },
 });
 
-export const { changeState, changeUnfoldable } = sidebarSlice.actions;
+export const { changeState } = sidebarSlice.actions;
 
 export default sidebarSlice.reducer;
