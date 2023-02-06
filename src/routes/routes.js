@@ -9,7 +9,7 @@ const Register = React.lazy(() => import("../pages/auth/Register"));
 const Home = React.lazy(() => import("../pages/Home"));
 const Page404 = React.lazy(() => import("../pages/Page404"));
 
-const PageRoutes = () => {
+const AppRoutes = () => {
   const routes = useRoutes([
     {
       path: "/",
@@ -51,4 +51,4 @@ const PageRoutes = () => {
   );
 };
 
-export default PageRoutes;
+export default AppRoutes;
