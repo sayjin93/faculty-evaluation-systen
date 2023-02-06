@@ -11,7 +11,8 @@ export function reducer(state, action) {
       return { auth: true };
     case "logout":
       return { auth: false };
-      fefault: throw new Error();
+    default:
+      throw new Error();
   }
 }
 
