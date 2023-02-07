@@ -6,6 +6,7 @@ import AppContent from "./components/AppContent";
 import AppFooter from "./components/AppFooter";
 
 function Layout() {
+  console.log("Layout");
   return (
     <div>
       <AppSidebar />

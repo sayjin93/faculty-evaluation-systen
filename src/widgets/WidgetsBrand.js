@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { CWidgetStatsD, CRow, CCol } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -224,10 +223,6 @@ const WidgetsBrand = ({ withCharts }) => {
       </CCol>
     </CRow>
   );
-};
-
-WidgetsBrand.propTypes = {
-  withCharts: PropTypes.bool,
 };
 
 export default WidgetsBrand;

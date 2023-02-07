@@ -1,10 +1,21 @@
 import { configureStore } from "@reduxjs/toolkit";
-import sidebarReducer from "./slices/Sidebar.js";
+import createSagaMiddleware from "redux-saga";
+import rootReducer from "./rootReducers";
+import rootSaga from "./rootSaga";
 
-const store = configureStore({
-  reducer: {
-    sidebar: sidebarReducer,
-  },
-});
+export default function configureAppStore(preloadedState) {
+  const sagaMiddleware = createSagaMiddleware();
+  const store = configureStore({
+    reducer: rootReducer,
+    middleware: [sagaMiddleware],
+    preloadedState,
+  });
+  sagaMiddleware.run(rootSaga);
 
-export default store;
+  // if (process.env.NODE_ENV !== "production" && module.hot) {
+  //   module.hot.accept("./rootReducers", () =>
+  //     store.replaceReducer(rootReducer)
+  //   );
+  // }
+  return store;
+}

@@ -1,5 +1,4 @@
 import React from "react";
-import AuthConsumer from "../hooks/auth";
 
 import {
   CAvatar,
@@ -56,9 +55,6 @@ import WidgetsBrand from "../widgets/WidgetsBrand";
 import WidgetsDropdown from "../widgets/WidgetsDropdown";
 
 const Home = () => {
-  const auth = AuthConsumer();
-  console.log(auth);
-
   const random = (min, max) =>
     Math.floor(Math.random() * (max - min + 1) + min);
 

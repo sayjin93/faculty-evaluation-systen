@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getCookie, isNullOrUndefined } from "../../hooks/helpers";
+
+import { login } from "../../store/reducers/authenticationSlice";
 
 import {
   CButton,
@@ -23,31 +25,30 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser, cifAl, cifGb } from "@coreui/icons";
 
+const LoginPage = () => {
+  //#region redux
+  const dispatch = useDispatch();
+  //#endregion
 
-const Login = () => {
-  //*#region constants
+  //#region constants
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    let token = getCookie({ key: "jwt_token" });
-    if (isNullOrUndefined(token)) navigate("/");
-    else {
-      const keyDownHandler = (event) => {
-        if (event.key === "Enter") {
-          const el = document.getElementById("BtnLogin");
-          el.click();
-        }
-      };
-      document.addEventListener("keydown", keyDownHandler);
+    const keyDownHandler = (event) => {
+      if (event.key === "Enter") {
+        const el = document.getElementById("BtnLogin");
+        el.click();
+      }
+    };
+    document.addEventListener("keydown", keyDownHandler);
 
-      return () => {
-        document.removeEventListener("keydown", keyDownHandler);
-      };
-    }
-  }, [navigate]);
+    return () => {
+      document.removeEventListener("keydown", keyDownHandler);
+    };
+  }, []);
   //#endregion
 
   return (
@@ -58,7 +59,16 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
+                  <CForm
+                    onSubmit={() =>
+                      dispatch(
+                        login({
+                          email: "eve.holt@reqres.in",
+                          password: "cityslicka",
+                        })
+                      )
+                    }
+                  >
                     <h1>{t("Login")}</h1>
                     <p className="text-medium-emphasis">
                       {t("SignInToYourAccount")}
@@ -162,4 +172,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

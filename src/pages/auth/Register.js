@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 
 const Register = () => {
   //*#region constants
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   //#endregion
 
   return (

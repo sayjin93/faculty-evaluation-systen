@@ -1,14 +1,10 @@
 {
   "compilerOptions": {
+    "jsx": "react",
     "baseUrl": ".",
     "checkJs": true,
-    "target": "es6",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "jsx": "react",
-    // "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
   },
   "exclude": ["node_modules"],
-  "include": ["src/**/*"]
+  "include": ["src"]
 }

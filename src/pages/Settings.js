@@ -1,11 +1,7 @@
 import React from "react";
-import AuthConsumer from "../hooks/auth";
 
-const Home = () => {
-  const auth = AuthConsumer();
-  console.log(auth);
-  
-  return <p>Home</p>;
+const Settings = () => {
+  return <p>Settings</p>;
 };
 
-export default Home;
+export default Settings;
