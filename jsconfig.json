@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "checkJs": true,
     "target": "es6",
     "module": "esnext",

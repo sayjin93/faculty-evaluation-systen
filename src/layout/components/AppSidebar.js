@@ -1,24 +1,18 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
-import {
-  CSidebar,
-  CSidebarBrand,
-  CSidebarNav,
-} from "@coreui/react";
-import CIcon from "@coreui/icons-react";
+//redux
+import { useSelector, useDispatch } from "react-redux";
+import { changeState } from "../../store/slices/Sidebar";
+
+import { CImage, CSidebar, CSidebarBrand, CSidebarNav } from "@coreui/react";
 
 import { AppSidebarNav } from "./AppSidebarNav";
 
-import { logoNegative } from "../../assets/images/logo-negative";
+import logo from "../../assets/images/logo.svg";
 
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
-
-// sidebar nav config
-import navigation from "./_nav";
-
-import { changeState } from "../../store/slices/Sidebar";
 
 const AppSidebar = () => {
   const dispatch = useDispatch();
@@ -33,12 +27,14 @@ const AppSidebar = () => {
         dispatch(changeState(visible));
       }}
     >
-      <CSidebarBrand className="d-none d-md-flex" to="/">
-        <CIcon className="sidebar-brand-full" icon={logoNegative} height={35} />
+      <CSidebarBrand className="d-none d-md-flex text-center">
+        <Link to="/">
+          <CImage src={logo} height={36} />
+        </Link>
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar style={{ height: "100%" }}>
-          <AppSidebarNav items={navigation} />
+          <AppSidebarNav />
         </SimpleBar>
       </CSidebarNav>
     </CSidebar>

@@ -1,17 +1,11 @@
 import React, { Suspense } from "react";
 import AppRoutes from "./routes";
-
+import { CSpinner } from "@coreui/react";
 import "./assets/slyles/App.scss";
-
-const loading = (
-  <div className="pt-3 text-center">
-    <div className="sk-spinner sk-spinner-pulse"></div>
-  </div>
-);
 
 function App() {
   return (
-    <Suspense fallback={loading}>
+    <Suspense fallback={<CSpinner color="primary" />}>
       <AppRoutes />
     </Suspense>
   );

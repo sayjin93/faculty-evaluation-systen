@@ -5,10 +5,7 @@ const AppFooter = () => {
   return (
     <CFooter>
       <div>
-        <a href="https://uet.edu.al/" target="_blank" rel="noopener noreferrer">
-          UET
-        </a>
-        <span className="ms-1">&copy; 2023.</span>
+        <span className="ms-1">Copyright &copy; 2023.</span>
       </div>
       <div className="ms-auto">
         <span className="me-1">Developed by</span>
