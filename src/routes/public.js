@@ -3,7 +3,6 @@ import { Navigate } from "react-router-dom";
 import { getCookie, isNullOrUndefined } from "../hooks/helpers";
 
 let token = getCookie({ key: "jwt_token" });
-token = "dhfbdfdf"; //temporary
 
 let pathName = window.location.pathname;
 let location = pathName.split("/")[1];

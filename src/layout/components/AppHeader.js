@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { changeState } from "../../store/slices/Sidebar";
+import { changeState } from "../../store/reducers/sidebarSlice";
 
 import {
   CContainer,

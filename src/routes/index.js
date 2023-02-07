@@ -1,26 +1,26 @@
-import React from "react";
+import React, { lazy } from "react";
 import { useRoutes } from "react-router-dom";
 
 import Public from "./public";
 import Private from "./private";
 
-const DefaultLayout = React.lazy(() => import("../layout/DefaultLayout"));
+const DefaultLayout = lazy(() => import("../layout/DefaultLayout"));
 
-const Login = React.lazy(() => import("../pages/auth/Login"));
-const Register = React.lazy(() => import("../pages/auth/Register"));
+const Login = lazy(() => import("../pages/auth/Login"));
+const Register = lazy(() => import("../pages/auth/Register"));
 
-const Home = React.lazy(() => import("../pages/Home"));
+const Home = lazy(() => import("../pages/Home"));
 
-const Professors = React.lazy(() => import("../pages/professors"));
-const Courses = React.lazy(() => import("../pages/courses"));
-const Papers = React.lazy(() => import("../pages/papers"));
-const Books = React.lazy(() => import("../pages/books"));
-const Conferences = React.lazy(() => import("../pages/conferences"));
-const Community = React.lazy(() => import("../pages/community"));
-const Reports = React.lazy(() => import("../pages/reports"));
+const Professors = lazy(() => import("../pages/professors"));
+const Courses = lazy(() => import("../pages/courses"));
+const Papers = lazy(() => import("../pages/papers"));
+const Books = lazy(() => import("../pages/books"));
+const Conferences = lazy(() => import("../pages/conferences"));
+const Community = lazy(() => import("../pages/community"));
+const Reports = lazy(() => import("../pages/reports"));
 
-const Settings = React.lazy(() => import("../pages/Settings"));
-const Page404 = React.lazy(() => import("../pages/Page404"));
+const Settings = lazy(() => import("../pages/Settings"));
+const Page404 = lazy(() => import("../pages/Page404"));
 
 const AppRoutes = () => {
   const routes = useRoutes([

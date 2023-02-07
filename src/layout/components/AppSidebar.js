@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
-import { changeState } from "../../store/slices/Sidebar";
+import { changeState } from "../../store/reducers/sidebarSlice";
 
 import { CImage, CSidebar, CSidebarBrand, CSidebarNav } from "@coreui/react";
 
