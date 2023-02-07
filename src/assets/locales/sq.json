@@ -11,5 +11,15 @@
   "RepeatPassword": "Përsëritni fjalëkalimin",
   "CreateAccount": "Krijo llogari",
   "BackToLogin": "Kthehu te identifikimi",
-  "RegisterNowByClickingButtonBelowToHaveAccessInTheFacultyEvaluationSystem": "Regjistrohu tani duke klikuar butonin më poshtë për të pasur akses në Sistemin e Vlerësimit të Fakultetit"
+  "RegisterNowByClickingButtonBelowToHaveAccessInTheFacultyEvaluationSystem": "Regjistrohu tani duke klikuar butonin më poshtë për të pasur akses në Sistemin e Vlerësimit të Fakultetit",
+  "Dashboard": "Paneli",
+  "New": "E re",
+  "Professors": "Profesorët",
+  "Courses": "Kurse",
+  "Papers": "Punime",
+  "Books": "Libra",
+  "Conferences": "Konferenca",
+  "CommunityServices": "Shërbimet Komunitare",
+  "Reports": "Raportet",
+  "Settings": "Cilësimet"
 }

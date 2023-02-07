@@ -12,5 +12,15 @@
   "RepeatPassword": "Repeat password",
   "CreateAccount": "Create Account",
   "BackToLogin": "Back to login",
-  "RegisterNowByClickingButtonBelowToHaveAccessInTheFacultyEvaluationSystem": "Register now by clicking button below to have access in the Faculty Evaluation System"
+  "RegisterNowByClickingButtonBelowToHaveAccessInTheFacultyEvaluationSystem": "Register now by clicking button below to have access in the Faculty Evaluation System",
+  "Dashboard": "Dashboard",
+  "New": "New",
+  "Professors": "Professors",
+  "Courses": "Courses",
+  "Paper": "Papers",
+  "Books": "Books",
+  "Conferences": "Conferences",
+  "CommunityServices": "Community Services",
+  "Reports": "Reports",
+  "Settings": "Settings"
 }

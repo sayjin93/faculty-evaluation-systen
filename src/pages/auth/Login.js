@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { getCookie, isNullOrUndefined } from "../../hooks/helpers";
+
 import {
   CButton,
   CCard,
@@ -19,8 +22,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser, cifAl, cifGb } from "@coreui/icons";
-import { useTranslation } from "react-i18next";
-import { getCookie, isNullOrUndefined } from "../../hooks/Helpers";
+
 
 const Login = () => {
   //*#region constants
@@ -31,9 +33,8 @@ const Login = () => {
   //#region useEffect
   useEffect(() => {
     let token = getCookie({ key: "jwt_token" });
-    if (isNullOrUndefined(token)) {
-      navigate("/");
-    } else {
+    if (isNullOrUndefined(token)) navigate("/");
+    else {
       const keyDownHandler = (event) => {
         if (event.key === "Enter") {
           const el = document.getElementById("BtnLogin");
@@ -46,7 +47,7 @@ const Login = () => {
         document.removeEventListener("keydown", keyDownHandler);
       };
     }
-  }, []);
+  }, [navigate]);
   //#endregion
 
   return (

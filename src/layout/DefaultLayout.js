@@ -1,9 +1,9 @@
 import React from "react";
 
-import AppSidebar from "./layout/AppSidebar";
-import AppHeader from "./layout/AppHeader";
-import AppContent from "./layout/AppContent";
-import AppFooter from "./layout/AppFooter";
+import AppSidebar from "./components/AppSidebar";
+import AppHeader from "./components/AppHeader";
+import AppContent from "./components/AppContent";
+import AppFooter from "./components/AppFooter";
 
 function Layout() {
   return (
