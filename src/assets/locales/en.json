@@ -22,5 +22,8 @@
   "Conferences": "Conferences",
   "CommunityServices": "Community Services",
   "Reports": "Reports",
-  "Settings": "Settings"
+  "Settings": "Settings",
+  "Profile": "Profile",
+  "Logout": "Logout",
+  "DevelopedBy": "Developed by"
 }
