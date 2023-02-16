@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { setCookie } from "src/hooks/helpers";
 
 import { login } from "../../store/reducers/authenticationSlice";
 
@@ -35,6 +36,18 @@ const LoginPage = () => {
   const navigate = useNavigate();
   //#endregion
 
+  //#region functions
+  const handleLanguageChange = (language) => {
+    debugger;
+    i18n.changeLanguage(language);
+    setCookie({
+      key: "language",
+      value: language,
+      options: { path: "/" },
+    });
+  };
+  //#endregion
+
   //#region useEffect
   useEffect(() => {
     const keyDownHandler = (event) => {
@@ -61,12 +74,13 @@ const LoginPage = () => {
                 <CCardBody>
                   <CForm
                     onSubmit={() =>
-                      dispatch(
-                        login({
-                          email: "eve.holt@reqres.in",
-                          password: "cityslicka",
-                        })
-                      )
+                      // dispatch(
+                      //   login({
+                      //     email: "eve.holt@reqres.in",
+                      //     password: "cityslicka",
+                      //   })
+                      // )
+                      alert("nuk eshte bere ende auth")
                     }
                   >
                     <h1>{t("Login")}</h1>
@@ -115,18 +129,12 @@ const LoginPage = () => {
                           </CDropdownToggle>
                           <CDropdownMenu>
                             <CDropdownItem
-                              onClick={() => {
-                                i18n.changeLanguage("sq");
-                              }}
+                              onClick={()=>handleLanguageChange("sq")}
                             >
                               <CIcon icon={cifAl} />
                               <span className="ms-2">Shqip</span>
                             </CDropdownItem>
-                            <CDropdownItem
-                              onClick={() => {
-                                i18n.changeLanguage("en");
-                              }}
-                            >
+                            <CDropdownItem onClick={()=>handleLanguageChange("en")}>
                               <CIcon icon={cifGb} />
                               <span className="ms-2">English</span>
                             </CDropdownItem>
