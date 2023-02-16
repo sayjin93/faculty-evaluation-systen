@@ -54,3 +54,12 @@ export function formatDate(date) {
 
   return [year, month, day].join("-");
 }
+
+export function fixTableHeaderName(text) {
+  // Replace underscores with spaces and capitalize the first letter of each word
+  const formattedName = text
+    .replace(/_/g, " ")
+    .replace(/(?:^|\s)\S/g, (a) => a.toUpperCase());
+
+  return formattedName;
+}

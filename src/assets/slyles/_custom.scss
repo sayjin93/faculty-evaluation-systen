@@ -16,3 +16,8 @@
     flex-direction: column;
   }
 }
+
+.header {
+  background: transparent;
+  margin-bottom: var(--cui-header-padding-y);
+}
