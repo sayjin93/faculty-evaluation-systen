@@ -49,7 +49,7 @@ export const AppSidebarNav = () => {
     },
     {
       component: CNavItem,
-      name: t("Papers"),
+      name: t("Paper"),
       to: "/papers",
       icon: <CIcon icon={cilPen} customClassName="nav-icon" />,
     },

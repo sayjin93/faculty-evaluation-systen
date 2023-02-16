@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 const PageHeader = (props) => {
   //#region constants
-  const { title, component } = props;
+  const { title, component, buttons } = props;
   const { t } = useTranslation();
   //#endregion
 
@@ -19,9 +19,11 @@ const PageHeader = (props) => {
       <CContainer fluid>
         <CHeaderBrand>{title}</CHeaderBrand>
 
-        <CButton color="dark" onClick={() => handleAdd(component)}>
-          {t("Add")}
-        </CButton>
+        {buttons ?? (
+          <CButton color="dark" onClick={() => handleAdd(component)}>
+            {t("Add")}
+          </CButton>
+        )}
       </CContainer>
     </CHeader>
   );
