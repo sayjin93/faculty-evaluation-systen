@@ -24,5 +24,12 @@
   "Settings": "Cilësimet",
   "Profile": "Profili",
   "Logout": "Dil",
-  "DevelopedBy": "Zhvilluar nga"
+  "DevelopedBy": "Zhvilluar nga",
+  "Add": "Shto",
+  "Edit": "Modifiko",
+  "Delete": "Fshi",
+  "Male": "Mashkull",
+  "Female": "Femër",
+  "All": "Të gjithë",
+  "ChooseProfessor": "Zgjidh Professorin"
 }

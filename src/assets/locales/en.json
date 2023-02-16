@@ -25,5 +25,12 @@
   "Settings": "Settings",
   "Profile": "Profile",
   "Logout": "Logout",
-  "DevelopedBy": "Developed by"
+  "DevelopedBy": "Developed by",
+  "Add": "Add",
+  "Edit": "Edit",
+  "Delete": "Delete",
+  "Male": "Male",
+  "Female": "Female",
+  "All": "All",
+  "ChooseProfessor": "Choose Professor"
 }
