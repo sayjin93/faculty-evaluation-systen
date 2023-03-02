@@ -36,9 +36,9 @@ const PageTable = (props) => {
             {header.map((element) => {
               let thead = fixTableHeaderName(element);
               if (element === "id") thead = "#";
-              if (element === "professor_id") return;
-              if (element === "academic_year_id") return;
-              if (element === "scientific_work_id") return;
+              if (element === "professor_id") return null;
+              if (element === "academic_year_id") return null;
+              if (element === "scientific_work_id") return null;
 
               return (
                 <CTableHeaderCell key={element} scope="col">
@@ -229,7 +229,7 @@ const PageTable = (props) => {
             <CTableDataCell>{date}</CTableDataCell>
             <CTableDataCell>{element.description}</CTableDataCell>
             <CTableDataCell className="text-center">
-              {element.eternal == 1 ? (
+              {element.eternal === 1 ? (
                 <CIcon icon={cilCheckAlt} size="sm" />
               ) : (
                 ""
