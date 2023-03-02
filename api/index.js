@@ -8,7 +8,7 @@ const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "fc",
+  database: "faculty",
 });
 
 db.connect((err) => {
@@ -33,7 +33,6 @@ app.get("/users", (req, res) => {
     }
   });
 });
-
 app.post("/users", (req, res) => {
   const sql = "INSERT INTO users (`username`, `password`, `email`) VALUES (?)";
   const values = ["user2", "passw2", "email2"];
@@ -48,6 +47,77 @@ app.post("/users", (req, res) => {
   });
 });
 
+app.get("/professors", (req, res) => {
+  const sql = "SELECT * FROM professor";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error querying database: ", err);
+      res.status(500).send("Error querying database");
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get("/courses", (req, res) => {
+  const sql = "SELECT * FROM course";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error querying database: ", err);
+      res.status(500).send("Error querying database");
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get("/papers", (req, res) => {
+  const sql = "SELECT * FROM paper";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error querying database: ", err);
+      res.status(500).send("Error querying database");
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get("/books", (req, res) => {
+  const sql = "SELECT * FROM book";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error querying database: ", err);
+      res.status(500).send("Error querying database");
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get("/conferences", (req, res) => {
+  const sql = "SELECT * FROM conference";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error querying database: ", err);
+      res.status(500).send("Error querying database");
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get("/community", (req, res) => {
+  const sql = "SELECT * FROM community_services";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error querying database: ", err);
+      res.status(500).send("Error querying database");
+    } else {
+      res.json(results);
+    }
+  });
+});
 app.listen(5000, () => {
   console.log("Server started on port 5000");
 });
