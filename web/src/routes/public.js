@@ -1,8 +1,8 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { getCookie, isNullOrUndefined } from "../hooks/helpers";
+import { isNullOrUndefined } from "../hooks/helpers";
 
-let token = getCookie({ key: "jwt_token" });
+let token = localStorage.getItem("jwt_token");
 
 const PublicRoute = ({ children }) => {
   if (isNullOrUndefined(token)) {

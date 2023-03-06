@@ -64,9 +64,9 @@ const LoginPage = () => {
     event.preventDefault();
 
     axios
-      .post("http://localhost:5000/login", { username, password })
+      .get("http://localhost:5000/api/users", { data: { username, password } })
       .then((response) => {
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("jwt_token", response.data[0].token);
         window.location.href = "/";
       })
       .catch((error) => {

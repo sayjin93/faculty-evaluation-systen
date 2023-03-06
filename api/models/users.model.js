@@ -1,3 +1,5 @@
+const SequelizeTokenify = require("sequelize-tokenify");
+
 module.exports = (sequelize, Sequelize) => {
   const Users = sequelize.define("users", {
     first_name: {
@@ -8,16 +10,26 @@ module.exports = (sequelize, Sequelize) => {
     },
     username: {
       type: Sequelize.STRING,
+      unique: true,
     },
     password: {
       type: Sequelize.STRING,
     },
+    token: {
+      type: Sequelize.STRING,
+      unique: true,
+    },
     email: {
       type: Sequelize.STRING,
+      unique: true,
     },
     isAdmin: {
       type: Sequelize.BOOLEAN,
     },
+  });
+
+  SequelizeTokenify.tokenify(Users, {
+    field: "token",
   });
 
   return Users;

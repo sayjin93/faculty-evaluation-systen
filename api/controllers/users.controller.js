@@ -4,7 +4,7 @@ const Users = db.users;
 // Create and Save a new Users
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.usersname || !req.body.password || !req.body.email) {
+  if (!req.body.username || !req.body.password || !req.body.email) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
