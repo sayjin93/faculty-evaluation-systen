@@ -1,18 +1,15 @@
 module.exports = (sequelize, Sequelize) => {
-  const Conference = sequelize.define("conference", {
-    name: {
+  const Books = sequelize.define("books", {
+    title: {
       type: Sequelize.STRING,
     },
-    location: {
+    publication_house: {
       type: Sequelize.STRING,
     },
-    present_title: {
-      type: Sequelize.STRING,
+    publication_year: {
+      type: Sequelize.DATEONLY,
     },
     authors: {
-      type: Sequelize.STRING,
-    },
-    dates: {
       type: Sequelize.STRING,
     },
     scientific_work_id: {
@@ -20,5 +17,5 @@ module.exports = (sequelize, Sequelize) => {
     },
   });
 
-  return Conference;
+  return Books;
 };

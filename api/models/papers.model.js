@@ -1,21 +1,18 @@
 module.exports = (sequelize, Sequelize) => {
-  const Book = sequelize.define("book", {
+  const Papers = sequelize.define("papers", {
     title: {
       type: Sequelize.STRING,
     },
-    publication_house: {
+    journal: {
       type: Sequelize.STRING,
     },
-    publication_year: {
-      type: Sequelize.DATEONLY,
-    },
-    authors: {
-      type: Sequelize.STRING,
+    publication: {
+      type: Sequelize.DATE,
     },
     scientific_work_id: {
       type: Sequelize.INTEGER,
     },
   });
 
-  return Book;
+  return Papers;
 };

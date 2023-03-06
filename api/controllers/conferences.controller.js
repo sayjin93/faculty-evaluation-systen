@@ -1,7 +1,7 @@
 const db = require("../models");
-const Conference = db.conference;
+const Conferences = db.conferences;
 
-// Create and Save a new Conference
+// Create and Save a new Conferences
 exports.create = (req, res) => {
   // Validate request
   if (!req.body.name) {
@@ -11,7 +11,7 @@ exports.create = (req, res) => {
     return;
   }
 
-  // Create a Conference
+  // Create a Conferences
   const conferenceData = {
     name: req.body.name,
     location: req.body.location,
@@ -21,131 +21,131 @@ exports.create = (req, res) => {
     scientific_work_id: req.body.scientific_work_id,
   };
 
-  // Save Conference in the database
-  Conference.create(conferenceData)
+  // Save Conferences in the database
+  Conferences.create(conferenceData)
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Conference.",
+          err.message || "Some error occurred while creating the Conferences.",
       });
     });
 };
 
-// Retrieve all Conferences from the database.
+// Retrieve all Conferencess from the database.
 exports.findAll = (req, res) => {
-  Conference.findAll()
+  Conferences.findAll()
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving Conferences.",
+          err.message || "Some error occurred while retrieving Conferencess.",
       });
     });
 };
 
-// Find a single Conference with an id
+// Find a single Conferences with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Conference.findByPk(id)
+  Conferences.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find Conference with id=${id}.`,
+          message: `Cannot find Conferences with id=${id}.`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Conference with id=" + id,
+        message: "Error retrieving Conferences with id=" + id,
       });
     });
 };
 
-// Update a Conference by the id in the request
+// Update a Conferences by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  Conference.update(req.body, {
+  Conferences.update(req.body, {
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Conference was updated successfully.",
+          message: "Conferences was updated successfully.",
         });
       } else {
         res.send({
-          message: `Cannot update Conference with id=${id}. Maybe Conference was not found or req.body is empty!`,
+          message: `Cannot update Conferences with id=${id}. Maybe Conferences was not found or req.body is empty!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating Conference with id=" + id,
+        message: "Error updating Conferences with id=" + id,
       });
     });
 };
 
-// Delete a Conference with the specified id in the request
+// Delete a Conferences with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  Conference.destroy({
+  Conferences.destroy({
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Conference was deleted successfully!",
+          message: "Conferences was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete Conference with id=${id}. Maybe Conference was not found!`,
+          message: `Cannot delete Conferences with id=${id}. Maybe Conferences was not found!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Conference with id=" + id,
+        message: "Could not delete Conferences with id=" + id,
       });
     });
 };
 
-// Delete all Conference from the database.
+// Delete all Conferences from the database.
 exports.deleteAll = (req, res) => {
-  Conference.destroy({
+  Conferences.destroy({
     where: {},
     truncate: false,
   })
     .then((nums) => {
-      res.send({ message: `${nums} Conferences were deleted successfully!` });
+      res.send({ message: `${nums} Conferencess were deleted successfully!` });
     })
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while removing all Conferences.",
+          err.message || "Some error occurred while removing all Conferencess.",
       });
     });
 };
 
-// Find all published Conference
+// Find all published Conferences
 exports.findAllPublished = (req, res) => {
-  Conference.findAll({ where: { published: true } })
+  Conferences.findAll({ where: { published: true } })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving Conferences.",
+          err.message || "Some error occurred while retrieving Conferencess.",
       });
     });
 };

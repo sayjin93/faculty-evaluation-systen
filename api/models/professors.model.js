@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Professor = sequelize.define("professor", {
+  const Professors = sequelize.define("professors", {
     first_name: {
       type: Sequelize.STRING,
     },
@@ -11,5 +11,5 @@ module.exports = (sequelize, Sequelize) => {
     },
   });
 
-  return Professor;
+  return Professors;
 };
