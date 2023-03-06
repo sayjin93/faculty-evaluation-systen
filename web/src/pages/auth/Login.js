@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -25,6 +25,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser, cifAl, cifGb } from "@coreui/icons";
+import axios from "axios";
 
 const LoginPage = () => {
   //#region redux
@@ -36,6 +37,11 @@ const LoginPage = () => {
   const navigate = useNavigate();
   //#endregion
 
+  //#region states
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  //#endregion
+
   //#region functions
   const handleLanguageChange = (language) => {
     i18n.changeLanguage(language);
@@ -44,6 +50,28 @@ const LoginPage = () => {
       value: language,
       options: { path: "/" },
     });
+  };
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    axios
+      .post("http://localhost:5000/login", { username, password })
+      .then((response) => {
+        localStorage.setItem("token", response.data.token);
+        window.location.href = "/";
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   //#endregion
 
@@ -71,17 +99,7 @@ const LoginPage = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm
-                    onSubmit={() =>
-                      // dispatch(
-                      //   login({
-                      //     email: "eve.holt@reqres.in",
-                      //     password: "cityslicka",
-                      //   })
-                      // )
-                      alert("nuk eshte bere ende auth")
-                    }
-                  >
+                  <CForm onSubmit={handleSubmit}>
                     <h1>{t("Login")}</h1>
                     <p className="text-medium-emphasis">
                       {t("SignInToYourAccount")}
@@ -91,8 +109,11 @@ const LoginPage = () => {
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
                       <CFormInput
+                        type="text"
                         placeholder={t("Username")}
                         autoComplete="username"
+                        value={username}
+                        onChange={handleUsernameChange}
                       />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
@@ -103,11 +124,18 @@ const LoginPage = () => {
                         type="password"
                         placeholder={t("Password")}
                         autoComplete="current-password"
+                        value={password}
+                        onChange={handlePasswordChange}
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton id="BtnLogin" color="primary" className="px-4">
+                        <CButton
+                          type="submit"
+                          id="BtnLogin"
+                          color="primary"
+                          className="px-4"
+                        >
                           {t("Login")}
                         </CButton>
                       </CCol>
@@ -128,12 +156,14 @@ const LoginPage = () => {
                           </CDropdownToggle>
                           <CDropdownMenu>
                             <CDropdownItem
-                              onClick={()=>handleLanguageChange("sq")}
+                              onClick={() => handleLanguageChange("sq")}
                             >
                               <CIcon icon={cifAl} />
                               <span className="ms-2">Shqip</span>
                             </CDropdownItem>
-                            <CDropdownItem onClick={()=>handleLanguageChange("en")}>
+                            <CDropdownItem
+                              onClick={() => handleLanguageChange("en")}
+                            >
                               <CIcon icon={cifGb} />
                               <span className="ms-2">English</span>
                             </CDropdownItem>
