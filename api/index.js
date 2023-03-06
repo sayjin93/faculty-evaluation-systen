@@ -31,10 +31,14 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to jk application." });
 });
 
-require("./routes/academic_year.routes")(app);
-require("./routes/book.routes")(app);
-require("./routes/community_service.routes")(app);
-require("./routes/professor.routes")(app);
+require("./routes/academic_years.routes")(app);
+require("./routes/books.routes")(app);
+require("./routes/community_services.routes")(app);
+require("./routes/courses.routes")(app);
+require("./routes/papers.routes")(app);
+require("./routes/professors.routes")(app);
+require("./routes/scientific_works.routes")(app);
+require("./routes/users.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 5000;

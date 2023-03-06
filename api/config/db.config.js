@@ -3,7 +3,8 @@ module.exports = {
   USER: "root",
   PASSWORD: "",
   DB: "faculty",
-  dialect: "mysql",
+  dialect:
+    "mysql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
   pool: {
     max: 5,
     min: 0,

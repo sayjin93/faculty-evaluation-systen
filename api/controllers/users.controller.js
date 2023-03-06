@@ -1,148 +1,147 @@
 const db = require("../models");
-const Professor = db.professor;
+const Users = db.users;
 
-// Create and Save a new Professor
+// Create and Save a new Users
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.first_name) {
+  if (!req.body.usersname || !req.body.password || !req.body.email) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
     return;
   }
 
-  // Create a Tutorial
-  const professorData = {
+  // Create a Users
+  const userData = {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
-    gender: req.body.gender,
+    usersname: req.body.usersname,
+    password: req.body.password,
+    email: req.body.email,
+    isAdmin: req.body.isAdmin,
   };
 
-  // Save Tutorial in the database
-  Professor.create(professorData)
+  // Save Users in the database
+  Users.create(userData)
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Professor.",
+        message: err.message || "Some error occurred while creating the Users.",
       });
     });
 };
 
-// Retrieve all Professors from the database.
+// Retrieve all Users from the database.
 exports.findAll = (req, res) => {
-  Professor.findAll()
+  Users.findAll()
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving professors.",
+        message: err.message || "Some error occurred while retrieving Users.",
       });
     });
 };
 
-// Find a single Tutorial with an id
+// Find a single Users with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Professor.findByPk(id)
+  Users.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find Professor with id=${id}.`,
+          message: `Cannot find Users with id=${id}.`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Professor with id=" + id,
+        message: "Error retrieving Users with id=" + id,
       });
     });
 };
 
-// Update a Tutorial by the id in the request
+// Update a Users by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  Professor.update(req.body, {
+  Users.update(req.body, {
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Professor was updated successfully.",
+          message: "Users was updated successfully.",
         });
       } else {
         res.send({
-          message: `Cannot update Professor with id=${id}. Maybe Professor was not found or req.body is empty!`,
+          message: `Cannot update Users with id=${id}. Maybe Users was not found or req.body is empty!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating Professor with id=" + id,
+        message: "Error updating Users with id=" + id,
       });
     });
 };
 
-// Delete a Tutorial with the specified id in the request
+// Delete a Users with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  Professor.destroy({
+  Users.destroy({
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Professor was deleted successfully!",
+          message: "Users was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete Professor with id=${id}. Maybe Professor was not found!`,
+          message: `Cannot delete Users with id=${id}. Maybe Users was not found!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Professor with id=" + id,
+        message: "Could not delete Users with id=" + id,
       });
     });
 };
 
-// Delete all Professor from the database.
+// Delete all Users from the database.
 exports.deleteAll = (req, res) => {
-  Professor.destroy({
+  Users.destroy({
     where: {},
     truncate: false,
   })
     .then((nums) => {
-      res.send({ message: `${nums} Professor were deleted successfully!` });
+      res.send({ message: `${nums} Users were deleted successfully!` });
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all professor.",
+        message: err.message || "Some error occurred while removing all Users.",
       });
     });
 };
 
-// Find all published Professor
+// Find all published Users
 exports.findAllPublished = (req, res) => {
-  Tutorial.findAll({ where: { published: true } })
+  Users.findAll({ where: { published: true } })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving professors.",
+        message: err.message || "Some error occurred while retrieving Users.",
       });
     });
 };

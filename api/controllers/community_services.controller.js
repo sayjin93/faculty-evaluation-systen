@@ -1,5 +1,5 @@
 const db = require("../models");
-const CommunityService = db.community_service;
+const CommunityServices = db.community_services;
 
 // Create and Save a new Community Service
 exports.create = (req, res) => {
@@ -22,7 +22,7 @@ exports.create = (req, res) => {
   };
 
   // Save Tutorial in the database
-  CommunityService.create(CommunityServiceData)
+  CommunityServices.create(CommunityServiceData)
     .then((data) => {
       res.send(data);
     })
@@ -37,7 +37,7 @@ exports.create = (req, res) => {
 
 // Retrieve all Community Services from the database.
 exports.findAll = (req, res) => {
-  CommunityService.findAll()
+  CommunityServices.findAll()
     .then((data) => {
       res.send(data);
     })
@@ -54,7 +54,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  CommunityService.findByPk(id)
+  CommunityServices.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
@@ -75,7 +75,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  CommunityService.update(req.body, {
+  CommunityServices.update(req.body, {
     where: { id: id },
   })
     .then((num) => {
@@ -100,7 +100,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  CommunityService.destroy({
+  CommunityServices.destroy({
     where: { id: id },
   })
     .then((num) => {
@@ -123,7 +123,7 @@ exports.delete = (req, res) => {
 
 // Delete all Community Service from the database.
 exports.deleteAll = (req, res) => {
-  CommunityService.destroy({
+  CommunityServices.destroy({
     where: {},
     truncate: false,
   })

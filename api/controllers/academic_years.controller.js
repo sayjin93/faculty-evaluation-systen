@@ -1,5 +1,5 @@
 const db = require("../models");
-const AcademicYear = db.academic_year;
+const AcademicYears = db.academic_years;
 
 // Create and Save a new Academic Year
 exports.create = (req, res) => {
@@ -18,7 +18,7 @@ exports.create = (req, res) => {
   };
 
   // Save Academic Year in the database
-  AcademicYear.create(AcademicYearData)
+  AcademicYears.create(AcademicYearData)
     .then((data) => {
       res.send(data);
     })
@@ -33,7 +33,7 @@ exports.create = (req, res) => {
 
 // Retrieve all Academic Years from the database.
 exports.findAll = (req, res) => {
-  AcademicYear.findAll()
+  AcademicYears.findAll()
     .then((data) => {
       res.send(data);
     })
@@ -49,7 +49,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  AcademicYear.findByPk(id)
+  AcademicYears.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
@@ -70,7 +70,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  AcademicYear.update(req.body, {
+  AcademicYears.update(req.body, {
     where: { id: id },
   })
     .then((num) => {
@@ -95,7 +95,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  AcademicYear.destroy({
+  AcademicYears.destroy({
     where: { id: id },
   })
     .then((num) => {
@@ -118,7 +118,7 @@ exports.delete = (req, res) => {
 
 // Delete all Academic Year from the database.
 exports.deleteAll = (req, res) => {
-  AcademicYear.destroy({
+  AcademicYears.destroy({
     where: {},
     truncate: false,
   })
@@ -138,7 +138,7 @@ exports.deleteAll = (req, res) => {
 
 // Find all published Academic Year
 exports.findAllPublished = (req, res) => {
-  AcademicYear.findAll({ where: { published: true } })
+  AcademicYears.findAll({ where: { published: true } })
     .then((data) => {
       res.send(data);
     })

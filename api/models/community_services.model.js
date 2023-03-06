@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const CommunityService = sequelize.define("community_service", {
+  const CommunityServices = sequelize.define("community_services", {
     event: {
       type: Sequelize.STRING,
     },
@@ -20,5 +20,5 @@ module.exports = (sequelize, Sequelize) => {
     },
   });
 
-  return CommunityService;
+  return CommunityServices;
 };

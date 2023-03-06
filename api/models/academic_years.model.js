@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const AcademicYear = sequelize.define("academic_year", {
+  const AcademicYears = sequelize.define("academic_years", {
     year: {
       type: Sequelize.STRING,
     },
@@ -8,5 +8,5 @@ module.exports = (sequelize, Sequelize) => {
     },
   });
 
-  return AcademicYear;
+  return AcademicYears;
 };
