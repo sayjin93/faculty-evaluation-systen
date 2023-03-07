@@ -1,13 +1,9 @@
 const express = require("express");
-const cors = require("cors");
-
 const app = express();
+const cors = require("cors");
+require("dotenv").config();
 
-app.use(cors());
-
-// parse requests of content-type - application/json
-app.use(express.json());
-
+// Connect database
 const db = require("./models");
 db.sequelize
   .sync()
@@ -18,10 +14,16 @@ db.sequelize
     console.log("Failed to sync db: " + err.message);
   });
 
+
+app.use(cors());
+
+// parse requests of content-type - application/json
+app.use(express.json());
+
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-// simple route
+// routes middleware
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to jk application." });
 });
@@ -36,7 +38,7 @@ require("./routes/scientific_works.routes")(app);
 require("./routes/users.routes")(app);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.API_PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
