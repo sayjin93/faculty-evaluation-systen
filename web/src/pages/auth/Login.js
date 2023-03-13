@@ -64,7 +64,9 @@ const LoginPage = () => {
     event.preventDefault();
 
     axios
-      .get("http://localhost:5000/api/users", { data: { username, password } })
+      .get(process.env.REACT_APP_API_URL + "/users", {
+        data: { username, password },
+      })
       .then((response) => {
         localStorage.setItem("jwt_token", response.data[0].token);
         window.location.href = "/";

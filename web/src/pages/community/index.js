@@ -20,7 +20,7 @@ const Community = () => {
   useEffect(() => {
     const fetchCommunity = async () => {
       await axios
-        .get("http://localhost:5000/community")
+        .get(process.env.REACT_APP_API_URL + "/community")
         .then((response) => {
           setItems(response.data);
         })

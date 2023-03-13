@@ -20,7 +20,7 @@ const Conferences = () => {
   useEffect(() => {
     const fetchConferences = async () => {
       await axios
-        .get("http://localhost:5000/conferences")
+        .get(process.env.REACT_APP_API_URL + "/conferences")
         .then((response) => {
           setItems(response.data);
         })

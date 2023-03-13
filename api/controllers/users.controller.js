@@ -15,7 +15,7 @@ exports.create = (req, res) => {
   const userData = {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
-    usersname: req.body.usersname,
+    username: req.body.username,
     password: req.body.password,
     email: req.body.email,
     isAdmin: req.body.isAdmin,
@@ -28,7 +28,7 @@ exports.create = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while creating the Users.",
+        message: err.message || "Some error occurred while creating the User.",
       });
     });
 };
