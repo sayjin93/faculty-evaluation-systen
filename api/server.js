@@ -4,9 +4,8 @@ const dotenv = require("dotenv");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger_output.json");
 
+// Loads environment variables
 dotenv.config();
-
-const app = express();
 
 // Connect database
 const db = require("./models");
@@ -18,6 +17,9 @@ db.sequelize
   .catch((err) => {
     console.log("Failed to sync db: " + err.message);
   });
+
+// Creates a new instance of the Express.js framework and assigns it to the app constant.
+const app = express();
 
 // Middleware
 app.use(cors());
