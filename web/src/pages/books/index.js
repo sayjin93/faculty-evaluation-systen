@@ -20,7 +20,7 @@ const Books = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       await axios
-        .get("http://localhost:5000/books")
+        .get(process.env.REACT_APP_API_URL + "/books")
         .then((response) => {
           setItems(response.data);
         })

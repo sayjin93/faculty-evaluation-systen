@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+
 import {
   CButton,
   CCard,
@@ -14,12 +17,75 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+
+import ToastComponent from "src/components/Toast";
 
 const Register = () => {
-  //*#region constants
+  //#region constants
   const { t } = useTranslation();
   //#endregion
+
+  //#region states
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+
+  const [toast, setToast] = useState({
+    color: "",
+    content: "",
+    visible: false,
+  });
+
+  //#endregion
+
+  //#region functions
+  const callToast = (color, content, visible) => {
+    setToast({
+      color: color,
+      content: content,
+      visible: visible,
+    });
+  };
+
+  const handleCloseToast = () => {
+    callToast("", "", false);
+  };
+
+  const handleRegister = async (event) => {
+    try {
+      // Send a POST request to the '/api/users' endpoint with the user data
+      const response = await axios
+        .post(process.env.REACT_APP_API_URL + "/users", {
+          username,
+          email,
+          password,
+        })
+        .then((response) => {
+          // Handle the success response
+          callToast("success", "Account created succesfully!", true);
+          setUsername("");
+          setEmail("");
+          setPassword("");
+          setRepeatPassword("");
+
+          console.log(response);
+          // console.log(response.data);
+        });
+    } catch (error) {
+      // Handle any errors
+      callToast("danger", error.response.data.message, true);
+
+      // console.error(error);
+    }
+  };
+  //#endregion
+
+  const isCreateAccountDisabled =
+    username === "" ||
+    email === "" ||
+    password === "" ||
+    password !== repeatPassword;
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -38,13 +104,21 @@ const Register = () => {
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
                     <CFormInput
+                      type="text"
                       placeholder={t("Username")}
-                      autoComplete="username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
-                    <CFormInput placeholder={t("Email")} autoComplete="email" />
+                    <CFormInput
+                      type="email"
+                      placeholder={t("Email")}
+                      value={email}
+                      size="sm"
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
@@ -53,7 +127,8 @@ const Register = () => {
                     <CFormInput
                       type="password"
                       placeholder={t("Password")}
-                      autoComplete="new-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -63,11 +138,18 @@ const Register = () => {
                     <CFormInput
                       type="password"
                       placeholder={t("RepeatPassword")}
-                      autoComplete="new-password"
+                      value={repeatPassword}
+                      onChange={(e) => setRepeatPassword(e.target.value)}
                     />
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton color="success">{t("CreateAccount")}</CButton>
+                    <CButton
+                      color="success"
+                      disabled={isCreateAccountDisabled}
+                      onClick={handleRegister}
+                    >
+                      {t("CreateAccount")}
+                    </CButton>
                   </div>
                 </CForm>
                 <Link to="/login">
@@ -83,6 +165,13 @@ const Register = () => {
           <CCol xs={6} className="text-right"></CCol>
         </CRow>
       </CContainer>
+
+      <ToastComponent
+        type={toast.color}
+        content={toast.content}
+        visible={toast.visible}
+        onClose={handleCloseToast}
+      />
     </div>
   );
 };

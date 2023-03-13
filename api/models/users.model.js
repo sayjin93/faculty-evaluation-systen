@@ -15,10 +15,6 @@ module.exports = (sequelize, Sequelize) => {
     password: {
       type: Sequelize.STRING,
     },
-    token: {
-      type: Sequelize.STRING,
-      unique: true,
-    },
     email: {
       type: Sequelize.STRING,
       unique: true,
@@ -26,10 +22,6 @@ module.exports = (sequelize, Sequelize) => {
     isAdmin: {
       type: Sequelize.BOOLEAN,
     },
-  });
-
-  SequelizeTokenify.tokenify(Users, {
-    field: "token",
   });
 
   return Users;

@@ -20,7 +20,7 @@ const Courses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       await axios
-        .get("http://localhost:5000/courses")
+        .get(process.env.REACT_APP_API_URL + "/courses")
         .then((response) => {
           setItems(response.data);
         })

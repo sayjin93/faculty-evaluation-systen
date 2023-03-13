@@ -20,7 +20,7 @@ const Papers = () => {
   useEffect(() => {
     const fetchPapers = async () => {
       await axios
-        .get("http://localhost:5000/papers")
+        .get(process.env.REACT_APP_API_URL + "/papers")
         .then((response) => {
           setItems(response.data);
         })

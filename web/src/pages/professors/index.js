@@ -19,7 +19,7 @@ const Professors = () => {
   useEffect(() => {
     const fetchProfessors = async () => {
       await axios
-        .get("http://localhost:5000/professors")
+        .get(process.env.REACT_APP_API_URL + "/professors")
         .then((response) => {
           setItems(response.data);
         })
