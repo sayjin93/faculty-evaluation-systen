@@ -1,5 +1,3 @@
-const SequelizeTokenify = require("sequelize-tokenify");
-
 module.exports = (sequelize, Sequelize) => {
   const Users = sequelize.define("users", {
     first_name: {
