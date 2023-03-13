@@ -54,4 +54,5 @@ db.conferences.belongsTo(db.scientific_works, {
   foreignKey: "scientific_work_id",
 });
 
+
 module.exports = db;
