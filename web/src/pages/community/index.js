@@ -8,7 +8,7 @@ import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 
 const Community = () => {
   //#region constants
-  const title = "Community";
+  const title = "CommunityService";
   const { t } = useTranslation();
   //#endregion
 
@@ -20,7 +20,7 @@ const Community = () => {
   useEffect(() => {
     const fetchCommunity = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/community")
+        .get(process.env.REACT_APP_API_URL + "/community-service")
         .then((response) => {
           setItems(response.data);
         })

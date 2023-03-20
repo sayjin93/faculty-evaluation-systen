@@ -34,6 +34,7 @@ app.get("/", (req, res) => {
 require("./routes/academic_years.routes")(app);
 require("./routes/books.routes")(app);
 require("./routes/community_services.routes")(app);
+require("./routes/conferences.routes")(app);
 require("./routes/courses.routes")(app);
 require("./routes/papers.routes")(app);
 require("./routes/professors.routes")(app);

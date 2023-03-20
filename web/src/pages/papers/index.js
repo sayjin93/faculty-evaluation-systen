@@ -8,7 +8,7 @@ import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 
 const Papers = () => {
   //#region constants
-  const title = "Papers";
+  const title = "Paper";
   const { t } = useTranslation();
   //#endregion
 

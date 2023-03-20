@@ -8,7 +8,7 @@ import PageTable from "src/components/PageTable";
 
 const Courses = () => {
   //#region constants
-  const title = "Courses";
+  const title = "Course";
   const { t } = useTranslation();
   //#endregion
 
