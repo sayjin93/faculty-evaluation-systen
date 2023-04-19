@@ -30,7 +30,6 @@ const PageTable = (props) => {
     try {
       const header = Object.keys(items[0]); // extract keys from the first object
 
-      console.log("Header: " + header);
       return (
         <CTableHead>
           <CTableRow color="dark">
@@ -56,7 +55,7 @@ const PageTable = (props) => {
         </CTableHead>
       );
     } catch (err) {
-      // console.log(err);
+      console.log(err);
     }
   };
   const RenderContent = () => {
@@ -201,7 +200,6 @@ const PageTable = (props) => {
       return items.map((element) => {
         const id = element.id;
 
-        console.log("Elements: " + element);
         return (
           <CTableRow key={element.id}>
             <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
