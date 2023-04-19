@@ -30,6 +30,7 @@ const PageTable = (props) => {
     try {
       const header = Object.keys(items[0]); // extract keys from the first object
 
+      console.log("Header: " + header);
       return (
         <CTableHead>
           <CTableRow color="dark">
@@ -41,7 +42,11 @@ const PageTable = (props) => {
               if (element === "scientific_work_id") return null;
 
               return (
-                <CTableHeaderCell key={element} scope="col">
+                <CTableHeaderCell
+                  key={element}
+                  scope="col"
+                  className={element === "external" ? "text-center" : ""}
+                >
                   {thead}
                 </CTableHeaderCell>
               );
@@ -67,6 +72,8 @@ const PageTable = (props) => {
             <CTableDataCell>{element.first_name}</CTableDataCell>
             <CTableDataCell>{element.last_name}</CTableDataCell>
             <CTableDataCell>{gender}</CTableDataCell>
+            <CTableDataCell>{element.createdAt}</CTableDataCell>
+            <CTableDataCell>{element.updatedAt}</CTableDataCell>
             <CTableDataCell>
               <CButtonGroup role="group" aria-label="Basic example" size="sm">
                 <CButton
@@ -88,7 +95,7 @@ const PageTable = (props) => {
           </CTableRow>
         );
       });
-    } else if (component === "Courses") {
+    } else if (component === "Course") {
       return items.map((element) => {
         const id = element.id;
         let program = element.program;
@@ -102,6 +109,8 @@ const PageTable = (props) => {
             <CTableDataCell>{element.semester}</CTableDataCell>
             <CTableDataCell>{element.week_hours}</CTableDataCell>
             <CTableDataCell>{program}</CTableDataCell>
+            <CTableDataCell>{element.createdAt}</CTableDataCell>
+            <CTableDataCell>{element.updatedAt}</CTableDataCell>
             <CTableDataCell>
               <CButtonGroup role="group" aria-label="Basic example" size="sm">
                 <CButton
@@ -123,7 +132,7 @@ const PageTable = (props) => {
           </CTableRow>
         );
       });
-    } else if (component === "Papers") {
+    } else if (component === "Paper") {
       return items.map((element) => {
         const id = element.id;
         return (
@@ -132,6 +141,8 @@ const PageTable = (props) => {
             <CTableDataCell>{element.title}</CTableDataCell>
             <CTableDataCell>{element.journal}</CTableDataCell>
             <CTableDataCell>{element.publication}</CTableDataCell>
+            <CTableDataCell>{element.createdAt}</CTableDataCell>
+            <CTableDataCell>{element.updatedAt}</CTableDataCell>
             <CTableDataCell>
               <CButtonGroup role="group" aria-label="Basic example" size="sm">
                 <CButton
@@ -153,7 +164,7 @@ const PageTable = (props) => {
           </CTableRow>
         );
       });
-    } else if (component === "Books") {
+    } else if (component === "Book") {
       return items.map((element) => {
         const id = element.id;
         return (
@@ -163,6 +174,8 @@ const PageTable = (props) => {
             <CTableDataCell>{element.publication_house}</CTableDataCell>
             <CTableDataCell>{element.publication_year}</CTableDataCell>
             <CTableDataCell>{element.authors}</CTableDataCell>
+            <CTableDataCell>{element.createdAt}</CTableDataCell>
+            <CTableDataCell>{element.updatedAt}</CTableDataCell>
             <CTableDataCell>
               <CButtonGroup role="group" aria-label="Basic example" size="sm">
                 <CButton
@@ -184,9 +197,11 @@ const PageTable = (props) => {
           </CTableRow>
         );
       });
-    } else if (component === "Conferences") {
+    } else if (component === "Conference") {
       return items.map((element) => {
         const id = element.id;
+
+        console.log("Elements: " + element);
         return (
           <CTableRow key={element.id}>
             <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
@@ -195,6 +210,8 @@ const PageTable = (props) => {
             <CTableDataCell>{element.present_title}</CTableDataCell>
             <CTableDataCell>{element.authors}</CTableDataCell>
             <CTableDataCell>{element.dates}</CTableDataCell>
+            <CTableDataCell>{element.createdAt}</CTableDataCell>
+            <CTableDataCell>{element.updatedAt}</CTableDataCell>
             <CTableDataCell>
               <CButtonGroup role="group" aria-label="Basic example" size="sm">
                 <CButton
@@ -216,7 +233,7 @@ const PageTable = (props) => {
           </CTableRow>
         );
       });
-    } else if (component === "Community") {
+    } else if (component === "CommunityService") {
       return items.map((element) => {
         const id = element.id;
         let date = element.time;
@@ -229,12 +246,10 @@ const PageTable = (props) => {
             <CTableDataCell>{date}</CTableDataCell>
             <CTableDataCell>{element.description}</CTableDataCell>
             <CTableDataCell className="text-center">
-              {element.eternal === 1 ? (
-                <CIcon icon={cilCheckAlt} size="sm" />
-              ) : (
-                ""
-              )}
+              {element.external ? <CIcon icon={cilCheckAlt} size="sm" /> : ""}
             </CTableDataCell>
+            <CTableDataCell>{element.createdAt}</CTableDataCell>
+            <CTableDataCell>{element.updatedAt}</CTableDataCell>
             <CTableDataCell>
               <CButtonGroup role="group" aria-label="Basic example" size="sm">
                 <CButton

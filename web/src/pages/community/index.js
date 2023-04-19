@@ -33,6 +33,8 @@ const Community = () => {
   }, []);
   //#endregion
 
+  console.log(items);
+
   return (
     <>
       <PageHeader title={t(title)} component={title} />
