@@ -177,7 +177,7 @@ const Books = () => {
   };
   const fetchOneBook = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/books" + "/" + id, {
+      .get(process.env.REACT_APP_API_URL + "/books/" + id, {
         headers: headers,
       })
       .then((response) => {
@@ -234,7 +234,7 @@ const Books = () => {
   const editBook = async (id) => {
     await axios
       .put(
-        process.env.REACT_APP_API_URL + "/books" + "/" + id,
+        process.env.REACT_APP_API_URL + "/books/" + id,
         {
           title: formData.title,
           publication_house: formData.publicationHouse,
@@ -263,7 +263,7 @@ const Books = () => {
   };
   const deleteBook = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/books" + "/" + id, {
+      .delete(process.env.REACT_APP_API_URL + "/books/" + id, {
         headers: headers,
       })
       .then((response) => {

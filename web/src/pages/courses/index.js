@@ -170,7 +170,7 @@ const Courses = () => {
   };
   const fetchOneCourse = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/courses" + "/" + id, {
+      .get(process.env.REACT_APP_API_URL + "/courses/" + id, {
         headers: headers,
       })
       .then((response) => {
@@ -230,7 +230,7 @@ const Courses = () => {
   const editCourse = async (id) => {
     await axios
       .put(
-        process.env.REACT_APP_API_URL + "/courses" + "/" + id,
+        process.env.REACT_APP_API_URL + "/courses/" + id,
         {
           name: formData.courseName,
           number: formData.courseNumber,
@@ -260,7 +260,7 @@ const Courses = () => {
   };
   const deleteCourse = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/courses" + "/" + id, {
+      .delete(process.env.REACT_APP_API_URL + "/courses/" + id, {
         headers: headers,
       })
       .then((response) => {

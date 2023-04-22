@@ -169,7 +169,7 @@ const Conferences = () => {
   };
   const fefetchOneConference = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/conferences" + "/" + id, {
+      .get(process.env.REACT_APP_API_URL + "/conferences/" + id, {
         headers: headers,
       })
       .then((response) => {
@@ -228,7 +228,7 @@ const Conferences = () => {
   const editConference = async (id) => {
     await axios
       .put(
-        process.env.REACT_APP_API_URL + "/conferences" + "/" + id,
+        process.env.REACT_APP_API_URL + "/conferences/" + id,
         {
           name: formData.name,
           location: formData.location,
@@ -258,7 +258,7 @@ const Conferences = () => {
   };
   const deleteConference = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/conferences" + "/" + id, {
+      .delete(process.env.REACT_APP_API_URL + "/conferences/" + id, {
         headers: headers,
       })
       .then((response) => {

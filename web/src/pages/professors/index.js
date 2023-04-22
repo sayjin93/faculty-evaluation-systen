@@ -29,12 +29,7 @@ import { cilPen, cilTrash } from "@coreui/icons";
 
 import headers from "../../constants/auth";
 
-import {
-  convertDateFormat,
-  formatDate,
-  formatDate2,
-  renderHeader,
-} from "src/hooks/helpers";
+import { convertDateFormat, renderHeader } from "src/hooks/helpers";
 import { setModal } from "../../store/reducers/modalSlice";
 import { showToast } from "../../store/reducers/toastSlice";
 import { useNavigate } from "react-router-dom";
@@ -59,8 +54,6 @@ const Professors = () => {
   });
   // @ts-ignore
   const modal = useSelector((state) => state.modal.modal);
-  // @ts-ignore
-  const toast = useSelector((state) => state.modal.toast);
   //#endregion
 
   //#region functions
@@ -165,7 +158,7 @@ const Professors = () => {
   };
   const fetchOneProfessor = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/professors" + "/" + id, {
+      .get(process.env.REACT_APP_API_URL + "/professors/" + id, {
         headers: headers,
       })
       .then((response) => {
@@ -226,7 +219,7 @@ const Professors = () => {
   const editProfessor = async (id) => {
     await axios
       .put(
-        process.env.REACT_APP_API_URL + "/professors" + "/" + id,
+        process.env.REACT_APP_API_URL + "/professors/" + id,
         {
           firstname: formData.firstname,
           lastname: formData.lastname,
@@ -254,7 +247,7 @@ const Professors = () => {
   };
   const deleteProfessor = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/professors" + "/" + id, {
+      .delete(process.env.REACT_APP_API_URL + "/professors/" + id, {
         headers: headers,
       })
       .then((response) => {

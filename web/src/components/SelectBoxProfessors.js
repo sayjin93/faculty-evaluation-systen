@@ -47,7 +47,7 @@ const SelectBoxProfessors = () => {
     };
 
     await axios
-      .get(process.env.REACT_APP_API_URL + "/professors" + "/" + id, {
+      .get(process.env.REACT_APP_API_URL + "/professors/" + id, {
         headers: headers,
       })
       .then((response) => {

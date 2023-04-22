@@ -185,7 +185,7 @@ const Community = () => {
   };
   const fetchOneCommunity = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/community-service" + "/" + id, {
+      .get(process.env.REACT_APP_API_URL + "/community-service/" + id, {
         headers: headers,
       })
       .then((response) => {
@@ -245,7 +245,7 @@ const Community = () => {
   const editCommunity = async (id) => {
     await axios
       .put(
-        process.env.REACT_APP_API_URL + "/community-service" + "/" + id,
+        process.env.REACT_APP_API_URL + "/community-service/" + id,
         {
           event: formData.event,
           time: formData.time,
@@ -274,7 +274,7 @@ const Community = () => {
   };
   const deleteCommunity = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/community-service" + "/" + id, {
+      .delete(process.env.REACT_APP_API_URL + "/community-service/" + id, {
         headers: headers,
       })
       .then((response) => {
