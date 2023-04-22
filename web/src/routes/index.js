@@ -37,13 +37,14 @@ const AppRoutes = () => {
           element: <Home />,
         },
         {
-          path: "/professors",
-          element: <Professors />,
-        },
-        {
           path: "/courses",
           element: <Courses />,
         },
+        {
+          path: "/professors",
+          element: <Professors />,
+        },
+        
         {
           path: "/papers",
           element: <Papers />,
@@ -73,17 +74,17 @@ const AppRoutes = () => {
     {
       path: "/login",
       element: (
-        <Public>
+        // <Public>
           <Login />
-        </Public>
+        // </Public>
       ),
     },
     {
       path: "/register",
       element: (
-        <Public>
+        // <Public>
           <Register />
-        </Public>
+        // </Public>
       ),
     },
     {

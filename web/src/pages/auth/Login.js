@@ -64,12 +64,18 @@ const LoginPage = () => {
     event.preventDefault();
 
     axios
-      .get(process.env.REACT_APP_API_URL + "/users", {
-        data: { username, password },
+      .post(process.env.REACT_APP_API_URL + "/users/login", {
+          username,
+          password 
       })
       .then((response) => {
-        localStorage.setItem("jwt_token", response.data[0].token);
-        window.location.href = "/";
+        console.log(response.data);
+        if(response.data){
+          localStorage.setItem("jwt_token", response.data);
+          window.location.href = "/";
+          // navigate("/");
+        }
+        
       })
       .catch((error) => {
         console.log(error);

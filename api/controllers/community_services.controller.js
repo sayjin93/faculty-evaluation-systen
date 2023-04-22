@@ -13,8 +13,8 @@ exports.create = (req, res) => {
 
   // Create a Tutorial
   const CommunityServiceData = {
-    event: req.body.year,
-    time: req.body.active,
+    event: req.body.event,
+    time: req.body.time,
     description: req.body.description,
     external: req.body.external,
     academic_year_id: req.body.academic_year_id,

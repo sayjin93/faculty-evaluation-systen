@@ -1,8 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./swagger_output.json");
 
 // Loads environment variables
 dotenv.config();
@@ -28,7 +26,7 @@ app.use(express.urlencoded({ extended: true })); // parse requests of content-ty
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to jk application." });
+  res.json({ message: "Welcome to jk web-app." });
 });
 
 require("./routes/academic_years.routes")(app);
@@ -40,9 +38,6 @@ require("./routes/papers.routes")(app);
 require("./routes/professors.routes")(app);
 require("./routes/scientific_works.routes")(app);
 require("./routes/users.routes")(app);
-
-// Serve Swagger UI
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // set port, listen for requests
 const PORT = process.env.API_PORT || 4000;

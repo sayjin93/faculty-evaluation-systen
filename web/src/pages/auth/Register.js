@@ -48,10 +48,6 @@ const Register = () => {
     });
   };
 
-  const handleCloseToast = () => {
-    callToast("", "", false);
-  };
-
   const handleRegister = async (event) => {
     try {
       // Send a POST request to the '/api/users' endpoint with the user data
@@ -70,7 +66,6 @@ const Register = () => {
           setRepeatPassword("");
 
           console.log(response);
-          // console.log(response.data);
         });
     } catch (error) {
       // Handle any errors
@@ -170,7 +165,6 @@ const Register = () => {
         type={toast.color}
         content={toast.content}
         visible={toast.visible}
-        onClose={handleCloseToast}
       />
     </div>
   );

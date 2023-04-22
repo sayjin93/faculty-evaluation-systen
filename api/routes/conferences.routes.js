@@ -1,28 +1,28 @@
 module.exports = (app) => {
   const conferences = require("../controllers/conferences.controller.js");
-
+  const auth = require('../config/authenticate');
   var router = require("express").Router();
 
   // Create a new Conference
-  router.post("/", conferences.create);
+  router.post("/",auth, conferences.create);
 
   // Retrieve all Conferences
-  router.get("/", conferences.findAll);
+  router.get("/",auth, conferences.findAll);
 
   // Retrieve all published Conferences
-  router.get("/published", conferences.findAllPublished);
+  router.get("/published",auth, conferences.findAllPublished);
 
   // Retrieve a single Conference with id
-  router.get("/:id", conferences.findOne);
+  router.get("/:id",auth, conferences.findOne);
 
   // Update a Conference with id
-  router.put("/:id", conferences.update);
+  router.put("/:id", auth,conferences.update);
 
   // Delete a Conference with id
-  router.delete("/:id", conferences.delete);
+  router.delete("/:id",auth, conferences.delete);                
 
   // Delete all Conferences
-  router.delete("/", conferences.deleteAll);
+  router.delete("/", auth,conferences.deleteAll);
 
   app.use("/api/conferences", router);
 };

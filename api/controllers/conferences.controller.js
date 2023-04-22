@@ -16,7 +16,7 @@ exports.create = (req, res) => {
     name: req.body.name,
     location: req.body.location,
     present_title: req.body.present_title,
-    autors: req.body.authors,
+    authors: req.body.authors,
     dates: req.body.dates,
     scientific_work_id: req.body.scientific_work_id,
   };

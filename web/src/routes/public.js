@@ -6,7 +6,7 @@ let token = localStorage.getItem("jwt_token");
 
 const PublicRoute = ({ children }) => {
   if (isNullOrUndefined(token)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;

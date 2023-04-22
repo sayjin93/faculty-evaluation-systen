@@ -4,21 +4,20 @@ const Professors = db.professors;
 // Create and Save a new Professors
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.first_name) {
+  if (!req.body.firstname) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
     return;
   }
 
-  // Create a Tutorial
   const professorData = {
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
+    first_name: req.body.firstname,
+    last_name: req.body.lastname,
     gender: req.body.gender,
   };
 
-  // Save Tutorial in the database
+  // Save Professot in the database
   Professors.create(professorData)
     .then((data) => {
       res.send(data);
@@ -45,7 +44,7 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single Tutorial with an id
+// Find a single Professor with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
@@ -66,11 +65,17 @@ exports.findOne = (req, res) => {
     });
 };
 
-// Update a Tutorial by the id in the request
+// Update a Professor by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  Professors.update(req.body, {
+  const professorData = {
+    first_name: req.body.firstname,
+    last_name: req.body.lastname,
+    gender: req.body.gender,
+  };
+  console.log(id);
+  Professors.update(professorData, {
     where: { id: id },
   })
     .then((num) => {
@@ -94,7 +99,7 @@ exports.update = (req, res) => {
 // Delete a Tutorial with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
-
+  console.log(id);
   Professors.destroy({
     where: { id: id },
   })

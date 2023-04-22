@@ -1,6 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import {
+  CContainer,
+  CHeader,
+  CHeaderBrand,
   CCard,
   CCardBody,
   CCardHeader,
@@ -11,7 +14,7 @@ import {
   CDropdownToggle,
   CRow,
 } from "@coreui/react";
-import PageHeader from "src/components/PageHeader";
+
 import { setCookie } from "src/hooks/helpers";
 import CIcon from "@coreui/icons-react";
 import { cifAl, cifGb } from "@coreui/icons";
@@ -32,7 +35,12 @@ const Settings = () => {
 
   return (
     <>
-      <PageHeader title={t("Settings")} component="courses" buttons={false} />
+      <CHeader>
+        <CContainer fluid>
+          <CHeaderBrand>{t("Professors")}</CHeaderBrand>
+        </CContainer>
+      </CHeader>
+
       <CRow className="align-items-start">
         <CCol>
           <CCard

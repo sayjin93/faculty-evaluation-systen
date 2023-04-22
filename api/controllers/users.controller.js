@@ -1,4 +1,5 @@
 const db = require("../models");
+const jwt = require("jsonwebtoken");
 const Users = db.users;
 
 // Create and Save a new Users
@@ -35,9 +36,25 @@ exports.create = (req, res) => {
 
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
-  Users.findAll()
+  const userData = {
+    username: req.body.username,
+    password: req.body.password,
+  };
+  console.log(req.body);
+  Users.findOne({
+    where: { username: userData.username, password: userData.password },
+  })
     .then((data) => {
-      res.send(data);
+      const token = jwt.sign(
+        { username: userData.username, password: userData.password },
+        process.env.JWT_SECRET_KEY,
+        {
+          expiresIn: "2h",
+        }
+      );
+      // save user token
+      data.token = token;
+      res.send(token);
     })
     .catch((err) => {
       res.status(500).send({

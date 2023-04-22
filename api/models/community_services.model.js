@@ -15,7 +15,7 @@ module.exports = (sequelize, Sequelize) => {
     academic_year_id: {
       type: Sequelize.INTEGER,
     },
-    professor_id: {
+    preofessor_id: {
       type: Sequelize.INTEGER,
     },
   });
