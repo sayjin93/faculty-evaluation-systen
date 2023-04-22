@@ -10,7 +10,6 @@ import {
   CCol,
   CContainer,
   CFormInput,
-  CFormSelect,
   CHeader,
   CHeaderBrand,
   CModal,
@@ -62,8 +61,6 @@ const Papers = () => {
   });
   // @ts-ignore
   const modal = useSelector((state) => state.modal.modal);
-  // @ts-ignore
-  const toast = useSelector((state) => state.modal.toast);
   //#endregion
 
   //#region functions
