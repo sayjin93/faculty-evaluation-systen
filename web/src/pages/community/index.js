@@ -319,7 +319,7 @@ const Community = () => {
     <>
       <CHeader>
         <CContainer fluid>
-          <CHeaderBrand>{t("Community Services")}</CHeaderBrand>
+          <CHeaderBrand>{t("CommunityServices")}</CHeaderBrand>
 
           <CButton color="dark" onClick={() => dispatch(setModal(true))}>
             {t("Add")}

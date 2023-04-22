@@ -15,9 +15,9 @@ const Reports = () => {
         </CContainer>
       </CHeader>
 
-      <CTable responsive striped hover align="middle">
+      {/* <CTable responsive striped hover align="middle"> */}
         <p>Work in progress</p>
-      </CTable>
+      {/* </CTable> */}
     </>
   );
 };
