@@ -69,9 +69,7 @@ const Conferences = () => {
     return (
       <CTableBody>
         {items.map((element) => {
-          debugger;
           const id = element.id;
-
           let createdAt = element.createdAt
             ? convertDateFormat(element.createdAt)
             : null;

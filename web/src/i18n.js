@@ -3,6 +3,11 @@ import { initReactI18next } from "react-i18next";
 
 import translationSQ from "./assets/locales/sq.json";
 import translationEN from "./assets/locales/en.json";
+import { getCookie } from "./hooks/helpers";
+
+//language cookie
+const language = getCookie({ key: "language" });
+const languageCookie = language || "en";
 
 // the translations
 const resources = {
@@ -17,7 +22,7 @@ i18n
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
     resources,
-    lng: 'sq', // default language
+    lng: languageCookie, // default language
     fallbackLng: "en",
     debug: true,
 

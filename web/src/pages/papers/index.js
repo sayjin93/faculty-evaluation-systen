@@ -181,7 +181,6 @@ const Papers = () => {
         dispatch(setModal(true));
       })
       .catch((error) => {
-        debugger;
         dispatch(
           showToast({
             type: "danger",

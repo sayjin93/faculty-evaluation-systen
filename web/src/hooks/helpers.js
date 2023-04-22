@@ -82,28 +82,30 @@ export function formatDate2(date2) {
 //#region table
 export function renderHeader(items) {
   try {
-    const header = Object.keys(items[0]); // extract keys from the first object
+    if (items.length > 0) {
+      const header = Object.keys(items[0]); // extract keys from the first object
 
-    return (
-      <CTableHead>
-        <CTableRow color="dark">
-          {header.map((element) => {
-            let thead = fixTableHeaderName(element);
-            if (element === "id") thead = "#";
-            if (element === "professor_id") return null;
-            if (element === "academic_year_id") return null;
-            if (element === "scientific_work_id") return null;
+      return (
+        <CTableHead>
+          <CTableRow color="dark">
+            {header.map((element) => {
+              let thead = fixTableHeaderName(element);
+              if (element === "id") thead = "#";
+              if (element === "professor_id") return null;
+              if (element === "academic_year_id") return null;
+              if (element === "scientific_work_id") return null;
 
-            return (
-              <CTableHeaderCell key={element} scope="col">
-                {thead}
-              </CTableHeaderCell>
-            );
-          })}
-          <CTableHeaderCell scope="col"></CTableHeaderCell>
-        </CTableRow>
-      </CTableHead>
-    );
+              return (
+                <CTableHeaderCell key={element} scope="col">
+                  {thead}
+                </CTableHeaderCell>
+              );
+            })}
+            <CTableHeaderCell scope="col"></CTableHeaderCell>
+          </CTableRow>
+        </CTableHead>
+      );
+    }
   } catch (err) {
     console.log(err);
   }

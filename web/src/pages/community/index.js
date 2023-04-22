@@ -77,16 +77,12 @@ const Community = () => {
       <CTableBody>
         {items.map((element) => {
           const id = element.id;
-          debugger;
-
           let date = element.time ? formatDate2(element.time) : null;
-
           let checked = element.external ? (
             <CIcon icon={cilCheckAlt} size="sm" />
           ) : (
             ""
           );
-
           let createdAt = element.createdAt
             ? convertDateFormat(element.createdAt)
             : null;
