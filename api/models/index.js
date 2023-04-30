@@ -1,6 +1,8 @@
 const dbConfig = require("../config/db.config.js");
 
 const Sequelize = require("sequelize");
+const db = {};
+
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
@@ -13,9 +15,8 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   },
 });
 
-const db = {};
-db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
 // Importing database models and initializing them with the sequelize and Sequelize instances
 db.academic_years = require("./academic_years.model.js")(sequelize, Sequelize);
@@ -53,6 +54,5 @@ db.papers.belongsTo(db.scientific_works, { foreignKey: "scientific_work_id" });
 db.conferences.belongsTo(db.scientific_works, {
   foreignKey: "scientific_work_id",
 });
-
 
 module.exports = db;

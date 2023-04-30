@@ -74,7 +74,6 @@ exports.update = (req, res) => {
     last_name: req.body.lastname,
     gender: req.body.gender,
   };
-  console.log(id);
   Professors.update(professorData, {
     where: { id: id },
   })
@@ -96,10 +95,9 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a Tutorial with the specified id in the request
+// Delete a Professor with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
-  console.log(id);
   Professors.destroy({
     where: { id: id },
   })
@@ -110,7 +108,7 @@ exports.delete = (req, res) => {
         });
       } else {
         res.send({
-          message: `Cannot delete Professors with id=${id}. Maybe Professors was not found!`,
+          message: `Could not delete Professors with id=${id}. Maybe Professors was not found!`,
         });
       }
     })

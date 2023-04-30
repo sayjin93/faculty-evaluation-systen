@@ -40,7 +40,6 @@ exports.findAll = (req, res) => {
     username: req.body.username,
     password: req.body.password,
   };
-  console.log(req.body);
   Users.findOne({
     where: { username: userData.username, password: userData.password },
   })
@@ -162,22 +161,3 @@ exports.findAllPublished = (req, res) => {
       });
     });
 };
-
-// Create admin
-const newUser = {
-  first_name: "Jurgen",
-  last_name: "Kruja",
-  username: "admin",
-  password: "admin",
-  email: "jurgen-kruja@live.com",
-  isAdmin: true,
-};
-
-// Insert the new user record into the "users" table
-Users.create(newUser)
-  .then((user) => {
-    console.log(`Created user with ID ${user.id}`);
-  })
-  .catch((error) => {
-    console.error("Error creating user:", error);
-  });
