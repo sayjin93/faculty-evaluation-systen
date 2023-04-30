@@ -10,19 +10,19 @@ const db = require("./models");
 db.sequelize
   .sync({ alter: true })
   .then(() => {
-    console.log("Synced db.");
+    console.log("Database synced successfully.");
   })
-  .catch((err) => {
-    console.log("Failed to sync db: " + err.message);
+  .catch((error) => {
+    console.error("Error syncing database: ", error);
   });
 
 // Creates a new instance of the Express.js framework and assigns it to the app constant.
 const app = express();
 
 // Middleware
-app.use(cors());
 app.use(express.json()); // parse requests of content-type - application/json
 app.use(express.urlencoded({ extended: true })); // parse requests of content-type - application/x-www-form-urlencoded
+app.use(cors());
 
 // simple route
 app.get("/", (req, res) => {

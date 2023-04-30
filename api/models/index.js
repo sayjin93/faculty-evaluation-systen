@@ -1,39 +1,42 @@
-const dbConfig = require("../config/db.config.js");
+const { Sequelize } = require("sequelize");
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    dialect: process.env.DB_DIALECT,
+    operatorsAliases: false,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+  }
+);
 
-const Sequelize = require("sequelize");
-const db = {};
-
-const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-  host: dbConfig.HOST,
-  dialect: dbConfig.dialect,
-  operatorsAliases: 0,
-  pool: {
-    max: dbConfig.pool.max, // max number of connections in the pool
-    min: dbConfig.pool.min, // min number of connections in the pool
-    acquire: dbConfig.pool.acquire, // max time, in milliseconds, that a pool will try to get connection before throwing error
-    idle: dbConfig.pool.idle, // max time, in milliseconds, that a connection can be idle before being released
-  },
-});
-
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+const db = {
+  sequelize,
+  Sequelize,
+};
 
 // Importing database models and initializing them with the sequelize and Sequelize instances
-db.academic_years = require("./academic_years.model.js")(sequelize, Sequelize);
-db.books = require("./books.model.js")(sequelize, Sequelize);
-db.community_services = require("./community_services.model.js")(
-  sequelize,
-  Sequelize
-);
-db.conferences = require("./conferences.model.js")(sequelize, Sequelize);
-db.courses = require("./courses.model.js")(sequelize, Sequelize);
-db.papers = require("./papers.model.js")(sequelize, Sequelize);
-db.professors = require("./professors.model.js")(sequelize, Sequelize);
-db.scientific_works = require("./scientific_works.model.js")(
-  sequelize,
-  Sequelize
-);
-db.users = require("./users.model.js")(sequelize, Sequelize);
+const modelNames = [
+  "academic_years",
+  "books",
+  "community_services",
+  "conferences",
+  "courses",
+  "papers",
+  "professors",
+  "scientific_works",
+  "users",
+];
+for (let modelName of modelNames) {
+  const modelDefiner = require(`./${modelName}.model.js`);
+  db[modelName] = modelDefiner(sequelize, Sequelize);
+}
 
 // Setting up associations between models using foreign key constraints
 db.courses.belongsTo(db.professors, { foreignKey: "professor_id" });
