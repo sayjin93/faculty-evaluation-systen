@@ -3,8 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { setCookie } from "src/hooks/helpers";
-
-import { login } from "../../store/reducers/authenticationSlice";
+import { showToast } from "../../store/reducers/toastSlice";
 
 import {
   CButton,
@@ -65,20 +64,24 @@ const LoginPage = () => {
 
     axios
       .post(process.env.REACT_APP_API_URL + "/users/login", {
-          username,
-          password 
+        username,
+        password,
       })
       .then((response) => {
-        console.log(response.data);
-        if(response.data){
+        if (response.data) {
+          debugger;
           localStorage.setItem("jwt_token", response.data);
-          window.location.href = "/";
-          // navigate("/");
+          navigate("/", { replace: true });
         }
-        
       })
       .catch((error) => {
         console.log(error);
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
       });
   };
   //#endregion

@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -12,9 +14,32 @@ import {
 } from "@coreui/react";
 import { cilLockLocked, cilSettings, cilUser } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
+import { showToast } from "src/store/reducers/toastSlice";
 
 const AppHeaderDropdown = () => {
+  //#region constants
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  //#endregion
+
+  //#region functions
+  const logout = () => {
+    // Remove the JWT token from the Local Storage
+    localStorage.removeItem("jwt_token");
+
+    // Redirect the user to the login page
+    navigate("/login", { replace: true });
+
+    //Show toast with notification
+    dispatch(
+      showToast({
+        type: "success",
+        content: "You have been logout successfully!",
+      })
+    );
+  };
+  //#endregion
 
   return (
     <CDropdown variant="nav-item">
@@ -36,7 +61,7 @@ const AppHeaderDropdown = () => {
           {t("Settings")}
         </CDropdownItem>
         <CDropdownDivider />
-        <CDropdownItem href="#">
+        <CDropdownItem href="#" onClick={logout}>
           <CIcon icon={cilLockLocked} className="me-2" />
           {t("Logout")}
         </CDropdownItem>

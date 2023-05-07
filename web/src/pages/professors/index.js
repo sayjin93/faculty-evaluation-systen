@@ -152,7 +152,6 @@ const Professors = () => {
             content: error.response.statusText,
           })
         );
-
         if (error.response.status === 401) navigate("/login");
       });
   };

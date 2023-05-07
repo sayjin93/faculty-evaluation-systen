@@ -5,7 +5,7 @@ import AppHeader from "./components/AppHeader";
 import AppContent from "./components/AppContent";
 import AppFooter from "./components/AppFooter";
 
-function Layout() {
+const Layout = () => {
   return (
     <div>
       <AppSidebar />
@@ -18,6 +18,6 @@ function Layout() {
       </div>
     </div>
   );
-}
+};
 
 export default Layout;

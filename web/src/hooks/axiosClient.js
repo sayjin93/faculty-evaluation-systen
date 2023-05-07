@@ -1,9 +1,12 @@
 import axios from "axios";
 import constants from "../constants";
+import auth from "src/constants/auth";
 
 const axiosClient = axios.create();
 
-axiosClient.defaults.baseURL = constants.HOST_URL;
+axiosClient.defaults.baseURL = constants.API_URL;
+axios.defaults.headers.common["Authorization"] = auth["auth-token"];
+axios.defaults.headers.post["Content-Type"] = auth["Content-Type"];
 
 axiosClient.defaults.headers = constants.headers;
 
