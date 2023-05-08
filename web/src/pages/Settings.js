@@ -15,7 +15,7 @@ import {
   CRow,
 } from "@coreui/react";
 
-import { setCookie } from "src/hooks/helpers";
+import { setCookie } from "src/hooks";
 import CIcon from "@coreui/icons-react";
 import { cifAl, cifGb } from "@coreui/icons";
 

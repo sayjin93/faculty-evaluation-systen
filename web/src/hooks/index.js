@@ -1,6 +1,7 @@
 import React from "react";
 import { CTableHead, CTableHeaderCell, CTableRow } from "@coreui/react";
 import Cookies from "universal-cookie";
+
 //#region cookies
 export function setCookie(props) {
   try {
@@ -120,6 +121,7 @@ export function fixTableHeaderName(text) {
 }
 //#endregion
 
+//#region others
 export function isNullOrUndefined(props) {
   try {
     if (props !== null && props !== undefined && props !== "") {
@@ -130,3 +132,4 @@ export function isNullOrUndefined(props) {
   }
   return false;
 }
+//#endregion

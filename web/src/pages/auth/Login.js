@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { setCookie } from "src/hooks/helpers";
+import { setCookie } from "src/hooks";
 import { showToast } from "../../store/reducers/toastSlice";
 
 import {
@@ -69,7 +69,6 @@ const LoginPage = () => {
       })
       .then((response) => {
         if (response.data) {
-          debugger;
           localStorage.setItem("jwt_token", response.data);
           navigate("/", { replace: true });
         }

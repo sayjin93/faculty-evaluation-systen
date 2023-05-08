@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next";
 
 import translationSQ from "./assets/locales/sq.json";
 import translationEN from "./assets/locales/en.json";
-import { getCookie } from "./hooks/helpers";
+import { getCookie } from "./hooks";
 
 //language cookie
 const language = getCookie({ key: "language" });

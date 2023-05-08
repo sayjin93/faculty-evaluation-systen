@@ -27,9 +27,9 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
 
-import headers from "../../constants/auth";
+import {headers} from "../../constants";
 
-import { convertDateFormat, renderHeader } from "src/hooks/helpers";
+import { convertDateFormat, renderHeader } from "src/hooks";
 import { setModal } from "../../store/reducers/modalSlice";
 import { showToast } from "../../store/reducers/toastSlice";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";

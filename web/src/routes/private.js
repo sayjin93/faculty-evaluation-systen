@@ -1,10 +1,9 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { isNullOrUndefined } from "../hooks/helpers";
+import { isNullOrUndefined } from "../hooks";
+import { token } from "src/constants";
 
 const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem("jwt_token");
-
   if (!isNullOrUndefined(token)) {
     return <Navigate to="/login" replace />;
   }

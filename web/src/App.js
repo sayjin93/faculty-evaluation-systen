@@ -2,7 +2,7 @@ import React, { Suspense, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CSpinner } from "@coreui/react";
-import { getCookie, isNullOrUndefined } from "./hooks/helpers";
+import { getCookie, isNullOrUndefined } from "./hooks";
 import AppRoutes from "./routes";
 import "./assets/slyles/App.scss";
 import ToastComponent from "./components/Toast";

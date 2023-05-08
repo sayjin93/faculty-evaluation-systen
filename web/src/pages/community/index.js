@@ -27,14 +27,14 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar, cilCheckAlt } from "@coreui/icons";
 
-import headers from "../../constants/auth";
+import {headers} from "../../constants";
 
 import {
   convertDateFormat,
   formatDate2,
   formatDateFromSQL,
   renderHeader,
-} from "src/hooks/helpers";
+} from "src/hooks";
 import { setModal } from "../../store/reducers/modalSlice";
 import { showToast } from "../../store/reducers/toastSlice";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";

@@ -10,6 +10,7 @@ import {
   CRow,
 } from "@coreui/react";
 import axios from "axios";
+import { headers } from "src/constants";
 
 const SelectBoxProfessors = () => {
   //#region constants
@@ -40,12 +41,6 @@ const SelectBoxProfessors = () => {
     alert("Profesori u ndryshua");
   };
   const findOneProfessors = async (id) => {
-    const token = localStorage.getItem("jwt_token");
-    const headers = {
-      "auth-token": token,
-      "Content-Type": "application/json",
-    };
-
     await axios
       .get(process.env.REACT_APP_API_URL + "/professors/" + id, {
         headers: headers,
@@ -69,12 +64,6 @@ const SelectBoxProfessors = () => {
   //#region useEffect
   useEffect(() => {
     const fetchProfessors = async () => {
-      const token = localStorage.getItem("jwt_token");
-      const headers = {
-        "auth-token": token,
-        "Content-Type": "application/json",
-      };
-
       await axios
         .get(process.env.REACT_APP_API_URL + "/professors", {
           headers: headers,
