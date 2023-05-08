@@ -1,10 +1,12 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { isNullOrUndefined } from "../hooks";
-import { token } from "src/constants";
+import useAuthToken from "../hooks/token";
 
 const PublicRoute = ({ children }) => {
-  if (isNullOrUndefined(token)) {
+  const jwtToken = useAuthToken();
+
+  if (isNullOrUndefined(jwtToken)) {
     return <Navigate to="/" replace />;
   }
 

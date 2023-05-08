@@ -27,8 +27,6 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar, cilCheckAlt } from "@coreui/icons";
 
-import {headers} from "../../constants";
-
 import {
   convertDateFormat,
   formatDate2,
@@ -139,9 +137,7 @@ const Community = () => {
 
   const deleteAllCommunity = async () => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/community-service", {
-        headers: headers,
-      })
+      .delete(process.env.REACT_APP_API_URL + "/community-service")
       .then((response) => {
         setStatus(response);
         dispatch(
@@ -162,9 +158,7 @@ const Community = () => {
   };
   const fetchCommunity = async () => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/community-service", {
-        headers: headers,
-      })
+      .get(process.env.REACT_APP_API_URL + "/community-service")
       .then((response) => {
         setItems(response.data);
       })
@@ -181,9 +175,7 @@ const Community = () => {
   };
   const fetchOneCommunity = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/community-service/" + id, {
-        headers: headers,
-      })
+      .get(process.env.REACT_APP_API_URL + "/community-service/" + id)
       .then((response) => {
         setFormData({
           ...formData,
@@ -205,16 +197,12 @@ const Community = () => {
   };
   const addCommunity = async () => {
     await axios
-      .post(
-        process.env.REACT_APP_API_URL + "/community-service",
-        {
-          event: formData.event,
-          time: formData.time,
-          description: formData.description,
-          external: formData.external,
-        },
-        { headers: headers }
-      )
+      .post(process.env.REACT_APP_API_URL + "/community-service", {
+        event: formData.event,
+        time: formData.time,
+        description: formData.description,
+        external: formData.external,
+      })
       .then((response) => {
         const event = response.data.event;
 
@@ -240,16 +228,12 @@ const Community = () => {
   };
   const editCommunity = async (id) => {
     await axios
-      .put(
-        process.env.REACT_APP_API_URL + "/community-service/" + id,
-        {
-          event: formData.event,
-          time: formData.time,
-          description: formData.description,
-          external: formData.external,
-        },
-        { headers: headers }
-      )
+      .put(process.env.REACT_APP_API_URL + "/community-service/" + id, {
+        event: formData.event,
+        time: formData.time,
+        description: formData.description,
+        external: formData.external,
+      })
       .then((response) => {
         setStatus(response);
         dispatch(
@@ -270,9 +254,7 @@ const Community = () => {
   };
   const deleteCommunity = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/community-service/" + id, {
-        headers: headers,
-      })
+      .delete(process.env.REACT_APP_API_URL + "/community-service/" + id)
       .then((response) => {
         setStatus(response);
         dispatch(

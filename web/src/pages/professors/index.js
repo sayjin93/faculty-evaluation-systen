@@ -27,8 +27,6 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
-import { headers } from "../../constants";
-
 import { convertDateFormat, renderHeader } from "src/hooks";
 import { setModal } from "../../store/reducers/modalSlice";
 import { showToast } from "../../store/reducers/toastSlice";
@@ -118,9 +116,7 @@ const Professors = () => {
 
   const deleteAllProfessors = async () => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/professors", {
-        headers: headers,
-      })
+      .delete(process.env.REACT_APP_API_URL + "/professors")
       .then((response) => {
         setStatus(response);
         dispatch(
@@ -141,7 +137,7 @@ const Professors = () => {
   };
   const fetchProfessors = async () => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/professors", { headers: headers })
+      .get(process.env.REACT_APP_API_URL + "/professors")
       .then((response) => {
         setItems(response.data);
       })
@@ -153,14 +149,18 @@ const Professors = () => {
           })
         );
 
-        if (error.response.status === 401) navigate("/login");
+        if (error.response.status === 401) {
+          // Remove the JWT token from the Local Storage
+          // localStorage.removeItem("jwt_token");
+
+          // Redirect the user to the login page
+          navigate("/login", { replace: true });
+        }
       });
   };
   const fetchOneProfessor = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/professors/" + id, {
-        headers: headers,
-      })
+      .get(process.env.REACT_APP_API_URL + "/professors/" + id)
       .then((response) => {
         setFormData({
           ...formData,
@@ -181,15 +181,11 @@ const Professors = () => {
   };
   const addProfessor = async () => {
     await axios
-      .post(
-        process.env.REACT_APP_API_URL + "/professors",
-        {
-          firstname: formData.firstname,
-          lastname: formData.lastname,
-          gender: formData.gender,
-        },
-        { headers: headers }
-      )
+      .post(process.env.REACT_APP_API_URL + "/professors", {
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        gender: formData.gender,
+      })
       .then((response) => {
         const firstName = response.data.first_name;
         const lastName = response.data.last_name;
@@ -218,15 +214,11 @@ const Professors = () => {
   };
   const editProfessor = async (id) => {
     await axios
-      .put(
-        process.env.REACT_APP_API_URL + "/professors/" + id,
-        {
-          firstname: formData.firstname,
-          lastname: formData.lastname,
-          gender: formData.gender,
-        },
-        { headers: headers }
-      )
+      .put(process.env.REACT_APP_API_URL + "/professors/" + id, {
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        gender: formData.gender,
+      })
       .then((response) => {
         setStatus(response);
         dispatch(
@@ -247,9 +239,7 @@ const Professors = () => {
   };
   const deleteProfessor = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/professors/" + id, {
-        headers: headers,
-      })
+      .delete(process.env.REACT_APP_API_URL + "/professors/" + id)
       .then((response) => {
         setStatus(response);
         dispatch(

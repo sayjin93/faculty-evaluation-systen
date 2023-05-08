@@ -10,7 +10,6 @@ import {
   CRow,
 } from "@coreui/react";
 import axios from "axios";
-import { headers } from "src/constants";
 
 const SelectBoxProfessors = () => {
   //#region constants
@@ -42,9 +41,7 @@ const SelectBoxProfessors = () => {
   };
   const findOneProfessors = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/professors/" + id, {
-        headers: headers,
-      })
+      .get(process.env.REACT_APP_API_URL + "/professors/" + id)
       .then((response) => {
         // setItems(response.data);
         alert(response.data.first_name);
@@ -65,9 +62,7 @@ const SelectBoxProfessors = () => {
   useEffect(() => {
     const fetchProfessors = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/professors", {
-          headers: headers,
-        })
+        .get(process.env.REACT_APP_API_URL + "/professors")
         .then((response) => {
           setItems(response.data);
         })

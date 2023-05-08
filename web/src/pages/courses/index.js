@@ -28,8 +28,6 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
-import {headers} from "../../constants";
-
 import { convertDateFormat, renderHeader } from "src/hooks";
 import { setModal } from "../../store/reducers/modalSlice";
 import { showToast } from "../../store/reducers/toastSlice";
@@ -128,9 +126,7 @@ const Courses = () => {
 
   const deleteAllCourses = async () => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/courses", {
-        headers: headers,
-      })
+      .delete(process.env.REACT_APP_API_URL + "/courses")
       .then((response) => {
         setStatus(response);
         dispatch(
@@ -151,7 +147,7 @@ const Courses = () => {
   };
   const fetchCourses = async () => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/courses", { headers: headers })
+      .get(process.env.REACT_APP_API_URL + "/courses")
       .then((response) => {
         setItems(response.data);
       })
@@ -168,9 +164,7 @@ const Courses = () => {
   };
   const fetchOneCourse = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/courses/" + id, {
-        headers: headers,
-      })
+      .get(process.env.REACT_APP_API_URL + "/courses/" + id)
       .then((response) => {
         setFormData({
           ...formData,
@@ -193,17 +187,13 @@ const Courses = () => {
   };
   const addCourse = async () => {
     await axios
-      .post(
-        process.env.REACT_APP_API_URL + "/courses",
-        {
-          name: formData.courseName,
-          number: formData.courseNumber,
-          semester: formData.semester,
-          week_hours: formData.weekHours,
-          program: formData.program,
-        },
-        { headers: headers }
-      )
+      .post(process.env.REACT_APP_API_URL + "/courses", {
+        name: formData.courseName,
+        number: formData.courseNumber,
+        semester: formData.semester,
+        week_hours: formData.weekHours,
+        program: formData.program,
+      })
       .then((response) => {
         const courseName = response.data.name;
 
@@ -226,17 +216,13 @@ const Courses = () => {
   };
   const editCourse = async (id) => {
     await axios
-      .put(
-        process.env.REACT_APP_API_URL + "/courses/" + id,
-        {
-          name: formData.courseName,
-          number: formData.courseNumber,
-          semester: formData.semester,
-          week_hours: formData.weekHours,
-          program: formData.program,
-        },
-        { headers: headers }
-      )
+      .put(process.env.REACT_APP_API_URL + "/courses/" + id, {
+        name: formData.courseName,
+        number: formData.courseNumber,
+        semester: formData.semester,
+        week_hours: formData.weekHours,
+        program: formData.program,
+      })
       .then((response) => {
         setStatus(response);
         dispatch(
@@ -257,9 +243,7 @@ const Courses = () => {
   };
   const deleteCourse = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/courses/" + id, {
-        headers: headers,
-      })
+      .delete(process.env.REACT_APP_API_URL + "/courses/" + id)
       .then((response) => {
         setStatus(response);
         dispatch(

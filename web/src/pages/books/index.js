@@ -28,13 +28,7 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
 
-import {headers} from "../../constants";
-
-import {
-  convertDateFormat,
-  formatDateFromSQL,
-  renderHeader,
-} from "src/hooks";
+import { convertDateFormat, formatDateFromSQL, renderHeader } from "src/hooks";
 import { setModal } from "../../store/reducers/modalSlice";
 import { showToast } from "../../store/reducers/toastSlice";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
@@ -137,9 +131,7 @@ const Books = () => {
 
   const deleteAllBooks = async () => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/books", {
-        headers: headers,
-      })
+      .delete(process.env.REACT_APP_API_URL + "/books")
       .then((response) => {
         setStatus(response);
         dispatch(
@@ -160,7 +152,7 @@ const Books = () => {
   };
   const fetchBooks = async () => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/books", { headers: headers })
+      .get(process.env.REACT_APP_API_URL + "/books")
       .then((response) => {
         setItems(response.data);
       })
@@ -177,9 +169,7 @@ const Books = () => {
   };
   const fetchOneBook = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/books/" + id, {
-        headers: headers,
-      })
+      .get(process.env.REACT_APP_API_URL + "/books/" + id)
       .then((response) => {
         setFormData({
           ...formData,
@@ -201,16 +191,12 @@ const Books = () => {
   };
   const addBook = async () => {
     await axios
-      .post(
-        process.env.REACT_APP_API_URL + "/books",
-        {
-          title: formData.title,
-          publication_house: formData.publicationHouse,
-          publication_year: formData.publicationYear,
-          authors: formData.authors,
-        },
-        { headers: headers }
-      )
+      .post(process.env.REACT_APP_API_URL + "/books", {
+        title: formData.title,
+        publication_house: formData.publicationHouse,
+        publication_year: formData.publicationYear,
+        authors: formData.authors,
+      })
       .then((response) => {
         const title = response.data.title;
 
@@ -233,16 +219,12 @@ const Books = () => {
   };
   const editBook = async (id) => {
     await axios
-      .put(
-        process.env.REACT_APP_API_URL + "/books/" + id,
-        {
-          title: formData.title,
-          publication_house: formData.publicationHouse,
-          publication_year: formData.publicationYear,
-          authors: formData.authors,
-        },
-        { headers: headers }
-      )
+      .put(process.env.REACT_APP_API_URL + "/books/" + id, {
+        title: formData.title,
+        publication_house: formData.publicationHouse,
+        publication_year: formData.publicationYear,
+        authors: formData.authors,
+      })
       .then((response) => {
         setStatus(response);
         dispatch(
@@ -263,9 +245,7 @@ const Books = () => {
   };
   const deleteBook = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/books/" + id, {
-        headers: headers,
-      })
+      .delete(process.env.REACT_APP_API_URL + "/books/" + id)
       .then((response) => {
         setStatus(response);
         dispatch(

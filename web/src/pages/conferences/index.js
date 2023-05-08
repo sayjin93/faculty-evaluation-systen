@@ -27,8 +27,6 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
-import {headers} from "../../constants";
-
 import { convertDateFormat, renderHeader } from "src/hooks";
 import { setModal } from "../../store/reducers/modalSlice";
 import { showToast } from "../../store/reducers/toastSlice";
@@ -127,9 +125,7 @@ const Conferences = () => {
 
   const deleteAllConferences = async () => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/conferences", {
-        headers: headers,
-      })
+      .delete(process.env.REACT_APP_API_URL + "/conferences")
       .then((response) => {
         setStatus(response);
         dispatch(
@@ -150,7 +146,7 @@ const Conferences = () => {
   };
   const fetchConferences = async () => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/conferences", { headers: headers })
+      .get(process.env.REACT_APP_API_URL + "/conferences")
       .then((response) => {
         setItems(response.data);
       })
@@ -167,9 +163,7 @@ const Conferences = () => {
   };
   const fefetchOneConference = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/conferences/" + id, {
-        headers: headers,
-      })
+      .get(process.env.REACT_APP_API_URL + "/conferences/" + id)
       .then((response) => {
         setFormData({
           ...formData,
@@ -192,17 +186,13 @@ const Conferences = () => {
   };
   const addConference = async () => {
     await axios
-      .post(
-        process.env.REACT_APP_API_URL + "/conferences",
-        {
-          name: formData.name,
-          location: formData.location,
-          present_title: formData.presentTitle,
-          authors: formData.authors,
-          dates: formData.dates,
-        },
-        { headers: headers }
-      )
+      .post(process.env.REACT_APP_API_URL + "/conferences", {
+        name: formData.name,
+        location: formData.location,
+        present_title: formData.presentTitle,
+        authors: formData.authors,
+        dates: formData.dates,
+      })
       .then((response) => {
         const name = response.data.name;
 
@@ -225,17 +215,13 @@ const Conferences = () => {
   };
   const editConference = async (id) => {
     await axios
-      .put(
-        process.env.REACT_APP_API_URL + "/conferences/" + id,
-        {
-          name: formData.name,
-          location: formData.location,
-          present_title: formData.presentTitle,
-          authors: formData.authors,
-          dates: formData.dates,
-        },
-        { headers: headers }
-      )
+      .put(process.env.REACT_APP_API_URL + "/conferences/" + id, {
+        name: formData.name,
+        location: formData.location,
+        present_title: formData.presentTitle,
+        authors: formData.authors,
+        dates: formData.dates,
+      })
       .then((response) => {
         setStatus(response);
         dispatch(
@@ -256,9 +242,7 @@ const Conferences = () => {
   };
   const deleteConference = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/conferences/" + id, {
-        headers: headers,
-      })
+      .delete(process.env.REACT_APP_API_URL + "/conferences/" + id)
       .then((response) => {
         setStatus(response);
         dispatch(

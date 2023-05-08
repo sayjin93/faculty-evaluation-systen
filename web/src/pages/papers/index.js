@@ -27,8 +27,6 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
 
-import {headers} from "../../constants";
-
 import { convertDateFormat, renderHeader } from "src/hooks";
 import { setModal } from "../../store/reducers/modalSlice";
 import { showToast } from "../../store/reducers/toastSlice";
@@ -128,9 +126,7 @@ const Papers = () => {
 
   const deleteAllPapers = async () => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/papers", {
-        headers: headers,
-      })
+      .delete(process.env.REACT_APP_API_URL + "/papers")
       .then((response) => {
         setStatus(response);
         dispatch(
@@ -151,7 +147,7 @@ const Papers = () => {
   };
   const fetchPapers = async () => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/papers", { headers: headers })
+      .get(process.env.REACT_APP_API_URL + "/papers")
       .then((response) => {
         setItems(response.data);
       })
@@ -168,9 +164,7 @@ const Papers = () => {
   };
   const fetchOnePaper = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/papers/" + id, {
-        headers: headers,
-      })
+      .get(process.env.REACT_APP_API_URL + "/papers/" + id)
       .then((response) => {
         setFormData({
           ...formData,
@@ -191,15 +185,11 @@ const Papers = () => {
   };
   const addPaper = async () => {
     await axios
-      .post(
-        process.env.REACT_APP_API_URL + "/papers",
-        {
-          title: formData.title,
-          journal: formData.journal,
-          publication: formData.publication,
-        },
-        { headers: headers }
-      )
+      .post(process.env.REACT_APP_API_URL + "/papers", {
+        title: formData.title,
+        journal: formData.journal,
+        publication: formData.publication,
+      })
       .then((response) => {
         const title = response.data.title;
 
@@ -222,15 +212,11 @@ const Papers = () => {
   };
   const editPaper = async (id) => {
     await axios
-      .put(
-        process.env.REACT_APP_API_URL + "/papers/" + id,
-        {
-          title: formData.title,
-          journal: formData.journal,
-          publication: formData.publication,
-        },
-        { headers: headers }
-      )
+      .put(process.env.REACT_APP_API_URL + "/papers/" + id, {
+        title: formData.title,
+        journal: formData.journal,
+        publication: formData.publication,
+      })
       .then((response) => {
         setStatus(response);
         dispatch(
@@ -251,9 +237,7 @@ const Papers = () => {
   };
   const deletePaper = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/papers/" + id, {
-        headers: headers,
-      })
+      .delete(process.env.REACT_APP_API_URL + "/papers/" + id)
       .then((response) => {
         setStatus(response);
         dispatch(
