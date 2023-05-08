@@ -6,7 +6,6 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     dialect: process.env.DB_DIALECT,
-    operatorsAliases: false,
     pool: {
       max: 5,
       min: 0,
