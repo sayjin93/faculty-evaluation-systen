@@ -356,7 +356,7 @@ const Community = () => {
             onChange={(event) => handleInputChange(event, "event")}
           />
 
-          <label className="form-label">{t("Time")}</label>
+          <label className="form-label">{t("Date")}</label>
           <div className="input-group flex-nowrap mb-3">
             <span className="input-group-text">
               <CIcon icon={cilCalendar} />

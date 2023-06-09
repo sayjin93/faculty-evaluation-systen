@@ -329,9 +329,7 @@ const Courses = () => {
       >
         <CModalHeader>
           <CModalTitle>
-            {modalOptions.editMode
-              ? t("Edit") + " " + t("Course")
-              : t("Add") + " " + t("New") + " " + t("Course")}
+            {modalOptions.editMode ? t("Edit") : t("Add")}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>

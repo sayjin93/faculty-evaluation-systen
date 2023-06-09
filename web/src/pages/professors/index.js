@@ -323,9 +323,7 @@ const Professors = () => {
       >
         <CModalHeader>
           <CModalTitle>
-            {modalOptions.editMode
-              ? t("Edit") + " " + t("Professor")
-              : t("Add") + " " + t("New") + " " + t("Professor")}
+            {modalOptions.editMode ? t("Edit") : t("Add")}
           </CModalTitle>
         </CModalHeader>
 
