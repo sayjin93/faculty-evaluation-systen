@@ -10,21 +10,25 @@ import {
   CRow,
 } from "@coreui/react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { changeProfessorSelected } from "../store";
 
-const SelectBoxProfessors = () => {
+const SelectBoxProfessors = ({ modal = false }) => {
   //#region constants
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   //#endregion
 
   //#region states
   const [items, setItems] = useState([]);
-  const [selectId, setSelectId] = useState();
   //#endregion
 
   //#region functions
   const RenderOptions = () => {
     return (
       <>
+        {!modal && <option>{t("All")}</option>}
+
         {items.map((professor) => {
           const fullName = professor.first_name + " " + professor.last_name;
           return (
@@ -36,25 +40,8 @@ const SelectBoxProfessors = () => {
       </>
     );
   };
-  const handleChange = (e) => {
-    alert("Profesori u ndryshua");
-  };
-  const findOneProfessors = async (id) => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/professors/" + id)
-      .then((response) => {
-        // setItems(response.data);
-        alert(response.data.first_name);
-        // reload()
-      })
-      .catch((error) => {
-        // navigate("/login");
-        alert("No result");
-        console.log(error);
-      });
-  };
-  const handleIdChanged = (event) => {
-    setSelectId(event.target.value);
+  const handleChange = (event) => {
+    dispatch(changeProfessorSelected(event.target.value));
   };
   //#endregion
 
@@ -64,7 +51,13 @@ const SelectBoxProfessors = () => {
       await axios
         .get(process.env.REACT_APP_API_URL + "/professors")
         .then((response) => {
+          //set list of professors on state
           setItems(response.data);
+
+          //set the first professor id as selected
+          if (modal && response.data.length > 0) {
+            dispatch(changeProfessorSelected(response.data[0].id));
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -76,35 +69,14 @@ const SelectBoxProfessors = () => {
   //#endregion
 
   return (
-    <>
-      <CRow>
-        <CCol>
-          <CButton color="dark" onClick={() => findOneProfessors(selectId)}>
-            Find
-          </CButton>
-        </CCol>
-        <CCol>
-          <CFormInput
-            type="text"
-            floatingClassName="mb-3"
-            floatingLabel="id"
-            placeholder="id"
-            value={selectId}
-            onChange={handleIdChanged}
-          />
-        </CCol>
-      </CRow>
-
-      <CInputGroup className="mb-3">
-        <CInputGroupText component="label" htmlFor="inputGroupSelect01">
-          {t("ChooseProfessor")}
-        </CInputGroupText>
-        <CFormSelect id="inputGroupSelect01" onChange={handleChange}>
-          <option>{t("All")}</option>
-          <RenderOptions />
-        </CFormSelect>
-      </CInputGroup>
-    </>
+    <CInputGroup className="mb-3">
+      <CInputGroupText component="label">
+        {t("ChooseProfessor")}
+      </CInputGroupText>
+      <CFormSelect onChange={handleChange}>
+        <RenderOptions />
+      </CFormSelect>
+    </CInputGroup>
   );
 };
 

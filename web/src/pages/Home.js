@@ -195,34 +195,43 @@ const Home = () => {
   ];
   //#endregion
 
-  //#region functions
-  const fetchAcademicYears = async () => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/academic-year")
-      .then((response) => {
-        // Find the object with "active" set to true
-        const activeObject = response.data.find((obj) => obj.active === true);
-
-        dispatch(changeAcademicYear(activeObject));
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error.response.statusText,
-          })
-        );
-
-        if (error.response.status === 401) {
-          // Redirect the user to the login page
-          navigate("/login", { replace: true });
-        }
-      });
-  };
-  //#endregion
-
   //#region useEffect
   useEffect(() => {
+    const fetchAcademicYears = async () => {
+      await axios
+        .get(process.env.REACT_APP_API_URL + "/academic-year")
+        .then((response) => {
+          // Find the object with "active" set to true
+          const activeObject = response.data.find((obj) => obj.active === true);
+
+          dispatch(changeAcademicYear(activeObject));
+        })
+        .catch((error) => {
+          if (error.code === "ERR_NETWORK") {
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.message,
+              })
+            );
+          } else if (error.code === "ERR_BAD_REQUEST") {
+            // Remove the JWT token from the Local Storage
+            localStorage.removeItem("jwt_token");
+
+            // Redirect the user to the login page
+            navigate("/login", { replace: true });
+
+            // Show alert
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.response.statusText,
+              })
+            );
+          }
+        });
+    };
+
     fetchAcademicYears();
   }, []);
   //#endregion

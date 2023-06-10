@@ -59,27 +59,6 @@ const Settings = () => {
       options: { path: "/" },
     });
   };
-  const fetchAcademicYears = async () => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/academic-year")
-      .then((response) => {
-        setAcademicYear(response.data);
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error.response.statusText,
-          })
-        );
-
-        if (error.response.status === 401) {
-          // Redirect the user to the login page
-          navigate("/login", { replace: true });
-        }
-      });
-  };
-
   const addAcademicYear = async () => {
     await axios
       .post(process.env.REACT_APP_API_URL + "/academic-year", {
@@ -135,6 +114,38 @@ const Settings = () => {
 
   //#region useEffect
   useEffect(() => {
+    const fetchAcademicYears = async () => {
+      await axios
+        .get(process.env.REACT_APP_API_URL + "/academic-year")
+        .then((response) => {
+          setAcademicYear(response.data);
+        })
+        .catch((error) => {
+          if (error.code === "ERR_NETWORK") {
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.message,
+              })
+            );
+          } else if (error.code === "ERR_BAD_REQUEST") {
+            // Remove the JWT token from the Local Storage
+            localStorage.removeItem("jwt_token");
+
+            // Redirect the user to the login page
+            navigate("/login", { replace: true });
+
+            // Show alert
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.response.statusText,
+              })
+            );
+          }
+        });
+    };
+
     fetchAcademicYears();
   }, [status]);
   //#endregion

@@ -4,7 +4,11 @@ import storage from "redux-persist/lib/storage";
 
 //slices
 import { modalReducer, setModal } from "./slices/modalSlice";
-import { settingsReducer, changeAcademicYear } from "./slices/settingsSlice";
+import {
+  settingsReducer,
+  changeAcademicYear,
+  changeProfessorSelected,
+} from "./slices/settingsSlice";
 import { sidebarReducer, changeState } from "./slices/sidebarSlice";
 import { toastReducer, showToast, hideToast } from "./slices/toastSlice";
 
@@ -45,6 +49,7 @@ export {
   store,
   setModal,
   changeAcademicYear,
+  changeProfessorSelected,
   changeState,
   showToast,
   hideToast,

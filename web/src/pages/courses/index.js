@@ -41,8 +41,8 @@ const Courses = () => {
   const defaultFormData = {
     courseName: "",
     courseNumber: "",
-    semester: "",
-    weekHours: "",
+    semester: 0,
+    weekHours: 0,
     program: "",
   };
   //#endregion
@@ -56,8 +56,16 @@ const Courses = () => {
     selectedId: -1,
     disabled: true,
   });
-  // @ts-ignore
-  const modal = useSelector((state) => state.modal.modal);
+
+  const { modal, academicYearId, professorId } = useSelector((state) => ({
+    // @ts-ignore
+    modal: state.modal.modal,
+    // @ts-ignore
+    academicYearId: state.settings.academicYear.id,
+    // @ts-ignore
+    professorId: state.settings.professorId,
+  }));
+
   //#endregion
 
   //#region functions
@@ -123,67 +131,6 @@ const Courses = () => {
     });
   };
 
-  const deleteAllCourses = async () => {
-    await axios
-      .delete(process.env.REACT_APP_API_URL + "/courses")
-      .then((response) => {
-        setStatus(response);
-        dispatch(
-          showToast({
-            type: "success",
-            content: "All courses are deleted successful!",
-          })
-        );
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
-  const fetchCourses = async () => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/courses")
-      .then((response) => {
-        setItems(response.data);
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error.response.statusText,
-          })
-        );
-
-        if (error.response.status === 401) navigate("/login");
-      });
-  };
-  const fetchOneCourse = async (id) => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/courses/" + id)
-      .then((response) => {
-        setFormData({
-          ...formData,
-          courseName: response.data.name,
-          courseNumber: response.data.number,
-          semester: response.data.semester,
-          weekHours: response.data.week_hours,
-          program: response.data.program,
-        });
-        dispatch(setModal(true));
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
   const addCourse = async () => {
     await axios
       .post(process.env.REACT_APP_API_URL + "/courses", {
@@ -192,6 +139,8 @@ const Courses = () => {
         semester: formData.semester,
         week_hours: formData.weekHours,
         program: formData.program,
+        academic_year_id: academicYearId,
+        professor_id: professorId,
       })
       .then((response) => {
         const courseName = response.data.name;
@@ -221,6 +170,7 @@ const Courses = () => {
         semester: formData.semester,
         week_hours: formData.weekHours,
         program: formData.program,
+        professor_id: professorId,
       })
       .then((response) => {
         setStatus(response);
@@ -265,6 +215,38 @@ const Courses = () => {
 
   //#region useEffect
   useEffect(() => {
+    const fetchCourses = async () => {
+      await axios
+        .get(process.env.REACT_APP_API_URL + "/courses")
+        .then((response) => {
+          setItems(response.data);
+        })
+        .catch((error) => {
+          if (error.code === "ERR_NETWORK") {
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.message,
+              })
+            );
+          } else if (error.code === "ERR_BAD_REQUEST") {
+            // Remove the JWT token from the Local Storage
+            localStorage.removeItem("jwt_token");
+
+            // Redirect the user to the login page
+            navigate("/login", { replace: true });
+
+            // Show alert
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.response.statusText,
+              })
+            );
+          }
+        });
+    };
+
     fetchCourses();
   }, [status]);
 
@@ -274,14 +256,10 @@ const Courses = () => {
       disabled:
         formData.courseName === "" ||
         formData.courseNumber === "" ||
-        formData.semester === "" ||
-        formData.weekHours === "",
+        formData.semester === 0 ||
+        formData.weekHours === 0,
     });
   }, [formData]);
-
-  useEffect(() => {
-    if (modalOptions.editMode) fetchOneCourse(modalOptions.selectedId);
-  }, [modalOptions.editMode]);
   //#endregion
 
   return (
@@ -295,16 +273,6 @@ const Courses = () => {
           </CButton>
         </CContainer>
       </CHeader>
-
-      <div id="temporary" className="mb-2">
-        <CRow>
-          <CCol>
-            <CButton color="dark" onClick={() => deleteAllCourses()}>
-              Delete All
-            </CButton>
-          </CCol>
-        </CRow>
-      </div>
 
       <SelectBoxProfessors />
 
@@ -350,10 +318,12 @@ const Courses = () => {
           />
           <CFormInput
             type="number"
+            min={1}
+            max={2}
             floatingClassName="mb-3"
             floatingLabel={t("Semester")}
             placeholder={t("Semester")}
-            value={formData.semester}
+            value={formData.semester === 0 ? "" : formData.semester}
             onChange={(event) => handleInputChange(event, "semester")}
           />
           <CFormInput
@@ -361,7 +331,7 @@ const Courses = () => {
             floatingClassName="mb-3"
             floatingLabel={t("WeekHours")}
             placeholder={t("WeekHours")}
-            value={formData.weekHours}
+            value={formData.weekHours === 0 ? "" : formData.weekHours}
             onChange={(event) => handleInputChange(event, "weekHours")}
           />
           <CFormSelect
@@ -372,6 +342,7 @@ const Courses = () => {
             <option value="Bachelor">{t("Bachelor")}</option>
             <option value="Master">{t("Master")}</option>
           </CFormSelect>
+          <SelectBoxProfessors modal />
         </CModalBody>
         <CModalFooter>
           <CButton

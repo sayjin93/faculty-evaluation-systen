@@ -143,23 +143,6 @@ const Conferences = () => {
         );
       });
   };
-  const fetchConferences = async () => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/conferences")
-      .then((response) => {
-        setItems(response.data);
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error.response.statusText,
-          })
-        );
-
-        if (error.response.status === 401) navigate("/login");
-      });
-  };
   const fefetchOneConference = async (id) => {
     await axios
       .get(process.env.REACT_APP_API_URL + "/conferences/" + id)
@@ -264,6 +247,38 @@ const Conferences = () => {
 
   //#region useEffect
   useEffect(() => {
+    const fetchConferences = async () => {
+      await axios
+        .get(process.env.REACT_APP_API_URL + "/conferences")
+        .then((response) => {
+          setItems(response.data);
+        })
+        .catch((error) => {
+          if (error.code === "ERR_NETWORK") {
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.message,
+              })
+            );
+          } else if (error.code === "ERR_BAD_REQUEST") {
+            // Remove the JWT token from the Local Storage
+            localStorage.removeItem("jwt_token");
+        
+            // Redirect the user to the login page
+            navigate("/login", { replace: true });
+        
+            // Show alert
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.response.statusText,
+              })
+            );
+          }
+        });
+    };
+    
     fetchConferences();
   }, [status]);
 

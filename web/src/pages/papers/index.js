@@ -144,23 +144,7 @@ const Papers = () => {
         );
       });
   };
-  const fetchPapers = async () => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/papers")
-      .then((response) => {
-        setItems(response.data);
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error.response.statusText,
-          })
-        );
 
-        if (error.response.status === 401) navigate("/login");
-      });
-  };
   const fetchOnePaper = async (id) => {
     await axios
       .get(process.env.REACT_APP_API_URL + "/papers/" + id)
@@ -259,8 +243,39 @@ const Papers = () => {
 
   //#region useEffect
   useEffect(() => {
+    const fetchPapers = async () => {
+      await axios
+        .get(process.env.REACT_APP_API_URL + "/papers")
+        .then((response) => {
+          setItems(response.data);
+        })
+        .catch((error) => {
+          if (error.code === "ERR_NETWORK") {
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.message,
+              })
+            );
+          } else if (error.code === "ERR_BAD_REQUEST") {
+            // Remove the JWT token from the Local Storage
+            localStorage.removeItem("jwt_token");
+
+            // Redirect the user to the login page
+            navigate("/login", { replace: true });
+
+            // Show alert
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.response.statusText,
+              })
+            );
+          }
+        });
+    };
+
     fetchPapers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   useEffect(() => {

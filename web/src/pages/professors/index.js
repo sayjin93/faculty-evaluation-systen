@@ -53,55 +53,69 @@ const Professors = () => {
 
   //#region functions
   const RenderTableBody = () => {
-    return (
-      <CTableBody>
-        {items.map((element) => {
-          const id = element.id;
-          let gender = element.gender === "m" ? t("Male") : t("Female");
-          let createdAt = element.createdAt
-            ? convertDateFormat(element.createdAt)
-            : null;
-          let updatedAt = element.updatedAt
-            ? convertDateFormat(element.updatedAt)
-            : null;
+    if (items.length > 0) {
+      return (
+        <CTableBody>
+          {items.map((element) => {
+            const id = element.id;
+            let gender = element.gender === "m" ? t("Male") : t("Female");
+            let createdAt = element.createdAt
+              ? convertDateFormat(element.createdAt)
+              : null;
+            let updatedAt = element.updatedAt
+              ? convertDateFormat(element.updatedAt)
+              : null;
 
-          return (
-            <CTableRow key={id}>
-              <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
-              <CTableDataCell>{element.first_name}</CTableDataCell>
-              <CTableDataCell>{element.last_name}</CTableDataCell>
-              <CTableDataCell>{gender}</CTableDataCell>
-              <CTableDataCell>{createdAt}</CTableDataCell>
-              <CTableDataCell>{updatedAt}</CTableDataCell>
-              <CTableDataCell>
-                <CButtonGroup role="group" aria-label="Basic example" size="sm">
-                  <CButton
-                    color="primary"
-                    variant="outline"
-                    onClick={() => {
-                      setModalOptions({
-                        ...modalOptions,
-                        editMode: true,
-                        selectedId: id,
-                      });
-                    }}
+            return (
+              <CTableRow key={id}>
+                <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
+                <CTableDataCell>{element.first_name}</CTableDataCell>
+                <CTableDataCell>{element.last_name}</CTableDataCell>
+                <CTableDataCell>{gender}</CTableDataCell>
+                <CTableDataCell>{createdAt}</CTableDataCell>
+                <CTableDataCell>{updatedAt}</CTableDataCell>
+                <CTableDataCell>
+                  <CButtonGroup
+                    role="group"
+                    aria-label="Basic example"
+                    size="sm"
                   >
-                    <CIcon icon={cilPen} />
-                  </CButton>
-                  <CButton
-                    color="danger"
-                    variant="outline"
-                    onClick={() => deleteProfessor(id)}
-                  >
-                    <CIcon icon={cilTrash} />
-                  </CButton>
-                </CButtonGroup>
-              </CTableDataCell>
-            </CTableRow>
-          );
-        })}
-      </CTableBody>
-    );
+                    <CButton
+                      color="primary"
+                      variant="outline"
+                      onClick={() => {
+                        setModalOptions({
+                          ...modalOptions,
+                          editMode: true,
+                          selectedId: id,
+                        });
+                      }}
+                    >
+                      <CIcon icon={cilPen} />
+                    </CButton>
+                    <CButton
+                      color="danger"
+                      variant="outline"
+                      onClick={() => deleteProfessor(id)}
+                    >
+                      <CIcon icon={cilTrash} />
+                    </CButton>
+                  </CButtonGroup>
+                </CTableDataCell>
+              </CTableRow>
+            );
+          })}
+        </CTableBody>
+      );
+    } else {
+      return (
+        <CTableBody>
+          <CTableRow>
+            <CTableHeaderCell>No data to display</CTableHeaderCell>
+          </CTableRow>
+        </CTableBody>
+      );
+    }
   };
 
   const handleInputChange = (event, fieldName) => {
@@ -111,29 +125,6 @@ const Professors = () => {
     });
   };
 
-  const fetchProfessors = async () => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/professors")
-      .then((response) => {
-        setItems(response.data);
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error.response.statusText,
-          })
-        );
-
-        if (error.response.status === 401) {
-          // Remove the JWT token from the Local Storage
-          // localStorage.removeItem("jwt_token");
-
-          // Redirect the user to the login page
-          navigate("/login", { replace: true });
-        }
-      });
-  };
   const fetchOneProfessor = async (id) => {
     await axios
       .get(process.env.REACT_APP_API_URL + "/professors/" + id)
@@ -239,6 +230,38 @@ const Professors = () => {
 
   //#region useEffect
   useEffect(() => {
+    const fetchProfessors = async () => {
+      await axios
+        .get(process.env.REACT_APP_API_URL + "/professors")
+        .then((response) => {
+          setItems(response.data);
+        })
+        .catch((error) => {
+          if (error.code === "ERR_NETWORK") {
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.message,
+              })
+            );
+          } else if (error.code === "ERR_BAD_REQUEST") {
+            // Remove the JWT token from the Local Storage
+            localStorage.removeItem("jwt_token");
+
+            // Redirect the user to the login page
+            navigate("/login", { replace: true });
+
+            // Show alert
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.response.statusText,
+              })
+            );
+          }
+        });
+    };
+
     fetchProfessors();
   }, [status]);
 

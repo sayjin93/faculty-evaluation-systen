@@ -74,7 +74,6 @@ const LoginPage = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
         dispatch(
           showToast({
             type: "danger",
