@@ -106,6 +106,31 @@ const Settings = () => {
         );
       });
   };
+
+  const updateActiveStatus = async (item) => {
+    const { id, year } = item;
+
+    await axios
+      .put(process.env.REACT_APP_API_URL + "/academic-year/active/" + id)
+      .then((response) => {
+        setStatus(response);
+
+        dispatch(
+          showToast({
+            type: "success",
+            content: "Academic Year " + year + " is set as active!",
+          })
+        );
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
   //#endregion
 
   //#region useEffect
@@ -124,12 +149,7 @@ const Settings = () => {
 
       <CRow className="align-items-start">
         <CCol>
-          <CCard
-            color="dark"
-            textColor="white"
-            className="mb-3"
-            // style={{ maxWidth: "18rem" }}
-          >
+          <CCard color="dark" textColor="white" className="mb-3">
             <CCardHeader>{t("Language")}</CCardHeader>
             <CCardBody>
               <CDropdown>
@@ -147,11 +167,17 @@ const Settings = () => {
                   )}
                 </CDropdownToggle>
                 <CDropdownMenu>
-                  <CDropdownItem onClick={() => handleLanguageChange("sq")}>
+                  <CDropdownItem
+                    className="cursor"
+                    onClick={() => handleLanguageChange("sq")}
+                  >
                     <CIcon icon={cifAl} />
                     <span className="ms-2">Shqip</span>
                   </CDropdownItem>
-                  <CDropdownItem onClick={() => handleLanguageChange("en")}>
+                  <CDropdownItem
+                    className="cursor"
+                    onClick={() => handleLanguageChange("en")}
+                  >
                     <CIcon icon={cifGb} />
                     <span className="ms-2">English</span>
                   </CDropdownItem>
@@ -162,12 +188,7 @@ const Settings = () => {
         </CCol>
 
         <CCol>
-          <CCard
-            color="dark"
-            textColor="white"
-            className="mb-3"
-            // style={{ maxWidth: "18rem" }}
-          >
+          <CCard color="dark" textColor="white" className="mb-3">
             <CCardHeader>{t("AcademicYear")}</CCardHeader>
             <CCardBody>
               <div className="flex flex-justify-between flex-gap-10">
@@ -180,8 +201,12 @@ const Settings = () => {
                     {academicYear.map((element) => {
                       return (
                         <CDropdownItem
+                          className="cursor"
                           key={element.id}
-                          onClick={() => dispatch(changeAcademicYear(element))}
+                          onClick={() => {
+                            dispatch(changeAcademicYear(element));
+                            updateActiveStatus(element);
+                          }}
                         >
                           <span className="ms-2">{element.year}</span>
                         </CDropdownItem>

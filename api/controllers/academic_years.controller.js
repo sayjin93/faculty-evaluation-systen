@@ -91,6 +91,43 @@ exports.update = (req, res) => {
     });
 };
 
+// Update the active property of all Academic Years
+exports.updateActiveStatus = (req, res) => {
+  const activeId = req.params.id;
+
+  // Set the active property to false for all rows except the specified id
+  AcademicYears.update(
+    { active: false },
+    { where: { id: { [db.Sequelize.Op.ne]: activeId } } }
+  )
+    .then((num) => {
+      if (num > 0) {
+        // Set the active property to true for the specified id
+        AcademicYears.update({ active: true }, { where: { id: activeId } })
+          .then(() => {
+            res.send({
+              message: "Academic Year active status updated successfully.",
+            });
+          })
+          .catch((err) => {
+            res.status(500).send({
+              message: "Error updating Academic Year active status.",
+            });
+          });
+      } else {
+        res.send({
+          message:
+            "No Academic Years found to update the active status. Make sure the specified id exists.",
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Error updating Academic Year active status.",
+      });
+    });
+};
+
 // Delete a Academic Year with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;

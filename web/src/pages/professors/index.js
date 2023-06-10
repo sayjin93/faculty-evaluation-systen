@@ -197,6 +197,7 @@ const Professors = () => {
       })
       .then((response) => {
         setStatus(response);
+
         dispatch(
           showToast({
             type: "success",

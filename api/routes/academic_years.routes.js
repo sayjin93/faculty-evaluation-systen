@@ -18,6 +18,9 @@ module.exports = (app) => {
   // Update a Academic Year with id
   router.put("/:id", auth, academic_years.update);
 
+  // Update the active status of academic years
+  router.put("/active/:id", auth, academic_years.updateActiveStatus);
+
   // Delete a Academic Year with id
   router.delete("/:id", auth, academic_years.delete);
 
