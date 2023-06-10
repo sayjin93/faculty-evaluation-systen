@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
@@ -196,11 +196,10 @@ const Home = () => {
   //#endregion
 
   //#region functions
-  const fetchAcademicYears = useCallback(async () => {
+  const fetchAcademicYears = async () => {
     await axios
       .get(process.env.REACT_APP_API_URL + "/academic-year")
       .then((response) => {
-        debugger;
         // Find the object with "active" set to true
         const activeObject = response.data.find((obj) => obj.active === true);
 
@@ -219,13 +218,13 @@ const Home = () => {
           navigate("/login", { replace: true });
         }
       });
-  }, [dispatch, navigate]);
+  };
   //#endregion
 
   //#region useEffect
   useEffect(() => {
     fetchAcademicYears();
-  }, [fetchAcademicYears]);
+  }, []);
   //#endregion
 
   return (

@@ -33,14 +33,11 @@ const Register = () => {
     repeatPassword: "",
   });
 
-  console.log(user);
-
   const [toast, setToast] = useState({
     color: "",
     content: "",
     visible: false,
   });
-
   //#endregion
 
   //#region functions
@@ -52,7 +49,7 @@ const Register = () => {
     });
   };
 
-  const handleRegister = async (event) => {
+  const handleRegister = async () => {
     try {
       // Send a POST request to the '/api/users' endpoint with the user data
       await axios

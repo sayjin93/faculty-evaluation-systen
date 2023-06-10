@@ -29,8 +29,7 @@ import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
 import { convertDateFormat, renderHeader } from "src/hooks";
-import { setModal } from "../../store/slices/modalSlice";
-import { showToast } from "../../store/slices/toastSlice";
+import { setModal, showToast } from "../../store";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 
 const Courses = () => {

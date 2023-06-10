@@ -27,14 +27,8 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar, cilCheckAlt } from "@coreui/icons";
 
-import {
-  convertDateFormat,
-  formatDate2,
-  formatDateFromSQL,
-  renderHeader,
-} from "src/hooks";
-import { setModal } from "../../store/slices/modalSlice";
-import { showToast } from "../../store/slices/toastSlice";
+import { convertDateFormat, formatDate2, renderHeader } from "src/hooks";
+import { setModal, showToast } from "../../store";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 
 import "flatpickr/dist/themes/airbnb.css";
@@ -63,10 +57,9 @@ const Community = () => {
     selectedId: -1,
     disabled: true,
   });
+
   // @ts-ignore
   const modal = useSelector((state) => state.modal.modal);
-  // @ts-ignore
-  const toast = useSelector((state) => state.modal.toast);
   //#endregion
 
   //#region functions

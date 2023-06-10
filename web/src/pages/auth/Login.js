@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { setCookie } from "src/hooks";
-import { showToast } from "../../store/slices/toastSlice";
+import { showToast } from "../../store";
 
 import {
   CButton,

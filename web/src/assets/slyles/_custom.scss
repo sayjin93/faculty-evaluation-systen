@@ -1,4 +1,7 @@
 // Here you can add other styles
+body {
+  min-width: 290px;
+}
 .wrapper {
   width: 100%;
   @include ltr-rtl("padding-left", var(--cui-sidebar-occupy-start, 0));
@@ -24,4 +27,20 @@
 
 .cursor {
   cursor: pointer;
+}
+
+.flex {
+  display: flex;
+
+  &-justify {
+    &-between {
+      justify-content: space-between;
+    }
+  }
+
+  &-gap {
+    &-10 {
+      gap: 10px;
+    }
+  }
 }
