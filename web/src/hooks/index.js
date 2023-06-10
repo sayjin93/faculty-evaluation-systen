@@ -94,7 +94,6 @@ export function renderHeader(items) {
               if (element === "id") thead = "#";
               if (element === "professor_id") return null;
               if (element === "academic_year_id") return null;
-              if (element === "scientific_work_id") return null;
 
               return (
                 <CTableHeaderCell key={element} scope="col">

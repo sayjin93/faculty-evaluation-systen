@@ -1,75 +1,134 @@
-# Faculty Evaluation Ssysten
+# Faculty Evaluation System API Documentation
 
-This system is designed to collect data about faculty members related to the teaching load, scientific work and community services the perform to advance UET name and reputation.
+This is the server side API for a Faculty Evaluation System. It is built with Node.js and uses Express.js as the web framework and Sequelize ORM for handling database operations with a MySQL database.
 
-## Available Scripts
+## Setup and Installation
 
-In the project directory, you can run:
+1. Clone the repository:
 
-### `npm start`
+```bash
+git clone <repository-url>
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2. Navigate into the project directory:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+cd <project-directory>
+```
 
-### `npm test`
+3. Install dependencies:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm install
+```
 
-### `npm run build`
+4. Set up environment variables:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Create a `.env` file in the project root directory and provide values for the following variables:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+DB_NAME=your_db_name
+DB_USER=your_db_user
+DB_PASSWORD=your_db_password
+DB_HOST=your_db_host
+DB_DIALECT=mysql
+API_PORT=4000
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+5. Run the server:
 
-### `npm run eject`
+```bash
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## API Structure
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The API is structured around resources like academic years, books, community services, conferences, courses, papers, professors, and users.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Directory Structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The directory structure of the project is as follows:
 
-## Learn More
+```
+- config/
+  - authenticate.js
+- controllers/
+  - academic_years_controller.js
+  - books_controller.js
+  - community_services_controller.js
+  - conferences_controller.js
+  - courses_controller.js
+  - papers_controller.js
+  - professors_controller.js
+  - users_controller.js
+- models/
+  - index.js
+  - academic_years_model.js
+  - books_model.js
+  - community_services_model.js
+  - conferences_model.js
+  - courses_model.js
+  - papers_model.js
+  - professors_model.js
+  - users_model.js
+- routes/
+  - academic_years_routes.js
+  - books_routes.js
+  - community_services_routes.js
+  - conferences_routes.js
+  - courses_routes.js
+  - papers_routes.js
+  - professors_routes.js
+  - users_routes.js
+- seeders/
+  - 20230430010919-users.js
+- .env
+- server.js
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Models and Associations
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- `AcademicYears`: Represents the academic years.
+- `Books`: Represents the books authored by professors. Associated with `Professors` and `AcademicYears`.
+- `CommunityServices`: Represents the community services done by professors. Associated with `Professors` and `AcademicYears`.
+- `Conferences`: Represents the conferences attended by professors. Associated with `Professors` and `AcademicYears`.
+- `Courses`: Represents the courses taught by professors. Associated with `Professors` and `AcademicYears`.
+- `Papers`: Represents the research papers published by professors. Associated with `Professors` and `AcademicYears`.
+- `Professors`: Represents the professors.
+- `Users`: Represents the system users.
 
-### Code Splitting
+## Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Academic Years
 
-### Analyzing the Bundle Size
+- `GET /academic_years`: Get all academic years.
+- `GET /academic_years/:id`: Get a specific academic year.
+- `POST /academic_years`: Create a new academic year.
+- `PUT /academic_years/:id`: Update a specific academic year.
+- `DELETE /academic_years/:id`: Delete a specific academic year.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Books
 
-### Making a Progressive Web App
+- `GET /books`: Get all books.
+- `GET /books/:id`: Get a specific book.
+- `POST /books`: Create a new book.
+- `PUT /books/:id`: Update a specific book.
+- `DELETE /books/:id`: Delete a specific book.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+(Note: Replace `books` with other resources like `community_services`, `conferences`, `courses`, `papers`, `professors`, `users` to access those respective endpoints)
 
-### Advanced Configuration
+## Testing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Tests are yet to be implemented for this API.
 
-### `npm run build` fails to minify
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+To contribute to this project, please follow the [GitHub Flow](https://guides.github.com/introduction/flow/).
 
-### Count Row Numbers
+## License
 
-To count the number of rows of code in a GitHub repository, you can use the git command-line tool and run the following command in the terminal:
-`git ls-files | xargs wc -l`
+This project is licensed under the ISC License.
+
+Please replace `<repository-url>` and `<project-directory>` with the actual URL of your repository and the directory of your project.

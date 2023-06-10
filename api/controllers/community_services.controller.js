@@ -17,8 +17,8 @@ exports.create = (req, res) => {
     time: req.body.time,
     description: req.body.description,
     external: req.body.external,
-    academic_year_id: req.body.academic_year_id,
-    preofessor_id: req.body.preofessor_id,
+    academic_year_id: req.body.academic_year_id || new Date(),
+    professor_id: req.body.professor_id,
   };
 
   // Save Tutorial in the database

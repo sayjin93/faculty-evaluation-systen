@@ -29,7 +29,6 @@ const modelNames = [
   "courses",
   "papers",
   "professors",
-  "scientific_works",
   "users",
 ];
 for (let modelName of modelNames) {
@@ -38,23 +37,21 @@ for (let modelName of modelNames) {
 }
 
 // Setting up associations between models using foreign key constraints
-db.courses.belongsTo(db.professors, { foreignKey: "professor_id" });
-db.courses.belongsTo(db.academic_years, { foreignKey: "academic_year_id" });
+db.books.belongsTo(db.professors, { foreignKey: "professor_id" });
+db.books.belongsTo(db.academic_years, { foreignKey: "academic_year_id" });
 
 db.community_services.belongsTo(db.professors, { foreignKey: "professor_id" });
 db.community_services.belongsTo(db.academic_years, {
   foreignKey: "academic_year_id",
 });
 
-db.scientific_works.belongsTo(db.academic_years, {
-  foreignKey: "academic_year_id",
-});
-db.scientific_works.belongsTo(db.professors, { foreignKey: "professor_id" });
+db.conferences.belongsTo(db.professors, { foreignKey: "professor_id" });
+db.conferences.belongsTo(db.academic_years, { foreignKey: "academic_year_id" });
 
-db.books.belongsTo(db.scientific_works, { foreignKey: "scientific_work_id" });
-db.papers.belongsTo(db.scientific_works, { foreignKey: "scientific_work_id" });
-db.conferences.belongsTo(db.scientific_works, {
-  foreignKey: "scientific_work_id",
-});
+db.courses.belongsTo(db.professors, { foreignKey: "professor_id" });
+db.courses.belongsTo(db.academic_years, { foreignKey: "academic_year_id" });
+
+db.papers.belongsTo(db.professors, { foreignKey: "professor_id" });
+db.papers.belongsTo(db.academic_years, { foreignKey: "academic_year_id" });
 
 module.exports = db;

@@ -15,7 +15,10 @@ module.exports = (sequelize, Sequelize) => {
     dates: {
       type: Sequelize.STRING,
     },
-    scientific_work_id: {
+    academic_year_id: {
+      type: Sequelize.INTEGER,
+    },
+    professor_id: {
       type: Sequelize.INTEGER,
     },
   });

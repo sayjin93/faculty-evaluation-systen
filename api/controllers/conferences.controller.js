@@ -18,7 +18,8 @@ exports.create = (req, res) => {
     present_title: req.body.present_title,
     authors: req.body.authors,
     dates: req.body.dates,
-    scientific_work_id: req.body.scientific_work_id,
+    academic_year_id: req.body.academic_year_id || new Date(),
+    professor_id: req.body.professor_id,
   };
 
   // Save Conferences in the database

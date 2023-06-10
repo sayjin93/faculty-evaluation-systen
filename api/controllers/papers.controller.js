@@ -16,7 +16,8 @@ exports.create = (req, res) => {
     title: req.body.title,
     journal: req.body.journal,
     publication: req.body.publication,
-    scientific_year_id: req.body.scientific_year_id || new Date(),
+    academic_year_id: req.body.academic_year_id || new Date(),
+    professor_id: req.body.professor_id,
   };
 
   // Save Papers in the database

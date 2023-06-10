@@ -7,10 +7,23 @@ dotenv.config();
 
 // Connect database
 const db = require("./models");
+const usersSeed = require("./seeders/users_seed");
+const academicYearsSeed = require("./seeders/academic_year_seed");
+
 db.sequelize
   .sync({ alter: true })
   .then(() => {
     console.log("Database synced successfully.");
+
+    // Call all seed functions
+    return Promise.all([
+      usersSeed(db.sequelize.getQueryInterface(), db.Sequelize),
+      academicYearsSeed(db.sequelize.getQueryInterface(), db.Sequelize),
+      // Add more seed functions here as needed...
+    ]);
+  })
+  .then(() => {
+    console.log("Seeding completed successfully.");
   })
   .catch((error) => {
     console.error("Error syncing database: ", error);
@@ -26,7 +39,7 @@ app.use(cors());
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to jk web-app." });
+  res.json({ message: "Welcome to jk WebApp." });
 });
 
 require("./routes/academic_years.routes")(app);
@@ -36,7 +49,6 @@ require("./routes/conferences.routes")(app);
 require("./routes/courses.routes")(app);
 require("./routes/papers.routes")(app);
 require("./routes/professors.routes")(app);
-require("./routes/scientific_works.routes")(app);
 require("./routes/users.routes")(app);
 
 // set port, listen for requests

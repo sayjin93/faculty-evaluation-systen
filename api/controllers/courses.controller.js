@@ -18,7 +18,7 @@ exports.create = (req, res) => {
     semester: req.body.semester,
     week_hours: req.body.week_hours,
     program: req.body.program,
-    academic_year_id: req.body.academic_year_id,
+    academic_year_id: req.body.academic_year_id || new Date(),
     professor_id: req.body.professor_id,
   };
 
@@ -144,7 +144,8 @@ exports.findAllPublished = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Coursess.",
+        message:
+          err.message || "Some error occurred while retrieving Coursess.",
       });
     });
 };

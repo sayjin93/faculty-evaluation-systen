@@ -292,7 +292,7 @@ const Professors = () => {
         </CContainer>
       </CHeader>
 
-      <div id="temporary" className="mb-2">
+      {/* <div id="temporary" className="mb-2">
         <CRow>
           <CCol>
             <CButton color="dark" onClick={() => deleteAllProfessors()}>
@@ -300,7 +300,7 @@ const Professors = () => {
             </CButton>
           </CCol>
         </CRow>
-      </div>
+      </div> */}
 
       <CTable responsive striped hover align="middle">
         {renderHeader(items)}
