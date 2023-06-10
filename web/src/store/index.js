@@ -20,8 +20,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ['settings'] // only navigation will be persisted
-
+  whitelist: ["settings"], // only navigation will be persisted
 };
 
 // Create the persisted reducer
@@ -30,6 +29,12 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 // Configure the store with the persisted reducer
 const store = configureStore({
   reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST"],
+      },
+    }),
 });
 
 // Create the persistor
