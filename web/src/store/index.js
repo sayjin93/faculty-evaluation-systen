@@ -1,18 +1,41 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+
+//slices
 import { modalReducer, setModal } from "./slices/modalSlice";
 import { settingsReducer, changeAcademicYear } from "./slices/settingsSlice";
 import { sidebarReducer, changeState } from "./slices/sidebarSlice";
 import { toastReducer, showToast, hideToast } from "./slices/toastSlice";
 
-const store = configureStore({
-  reducer: {
-    modal: modalReducer,
-    settings: settingsReducer,
-    sidebar: sidebarReducer,
-    toast: toastReducer,
-  },
+// Combine all your reducers using combineReducers
+const rootReducer = combineReducers({
+  modal: modalReducer,
+  settings: settingsReducer,
+  sidebar: sidebarReducer,
+  toast: toastReducer,
 });
 
+// Configure redux-persist
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ['settings'] // only navigation will be persisted
+
+};
+
+// Create the persisted reducer
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+// Configure the store with the persisted reducer
+const store = configureStore({
+  reducer: persistedReducer,
+});
+
+// Create the persistor
+export const persistor = persistStore(store);
+
+// Export your actions
 export {
   store,
   setModal,

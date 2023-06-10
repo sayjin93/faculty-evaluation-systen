@@ -50,18 +50,18 @@ const AppHeaderDropdown = () => {
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-light fw-semibold py-2">
-          {t("Settings")}
+          {t("UserMenu")}
         </CDropdownHeader>
-        <CDropdownItem href="#">
+        <CDropdownItem className="cursor">
           <CIcon icon={cilUser} className="me-2" />
           {t("Profile")}
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem className="cursor" onClick={() => navigate("/settings")}>
           <CIcon icon={cilSettings} className="me-2" />
           {t("Settings")}
         </CDropdownItem>
         <CDropdownDivider />
-        <CDropdownItem href="#" onClick={logout}>
+        <CDropdownItem className="cursor" onClick={logout}>
           <CIcon icon={cilLockLocked} className="me-2" />
           {t("Logout")}
         </CDropdownItem>
