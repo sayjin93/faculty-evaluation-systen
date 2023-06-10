@@ -47,7 +47,7 @@ const Settings = () => {
 
   const [academicYear, setAcademicYear] = useState([]);
   const [status, setStatus] = useState(null);
-  const [newAcademicYear, setNewAcademicYear] = useState(null);
+  const [newAcademicYear, setNewAcademicYear] = useState("");
   //#endregion
 
   //#region functions
@@ -257,7 +257,7 @@ const Settings = () => {
             {t("Close")}
           </CButton>
           <CButton
-            disabled={!academicYear}
+            disabled={newAcademicYear.length === 0}
             onClick={() => {
               addAcademicYear();
               dispatch(setModal(false));
