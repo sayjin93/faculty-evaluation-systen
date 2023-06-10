@@ -1,15 +1,18 @@
+import "./assets/slyles/App.scss";
+
 import React, { Suspense, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+
 import { CSpinner } from "@coreui/react";
+import ToastComponent from "./components/Toast";
 import { getCookie, isNullOrUndefined } from "./hooks";
 import AppRoutes from "./routes";
-import "./assets/slyles/App.scss";
-import ToastComponent from "./components/Toast";
 
 function App() {
   //#region constants
   const { i18n } = useTranslation();
+
   // @ts-ignore
   const toast = useSelector((state) => state.toast);
   //#endregion
@@ -22,7 +25,7 @@ function App() {
     if (i18n.language !== languageCookie) {
       i18n.changeLanguage(languageCookie);
     }
-  });
+  }, [i18n]);
   //#endregion
 
   return (

@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { CContainer, CHeader, CHeaderBrand, CTable } from "@coreui/react";
+import { CContainer, CHeader, CHeaderBrand } from "@coreui/react";
 
 const Reports = () => {
   //#region constants
@@ -15,9 +15,7 @@ const Reports = () => {
         </CContainer>
       </CHeader>
 
-      {/* <CTable responsive striped hover align="middle"> */}
-        <p>Work in progress</p>
-      {/* </CTable> */}
+      <p>Work in progress</p>
     </>
   );
 };

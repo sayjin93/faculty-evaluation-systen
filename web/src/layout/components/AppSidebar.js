@@ -6,7 +6,7 @@ import "simplebar-react/dist/simplebar.min.css";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
-import { changeState } from "../../store/reducers/sidebarSlice";
+import { changeState } from "../../store/slices/sidebarSlice";
 
 //components
 import { AppSidebarNav } from "./AppSidebarNav";

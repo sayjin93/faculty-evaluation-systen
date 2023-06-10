@@ -14,7 +14,7 @@ import {
 } from "@coreui/react";
 import { cilLockLocked, cilSettings, cilUser } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
-import { showToast } from "src/store/reducers/toastSlice";
+import { showToast } from "src/store/slices/toastSlice";
 
 const AppHeaderDropdown = () => {
   //#region constants

@@ -28,8 +28,8 @@ import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
 
 import { convertDateFormat, renderHeader } from "src/hooks";
-import { setModal } from "../../store/reducers/modalSlice";
-import { showToast } from "../../store/reducers/toastSlice";
+import { setModal } from "../../store/slices/modalSlice";
+import { showToast } from "../../store/slices/toastSlice";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 
 import "flatpickr/dist/themes/airbnb.css";
@@ -261,6 +261,7 @@ const Papers = () => {
   //#region useEffect
   useEffect(() => {
     fetchPapers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   useEffect(() => {

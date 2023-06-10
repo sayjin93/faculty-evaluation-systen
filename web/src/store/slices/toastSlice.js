@@ -25,5 +25,4 @@ const toastSlice = createSlice({
 });
 
 export const { showToast, hideToast } = toastSlice.actions;
-
-export default toastSlice.reducer;
+export const toastReducer = toastSlice.reducer;

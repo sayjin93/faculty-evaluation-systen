@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { CToaster, CToast, CToastBody, CToastClose } from "@coreui/react";
-import { hideToast } from "../store/reducers/toastSlice";
+import { hideToast } from "../store/slices/toastSlice";
 
 const ToastComponent = ({ type, content, visible }) => {
   const dispatch = useDispatch();

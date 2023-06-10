@@ -14,5 +14,4 @@ const sidebarSlice = createSlice({
 });
 
 export const { changeState } = sidebarSlice.actions;
-
-export default sidebarSlice.reducer;
+export const sidebarReducer = sidebarSlice.reducer;

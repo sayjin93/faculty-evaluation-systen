@@ -6,7 +6,6 @@ import axios from "axios";
 import {
   CButton,
   CButtonGroup,
-  CCol,
   CContainer,
   CFormInput,
   CFormSelect,
@@ -17,7 +16,6 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CRow,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -28,8 +26,8 @@ import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
 import { convertDateFormat, renderHeader } from "src/hooks";
-import { setModal } from "../../store/reducers/modalSlice";
-import { showToast } from "../../store/reducers/toastSlice";
+import { setModal } from "../../store/slices/modalSlice";
+import { showToast } from "../../store/slices/toastSlice";
 import { useNavigate } from "react-router-dom";
 
 const Professors = () => {
@@ -114,27 +112,6 @@ const Professors = () => {
     });
   };
 
-  const deleteAllProfessors = async () => {
-    await axios
-      .delete(process.env.REACT_APP_API_URL + "/professors")
-      .then((response) => {
-        setStatus(response);
-        dispatch(
-          showToast({
-            type: "success",
-            content: "All professors are deleted successful!",
-          })
-        );
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
   const fetchProfessors = async () => {
     await axios
       .get(process.env.REACT_APP_API_URL + "/professors")
@@ -291,16 +268,6 @@ const Professors = () => {
           </CButton>
         </CContainer>
       </CHeader>
-
-      {/* <div id="temporary" className="mb-2">
-        <CRow>
-          <CCol>
-            <CButton color="dark" onClick={() => deleteAllProfessors()}>
-              Delete All
-            </CButton>
-          </CCol>
-        </CRow>
-      </div> */}
 
       <CTable responsive striped hover align="middle">
         {renderHeader(items)}

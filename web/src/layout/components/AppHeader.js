@@ -2,7 +2,7 @@ import React from "react";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
-import { changeState } from "../../store/reducers/sidebarSlice";
+import { changeState } from "../../store/slices/sidebarSlice";
 
 import {
   CContainer,

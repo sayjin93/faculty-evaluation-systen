@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { showToast, changeAcademicYear } from "../store";
 
 import {
   CAvatar,
@@ -18,8 +22,6 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from "@coreui/react";
-import { CChartLine } from "@coreui/react-chartjs";
-import { getStyle, hexToRgba } from "@coreui/utils";
 import CIcon from "@coreui/icons-react";
 import {
   cibCcAmex,
@@ -55,9 +57,12 @@ import WidgetsBrand from "../widgets/WidgetsBrand";
 import WidgetsDropdown from "../widgets/WidgetsDropdown";
 
 const Home = () => {
-  const random = (min, max) =>
-    Math.floor(Math.random() * (max - min + 1) + min);
+  //#region constants
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  //#endregion
 
+  //#region data
   const progressExample = [
     { title: "Visits", value: "29.703 Users", percent: 40, color: "success" },
     { title: "Unique", value: "24.093 Users", percent: 20, color: "info" },
@@ -188,6 +193,40 @@ const Home = () => {
       activity: "Last week",
     },
   ];
+  //#endregion
+
+  //#region functions
+  const fetchAcademicYears = useCallback(async () => {
+    await axios
+      .get(process.env.REACT_APP_API_URL + "/academic-year")
+      .then((response) => {
+        debugger;
+        // Find the object with "active" set to true
+        const activeObject = response.data.find((obj) => obj.active === true);
+
+        dispatch(changeAcademicYear(activeObject));
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error.response.statusText,
+          })
+        );
+
+        if (error.response.status === 401) {
+          // Redirect the user to the login page
+          navigate("/login", { replace: true });
+        }
+      });
+  }, [dispatch, navigate]);
+  //#endregion
+
+  //#region useEffect
+  useEffect(() => {
+    fetchAcademicYears();
+  }, [fetchAcademicYears]);
+  //#endregion
 
   return (
     <>
@@ -222,98 +261,6 @@ const Home = () => {
               </CButtonGroup>
             </CCol>
           </CRow>
-          <CChartLine
-            style={{ height: "300px", marginTop: "40px" }}
-            data={{
-              labels: [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-              ],
-              datasets: [
-                {
-                  label: "My First dataset",
-                  backgroundColor: hexToRgba(getStyle("--cui-info"), 10),
-                  borderColor: getStyle("--cui-info"),
-                  pointHoverBackgroundColor: getStyle("--cui-info"),
-                  borderWidth: 2,
-                  data: [
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                  ],
-                  fill: true,
-                },
-                {
-                  label: "My Second dataset",
-                  backgroundColor: "transparent",
-                  borderColor: getStyle("--cui-success"),
-                  pointHoverBackgroundColor: getStyle("--cui-success"),
-                  borderWidth: 2,
-                  data: [
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                  ],
-                },
-                {
-                  label: "My Third dataset",
-                  backgroundColor: "transparent",
-                  borderColor: getStyle("--cui-danger"),
-                  pointHoverBackgroundColor: getStyle("--cui-danger"),
-                  borderWidth: 1,
-                  borderDash: [8, 5],
-                  data: [65, 65, 65, 65, 65, 65, 65],
-                },
-              ],
-            }}
-            options={{
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  display: false,
-                },
-              },
-              scales: {
-                x: {
-                  grid: {
-                    drawOnChartArea: false,
-                  },
-                },
-                y: {
-                  ticks: {
-                    beginAtZero: true,
-                    maxTicksLimit: 5,
-                    stepSize: Math.ceil(250 / 5),
-                    max: 250,
-                  },
-                },
-              },
-              elements: {
-                line: {
-                  tension: 0.4,
-                },
-                point: {
-                  radius: 0,
-                  hitRadius: 10,
-                  hoverRadius: 4,
-                  hoverBorderWidth: 3,
-                },
-              },
-            }}
-          />
         </CCardBody>
         <CCardFooter>
           <CRow xs={{ cols: 1 }} md={{ cols: 5 }} className="text-center">

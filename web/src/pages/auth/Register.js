@@ -26,10 +26,14 @@ const Register = () => {
   //#endregion
 
   //#region states
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
+  const [user, setUser] = useState({
+    username: "",
+    email: "",
+    password: "",
+    repeatPassword: "",
+  });
+
+  console.log(user);
 
   const [toast, setToast] = useState({
     color: "",
@@ -51,36 +55,36 @@ const Register = () => {
   const handleRegister = async (event) => {
     try {
       // Send a POST request to the '/api/users' endpoint with the user data
-      const response = await axios
+      await axios
         .post(process.env.REACT_APP_API_URL + "/users", {
-          username,
-          email,
-          password,
+          username: user.username,
+          email: user.email,
+          password: user.password,
         })
         .then((response) => {
           // Handle the success response
           callToast("success", "Account created succesfully!", true);
-          setUsername("");
-          setEmail("");
-          setPassword("");
-          setRepeatPassword("");
 
-          console.log(response);
+          setUser((prevState) => ({
+            ...prevState,
+            username: "",
+            email: "",
+            password: "",
+            repeatPassword: "",
+          }));
         });
     } catch (error) {
       // Handle any errors
       callToast("danger", error.response.data.message, true);
-
-      // console.error(error);
     }
   };
   //#endregion
 
   const isCreateAccountDisabled =
-    username === "" ||
-    email === "" ||
-    password === "" ||
-    password !== repeatPassword;
+    user.username === "" ||
+    user.email === "" ||
+    user.password === "" ||
+    user.password !== user.repeatPassword;
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -101,8 +105,13 @@ const Register = () => {
                     <CFormInput
                       type="text"
                       placeholder={t("Username")}
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
+                      value={user.username}
+                      onChange={(e) => {
+                        setUser((prevState) => ({
+                          ...prevState,
+                          username: e.target.value,
+                        }));
+                      }}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -110,9 +119,14 @@ const Register = () => {
                     <CFormInput
                       type="email"
                       placeholder={t("Email")}
-                      value={email}
+                      value={user.email}
                       size="sm"
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setUser((prevState) => ({
+                          ...prevState,
+                          email: e.target.value,
+                        }));
+                      }}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -122,8 +136,13 @@ const Register = () => {
                     <CFormInput
                       type="password"
                       placeholder={t("Password")}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      value={user.password}
+                      onChange={(e) => {
+                        setUser((prevState) => ({
+                          ...prevState,
+                          password: e.target.value,
+                        }));
+                      }}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -133,8 +152,13 @@ const Register = () => {
                     <CFormInput
                       type="password"
                       placeholder={t("RepeatPassword")}
-                      value={repeatPassword}
-                      onChange={(e) => setRepeatPassword(e.target.value)}
+                      value={user.repeatPassword}
+                      onChange={(e) => {
+                        setUser((prevState) => ({
+                          ...prevState,
+                          repeatPassword: e.target.value,
+                        }));
+                      }}
                     />
                   </CInputGroup>
                   <div className="d-grid">
