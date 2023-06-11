@@ -24,16 +24,16 @@ npm install
 
 4. Set up environment variables:
 
-Create a `.env` file in the project root directory and provide values for the following variables:
+Edit`.env` file in the project root directory and provide values for the following variables:
 
 ```
-DB_NAME=fc2
-DB_USER=root
+DB_NAME=your_db_name
+DB_USER=your_db_user
 DB_PASSWORD=your_db_password
 DB_HOST=localhost
 DB_DIALECT=mysql
 API_PORT=4000
-JWT_SECRET_KEY=jk_gfg_jwt_secret_key
+JWT_SECRET_KEY=your_jwt_secret_key
 ```
 
 5. Run the server:
@@ -117,9 +117,7 @@ The directory structure of the project is as follows:
 - `PUT /api/books/:id`: Update a specific book.
 - `DELETE /api/books/:id`: Delete a specific book.
 
-(Note: Replace
-
-`books` with other resources like `community_services`, `conferences`, `courses`, `papers`, `professors`, `users` to access those respective endpoints)
+(Note: Replace `books` with other resources like `community_services`, `conferences`, `courses`, `papers`, `professors`, `users` to access those respective endpoints)
 
 ## License
 

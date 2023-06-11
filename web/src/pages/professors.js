@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
@@ -9,6 +8,7 @@ import {
   CButtonGroup,
   CContainer,
   CFormInput,
+  CFormSelect,
   CHeader,
   CHeaderBrand,
   CModal,
@@ -23,28 +23,20 @@ import {
   CTableRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash, cilCalendar, cilCheckAlt } from "@coreui/icons";
+import { cilPen, cilTrash } from "@coreui/icons";
 
-import { convertDateFormat, formatDate2 } from "src/hooks";
-import { setModal, showToast } from "../../store";
-import SelectBoxProfessors from "src/components/SelectBoxProfessors";
-
-import "flatpickr/dist/themes/airbnb.css";
-import Flatpickr from "react-flatpickr";
+import { convertDateFormat } from "src/hooks";
+import { setModal, showToast } from "../store";
+import { useNavigate } from "react-router-dom";
 import TableHeader from "src/hooks/tableHeader";
 
-const Community = () => {
+const Professors = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const defaultFormData = {
-    event: "",
-    time: new Date(),
-    description: "",
-    external: 0,
-  };
+  const defaultFormData = { firstname: "", lastname: "", gender: "m" };
   //#endregion
 
   //#region states
@@ -56,7 +48,6 @@ const Community = () => {
     selectedId: -1,
     disabled: true,
   });
-
   // @ts-ignore
   const modal = useSelector((state) => state.modal.modal);
   //#endregion
@@ -68,12 +59,7 @@ const Community = () => {
         <CTableBody>
           {items.map((element) => {
             const id = element.id;
-            let date = element.time ? formatDate2(element.time) : null;
-            let checked = element.external ? (
-              <CIcon icon={cilCheckAlt} size="sm" />
-            ) : (
-              ""
-            );
+            let gender = element.gender === "m" ? t("Male") : t("Female");
             let createdAt = element.createdAt
               ? convertDateFormat(element.createdAt)
               : null;
@@ -84,12 +70,9 @@ const Community = () => {
             return (
               <CTableRow key={id}>
                 <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
-                <CTableDataCell>{element.event}</CTableDataCell>
-                <CTableDataCell>{date}</CTableDataCell>
-                <CTableDataCell>{element.description}</CTableDataCell>
-                <CTableDataCell className="text-center">
-                  {checked}
-                </CTableDataCell>
+                <CTableDataCell>{element.first_name}</CTableDataCell>
+                <CTableDataCell>{element.last_name}</CTableDataCell>
+                <CTableDataCell>{gender}</CTableDataCell>
                 <CTableDataCell>{createdAt}</CTableDataCell>
                 <CTableDataCell>{updatedAt}</CTableDataCell>
                 <CTableDataCell>
@@ -114,7 +97,7 @@ const Community = () => {
                     <CButton
                       color="danger"
                       variant="outline"
-                      onClick={() => deleteCommunity(id)}
+                      onClick={() => deleteProfessor(id)}
                     >
                       <CIcon icon={cilTrash} />
                     </CButton>
@@ -143,16 +126,15 @@ const Community = () => {
     });
   };
 
-  const fetchOneCommunity = async (id) => {
+  const fetchOneProfessor = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/community-service/" + id)
+      .get(process.env.REACT_APP_API_URL + "/professors/" + id)
       .then((response) => {
         setFormData({
           ...formData,
-          event: response.data.event,
-          time: response.data.time,
-          description: response.data.description,
-          external: response.data.external,
+          firstname: response.data.first_name,
+          lastname: response.data.last_name,
+          gender: response.data.gender,
         });
         dispatch(setModal(true));
       })
@@ -165,24 +147,26 @@ const Community = () => {
         );
       });
   };
-  const addCommunity = async () => {
+  const addProfessor = async () => {
     await axios
-      .post(process.env.REACT_APP_API_URL + "/community-service", {
-        event: formData.event,
-        time: formData.time,
-        description: formData.description,
-        external: formData.external,
+      .post(process.env.REACT_APP_API_URL + "/professors", {
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        gender: formData.gender,
       })
       .then((response) => {
-        const event = response.data.event;
+        const firstName = response.data.first_name;
+        const lastName = response.data.last_name;
 
         setStatus(response);
         dispatch(
           showToast({
             type: "success",
             content:
-              "Community service with title " +
-              event +
+              "Professor " +
+              firstName +
+              " " +
+              lastName +
               " was added successful!",
           })
         );
@@ -196,20 +180,20 @@ const Community = () => {
         );
       });
   };
-  const editCommunity = async (id) => {
+  const editProfessor = async (id) => {
     await axios
-      .put(process.env.REACT_APP_API_URL + "/community-service/" + id, {
-        event: formData.event,
-        time: formData.time,
-        description: formData.description,
-        external: formData.external,
+      .put(process.env.REACT_APP_API_URL + "/professors/" + id, {
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        gender: formData.gender,
       })
       .then((response) => {
         setStatus(response);
+
         dispatch(
           showToast({
             type: "success",
-            content: "Community service with id " + id + " edited successful!",
+            content: "Professor with id " + id + " edited successful!",
           })
         );
       })
@@ -222,15 +206,15 @@ const Community = () => {
         );
       });
   };
-  const deleteCommunity = async (id) => {
+  const deleteProfessor = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/community-service/" + id)
+      .delete(process.env.REACT_APP_API_URL + "/professors/" + id)
       .then((response) => {
         setStatus(response);
         dispatch(
           showToast({
             type: "success",
-            content: "Community service with id " + id + " deleted successful!",
+            content: "Professor with id " + id + " deleted successful!",
           })
         );
       })
@@ -247,9 +231,9 @@ const Community = () => {
 
   //#region useEffect
   useEffect(() => {
-    const fetchCommunity = async () => {
+    const fetchProfessors = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/community-service")
+        .get(process.env.REACT_APP_API_URL + "/professors")
         .then((response) => {
           setItems(response.data);
         })
@@ -279,23 +263,21 @@ const Community = () => {
         });
     };
 
-    fetchCommunity();
+    fetchProfessors();
   }, [status]);
 
   useEffect(() => {
     setModalOptions({
       ...modalOptions,
       disabled:
-        formData.name === "" ||
-        formData.location === "" ||
-        formData.presentTitle === null ||
-        formData.authors === "" ||
-        formData.dates === "",
+        formData.firstname === "" ||
+        formData.lastname === "" ||
+        formData.gender === "",
     });
   }, [formData]);
 
   useEffect(() => {
-    if (modalOptions.editMode) fetchOneCommunity(modalOptions.selectedId);
+    if (modalOptions.editMode) fetchOneProfessor(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion
 
@@ -303,7 +285,7 @@ const Community = () => {
     <>
       <CHeader>
         <CContainer fluid>
-          <CHeaderBrand>{t("CommunityServices")}</CHeaderBrand>
+          <CHeaderBrand>{t("Professors")}</CHeaderBrand>
 
           <CButton color="dark" onClick={() => dispatch(setModal(true))}>
             {t("Add")}
@@ -311,10 +293,9 @@ const Community = () => {
         </CContainer>
       </CHeader>
 
-      <SelectBoxProfessors />
-
       <CTable responsive striped hover align="middle">
         <TableHeader items={items} />
+
         <RenderTableBody />
       </CTable>
 
@@ -333,55 +314,37 @@ const Community = () => {
       >
         <CModalHeader>
           <CModalTitle>
-            {modalOptions.editMode
-              ? t("Edit") + " " + t("CommunityService")
-              : t("Add") + " " + t("New") + " " + t("CommunityService")}
+            {modalOptions.editMode ? t("Edit") : t("Add")}
           </CModalTitle>
         </CModalHeader>
+
         <CModalBody>
           <CFormInput
             type="text"
             floatingClassName="mb-3"
-            floatingLabel={t("Event")}
-            placeholder={t("Event")}
-            value={formData.event}
-            onChange={(event) => handleInputChange(event, "event")}
-          />
-
-          <label className="form-label">{t("Date")}</label>
-          <div className="input-group flex-nowrap mb-3">
-            <span className="input-group-text">
-              <CIcon icon={cilCalendar} />
-            </span>
-            <Flatpickr
-              className="form-control"
-              value={formData.time}
-              options={{
-                dateFormat: "d-m-Y",
-              }}
-              onChange={(dateObj) => {
-                const date = dateObj[0];
-                handleInputChange({ target: { value: date } }, "time");
-              }}
-            />
-          </div>
-          <CFormInput
-            type="text"
-            floatingClassName="mb-3"
-            floatingLabel={t("Description")}
-            placeholder={t("Description")}
-            value={formData.description}
-            onChange={(event) => handleInputChange(event, "description")}
+            floatingLabel={t("FirstName")}
+            placeholder={t("FirstName")}
+            value={formData.firstname}
+            onChange={(event) => handleInputChange(event, "firstname")}
           />
           <CFormInput
             type="text"
             floatingClassName="mb-3"
-            floatingLabel={t("External")}
-            placeholder={t("External")}
-            value={formData.external}
-            onChange={(event) => handleInputChange(event, "external")}
+            floatingLabel={t("LastName")}
+            placeholder={t("LastName")}
+            value={formData.lastname}
+            onChange={(event) => handleInputChange(event, "lastname")}
           />
+          <CFormSelect
+            floatingLabel={t("Gender")}
+            onChange={(event) => handleInputChange(event, "gender")}
+            value={formData.gender}
+          >
+            <option value="m">{t("Male")}</option>
+            <option value="f">{t("Female")}</option>
+          </CFormSelect>
         </CModalBody>
+
         <CModalFooter>
           <CButton
             color="secondary"
@@ -395,8 +358,8 @@ const Community = () => {
             disabled={modalOptions.disabled}
             onClick={() => {
               modalOptions.editMode
-                ? editCommunity(modalOptions.selectedId)
-                : addCommunity();
+                ? editProfessor(modalOptions.selectedId)
+                : addProfessor();
               dispatch(setModal(false));
             }}
           >
@@ -408,4 +371,4 @@ const Community = () => {
   );
 };
 
-export default Community;
+export default Professors;

@@ -26,7 +26,7 @@ import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
 
 import { convertDateFormat, formatDateFromSQL } from "src/hooks";
-import { setModal, showToast } from "../../store";
+import { setModal, showToast } from "../store";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 
 import "flatpickr/dist/themes/airbnb.css";

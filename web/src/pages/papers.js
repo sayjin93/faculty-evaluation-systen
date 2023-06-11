@@ -23,25 +23,26 @@ import {
   CTableRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash } from "@coreui/icons";
+import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
 
 import { convertDateFormat } from "src/hooks";
-import { setModal, showToast } from "../../store";
+import { setModal, showToast } from "../store";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
+
+import "flatpickr/dist/themes/airbnb.css";
+import Flatpickr from "react-flatpickr";
 import TableHeader from "src/hooks/tableHeader";
 
-const Conferences = () => {
+const Papers = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const defaultFormData = {
-    name: "",
-    location: "",
-    presentTitle: "",
-    authors: "",
-    dates: "",
+    title: "",
+    journal: "",
+    publication: new Date(),
   };
   //#endregion
 
@@ -65,6 +66,10 @@ const Conferences = () => {
         <CTableBody>
           {items.map((element) => {
             const id = element.id;
+
+            let publication = element.publication
+              ? convertDateFormat(element.publication, false)
+              : null;
             let createdAt = element.createdAt
               ? convertDateFormat(element.createdAt)
               : null;
@@ -75,11 +80,9 @@ const Conferences = () => {
             return (
               <CTableRow key={id}>
                 <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
-                <CTableDataCell>{element.name}</CTableDataCell>
-                <CTableDataCell>{element.location}</CTableDataCell>
-                <CTableDataCell>{element.present_title}</CTableDataCell>
-                <CTableDataCell>{element.authors}</CTableDataCell>
-                <CTableDataCell>{element.dates}</CTableDataCell>
+                <CTableDataCell>{element.title}</CTableDataCell>
+                <CTableDataCell>{element.journal}</CTableDataCell>
+                <CTableDataCell>{publication}</CTableDataCell>
                 <CTableDataCell>{createdAt}</CTableDataCell>
                 <CTableDataCell>{updatedAt}</CTableDataCell>
                 <CTableDataCell>
@@ -104,7 +107,7 @@ const Conferences = () => {
                     <CButton
                       color="danger"
                       variant="outline"
-                      onClick={() => deleteConference(id)}
+                      onClick={() => deletePaper(id)}
                     >
                       <CIcon icon={cilTrash} />
                     </CButton>
@@ -133,17 +136,15 @@ const Conferences = () => {
     });
   };
 
-  const fefetchOneConference = async (id) => {
+  const fetchOnePaper = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/conferences/" + id)
+      .get(process.env.REACT_APP_API_URL + "/papers/" + id)
       .then((response) => {
         setFormData({
           ...formData,
-          name: response.data.name,
-          location: response.data.location,
-          presentTitle: response.data.present_title,
-          authors: response.data.authors,
-          dates: response.data.dates,
+          title: response.data.title,
+          journal: response.data.journal,
+          publication: response.data.publication,
         });
         dispatch(setModal(true));
       })
@@ -156,23 +157,21 @@ const Conferences = () => {
         );
       });
   };
-  const addConference = async () => {
+  const addPaper = async () => {
     await axios
-      .post(process.env.REACT_APP_API_URL + "/conferences", {
-        name: formData.name,
-        location: formData.location,
-        present_title: formData.presentTitle,
-        authors: formData.authors,
-        dates: formData.dates,
+      .post(process.env.REACT_APP_API_URL + "/papers", {
+        title: formData.title,
+        journal: formData.journal,
+        publication: formData.publication,
       })
       .then((response) => {
-        const name = response.data.name;
+        const title = response.data.title;
 
         setStatus(response);
         dispatch(
           showToast({
             type: "success",
-            content: "Conference with name " + name + " was added successful!",
+            content: "Paper with title " + title + " was added successful!",
           })
         );
       })
@@ -185,21 +184,19 @@ const Conferences = () => {
         );
       });
   };
-  const editConference = async (id) => {
+  const editPaper = async (id) => {
     await axios
-      .put(process.env.REACT_APP_API_URL + "/conferences/" + id, {
-        name: formData.name,
-        location: formData.location,
-        present_title: formData.presentTitle,
-        authors: formData.authors,
-        dates: formData.dates,
+      .put(process.env.REACT_APP_API_URL + "/papers/" + id, {
+        title: formData.title,
+        journal: formData.journal,
+        publication: formData.publication,
       })
       .then((response) => {
         setStatus(response);
         dispatch(
           showToast({
             type: "success",
-            content: "Conference with id " + id + " edited successful!",
+            content: "Paper with id " + id + " edited successful!",
           })
         );
       })
@@ -212,15 +209,15 @@ const Conferences = () => {
         );
       });
   };
-  const deleteConference = async (id) => {
+  const deletePaper = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/conferences/" + id)
+      .delete(process.env.REACT_APP_API_URL + "/papers/" + id)
       .then((response) => {
         setStatus(response);
         dispatch(
           showToast({
             type: "success",
-            content: "Conference with id " + id + " deleted successful!",
+            content: "Paper with id " + id + " deleted successful!",
           })
         );
       })
@@ -237,9 +234,9 @@ const Conferences = () => {
 
   //#region useEffect
   useEffect(() => {
-    const fetchConferences = async () => {
+    const fetchPapers = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/conferences")
+        .get(process.env.REACT_APP_API_URL + "/papers")
         .then((response) => {
           setItems(response.data);
         })
@@ -269,23 +266,21 @@ const Conferences = () => {
         });
     };
 
-    fetchConferences();
+    fetchPapers();
   }, [status]);
 
   useEffect(() => {
     setModalOptions({
       ...modalOptions,
       disabled:
-        formData.name === "" ||
-        formData.location === "" ||
-        formData.presentTitle === null ||
-        formData.authors === "" ||
-        formData.dates === "",
+        formData.title === "" ||
+        formData.journal === "" ||
+        formData.publication === null,
     });
   }, [formData]);
 
   useEffect(() => {
-    if (modalOptions.editMode) fefetchOneConference(modalOptions.selectedId);
+    if (modalOptions.editMode) fetchOnePaper(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion
 
@@ -293,7 +288,7 @@ const Conferences = () => {
     <>
       <CHeader>
         <CContainer fluid>
-          <CHeaderBrand>{t("Conferences")}</CHeaderBrand>
+          <CHeaderBrand>{t("Papers")}</CHeaderBrand>
 
           <CButton color="dark" onClick={() => dispatch(setModal(true))}>
             {t("Add")}
@@ -324,53 +319,46 @@ const Conferences = () => {
         <CModalHeader>
           <CModalTitle>
             {modalOptions.editMode
-              ? t("Edit") + " " + t("Conference")
-              : t("Add") + " " + t("New") + " " + t("Conference")}
+              ? t("Edit") + " " + t("Paper")
+              : t("Add") + " " + t("New") + " " + t("Paper")}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CFormInput
             type="text"
             floatingClassName="mb-3"
-            floatingLabel={t("ConferenceName")}
-            placeholder={t("ConferenceName")}
-            value={formData.name}
-            onChange={(event) => handleInputChange(event, "name")}
+            floatingLabel={t("PaperTitle")}
+            placeholder={t("PaperTitle")}
+            value={formData.title}
+            onChange={(event) => handleInputChange(event, "title")}
           />
           <CFormInput
             type="text"
             floatingClassName="mb-3"
-            floatingLabel={t("Location")}
-            placeholder={t("Location")}
-            value={formData.location}
-            onChange={(event) => handleInputChange(event, "location")}
-          />
-          <CFormInput
-            type="text"
-            floatingClassName="mb-3"
-            floatingLabel={t("Dates")}
-            placeholder={t("Dates")}
-            value={formData.dates}
-            onChange={(event) => handleInputChange(event, "dates")}
+            floatingLabel={t("Journal")}
+            placeholder={t("Journal")}
+            value={formData.journal}
+            onChange={(event) => handleInputChange(event, "journal")}
           />
 
-          <CFormInput
-            type="text"
-            floatingClassName="mb-3"
-            floatingLabel={t("PresentationTitle")}
-            placeholder={t("PresentationTitle")}
-            value={formData.presentTitle}
-            onChange={(event) => handleInputChange(event, "presentTitle")}
-          />
-
-          <CFormInput
-            type="text"
-            floatingClassName="mb-3"
-            floatingLabel={t("Authors")}
-            placeholder={t("Authors")}
-            value={formData.authors}
-            onChange={(event) => handleInputChange(event, "authors")}
-          />
+          <label className="form-label">{t("Publication")}</label>
+          <div className="input-group flex-nowrap">
+            <span className="input-group-text" id="basic-addon1">
+              <CIcon icon={cilCalendar} />
+            </span>
+            <Flatpickr
+              aria-describedby="basic-addon1"
+              className="form-control"
+              value={formData.publication}
+              options={{
+                dateFormat: "d-m-Y",
+              }}
+              onChange={(dateObj) => {
+                const date = dateObj[0];
+                handleInputChange({ target: { value: date } }, "publication");
+              }}
+            />
+          </div>
         </CModalBody>
         <CModalFooter>
           <CButton
@@ -385,8 +373,8 @@ const Conferences = () => {
             disabled={modalOptions.disabled}
             onClick={() => {
               modalOptions.editMode
-                ? editConference(modalOptions.selectedId)
-                : addConference();
+                ? editPaper(modalOptions.selectedId)
+                : addPaper();
               dispatch(setModal(false));
             }}
           >
@@ -398,4 +386,4 @@ const Conferences = () => {
   );
 };
 
-export default Conferences;
+export default Papers;

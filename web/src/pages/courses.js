@@ -9,6 +9,7 @@ import {
   CButtonGroup,
   CContainer,
   CFormInput,
+  CFormSelect,
   CHeader,
   CHeaderBrand,
   CModal,
@@ -23,26 +24,25 @@ import {
   CTableRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
+import { cilPen, cilTrash } from "@coreui/icons";
 
 import { convertDateFormat } from "src/hooks";
-import { setModal, showToast } from "../../store";
+import { setModal, showToast } from "../store";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
-
-import "flatpickr/dist/themes/airbnb.css";
-import Flatpickr from "react-flatpickr";
 import TableHeader from "src/hooks/tableHeader";
 
-const Papers = () => {
+const Courses = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const defaultFormData = {
-    title: "",
-    journal: "",
-    publication: new Date(),
+    courseName: "",
+    courseNumber: "",
+    semester: 0,
+    weekHours: 0,
+    program: 1,
   };
   //#endregion
 
@@ -55,8 +55,16 @@ const Papers = () => {
     selectedId: -1,
     disabled: true,
   });
-  // @ts-ignore
-  const modal = useSelector((state) => state.modal.modal);
+
+  const { modal, academicYearId, professorId } = useSelector((state) => ({
+    // @ts-ignore
+    modal: state.modal.modal,
+    // @ts-ignore
+    academicYearId: state.settings.academicYear.id,
+    // @ts-ignore
+    professorId: state.settings.professorId,
+  }));
+
   //#endregion
 
   //#region functions
@@ -67,9 +75,8 @@ const Papers = () => {
           {items.map((element) => {
             const id = element.id;
 
-            let publication = element.publication
-              ? convertDateFormat(element.publication, false)
-              : null;
+            let program = element.program === "Bachelor" ? "Bachelor" : "MSc";
+
             let createdAt = element.createdAt
               ? convertDateFormat(element.createdAt)
               : null;
@@ -80,9 +87,12 @@ const Papers = () => {
             return (
               <CTableRow key={id}>
                 <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
-                <CTableDataCell>{element.title}</CTableDataCell>
-                <CTableDataCell>{element.journal}</CTableDataCell>
-                <CTableDataCell>{publication}</CTableDataCell>
+                <CTableDataCell>{element.name}</CTableDataCell>
+                <CTableDataCell>{element.number}</CTableDataCell>
+                <CTableDataCell>{element.semester}</CTableDataCell>
+                <CTableDataCell>{element.week_hours}</CTableDataCell>
+                <CTableDataCell>{program}</CTableDataCell>
+                <CTableDataCell>{element.professor_id}</CTableDataCell>
                 <CTableDataCell>{createdAt}</CTableDataCell>
                 <CTableDataCell>{updatedAt}</CTableDataCell>
                 <CTableDataCell>
@@ -107,7 +117,7 @@ const Papers = () => {
                     <CButton
                       color="danger"
                       variant="outline"
-                      onClick={() => deletePaper(id)}
+                      onClick={() => deleteCourse(id)}
                     >
                       <CIcon icon={cilTrash} />
                     </CButton>
@@ -136,15 +146,17 @@ const Papers = () => {
     });
   };
 
-  const fetchOnePaper = async (id) => {
+  const fetchOneCourse = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/papers/" + id)
+      .get(process.env.REACT_APP_API_URL + "/courses/" + id)
       .then((response) => {
         setFormData({
           ...formData,
-          title: response.data.title,
-          journal: response.data.journal,
-          publication: response.data.publication,
+          courseName: response.data.name,
+          courseNumber: response.data.number,
+          semester: response.data.semester,
+          weekHours: response.data.week_hours,
+          program: response.data.program,
         });
         dispatch(setModal(true));
       })
@@ -157,21 +169,25 @@ const Papers = () => {
         );
       });
   };
-  const addPaper = async () => {
+  const addCourse = async () => {
     await axios
-      .post(process.env.REACT_APP_API_URL + "/papers", {
-        title: formData.title,
-        journal: formData.journal,
-        publication: formData.publication,
+      .post(process.env.REACT_APP_API_URL + "/courses", {
+        name: formData.courseName,
+        number: formData.courseNumber,
+        semester: formData.semester,
+        week_hours: formData.weekHours,
+        program: formData.program,
+        academic_year_id: academicYearId,
+        professor_id: professorId,
       })
       .then((response) => {
-        const title = response.data.title;
+        const courseName = response.data.name;
 
         setStatus(response);
         dispatch(
           showToast({
             type: "success",
-            content: "Paper with title " + title + " was added successful!",
+            content: "Course " + courseName + " was added successful!",
           })
         );
       })
@@ -184,19 +200,23 @@ const Papers = () => {
         );
       });
   };
-  const editPaper = async (id) => {
+  const editCourse = async (id) => {
     await axios
-      .put(process.env.REACT_APP_API_URL + "/papers/" + id, {
-        title: formData.title,
-        journal: formData.journal,
-        publication: formData.publication,
+      .put(process.env.REACT_APP_API_URL + "/courses/" + id, {
+        name: formData.courseName,
+        number: formData.courseNumber,
+        semester: formData.semester,
+        week_hours: formData.weekHours,
+        program: formData.program,
+        academic_year_id: academicYearId,
+        professor_id: professorId,
       })
       .then((response) => {
         setStatus(response);
         dispatch(
           showToast({
             type: "success",
-            content: "Paper with id " + id + " edited successful!",
+            content: "Course with id " + id + " edited successful!",
           })
         );
       })
@@ -209,15 +229,15 @@ const Papers = () => {
         );
       });
   };
-  const deletePaper = async (id) => {
+  const deleteCourse = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/papers/" + id)
+      .delete(process.env.REACT_APP_API_URL + "/courses/" + id)
       .then((response) => {
         setStatus(response);
         dispatch(
           showToast({
             type: "success",
-            content: "Paper with id " + id + " deleted successful!",
+            content: "Course with id " + id + " deleted successful!",
           })
         );
       })
@@ -234,9 +254,9 @@ const Papers = () => {
 
   //#region useEffect
   useEffect(() => {
-    const fetchPapers = async () => {
+    const fetchCourses = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/papers")
+        .get(process.env.REACT_APP_API_URL + "/courses")
         .then((response) => {
           setItems(response.data);
         })
@@ -266,21 +286,23 @@ const Papers = () => {
         });
     };
 
-    fetchPapers();
+    fetchCourses();
   }, [status]);
 
   useEffect(() => {
     setModalOptions({
       ...modalOptions,
       disabled:
-        formData.title === "" ||
-        formData.journal === "" ||
-        formData.publication === null,
+        formData.courseName === "" ||
+        formData.courseNumber === "" ||
+        formData.semester < 1 ||
+        formData.semester > 2 ||
+        formData.weekHours < 1,
     });
   }, [formData]);
 
   useEffect(() => {
-    if (modalOptions.editMode) fetchOnePaper(modalOptions.selectedId);
+    if (modalOptions.editMode) fetchOneCourse(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion
 
@@ -288,7 +310,7 @@ const Papers = () => {
     <>
       <CHeader>
         <CContainer fluid>
-          <CHeaderBrand>{t("Papers")}</CHeaderBrand>
+          <CHeaderBrand>{t("Courses")}</CHeaderBrand>
 
           <CButton color="dark" onClick={() => dispatch(setModal(true))}>
             {t("Add")}
@@ -318,47 +340,55 @@ const Papers = () => {
       >
         <CModalHeader>
           <CModalTitle>
-            {modalOptions.editMode
-              ? t("Edit") + " " + t("Paper")
-              : t("Add") + " " + t("New") + " " + t("Paper")}
+            {modalOptions.editMode ? t("Edit") : t("Add")}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CFormInput
             type="text"
             floatingClassName="mb-3"
-            floatingLabel={t("PaperTitle")}
-            placeholder={t("PaperTitle")}
-            value={formData.title}
-            onChange={(event) => handleInputChange(event, "title")}
+            floatingLabel={t("CourseName")}
+            placeholder={t("CourseName")}
+            value={formData.courseName}
+            onChange={(event) => handleInputChange(event, "courseName")}
           />
           <CFormInput
             type="text"
             floatingClassName="mb-3"
-            floatingLabel={t("Journal")}
-            placeholder={t("Journal")}
-            value={formData.journal}
-            onChange={(event) => handleInputChange(event, "journal")}
+            floatingLabel={t("CourseNumber")}
+            placeholder={t("CourseNumber")}
+            value={formData.courseNumber}
+            onChange={(event) => handleInputChange(event, "courseNumber")}
           />
-
-          <label className="form-label">{t("Publication")}</label>
-          <div className="input-group flex-nowrap">
-            <span className="input-group-text" id="basic-addon1">
-              <CIcon icon={cilCalendar} />
-            </span>
-            <Flatpickr
-              aria-describedby="basic-addon1"
-              className="form-control"
-              value={formData.publication}
-              options={{
-                dateFormat: "d-m-Y",
-              }}
-              onChange={(dateObj) => {
-                const date = dateObj[0];
-                handleInputChange({ target: { value: date } }, "publication");
-              }}
-            />
-          </div>
+          <CFormInput
+            type="number"
+            min={1}
+            max={2}
+            floatingClassName="mb-3"
+            floatingLabel={`${t("Semester")} [1 ${t("Or")} 2]`}
+            placeholder={t("Semester")}
+            value={formData.semester === 0 ? "" : formData.semester}
+            onChange={(event) => handleInputChange(event, "semester")}
+          />
+          <CFormInput
+            type="number"
+            min={1}
+            floatingClassName="mb-3"
+            floatingLabel={t("WeekHours")}
+            placeholder={t("WeekHours")}
+            value={formData.weekHours === 0 ? "" : formData.weekHours}
+            onChange={(event) => handleInputChange(event, "weekHours")}
+          />
+          <CFormSelect
+            floatingClassName="mb-3"
+            floatingLabel={t("Program")}
+            onChange={(event) => handleInputChange(event, "program")}
+            value={formData.program}
+          >
+            <option value="1">{t("Bachelor")}</option>
+            <option value="2">{t("Master")}</option>
+          </CFormSelect>
+          <SelectBoxProfessors modal />
         </CModalBody>
         <CModalFooter>
           <CButton
@@ -373,8 +403,8 @@ const Papers = () => {
             disabled={modalOptions.disabled}
             onClick={() => {
               modalOptions.editMode
-                ? editPaper(modalOptions.selectedId)
-                : addPaper();
+                ? editCourse(modalOptions.selectedId)
+                : addCourse();
               dispatch(setModal(false));
             }}
           >
@@ -386,4 +416,4 @@ const Papers = () => {
   );
 };
 
-export default Papers;
+export default Courses;

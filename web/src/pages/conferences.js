@@ -9,7 +9,6 @@ import {
   CButtonGroup,
   CContainer,
   CFormInput,
-  CFormSelect,
   CHeader,
   CHeaderBrand,
   CModal,
@@ -27,22 +26,22 @@ import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
 import { convertDateFormat } from "src/hooks";
-import { setModal, showToast } from "../../store";
+import { setModal, showToast } from "../store";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import TableHeader from "src/hooks/tableHeader";
 
-const Courses = () => {
+const Conferences = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const defaultFormData = {
-    courseName: "",
-    courseNumber: "",
-    semester: 0,
-    weekHours: 0,
-    program: 1,
+    name: "",
+    location: "",
+    presentTitle: "",
+    authors: "",
+    dates: "",
   };
   //#endregion
 
@@ -55,16 +54,8 @@ const Courses = () => {
     selectedId: -1,
     disabled: true,
   });
-
-  const { modal, academicYearId, professorId } = useSelector((state) => ({
-    // @ts-ignore
-    modal: state.modal.modal,
-    // @ts-ignore
-    academicYearId: state.settings.academicYear.id,
-    // @ts-ignore
-    professorId: state.settings.professorId,
-  }));
-
+  // @ts-ignore
+  const modal = useSelector((state) => state.modal.modal);
   //#endregion
 
   //#region functions
@@ -74,9 +65,6 @@ const Courses = () => {
         <CTableBody>
           {items.map((element) => {
             const id = element.id;
-
-            let program = element.program === "Bachelor" ? "Bachelor" : "MSc";
-
             let createdAt = element.createdAt
               ? convertDateFormat(element.createdAt)
               : null;
@@ -88,11 +76,10 @@ const Courses = () => {
               <CTableRow key={id}>
                 <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
                 <CTableDataCell>{element.name}</CTableDataCell>
-                <CTableDataCell>{element.number}</CTableDataCell>
-                <CTableDataCell>{element.semester}</CTableDataCell>
-                <CTableDataCell>{element.week_hours}</CTableDataCell>
-                <CTableDataCell>{program}</CTableDataCell>
-                <CTableDataCell>{element.professor_id}</CTableDataCell>
+                <CTableDataCell>{element.location}</CTableDataCell>
+                <CTableDataCell>{element.present_title}</CTableDataCell>
+                <CTableDataCell>{element.authors}</CTableDataCell>
+                <CTableDataCell>{element.dates}</CTableDataCell>
                 <CTableDataCell>{createdAt}</CTableDataCell>
                 <CTableDataCell>{updatedAt}</CTableDataCell>
                 <CTableDataCell>
@@ -117,7 +104,7 @@ const Courses = () => {
                     <CButton
                       color="danger"
                       variant="outline"
-                      onClick={() => deleteCourse(id)}
+                      onClick={() => deleteConference(id)}
                     >
                       <CIcon icon={cilTrash} />
                     </CButton>
@@ -146,17 +133,17 @@ const Courses = () => {
     });
   };
 
-  const fetchOneCourse = async (id) => {
+  const fefetchOneConference = async (id) => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/courses/" + id)
+      .get(process.env.REACT_APP_API_URL + "/conferences/" + id)
       .then((response) => {
         setFormData({
           ...formData,
-          courseName: response.data.name,
-          courseNumber: response.data.number,
-          semester: response.data.semester,
-          weekHours: response.data.week_hours,
-          program: response.data.program,
+          name: response.data.name,
+          location: response.data.location,
+          presentTitle: response.data.present_title,
+          authors: response.data.authors,
+          dates: response.data.dates,
         });
         dispatch(setModal(true));
       })
@@ -169,25 +156,23 @@ const Courses = () => {
         );
       });
   };
-  const addCourse = async () => {
+  const addConference = async () => {
     await axios
-      .post(process.env.REACT_APP_API_URL + "/courses", {
-        name: formData.courseName,
-        number: formData.courseNumber,
-        semester: formData.semester,
-        week_hours: formData.weekHours,
-        program: formData.program,
-        academic_year_id: academicYearId,
-        professor_id: professorId,
+      .post(process.env.REACT_APP_API_URL + "/conferences", {
+        name: formData.name,
+        location: formData.location,
+        present_title: formData.presentTitle,
+        authors: formData.authors,
+        dates: formData.dates,
       })
       .then((response) => {
-        const courseName = response.data.name;
+        const name = response.data.name;
 
         setStatus(response);
         dispatch(
           showToast({
             type: "success",
-            content: "Course " + courseName + " was added successful!",
+            content: "Conference with name " + name + " was added successful!",
           })
         );
       })
@@ -200,23 +185,21 @@ const Courses = () => {
         );
       });
   };
-  const editCourse = async (id) => {
+  const editConference = async (id) => {
     await axios
-      .put(process.env.REACT_APP_API_URL + "/courses/" + id, {
-        name: formData.courseName,
-        number: formData.courseNumber,
-        semester: formData.semester,
-        week_hours: formData.weekHours,
-        program: formData.program,
-        academic_year_id: academicYearId,
-        professor_id: professorId,
+      .put(process.env.REACT_APP_API_URL + "/conferences/" + id, {
+        name: formData.name,
+        location: formData.location,
+        present_title: formData.presentTitle,
+        authors: formData.authors,
+        dates: formData.dates,
       })
       .then((response) => {
         setStatus(response);
         dispatch(
           showToast({
             type: "success",
-            content: "Course with id " + id + " edited successful!",
+            content: "Conference with id " + id + " edited successful!",
           })
         );
       })
@@ -229,15 +212,15 @@ const Courses = () => {
         );
       });
   };
-  const deleteCourse = async (id) => {
+  const deleteConference = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/courses/" + id)
+      .delete(process.env.REACT_APP_API_URL + "/conferences/" + id)
       .then((response) => {
         setStatus(response);
         dispatch(
           showToast({
             type: "success",
-            content: "Course with id " + id + " deleted successful!",
+            content: "Conference with id " + id + " deleted successful!",
           })
         );
       })
@@ -254,9 +237,9 @@ const Courses = () => {
 
   //#region useEffect
   useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchConferences = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/courses")
+        .get(process.env.REACT_APP_API_URL + "/conferences")
         .then((response) => {
           setItems(response.data);
         })
@@ -286,23 +269,23 @@ const Courses = () => {
         });
     };
 
-    fetchCourses();
+    fetchConferences();
   }, [status]);
 
   useEffect(() => {
     setModalOptions({
       ...modalOptions,
       disabled:
-        formData.courseName === "" ||
-        formData.courseNumber === "" ||
-        formData.semester < 1 ||
-        formData.semester > 2 ||
-        formData.weekHours < 1,
+        formData.name === "" ||
+        formData.location === "" ||
+        formData.presentTitle === null ||
+        formData.authors === "" ||
+        formData.dates === "",
     });
   }, [formData]);
 
   useEffect(() => {
-    if (modalOptions.editMode) fetchOneCourse(modalOptions.selectedId);
+    if (modalOptions.editMode) fefetchOneConference(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion
 
@@ -310,7 +293,7 @@ const Courses = () => {
     <>
       <CHeader>
         <CContainer fluid>
-          <CHeaderBrand>{t("Courses")}</CHeaderBrand>
+          <CHeaderBrand>{t("Conferences")}</CHeaderBrand>
 
           <CButton color="dark" onClick={() => dispatch(setModal(true))}>
             {t("Add")}
@@ -340,55 +323,54 @@ const Courses = () => {
       >
         <CModalHeader>
           <CModalTitle>
-            {modalOptions.editMode ? t("Edit") : t("Add")}
+            {modalOptions.editMode
+              ? t("Edit") + " " + t("Conference")
+              : t("Add") + " " + t("New") + " " + t("Conference")}
           </CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CFormInput
             type="text"
             floatingClassName="mb-3"
-            floatingLabel={t("CourseName")}
-            placeholder={t("CourseName")}
-            value={formData.courseName}
-            onChange={(event) => handleInputChange(event, "courseName")}
+            floatingLabel={t("ConferenceName")}
+            placeholder={t("ConferenceName")}
+            value={formData.name}
+            onChange={(event) => handleInputChange(event, "name")}
           />
           <CFormInput
             type="text"
             floatingClassName="mb-3"
-            floatingLabel={t("CourseNumber")}
-            placeholder={t("CourseNumber")}
-            value={formData.courseNumber}
-            onChange={(event) => handleInputChange(event, "courseNumber")}
+            floatingLabel={t("Location")}
+            placeholder={t("Location")}
+            value={formData.location}
+            onChange={(event) => handleInputChange(event, "location")}
           />
           <CFormInput
-            type="number"
-            min={1}
-            max={2}
+            type="text"
             floatingClassName="mb-3"
-            floatingLabel={`${t("Semester")} [1 ${t("Or")} 2]`}
-            placeholder={t("Semester")}
-            value={formData.semester === 0 ? "" : formData.semester}
-            onChange={(event) => handleInputChange(event, "semester")}
+            floatingLabel={t("Dates")}
+            placeholder={t("Dates")}
+            value={formData.dates}
+            onChange={(event) => handleInputChange(event, "dates")}
           />
+
           <CFormInput
-            type="number"
-            min={1}
+            type="text"
             floatingClassName="mb-3"
-            floatingLabel={t("WeekHours")}
-            placeholder={t("WeekHours")}
-            value={formData.weekHours === 0 ? "" : formData.weekHours}
-            onChange={(event) => handleInputChange(event, "weekHours")}
+            floatingLabel={t("PresentationTitle")}
+            placeholder={t("PresentationTitle")}
+            value={formData.presentTitle}
+            onChange={(event) => handleInputChange(event, "presentTitle")}
           />
-          <CFormSelect
+
+          <CFormInput
+            type="text"
             floatingClassName="mb-3"
-            floatingLabel={t("Program")}
-            onChange={(event) => handleInputChange(event, "program")}
-            value={formData.program}
-          >
-            <option value="1">{t("Bachelor")}</option>
-            <option value="2">{t("Master")}</option>
-          </CFormSelect>
-          <SelectBoxProfessors modal />
+            floatingLabel={t("Authors")}
+            placeholder={t("Authors")}
+            value={formData.authors}
+            onChange={(event) => handleInputChange(event, "authors")}
+          />
         </CModalBody>
         <CModalFooter>
           <CButton
@@ -403,8 +385,8 @@ const Courses = () => {
             disabled={modalOptions.disabled}
             onClick={() => {
               modalOptions.editMode
-                ? editCourse(modalOptions.selectedId)
-                : addCourse();
+                ? editConference(modalOptions.selectedId)
+                : addConference();
               dispatch(setModal(false));
             }}
           >
@@ -416,4 +398,4 @@ const Courses = () => {
   );
 };
 
-export default Courses;
+export default Conferences;
