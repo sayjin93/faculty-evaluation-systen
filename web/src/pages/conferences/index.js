@@ -63,56 +63,70 @@ const Conferences = () => {
 
   //#region functions
   const RenderTableBody = () => {
-    return (
-      <CTableBody>
-        {items.map((element) => {
-          const id = element.id;
-          let createdAt = element.createdAt
-            ? convertDateFormat(element.createdAt)
-            : null;
-          let updatedAt = element.updatedAt
-            ? convertDateFormat(element.updatedAt)
-            : null;
+    if (items.length > 0) {
+      return (
+        <CTableBody>
+          {items.map((element) => {
+            const id = element.id;
+            let createdAt = element.createdAt
+              ? convertDateFormat(element.createdAt)
+              : null;
+            let updatedAt = element.updatedAt
+              ? convertDateFormat(element.updatedAt)
+              : null;
 
-          return (
-            <CTableRow key={id}>
-              <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
-              <CTableDataCell>{element.name}</CTableDataCell>
-              <CTableDataCell>{element.location}</CTableDataCell>
-              <CTableDataCell>{element.present_title}</CTableDataCell>
-              <CTableDataCell>{element.authors}</CTableDataCell>
-              <CTableDataCell>{element.dates}</CTableDataCell>
-              <CTableDataCell>{createdAt}</CTableDataCell>
-              <CTableDataCell>{updatedAt}</CTableDataCell>
-              <CTableDataCell>
-                <CButtonGroup role="group" aria-label="Basic example" size="sm">
-                  <CButton
-                    color="primary"
-                    variant="outline"
-                    onClick={() => {
-                      setModalOptions({
-                        ...modalOptions,
-                        editMode: true,
-                        selectedId: id,
-                      });
-                    }}
+            return (
+              <CTableRow key={id}>
+                <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
+                <CTableDataCell>{element.name}</CTableDataCell>
+                <CTableDataCell>{element.location}</CTableDataCell>
+                <CTableDataCell>{element.present_title}</CTableDataCell>
+                <CTableDataCell>{element.authors}</CTableDataCell>
+                <CTableDataCell>{element.dates}</CTableDataCell>
+                <CTableDataCell>{createdAt}</CTableDataCell>
+                <CTableDataCell>{updatedAt}</CTableDataCell>
+                <CTableDataCell>
+                  <CButtonGroup
+                    role="group"
+                    aria-label="Basic example"
+                    size="sm"
                   >
-                    <CIcon icon={cilPen} />
-                  </CButton>
-                  <CButton
-                    color="danger"
-                    variant="outline"
-                    onClick={() => deleteConference(id)}
-                  >
-                    <CIcon icon={cilTrash} />
-                  </CButton>
-                </CButtonGroup>
-              </CTableDataCell>
-            </CTableRow>
-          );
-        })}
-      </CTableBody>
-    );
+                    <CButton
+                      color="primary"
+                      variant="outline"
+                      onClick={() => {
+                        setModalOptions({
+                          ...modalOptions,
+                          editMode: true,
+                          selectedId: id,
+                        });
+                      }}
+                    >
+                      <CIcon icon={cilPen} />
+                    </CButton>
+                    <CButton
+                      color="danger"
+                      variant="outline"
+                      onClick={() => deleteConference(id)}
+                    >
+                      <CIcon icon={cilTrash} />
+                    </CButton>
+                  </CButtonGroup>
+                </CTableDataCell>
+              </CTableRow>
+            );
+          })}
+        </CTableBody>
+      );
+    } else {
+      return (
+        <CTableBody>
+          <CTableRow>
+            <CTableHeaderCell>{t("NoDataToDisplay")}</CTableHeaderCell>
+          </CTableRow>
+        </CTableBody>
+      );
+    }
   };
 
   const handleInputChange = (event, fieldName) => {
@@ -264,10 +278,10 @@ const Conferences = () => {
           } else if (error.code === "ERR_BAD_REQUEST") {
             // Remove the JWT token from the Local Storage
             localStorage.removeItem("jwt_token");
-        
+
             // Redirect the user to the login page
             navigate("/login", { replace: true });
-        
+
             // Show alert
             dispatch(
               showToast({
@@ -278,7 +292,7 @@ const Conferences = () => {
           }
         });
     };
-    
+
     fetchConferences();
   }, [status]);
 

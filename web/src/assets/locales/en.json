@@ -73,5 +73,6 @@
   "WeekHours": "Week Hours",
   "Profile": "Profile",
   "UserMenu": "User Menu",
-  "AcademicYear": "Academic Year"
+  "AcademicYear": "Academic Year",
+  "NoDataToDisplay":"No data to display"
 }

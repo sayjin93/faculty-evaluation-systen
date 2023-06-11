@@ -111,7 +111,7 @@ const Professors = () => {
       return (
         <CTableBody>
           <CTableRow>
-            <CTableHeaderCell>No data to display</CTableHeaderCell>
+            <CTableHeaderCell>{t("NoDataToDisplay")}</CTableHeaderCell>
           </CTableRow>
         </CTableBody>
       );

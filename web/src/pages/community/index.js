@@ -64,61 +64,77 @@ const Community = () => {
 
   //#region functions
   const RenderTableBody = () => {
-    return (
-      <CTableBody>
-        {items.map((element) => {
-          const id = element.id;
-          let date = element.time ? formatDate2(element.time) : null;
-          let checked = element.external ? (
-            <CIcon icon={cilCheckAlt} size="sm" />
-          ) : (
-            ""
-          );
-          let createdAt = element.createdAt
-            ? convertDateFormat(element.createdAt)
-            : null;
-          let updatedAt = element.updatedAt
-            ? convertDateFormat(element.updatedAt)
-            : null;
+    if (items.length > 0) {
+      return (
+        <CTableBody>
+          {items.map((element) => {
+            const id = element.id;
+            let date = element.time ? formatDate2(element.time) : null;
+            let checked = element.external ? (
+              <CIcon icon={cilCheckAlt} size="sm" />
+            ) : (
+              ""
+            );
+            let createdAt = element.createdAt
+              ? convertDateFormat(element.createdAt)
+              : null;
+            let updatedAt = element.updatedAt
+              ? convertDateFormat(element.updatedAt)
+              : null;
 
-          return (
-            <CTableRow key={id}>
-              <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
-              <CTableDataCell>{element.event}</CTableDataCell>
-              <CTableDataCell>{date}</CTableDataCell>
-              <CTableDataCell>{element.description}</CTableDataCell>
-              <CTableDataCell className="text-center">{checked}</CTableDataCell>
-              <CTableDataCell>{createdAt}</CTableDataCell>
-              <CTableDataCell>{updatedAt}</CTableDataCell>
-              <CTableDataCell>
-                <CButtonGroup role="group" aria-label="Basic example" size="sm">
-                  <CButton
-                    color="primary"
-                    variant="outline"
-                    onClick={() => {
-                      setModalOptions({
-                        ...modalOptions,
-                        editMode: true,
-                        selectedId: id,
-                      });
-                    }}
+            return (
+              <CTableRow key={id}>
+                <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
+                <CTableDataCell>{element.event}</CTableDataCell>
+                <CTableDataCell>{date}</CTableDataCell>
+                <CTableDataCell>{element.description}</CTableDataCell>
+                <CTableDataCell className="text-center">
+                  {checked}
+                </CTableDataCell>
+                <CTableDataCell>{createdAt}</CTableDataCell>
+                <CTableDataCell>{updatedAt}</CTableDataCell>
+                <CTableDataCell>
+                  <CButtonGroup
+                    role="group"
+                    aria-label="Basic example"
+                    size="sm"
                   >
-                    <CIcon icon={cilPen} />
-                  </CButton>
-                  <CButton
-                    color="danger"
-                    variant="outline"
-                    onClick={() => deleteCommunity(id)}
-                  >
-                    <CIcon icon={cilTrash} />
-                  </CButton>
-                </CButtonGroup>
-              </CTableDataCell>
-            </CTableRow>
-          );
-        })}
-      </CTableBody>
-    );
+                    <CButton
+                      color="primary"
+                      variant="outline"
+                      onClick={() => {
+                        setModalOptions({
+                          ...modalOptions,
+                          editMode: true,
+                          selectedId: id,
+                        });
+                      }}
+                    >
+                      <CIcon icon={cilPen} />
+                    </CButton>
+                    <CButton
+                      color="danger"
+                      variant="outline"
+                      onClick={() => deleteCommunity(id)}
+                    >
+                      <CIcon icon={cilTrash} />
+                    </CButton>
+                  </CButtonGroup>
+                </CTableDataCell>
+              </CTableRow>
+            );
+          })}
+        </CTableBody>
+      );
+    } else {
+      return (
+        <CTableBody>
+          <CTableRow>
+            <CTableHeaderCell>{t("NoDataToDisplay")}</CTableHeaderCell>
+          </CTableRow>
+        </CTableBody>
+      );
+    }
   };
 
   const handleInputChange = (event, fieldName) => {
