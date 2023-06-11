@@ -1,19 +1,19 @@
 # Faculty Evaluation System API Documentation
 
-This is the server side API for a Faculty Evaluation System. It is built with Node.js and uses Express.js as the web framework and Sequelize ORM for handling database operations with a MySQL database.
+This is the server side API for a Faculty Evaluation System. It is built with Node.js and uses Express.js as the web framework and Sequelize ORM for handling database operations with a MySQL database. It also uses JWT for authentication and authorization.
 
 ## Setup and Installation
 
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/sayjin93/faculty-evaluation-systen.git
 ```
 
 2. Navigate into the project directory:
 
 ```bash
-cd <project-directory>
+cd api
 ```
 
 3. Install dependencies:
@@ -27,12 +27,13 @@ npm install
 Create a `.env` file in the project root directory and provide values for the following variables:
 
 ```
-DB_NAME=your_db_name
-DB_USER=your_db_user
+DB_NAME=fc2
+DB_USER=root
 DB_PASSWORD=your_db_password
-DB_HOST=your_db_host
+DB_HOST=localhost
 DB_DIALECT=mysql
 API_PORT=4000
+JWT_SECRET_KEY=jk_gfg_jwt_secret_key
 ```
 
 5. Run the server:
@@ -53,82 +54,73 @@ The directory structure of the project is as follows:
 - config/
   - authenticate.js
 - controllers/
-  - academic_years_controller.js
-  - books_controller.js
-  - community_services_controller.js
-  - conferences_controller.js
-  - courses_controller.js
-  - papers_controller.js
-  - professors_controller.js
-  - users_controller.js
+  - academic_years.controller.js
+  - books.controller.js
+  - community_services.controller.js
+  - conferences.controller.js
+  - courses.controller.js
+  - papers.controller.js
+  - professors.controller.js
+  - users.controller.js
 - models/
   - index.js
-  - academic_years_model.js
-  - books_model.js
-  - community_services_model.js
-  - conferences_model.js
-  - courses_model.js
-  - papers_model.js
-  - professors_model.js
-  - users_model.js
+  - academic_year.model.js
+  - book.model.js
+  - community_service.model.js
+  - conference.model.js
+  - course.model.js
+  - paper.model.js
+  - professor.model.js
+  - user.model.js
 - routes/
-  - academic_years_routes.js
-  - books_routes.js
-  - community_services_routes.js
-  - conferences_routes.js
-  - courses_routes.js
-  - papers_routes.js
-  - professors_routes.js
-  - users_routes.js
+  - academic_years.routes.js
+  - books.routes.js
+  - community_services.routes.js
+  - conferences.routes.js
+  - courses.routes.js
+  - papers.routes.js
+  - professors.routes.js
+  - users.routes.js
 - seeders/
-  - 20230430010919-users.js
+  - academic_year_seed.js
+  - user_seed.js
 - .env
 - server.js
 ```
 
 ### Models and Associations
 
-- `AcademicYears`: Represents the academic years.
-- `Books`: Represents the books authored by professors. Associated with `Professors` and `AcademicYears`.
-- `CommunityServices`: Represents the community services done by professors. Associated with `Professors` and `AcademicYears`.
-- `Conferences`: Represents the conferences attended by professors. Associated with `Professors` and `AcademicYears`.
-- `Courses`: Represents the courses taught by professors. Associated with `Professors` and `AcademicYears`.
-- `Papers`: Represents the research papers published by professors. Associated with `Professors` and `AcademicYears`.
-- `Professors`: Represents the professors.
-- `Users`: Represents the system users.
+- `AcademicYear`: Represents the academic years.
+- `Book`: Represents the books authored by professors. May be associated with `Professors` and `AcademicYears`.
+- `CommunityService`: Represents the community services done by professors. May be associated with `Professors` and `AcademicYears`.
+- `Conference`: Represents the conferences attended by professors. May be associated with `Professors` and `AcademicYears`.
+- `Course`: Represents the courses taught by professors. May be associated with `Professors` and `AcademicYears`.
+- `Paper`: Represents the research papers published by professors. May be associated with `Professors` and `AcademicYears`.
+- `Professor`: Represents the professors.
+- `User`: Represents the system users.
 
 ## Endpoints
 
 ### Academic Years
 
-- `GET /academic_years`: Get all academic years.
-- `GET /academic_years/:id`: Get a specific academic year.
-- `POST /academic_years`: Create a new academic year.
-- `PUT /academic_years/:id`: Update a specific academic year.
-- `DELETE /academic_years/:id`: Delete a specific academic year.
+- `GET /api/academic_years`: Get all academic years.
+- `GET /api/academic_years/:id`: Get a specific academic year.
+- `POST /api/academic_years`: Create a new academic year.
+- `PUT /api/academic_years/:id`: Update a specific academic year.
+- `DELETE /api/academic_years/:id`: Delete a specific academic year.
 
 ### Books
 
-- `GET /books`: Get all books.
-- `GET /books/:id`: Get a specific book.
-- `POST /books`: Create a new book.
-- `PUT /books/:id`: Update a specific book.
-- `DELETE /books/:id`: Delete a specific book.
+- `GET /api/books`: Get all books.
+- `GET /api/books/:id`: Get a specific book.
+- `POST /api/books`: Create a new book.
+- `PUT /api/books/:id`: Update a specific book.
+- `DELETE /api/books/:id`: Delete a specific book.
 
-(Note: Replace `books` with other resources like `community_services`, `conferences`, `courses`, `papers`, `professors`, `users` to access those respective endpoints)
+(Note: Replace
 
-## Testing
-
-
-
-Tests are yet to be implemented for this API.
-
-## Contributing
-
-To contribute to this project, please follow the [GitHub Flow](https://guides.github.com/introduction/flow/).
+`books` with other resources like `community_services`, `conferences`, `courses`, `papers`, `professors`, `users` to access those respective endpoints)
 
 ## License
 
 This project is licensed under the ISC License.
-
-Please replace `<repository-url>` and `<project-directory>` with the actual URL of your repository and the directory of your project.
