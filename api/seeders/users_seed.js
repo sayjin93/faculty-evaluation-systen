@@ -9,7 +9,7 @@ async function seed(queryInterface, Sequelize) {
       first_name: "Jurgen",
       last_name: "Kruja",
       password: "admin",
-      email: "Wilshere10.",
+      email: "jurgen-kruja@live.com",
       isAdmin: true,
       createdAt: new Date(),
       updatedAt: new Date(),
