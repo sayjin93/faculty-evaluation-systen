@@ -79,5 +79,7 @@
   "UpdatedAt": "Updated at",
   "Name": "Name",
   "Number": "Number",
-  "Or": "or"
+  "Or": "or",
+  "PasswordDoesNotMatch": "Password does not match",
+  "AccountCreatedSuccesfully": "Account created succesfully"
 }

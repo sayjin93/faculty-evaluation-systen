@@ -79,5 +79,7 @@
   "UpdatedAt": "Edituar",
   "Name": "Emri",
   "Number": "Numri",
-  "Or": "ose"
+  "Or": "ose",
+  "PasswordDoesNotMatch": "Fjalëkalimi nuk përputhet",
+  "AccountCreatedSuccesfully": "Llogaria u krijua me sukses"
 }

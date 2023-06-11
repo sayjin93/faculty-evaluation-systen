@@ -18,11 +18,13 @@ import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
 import { useTranslation } from "react-i18next";
 
-import ToastComponent from "src/components/Toast";
+import { useDispatch } from "react-redux";
+import { showToast } from "src/store";
 
 const Register = () => {
   //#region constants
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   //#endregion
 
   //#region states
@@ -32,23 +34,9 @@ const Register = () => {
     password: "",
     repeatPassword: "",
   });
-
-  const [toast, setToast] = useState({
-    color: "",
-    content: "",
-    visible: false,
-  });
   //#endregion
 
   //#region functions
-  const callToast = (color, content, visible) => {
-    setToast({
-      color: color,
-      content: content,
-      visible: visible,
-    });
-  };
-
   const handleInputChange = (event, fieldName) => {
     setUser({
       ...user,
@@ -56,39 +44,54 @@ const Register = () => {
     });
   };
 
-  const handleRegister = async () => {
-    try {
-      // Send a POST request to the '/api/users' endpoint with the user data
-      await axios
-        .post(process.env.REACT_APP_API_URL + "/users", {
-          username: user.username,
-          email: user.email,
-          password: user.password,
+  const handleRegister = async (event) => {
+    if (user.password !== user.repeatPassword) {
+      dispatch(
+        showToast({
+          type: "danger",
+          content: t("PasswordDoesNotMatch"),
         })
-        .then((response) => {
-          // Handle the success response
-          callToast("success", "Account created succesfully!", true);
+      );
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      try {
+        // Send a POST request to the '/api/users' endpoint with the user data
+        await axios
+          .post(process.env.REACT_APP_API_URL + "/users", {
+            username: user.username,
+            email: user.email,
+            password: user.password,
+          })
+          .then((response) => {
+            // Handle the success response
+            dispatch(
+              showToast({
+                type: "success",
+                content: t("AccountCreatedSuccesfully"),
+              })
+            );
 
-          setUser((prevState) => ({
-            ...prevState,
-            username: "",
-            email: "",
-            password: "",
-            repeatPassword: "",
-          }));
-        });
-    } catch (error) {
-      // Handle any errors
-      callToast("danger", error.response.data.message, true);
+            setUser((prevState) => ({
+              ...prevState,
+              username: "",
+              email: "",
+              password: "",
+              repeatPassword: "",
+            }));
+          });
+      } catch (error) {
+        // Handle any errors
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error.response.data.message,
+          })
+        );
+      }
     }
   };
   //#endregion
-
-  const isCreateAccountDisabled =
-    user.username === "" ||
-    user.email === "" ||
-    user.password === "" ||
-    user.password !== user.repeatPassword;
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -97,7 +100,7 @@ const Register = () => {
           <CCol md={9} lg={7} xl={6}>
             <CCard className="mx-4">
               <CCardBody className="p-4">
-                <CForm>
+                <CForm onSubmit={handleRegister}>
                   <h1>{t("Register")}</h1>
                   <p className="text-medium-emphasis">
                     {t("CreateYourAccount")}
@@ -107,6 +110,7 @@ const Register = () => {
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
                     <CFormInput
+                      required
                       type="text"
                       placeholder={t("Username")}
                       value={user.username}
@@ -116,6 +120,7 @@ const Register = () => {
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
                     <CFormInput
+                      required
                       type="email"
                       placeholder={t("Email")}
                       value={user.email}
@@ -128,6 +133,7 @@ const Register = () => {
                       <CIcon icon={cilLockLocked} />
                     </CInputGroupText>
                     <CFormInput
+                      required
                       type="password"
                       placeholder={t("Password")}
                       value={user.password}
@@ -139,6 +145,7 @@ const Register = () => {
                       <CIcon icon={cilLockLocked} />
                     </CInputGroupText>
                     <CFormInput
+                      required
                       type="password"
                       placeholder={t("RepeatPassword")}
                       value={user.repeatPassword}
@@ -148,11 +155,7 @@ const Register = () => {
                     />
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton
-                      color="success"
-                      disabled={isCreateAccountDisabled}
-                      onClick={handleRegister}
-                    >
+                    <CButton color="success" type="submit">
                       {t("CreateAccount")}
                     </CButton>
                   </div>
@@ -170,12 +173,6 @@ const Register = () => {
           <CCol xs={6} className="text-right"></CCol>
         </CRow>
       </CContainer>
-
-      <ToastComponent
-        type={toast.color}
-        content={toast.content}
-        visible={toast.visible}
-      />
     </div>
   );
 };
