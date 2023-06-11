@@ -25,9 +25,10 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
-import { convertDateFormat, renderHeader } from "src/hooks";
+import { convertDateFormat } from "src/hooks";
 import { setModal, showToast } from "../../store";
 import { useNavigate } from "react-router-dom";
+import TableHeader from "src/hooks/tableHeader";
 
 const Professors = () => {
   //#region constants
@@ -293,7 +294,7 @@ const Professors = () => {
       </CHeader>
 
       <CTable responsive striped hover align="middle">
-        {renderHeader(items)}
+        <TableHeader items={items} />
 
         <RenderTableBody />
       </CTable>

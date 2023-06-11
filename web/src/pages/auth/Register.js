@@ -49,6 +49,13 @@ const Register = () => {
     });
   };
 
+  const handleInputChange = (event, fieldName) => {
+    setUser({
+      ...user,
+      [fieldName]: event.target.value,
+    });
+  };
+
   const handleRegister = async () => {
     try {
       // Send a POST request to the '/api/users' endpoint with the user data
@@ -103,12 +110,7 @@ const Register = () => {
                       type="text"
                       placeholder={t("Username")}
                       value={user.username}
-                      onChange={(e) => {
-                        setUser((prevState) => ({
-                          ...prevState,
-                          username: e.target.value,
-                        }));
-                      }}
+                      onChange={(event) => handleInputChange(event, "username")}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -118,12 +120,7 @@ const Register = () => {
                       placeholder={t("Email")}
                       value={user.email}
                       size="sm"
-                      onChange={(e) => {
-                        setUser((prevState) => ({
-                          ...prevState,
-                          email: e.target.value,
-                        }));
-                      }}
+                      onChange={(event) => handleInputChange(event, "email")}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -134,12 +131,7 @@ const Register = () => {
                       type="password"
                       placeholder={t("Password")}
                       value={user.password}
-                      onChange={(e) => {
-                        setUser((prevState) => ({
-                          ...prevState,
-                          password: e.target.value,
-                        }));
-                      }}
+                      onChange={(event) => handleInputChange(event, "password")}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -150,12 +142,9 @@ const Register = () => {
                       type="password"
                       placeholder={t("RepeatPassword")}
                       value={user.repeatPassword}
-                      onChange={(e) => {
-                        setUser((prevState) => ({
-                          ...prevState,
-                          repeatPassword: e.target.value,
-                        }));
-                      }}
+                      onChange={(event) =>
+                        handleInputChange(event, "repeatPassword")
+                      }
                     />
                   </CInputGroup>
                   <div className="d-grid">

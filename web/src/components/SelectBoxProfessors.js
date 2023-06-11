@@ -1,16 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  CButton,
-  CCol,
-  CFormInput,
-  CFormSelect,
-  CInputGroup,
-  CInputGroupText,
-  CRow,
-} from "@coreui/react";
+import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { changeProfessorSelected } from "../store";
 
 const SelectBoxProfessors = ({ modal = false }) => {

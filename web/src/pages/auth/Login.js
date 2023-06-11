@@ -37,8 +37,10 @@ const LoginPage = () => {
   //#endregion
 
   //#region states
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
   //#endregion
 
   //#region functions
@@ -51,12 +53,11 @@ const LoginPage = () => {
     });
   };
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
+  const handleInputChange = (event, fieldName) => {
+    setFormData({
+      ...formData,
+      [fieldName]: event.target.value,
+    });
   };
 
   const handleSubmit = (event) => {
@@ -64,8 +65,8 @@ const LoginPage = () => {
 
     axios
       .post(process.env.REACT_APP_API_URL + "/users/login", {
-        username,
-        password,
+        username: formData.username,
+        password: formData.password,
       })
       .then((response) => {
         if (response.data) {
@@ -121,8 +122,10 @@ const LoginPage = () => {
                         type="text"
                         placeholder={t("Username")}
                         autoComplete="username"
-                        value={username}
-                        onChange={handleUsernameChange}
+                        value={formData.username}
+                        onChange={(event) =>
+                          handleInputChange(event, "username")
+                        }
                       />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
@@ -133,8 +136,10 @@ const LoginPage = () => {
                         type="password"
                         placeholder={t("Password")}
                         autoComplete="current-password"
-                        value={password}
-                        onChange={handlePasswordChange}
+                        value={formData.password}
+                        onChange={(event) =>
+                          handleInputChange(event, "password")
+                        }
                       />
                     </CInputGroup>
                     <CRow>
@@ -180,7 +185,7 @@ const LoginPage = () => {
                         </CDropdown>
                       </CCol>
                       <CCol xs={12} className="text-center">
-                        <CButton color="link" className="pt-4">
+                        <CButton disabled color="link" className="pt-4">
                           {t("ForgotPassword") + "?"}
                         </CButton>
                       </CCol>

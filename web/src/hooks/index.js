@@ -1,5 +1,3 @@
-import React from "react";
-import { CTableHead, CTableHeaderCell, CTableRow } from "@coreui/react";
 import Cookies from "universal-cookie";
 
 //#region cookies
@@ -80,45 +78,6 @@ export function formatDate2(date2) {
 }
 //#endregion
 
-//#region table
-export function renderHeader(items) {
-  try {
-    if (items.length > 0) {
-      const header = Object.keys(items[0]); // extract keys from the first object
-
-      return (
-        <CTableHead>
-          <CTableRow color="dark">
-            {header.map((element) => {
-              let thead = fixTableHeaderName(element);
-              if (element === "id") thead = "#";
-              if (element === "professor_id") return null;
-              if (element === "academic_year_id") return null;
-
-              return (
-                <CTableHeaderCell key={element} scope="col">
-                  {thead}
-                </CTableHeaderCell>
-              );
-            })}
-            <CTableHeaderCell scope="col"></CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-      );
-    }
-  } catch (err) {
-    console.log(err);
-  }
-}
-export function fixTableHeaderName(text) {
-  // Replace underscores with spaces and capitalize the first letter of each word
-  const formattedName = text
-    .replace(/_/g, " ")
-    .replace(/(?:^|\s)\S/g, (a) => a.toUpperCase());
-
-  return formattedName;
-}
-//#endregion
 
 //#region others
 export function isNullOrUndefined(props) {

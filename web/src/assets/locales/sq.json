@@ -38,7 +38,7 @@
   "Female": "Femër",
   "FirstName": "Emri",
   "ForgotPassword": "Keni harruar fjalëkalimin",
-  "Gender": "Gjinisa",
+  "Gender": "Gjinia",
   "Journal": "Revista",
   "Language": "Gjuha",
   "LastName": "Mbiemri",
@@ -53,7 +53,7 @@
   "Papers": "Punime",
   "Password": "Fjalëkalimi",
   "PresentationTitle": "Titulli Prezantimit",
-  "Professor": "Profesor",
+  "Professor": "Profesori",
   "Professors": "Profesorët",
   "Program": "Programi",
   "Publication": "Publikimi",
@@ -64,7 +64,7 @@
   "RegisterNowByClickingButtonBelowToHaveAccessInTheFacultyEvaluationSystem": "Regjistrohu tani duke klikuar butonin më poshtë për të pasur akses në Sistemin e Vlerësimit të Fakultetit",
   "RepeatPassword": "Përsëritni fjalëkalimin",
   "Reports": "Raportet",
-  "Semester": "Simestri",
+  "Semester": "Semestri",
   "Settings": "Cilësimet",
   "SignInToYourAccount": "Hyni në llogarinë tuaj",
   "SignUp": "Regjistrohu",
@@ -74,5 +74,10 @@
   "Profile": "Profili",
   "UserMenu": "Menuja Userit",
   "AcademicYear": "Viti Akademik",
-  "NoDataToDisplay":"Nu ka të dhëna"
+  "NoDataToDisplay": "Nu ka të dhëna",
+  "CreatedAt": "Krijuar",
+  "UpdatedAt": "Edituar",
+  "Name": "Emri",
+  "Number": "Numri",
+  "Or": "ose"
 }

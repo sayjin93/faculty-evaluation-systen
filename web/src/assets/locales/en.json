@@ -74,5 +74,10 @@
   "Profile": "Profile",
   "UserMenu": "User Menu",
   "AcademicYear": "Academic Year",
-  "NoDataToDisplay":"No data to display"
+  "NoDataToDisplay": "No data to display",
+  "CreatedAt": "Created at",
+  "UpdatedAt": "Updated at",
+  "Name": "Name",
+  "Number": "Number",
+  "Or": "or"
 }

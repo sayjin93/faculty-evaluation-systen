@@ -7,7 +7,6 @@ import axios from "axios";
 import {
   CButton,
   CButtonGroup,
-  CCol,
   CContainer,
   CFormInput,
   CHeader,
@@ -17,7 +16,6 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CRow,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -27,9 +25,10 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
-import { convertDateFormat, renderHeader } from "src/hooks";
+import { convertDateFormat } from "src/hooks";
 import { setModal, showToast } from "../../store";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
+import TableHeader from "src/hooks/tableHeader";
 
 const Conferences = () => {
   //#region constants
@@ -57,8 +56,6 @@ const Conferences = () => {
   });
   // @ts-ignore
   const modal = useSelector((state) => state.modal.modal);
-  // @ts-ignore
-  const toast = useSelector((state) => state.modal.toast);
   //#endregion
 
   //#region functions
@@ -136,27 +133,6 @@ const Conferences = () => {
     });
   };
 
-  const deleteAllConferences = async () => {
-    await axios
-      .delete(process.env.REACT_APP_API_URL + "/conferences")
-      .then((response) => {
-        setStatus(response);
-        dispatch(
-          showToast({
-            type: "success",
-            content: "All conferences are deleted successful!",
-          })
-        );
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
   const fefetchOneConference = async (id) => {
     await axios
       .get(process.env.REACT_APP_API_URL + "/conferences/" + id)
@@ -325,20 +301,10 @@ const Conferences = () => {
         </CContainer>
       </CHeader>
 
-      <div id="temporary" className="mb-2">
-        <CRow>
-          <CCol>
-            <CButton color="dark" onClick={() => deleteAllConferences()}>
-              Delete All
-            </CButton>
-          </CCol>
-        </CRow>
-      </div>
-
       <SelectBoxProfessors />
 
       <CTable responsive striped hover align="middle">
-        {renderHeader(items)}
+        <TableHeader items={items} />
         <RenderTableBody />
       </CTable>
 

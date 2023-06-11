@@ -7,7 +7,6 @@ import axios from "axios";
 import {
   CButton,
   CButtonGroup,
-  CCol,
   CContainer,
   CFormInput,
   CFormSelect,
@@ -18,7 +17,6 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CRow,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -28,9 +26,10 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
-import { convertDateFormat, renderHeader } from "src/hooks";
+import { convertDateFormat } from "src/hooks";
 import { setModal, showToast } from "../../store";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
+import TableHeader from "src/hooks/tableHeader";
 
 const Courses = () => {
   //#region constants
@@ -43,7 +42,7 @@ const Courses = () => {
     courseNumber: "",
     semester: 0,
     weekHours: 0,
-    program: "",
+    program: 1,
   };
   //#endregion
 
@@ -75,7 +74,8 @@ const Courses = () => {
         <CTableBody>
           {items.map((element) => {
             const id = element.id;
-            let program = element.program === 1 ? "MP" : "MSc";
+
+            let program = element.program === "Bachelor" ? "Bachelor" : "MSc";
 
             let createdAt = element.createdAt
               ? convertDateFormat(element.createdAt)
@@ -92,6 +92,7 @@ const Courses = () => {
                 <CTableDataCell>{element.semester}</CTableDataCell>
                 <CTableDataCell>{element.week_hours}</CTableDataCell>
                 <CTableDataCell>{program}</CTableDataCell>
+                <CTableDataCell>{element.professor_id}</CTableDataCell>
                 <CTableDataCell>{createdAt}</CTableDataCell>
                 <CTableDataCell>{updatedAt}</CTableDataCell>
                 <CTableDataCell>
@@ -145,6 +146,29 @@ const Courses = () => {
     });
   };
 
+  const fetchOneCourse = async (id) => {
+    await axios
+      .get(process.env.REACT_APP_API_URL + "/courses/" + id)
+      .then((response) => {
+        setFormData({
+          ...formData,
+          courseName: response.data.name,
+          courseNumber: response.data.number,
+          semester: response.data.semester,
+          weekHours: response.data.week_hours,
+          program: response.data.program,
+        });
+        dispatch(setModal(true));
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
   const addCourse = async () => {
     await axios
       .post(process.env.REACT_APP_API_URL + "/courses", {
@@ -184,6 +208,7 @@ const Courses = () => {
         semester: formData.semester,
         week_hours: formData.weekHours,
         program: formData.program,
+        academic_year_id: academicYearId,
         professor_id: professorId,
       })
       .then((response) => {
@@ -270,10 +295,15 @@ const Courses = () => {
       disabled:
         formData.courseName === "" ||
         formData.courseNumber === "" ||
-        formData.semester === 0 ||
-        formData.weekHours === 0,
+        formData.semester < 1 ||
+        formData.semester > 2 ||
+        formData.weekHours < 1,
     });
   }, [formData]);
+
+  useEffect(() => {
+    if (modalOptions.editMode) fetchOneCourse(modalOptions.selectedId);
+  }, [modalOptions.editMode]);
   //#endregion
 
   return (
@@ -291,7 +321,7 @@ const Courses = () => {
       <SelectBoxProfessors />
 
       <CTable responsive striped hover align="middle">
-        {renderHeader(items)}
+        <TableHeader items={items} />
         <RenderTableBody />
       </CTable>
 
@@ -335,13 +365,14 @@ const Courses = () => {
             min={1}
             max={2}
             floatingClassName="mb-3"
-            floatingLabel={t("Semester")}
+            floatingLabel={`${t("Semester")} [1 ${t("Or")} 2]`}
             placeholder={t("Semester")}
             value={formData.semester === 0 ? "" : formData.semester}
             onChange={(event) => handleInputChange(event, "semester")}
           />
           <CFormInput
             type="number"
+            min={1}
             floatingClassName="mb-3"
             floatingLabel={t("WeekHours")}
             placeholder={t("WeekHours")}
@@ -349,12 +380,13 @@ const Courses = () => {
             onChange={(event) => handleInputChange(event, "weekHours")}
           />
           <CFormSelect
+            floatingClassName="mb-3"
             floatingLabel={t("Program")}
             onChange={(event) => handleInputChange(event, "program")}
             value={formData.program}
           >
-            <option value="Bachelor">{t("Bachelor")}</option>
-            <option value="Master">{t("Master")}</option>
+            <option value="1">{t("Bachelor")}</option>
+            <option value="2">{t("Master")}</option>
           </CFormSelect>
           <SelectBoxProfessors modal />
         </CModalBody>
