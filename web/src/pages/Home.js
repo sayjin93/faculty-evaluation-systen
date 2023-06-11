@@ -7,7 +7,6 @@ import { showToast, changeAcademicYear } from "../store";
 import {
   CAvatar,
   CButton,
-  CButtonGroup,
   CCard,
   CCardBody,
   CCardFooter,
@@ -290,8 +289,6 @@ const Home = () => {
       </CCard>
 
       <WidgetsDropdown />
-
-      {/* <WidgetsBrand withCharts /> */}
 
       <CRow>
         <CCol xs>
