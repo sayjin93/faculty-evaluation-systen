@@ -40,7 +40,7 @@ import {
   cifPl,
   cifUs,
   cibTwitter,
-  cilCloudDownload,
+  cilPen,
   cilPeople,
   cilUser,
   cilUserFemale,
@@ -53,34 +53,31 @@ import avatar4 from "../assets/images/avatars/4.jpg";
 import avatar5 from "../assets/images/avatars/5.jpg";
 import avatar6 from "../assets/images/avatars/6.jpg";
 
-import WidgetsBrand from "../widgets/WidgetsBrand";
 import WidgetsDropdown from "../widgets/WidgetsDropdown";
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
   //#region constants
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //#endregion
 
   // @ts-ignore
-  const academicYearId = useSelector((state) => state.settings.academicYear.id);
+  const academicYear = useSelector((state) => state.settings.academicYear);
 
   //#region data
-  const progressExample = [
-    { title: "Visits", value: "29.703 Users", percent: 40, color: "success" },
-    { title: "Unique", value: "24.093 Users", percent: 20, color: "info" },
+  const uniData = [
+    { title: t("Professors"), value: "12", percent: 80, color: "success" },
+    { title: t("Courses"), value: "58", percent: 72, color: "info" },
+    { title: t("Papers"), value: "34", percent: 60, color: "warning" },
+    { title: t("Books"), value: "18", percent: 25, color: "danger" },
+    { title: t("Conferences"), value: "7", percent: 40.15, color: "primary" },
     {
-      title: "Pageviews",
-      value: "78.706 Views",
-      percent: 60,
-      color: "warning",
-    },
-    { title: "New Users", value: "22.123 Users", percent: 80, color: "danger" },
-    {
-      title: "Bounce Rate",
-      value: "Average Rate",
-      percent: 40.15,
-      color: "primary",
+      title: t("CommunityServices"),
+      value: "3",
+      percent: 12.78,
+      color: "secondary",
     },
   ];
 
@@ -201,6 +198,7 @@ const Home = () => {
   //#region useEffect
   useEffect(() => {
     const fetchAcademicYears = async () => {
+      debugger;
       await axios
         .get(process.env.REACT_APP_API_URL + "/academic-year")
         .then((response) => {
@@ -237,47 +235,43 @@ const Home = () => {
         });
     };
 
-    if (!academicYearId) fetchAcademicYears();
+    if (!academicYear) fetchAcademicYears();
   }, []);
   //#endregion
 
   return (
     <>
-      <WidgetsDropdown />
-
       <CCard className="mb-4">
         <CCardBody>
           <CRow>
             <CCol sm={5}>
               <h4 id="traffic" className="card-title mb-0">
-                Traffic
+                {t("AcademicYear")}
               </h4>
               <div className="small text-medium-emphasis">
-                January - July 2021
+                {academicYear.year}
               </div>
             </CCol>
             <CCol sm={7} className="d-none d-md-block">
-              <CButton color="primary" className="float-end">
-                <CIcon icon={cilCloudDownload} />
+              <CButton
+                color="light"
+                className="float-end"
+                onClick={() => navigate("/settings")}
+              >
+                <CIcon icon={cilPen} />
               </CButton>
-              <CButtonGroup className="float-end me-3">
-                {["Day", "Month", "Year"].map((value) => (
-                  <CButton
-                    color="outline-secondary"
-                    key={value}
-                    className="mx-0"
-                    active={value === "Month"}
-                  >
-                    {value}
-                  </CButton>
-                ))}
-              </CButtonGroup>
             </CCol>
           </CRow>
         </CCardBody>
         <CCardFooter>
-          <CRow xs={{ cols: 1 }} md={{ cols: 5 }} className="text-center">
-            {progressExample.map((item, index) => (
+          <CRow
+            xs={{ cols: 1 }}
+            sm={{ cols: 2 }}
+            md={{ cols: 3 }}
+            lg={{ cols: 6 }}
+            className="text-center"
+          >
+            {uniData.map((item, index) => (
               <CCol className="mb-sm-2 mb-0" key={index}>
                 <div className="text-medium-emphasis">{item.title}</div>
                 <strong>
@@ -295,7 +289,9 @@ const Home = () => {
         </CCardFooter>
       </CCard>
 
-      <WidgetsBrand withCharts />
+      <WidgetsDropdown />
+
+      {/* <WidgetsBrand withCharts /> */}
 
       <CRow>
         <CCol xs>

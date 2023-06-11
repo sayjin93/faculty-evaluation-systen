@@ -28,7 +28,7 @@ export const AppSidebarNav = () => {
       icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
       badge: {
         color: "info",
-        text: t("New").toUpperCase(),
+        text: t("Working").toUpperCase(),
       },
     },
     {
@@ -59,32 +59,6 @@ export const AppSidebarNav = () => {
       to: "/books",
       icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
     },
-    // {
-    //   component: CNavGroup,
-    //   name: "Icons",
-    //   icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
-    //   items: [
-    //     {
-    //       component: CNavItem,
-    //       name: "CoreUI Free",
-    //       to: "/icons/coreui-icons",
-    //       badge: {
-    //         color: "success",
-    //         text: "NEW",
-    //       },
-    //     },
-    //     {
-    //       component: CNavItem,
-    //       name: "CoreUI Flags",
-    //       to: "/icons/flags",
-    //     },
-    //     {
-    //       component: CNavItem,
-    //       name: "CoreUI Brands",
-    //       to: "/icons/brands",
-    //     },
-    //   ],
-    // },
     {
       component: CNavItem,
       name: t("Conferences"),
@@ -102,6 +76,10 @@ export const AppSidebarNav = () => {
       name: t("Reports"),
       to: "/reports",
       icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+      badge: {
+        color: "info",
+        text: t("Working").toUpperCase(),
+      },
     },
     {
       component: CNavTitle,
