@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { showToast, changeAcademicYear } from "../store";
 
@@ -61,6 +61,9 @@ const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //#endregion
+
+  // @ts-ignore
+  const academicYearId = useSelector((state) => state.settings.academicYear.id);
 
   //#region data
   const progressExample = [
@@ -201,12 +204,14 @@ const Home = () => {
       await axios
         .get(process.env.REACT_APP_API_URL + "/academic-year")
         .then((response) => {
+          debugger;
           // Find the object with "active" set to true
           const activeObject = response.data.find((obj) => obj.active === true);
 
           dispatch(changeAcademicYear(activeObject));
         })
         .catch((error) => {
+          debugger;
           if (error.code === "ERR_NETWORK") {
             dispatch(
               showToast({
@@ -232,7 +237,7 @@ const Home = () => {
         });
     };
 
-    fetchAcademicYears();
+    if (!academicYearId) fetchAcademicYears();
   }, []);
   //#endregion
 

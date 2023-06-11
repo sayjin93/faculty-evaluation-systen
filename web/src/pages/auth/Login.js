@@ -62,7 +62,8 @@ const LoginPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    event.stopPropagation();
+    
     axios
       .post(process.env.REACT_APP_API_URL + "/users/login", {
         username: formData.username,
@@ -78,10 +79,12 @@ const LoginPage = () => {
         dispatch(
           showToast({
             type: "danger",
-            content: error,
+            content: error.response.data.message,
           })
         );
       });
+
+
   };
   //#endregion
 
@@ -119,6 +122,7 @@ const LoginPage = () => {
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
                       <CFormInput
+                        required
                         type="text"
                         placeholder={t("Username")}
                         autoComplete="username"
@@ -133,6 +137,7 @@ const LoginPage = () => {
                         <CIcon icon={cilLockLocked} />
                       </CInputGroupText>
                       <CFormInput
+                        required
                         type="password"
                         placeholder={t("Password")}
                         autoComplete="current-password"

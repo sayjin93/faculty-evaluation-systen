@@ -45,6 +45,9 @@ const Register = () => {
   };
 
   const handleRegister = async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     if (user.password !== user.repeatPassword) {
       dispatch(
         showToast({
@@ -52,8 +55,6 @@ const Register = () => {
           content: t("PasswordDoesNotMatch"),
         })
       );
-      event.preventDefault();
-      event.stopPropagation();
     } else {
       try {
         // Send a POST request to the '/api/users' endpoint with the user data
