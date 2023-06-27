@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const colors = require("colors");
 const dotenv = require("dotenv");
 
 // Loads environment variables
@@ -14,9 +15,9 @@ const academicYearsSeed = require("./seeders/academic_year_seed");
 const professorsSeed = require("./seeders/professors_seed");
 
 db.sequelize
-  .sync({ alter: true })
+  .sync({ alter: true, logging: false })
   .then(() => {
-    console.log("Database synced successfully.");
+    console.log("Database synced successfully!".bgGreen);
 
     // Call all seed functions
     return Promise.all([
@@ -27,10 +28,11 @@ db.sequelize
     ]);
   })
   .then(() => {
-    console.log("Seeding completed successfully.");
+    console.log("Seeding completed successfully!".bgGreen);
   })
   .catch((error) => {
-    console.error("Error syncing database: ", error);
+    console.log("Error syncing database!".bgRed);
+    // console.error("Error syncing database: ", error);
   });
 
 // Creates a new instance of the Express.js framework and assigns it to the app constant.
@@ -58,5 +60,5 @@ require("./routes/users.routes")(app);
 // set port, listen for requests
 const PORT = process.env.API_PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+  console.log(colors.bgYellow("Server is running on port %s"), PORT);
 });
