@@ -17,12 +17,12 @@ async function seed(queryInterface, Sequelize) {
   });
 
   await db.users.findOrCreate({
-    where: { username: "user" },
+    where: { username: "petraq" },
     defaults: {
-      first_name: "Ardit",
-      last_name: "Bejtulla",
-      password: "user",
-      email: "info@jkruja.com",
+      first_name: "Petraq",
+      last_name: "Papajorgji",
+      password: "petraq",
+      email: "petraq@gmail.com",
       isAdmin: false,
       createdAt: new Date(),
       updatedAt: new Date(),

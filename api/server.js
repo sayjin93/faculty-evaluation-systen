@@ -7,8 +7,11 @@ dotenv.config();
 
 // Connect database
 const db = require("./models");
+
+// Seed database
 const usersSeed = require("./seeders/users_seed");
 const academicYearsSeed = require("./seeders/academic_year_seed");
+const professorsSeed = require("./seeders/professors_seed");
 
 db.sequelize
   .sync({ alter: true })
@@ -19,6 +22,7 @@ db.sequelize
     return Promise.all([
       usersSeed(db.sequelize.getQueryInterface(), db.Sequelize),
       academicYearsSeed(db.sequelize.getQueryInterface(), db.Sequelize),
+      professorsSeed(db.sequelize.getQueryInterface(), db.Sequelize),
       // Add more seed functions here as needed...
     ]);
   })
