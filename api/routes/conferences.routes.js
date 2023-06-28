@@ -9,8 +9,12 @@ module.exports = (app) => {
   // Retrieve all Conferences
   router.get("/", auth, conferences.findAll);
 
-  // Retrieve all published Conferences
-  router.get("/published", auth, conferences.findAllPublished);
+  // Retrieve all Conferences with a specific academic_year_id
+  router.get(
+    "/academic_year/:academic_year_id",
+    auth,
+    conferences.findAllByAcademicYear
+  );
 
   // Retrieve a single Conference with id
   router.get("/:id", auth, conferences.findOne);

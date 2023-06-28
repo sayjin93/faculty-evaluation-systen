@@ -9,8 +9,12 @@ module.exports = (app) => {
   // Retrieve all Papers
   router.get("/", auth, papers.findAll);
 
-  // Retrieve all published Papers
-  router.get("/published", auth, papers.findAllPublished);
+  // Retrieve all Papers with a specific academic_year_id
+  router.get(
+    "/academic_year/:academic_year_id",
+    auth,
+    papers.findAllByAcademicYear
+  );
 
   // Retrieve a single Paper with id
   router.get("/:id", auth, papers.findOne);

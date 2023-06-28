@@ -134,15 +134,17 @@ exports.deleteAll = (req, res) => {
     });
 };
 
-// Find all published Books
-exports.findAllPublished = (req, res) => {
-  Books.findAll({ where: { published: true } })
+// Find all Books with a specific academic_year_id
+exports.findAllByAcademicYear = (req, res) => {
+  const academic_year_id = req.params.academic_year_id;
+
+  Books.findAll({ where: { academic_year_id: academic_year_id } })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Bookss.",
+        message: err.message || "Some error occurred while retrieving Courses.",
       });
     });
 };

@@ -9,8 +9,12 @@ module.exports = (app) => {
   // Retrieve all Community Services
   router.get("/", auth, community_services.findAll);
 
-  // Retrieve all published Community Services
-  router.get("/published", auth, community_services.findAllPublished);
+  // Retrieve all Books with a specific academic_year_id
+  router.get(
+    "/academic_year/:academic_year_id",
+    auth,
+    community_services.findAllByAcademicYear
+  );
 
   // Retrieve a single Community Service with id
   router.get("/:id", auth, community_services.findOne);

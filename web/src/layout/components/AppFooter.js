@@ -18,8 +18,7 @@ const AppFooter = () => {
         <span className="me-1">{t("DevelopedBy")}</span>
         <a href="https://jkruja.com" target="_blank" rel="noopener noreferrer">
           Jurgen Kruja
-        </a>{" "}
-        & Ardit Bejtulla
+        </a>
       </div>
     </CFooter>
   );

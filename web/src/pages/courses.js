@@ -74,7 +74,6 @@ const Courses = () => {
     selectedId: -1,
   });
 
-  debugger;
   const filteredItems =
     Number(selectedProfessor) !== 0
       ? items.filter((item) => item.professor_id === Number(selectedProfessor))
@@ -168,6 +167,7 @@ const Courses = () => {
   };
 
   const handleInputChange = (event, fieldName) => {
+    debugger;
     setFormData({
       ...formData,
       [fieldName]: event.target.value,
@@ -272,13 +272,50 @@ const Courses = () => {
 
   //#region useEffect
   useEffect(() => {
+    // const fetchCourses = async () => {
+    //   await axios
+    //     .get(process.env.REACT_APP_API_URL + "/courses")
+    //     .then((response) => {
+    //       setItems(response.data);
+    //     })
+    //     .catch((error) => {
+    //       if (error.code === "ERR_NETWORK") {
+    //         dispatch(
+    //           showToast({
+    //             type: "danger",
+    //             content: error.message,
+    //           })
+    //         );
+    //       } else if (error.code === "ERR_BAD_REQUEST") {
+    //         // Remove the JWT token from the Local Storage
+    //         localStorage.removeItem("jwt_token");
+
+    //         // Redirect the user to the login page
+    //         navigate("/login", { replace: true });
+
+    //         // Show alert
+    //         dispatch(
+    //           showToast({
+    //             type: "danger",
+    //             content: error.response.statusText,
+    //           })
+    //         );
+    //       }
+    //     });
+    // };
+
     const fetchCourses = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/courses")
+        .get(
+          process.env.REACT_APP_API_URL +
+            `/courses/academic_year/${academicYearId}`
+        )
         .then((response) => {
+          debugger;
           setItems(response.data);
         })
         .catch((error) => {
+          debugger;
           if (error.code === "ERR_NETWORK") {
             dispatch(
               showToast({
@@ -432,7 +469,7 @@ const Courses = () => {
               floatingClassName="mb-3"
               floatingLabel={t("Program")}
               onChange={(event) => handleInputChange(event, "program")}
-              value={modalOptions.editMode ? formData.program : ""}
+              value={formData.program}
             >
               <option value="" disabled>
                 {t("Choose") + "..."}
@@ -442,12 +479,12 @@ const Courses = () => {
             </CFormSelect>
 
             <CFormSelect
-             className="cursor"
+              className="cursor"
               required
               feedbackInvalid={t("PleaseSelectAProfessor")}
               floatingClassName="mb-3"
               floatingLabel={t("Professor")}
-              value={modalOptions.editMode ? formData.professor : ""}
+              value={formData.professor}
               onChange={(event) => handleInputChange(event, "professor")}
             >
               <option value="" disabled>

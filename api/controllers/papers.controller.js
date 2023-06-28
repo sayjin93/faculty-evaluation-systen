@@ -134,15 +134,17 @@ exports.deleteAll = (req, res) => {
     });
 };
 
-// Find all published Papers
-exports.findAllPublished = (req, res) => {
-  Papers.findAll({ where: { published: true } })
+// Find all Papers with a specific academic_year_id
+exports.findAllByAcademicYear = (req, res) => {
+  const academic_year_id = req.params.academic_year_id;
+
+  Papers.findAll({ where: { academic_year_id: academic_year_id } })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Paperss.",
+        message: err.message || "Some error occurred while retrieving Courses.",
       });
     });
 };

@@ -137,16 +137,17 @@ exports.deleteAll = (req, res) => {
     });
 };
 
-// Find all published Conferences
-exports.findAllPublished = (req, res) => {
-  Conferences.findAll({ where: { published: true } })
+// Find all Conferences with a specific academic_year_id
+exports.findAllByAcademicYear = (req, res) => {
+  const academic_year_id = req.params.academic_year_id;
+
+  Conferences.findAll({ where: { academic_year_id: academic_year_id } })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving Conferencess.",
+        message: err.message || "Some error occurred while retrieving Courses.",
       });
     });
 };
