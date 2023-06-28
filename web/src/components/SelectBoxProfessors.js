@@ -1,39 +1,29 @@
-import React, { useEffect, useState } from "react";
+// @ts-ignore
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
+import { useDispatch, useSelector } from "react-redux";
+import { setProfessors, setSelectedProfessor } from "../store";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { changeProfessorSelected } from "../store";
+import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
 
-const SelectBoxProfessors = ({ modal = false }) => {
+const SelectBoxProfessors = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
   //#endregion
 
-  //#region states
-  const [items, setItems] = useState([]);
+  //#region selectors
+  const { professors, selectedProfesor } = useSelector((state) => ({
+    // @ts-ignore
+    professors: state.professors.list,
+    // @ts-ignore
+    selectedProfesor: state.professors.selected,
+  }));
   //#endregion
 
   //#region functions
-  const RenderOptions = () => {
-    return (
-      <>
-        {!modal && <option>{t("All")}</option>}
-
-        {items.map((professor) => {
-          const fullName = professor.first_name + " " + professor.last_name;
-          return (
-            <option key={professor.id} value={professor.id}>
-              {fullName}
-            </option>
-          );
-        })}
-      </>
-    );
-  };
   const handleChange = (event) => {
-    dispatch(changeProfessorSelected(event.target.value));
+    dispatch(setSelectedProfessor(event.target.value));
   };
   //#endregion
 
@@ -43,13 +33,8 @@ const SelectBoxProfessors = ({ modal = false }) => {
       await axios
         .get(process.env.REACT_APP_API_URL + "/professors")
         .then((response) => {
-          //set list of professors on state
-          setItems(response.data);
-
-          //set the first professor id as selected
-          if (modal && response.data.length > 0) {
-            dispatch(changeProfessorSelected(response.data[0].id));
-          }
+          //set list of professors on redux state
+          dispatch(setProfessors(response.data));
         })
         .catch((error) => {
           console.log(error);
@@ -65,8 +50,20 @@ const SelectBoxProfessors = ({ modal = false }) => {
       <CInputGroupText component="label">
         {t("ChooseProfessor")}
       </CInputGroupText>
-      <CFormSelect onChange={handleChange}>
-        <RenderOptions />
+      <CFormSelect
+        className="cursor"
+        value={selectedProfesor}
+        onChange={handleChange}
+      >
+        <option value={0}>{t("All")}</option>
+        {professors.map((professor) => {
+          const fullName = professor.first_name + " " + professor.last_name;
+          return (
+            <option key={professor.id} value={professor.id}>
+              {fullName}
+            </option>
+          );
+        })}
       </CFormSelect>
     </CInputGroup>
   );

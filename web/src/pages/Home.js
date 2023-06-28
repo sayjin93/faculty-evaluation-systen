@@ -197,18 +197,15 @@ const Home = () => {
   //#region useEffect
   useEffect(() => {
     const fetchAcademicYears = async () => {
-      debugger;
       await axios
         .get(process.env.REACT_APP_API_URL + "/academic-year")
         .then((response) => {
-          debugger;
           // Find the object with "active" set to true
           const activeObject = response.data.find((obj) => obj.active === true);
 
           dispatch(changeAcademicYear(activeObject));
         })
         .catch((error) => {
-          debugger;
           if (error.code === "ERR_NETWORK") {
             dispatch(
               showToast({

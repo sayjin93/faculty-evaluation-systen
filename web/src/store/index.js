@@ -5,16 +5,18 @@ import storage from "redux-persist/lib/storage";
 //slices
 import { modalReducer, setModal } from "./slices/modalSlice";
 import {
-  settingsReducer,
-  changeAcademicYear,
-  changeProfessorSelected,
-} from "./slices/settingsSlice";
+  professorsReducer,
+  setProfessors,
+  setSelectedProfessor,
+} from "./slices/professorsSlice";
+import { settingsReducer, changeAcademicYear } from "./slices/settingsSlice";
 import { sidebarReducer, changeState } from "./slices/sidebarSlice";
 import { toastReducer, showToast, hideToast } from "./slices/toastSlice";
 
 // Combine all your reducers using combineReducers
 const rootReducer = combineReducers({
   modal: modalReducer,
+  professors: professorsReducer,
   settings: settingsReducer,
   sidebar: sidebarReducer,
   toast: toastReducer,
@@ -24,7 +26,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["settings"], // only navigation will be persisted
+  whitelist: ["settings"], // only setings will be persisted
 };
 
 // Create the persisted reducer
@@ -48,8 +50,9 @@ export const persistor = persistStore(store);
 export {
   store,
   setModal,
+  setProfessors,
+  setSelectedProfessor,
   changeAcademicYear,
-  changeProfessorSelected,
   changeState,
   showToast,
   hideToast,
