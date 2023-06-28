@@ -150,7 +150,7 @@ exports.deleteAll = (req, res) => {
 };
 
 // Find all published Users
-exports.findAllPublished = (req, res) => {
+exports.findOneByUsername = (req, res) => {
   Users.findAll({ where: { published: true } })
     .then((data) => {
       res.send(data);
@@ -158,6 +158,21 @@ exports.findAllPublished = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving Users.",
+      });
+    });
+};
+
+// Find a Users with a specific username
+exports.findOneByUsername = (req, res) => {
+  const username = req.params.username;
+
+  Users.findAll({ where: { username: username } })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving Courses.",
       });
     });
 };

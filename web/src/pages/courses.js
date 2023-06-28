@@ -167,7 +167,6 @@ const Courses = () => {
   };
 
   const handleInputChange = (event, fieldName) => {
-    debugger;
     setFormData({
       ...formData,
       [fieldName]: event.target.value,
@@ -311,11 +310,9 @@ const Courses = () => {
             `/courses/academic_year/${academicYearId}`
         )
         .then((response) => {
-          debugger;
           setItems(response.data);
         })
         .catch((error) => {
-          debugger;
           if (error.code === "ERR_NETWORK") {
             dispatch(
               showToast({

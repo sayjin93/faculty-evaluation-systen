@@ -1,6 +1,5 @@
 module.exports = (app) => {
   const users = require("../controllers/users.controller.js");
-  
   const router = require("express").Router();
 
   // Create a new User
@@ -9,8 +8,8 @@ module.exports = (app) => {
   // Retrieve all Users
   router.post("/login", users.findAll);
 
-  // Retrieve all published Users
-  router.get("/published", users.findAllPublished);
+  // Retrieve User with a specific username
+  router.get("/username/:username", users.findOneByUsername);
 
   // Retrieve a single User with id
   router.get("/:id", users.findOne);

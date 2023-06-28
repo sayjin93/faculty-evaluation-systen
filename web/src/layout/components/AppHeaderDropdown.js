@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { batch, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -14,13 +14,22 @@ import {
 } from "@coreui/react";
 import { cilLockLocked, cilSettings, cilUser } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
-import { showToast } from "src/store";
+import { setFirstLogin, showToast } from "src/store";
 
 const AppHeaderDropdown = () => {
   //#region constants
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  //#endregion
+
+  //#region selectors
+  // @ts-ignore
+  const loggedUser = useSelector((state) => state.user.loggedUser);
+  const initials =
+    Object.keys(loggedUser).length !== 0
+      ? loggedUser["first_name"][0] + loggedUser["last_name"][0]
+      : "";
   //#endregion
 
   //#region functions
@@ -31,13 +40,16 @@ const AppHeaderDropdown = () => {
     // Redirect the user to the login page
     navigate("/login", { replace: true });
 
-    //Show toast with notification
-    dispatch(
-      showToast({
-        type: "success",
-        content: "You have been logout successfully!",
-      })
-    );
+    batch(() => {
+      //Show toast with notification
+      dispatch(
+        showToast({
+          type: "success",
+          content: "You have been logout successfully!",
+        })
+      );
+      dispatch(setFirstLogin(true));
+    });
   };
   //#endregion
 
@@ -45,7 +57,7 @@ const AppHeaderDropdown = () => {
     <CDropdown variant="nav-item">
       <CDropdownToggle className="py-0" caret={false}>
         <CAvatar color="primary" textColor="white" status="success" size="md">
-          AB
+          {initials}
         </CAvatar>
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { batch, useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { showToast, changeAcademicYear } from "../store";
+import { showToast, changeAcademicYear, setFirstLogin } from "../store";
 
 import {
   CAvatar,
@@ -62,8 +62,16 @@ const Home = () => {
   const dispatch = useDispatch();
   //#endregion
 
-  // @ts-ignore
-  const academicYear = useSelector((state) => state.settings.academicYear);
+  //#region selectors
+  const { academicYear, loggedUser, firstLogin } = useSelector((state) => ({
+    // @ts-ignore
+    academicYear: state.settings.academicYear,
+    // @ts-ignore
+    loggedUser: state.user.loggedUser,
+    // @ts-ignore
+    firstLogin: state.settings.firstLogin,
+  }));
+  //#endregion
 
   //#region data
   const uniData = [
@@ -231,7 +239,26 @@ const Home = () => {
         });
     };
 
-    if (!academicYear) fetchAcademicYears();
+    if (!academicYear) {
+      fetchAcademicYears();
+    }
+
+    if (firstLogin) {
+      batch(() => {
+        dispatch(
+          showToast({
+            type: "success",
+            content:
+              t("Welcome") +
+              " " +
+              loggedUser.first_name +
+              " " +
+              loggedUser.last_name,
+          })
+        );
+        dispatch(setFirstLogin(false));
+      });
+    }
   }, []);
   //#endregion
 

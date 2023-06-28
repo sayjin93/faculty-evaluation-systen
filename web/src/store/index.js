@@ -9,9 +9,14 @@ import {
   setProfessors,
   setSelectedProfessor,
 } from "./slices/professorsSlice";
-import { settingsReducer, changeAcademicYear } from "./slices/settingsSlice";
+import {
+  settingsReducer,
+  changeAcademicYear,
+  setFirstLogin,
+} from "./slices/settingsSlice";
 import { sidebarReducer, changeState } from "./slices/sidebarSlice";
 import { toastReducer, showToast, hideToast } from "./slices/toastSlice";
+import { userReducer, setUser } from "./slices/userSlice";
 
 // Combine all your reducers using combineReducers
 const rootReducer = combineReducers({
@@ -20,6 +25,7 @@ const rootReducer = combineReducers({
   settings: settingsReducer,
   sidebar: sidebarReducer,
   toast: toastReducer,
+  user: userReducer,
 });
 
 // Configure redux-persist
@@ -56,4 +62,6 @@ export {
   changeState,
   showToast,
   hideToast,
+  setUser,
+  setFirstLogin,
 };

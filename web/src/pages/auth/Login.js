@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { setCookie } from "src/hooks";
-import { showToast } from "../../store";
+import { setUser, showToast } from "../../store";
 
 import {
   CButton,
@@ -27,13 +27,10 @@ import { cilLockLocked, cilUser, cifAl, cifGb } from "@coreui/icons";
 import axios from "axios";
 
 const LoginPage = () => {
-  //#region redux
-  const dispatch = useDispatch();
-  //#endregion
-
   //#region constants
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   //#endregion
 
   //#region states
@@ -63,7 +60,7 @@ const LoginPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    
+
     axios
       .post(process.env.REACT_APP_API_URL + "/users/login", {
         username: formData.username,
@@ -73,6 +70,50 @@ const LoginPage = () => {
         if (response.data) {
           localStorage.setItem("jwt_token", response.data);
           navigate("/", { replace: true });
+
+          const fetchUserData = async () => {
+            await axios
+              .get(
+                process.env.REACT_APP_API_URL +
+                  `/users/username/${formData.username}`
+              )
+              .then((response) => {
+                if (response.data) {
+                  const loggedUser = {
+                    first_name: response.data[0].first_name,
+                    last_name: response.data[0].last_name,
+                    username: response.data[0].username,
+                    email: response.data[0].email,
+                  };
+                  dispatch(setUser(loggedUser));
+                }
+              })
+              .catch((error) => {
+                if (error.code === "ERR_NETWORK") {
+                  dispatch(
+                    showToast({
+                      type: "danger",
+                      content: error.message,
+                    })
+                  );
+                } else if (error.code === "ERR_BAD_REQUEST") {
+                  // Remove the JWT token from the Local Storage
+                  localStorage.removeItem("jwt_token");
+
+                  // Redirect the user to the login page
+                  navigate("/login", { replace: true });
+
+                  // Show alert
+                  dispatch(
+                    showToast({
+                      type: "danger",
+                      content: error.response.statusText,
+                    })
+                  );
+                }
+              });
+          };
+          fetchUserData();
         }
       })
       .catch((error) => {
@@ -83,8 +124,6 @@ const LoginPage = () => {
           })
         );
       });
-
-
   };
   //#endregion
 
