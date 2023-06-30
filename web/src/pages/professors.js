@@ -129,7 +129,6 @@ const Professors = () => {
         );
       })
       .catch((error) => {
-        debugger;
         if (error.response && error.response.status === 409) {
           dispatch(
             showToast({

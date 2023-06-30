@@ -32,7 +32,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["settings"], // only setings will be persisted
+  whitelist: ["settings", "user"], // only setings will be persisted
 };
 
 // Create the persisted reducer
