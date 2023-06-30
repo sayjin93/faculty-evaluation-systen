@@ -7,6 +7,7 @@ import {
   CButton,
   CButtonGroup,
   CContainer,
+  CForm,
   CFormInput,
   CFormSelect,
   CHeader,
@@ -43,16 +44,152 @@ const Professors = () => {
   const [items, setItems] = useState([]);
   const [formData, setFormData] = useState(defaultFormData);
   const [status, setStatus] = useState(null);
+  const [validated, setValidated] = useState(false);
   const [modalOptions, setModalOptions] = useState({
     editMode: false,
     selectedId: -1,
-    disabled: true,
   });
+
   // @ts-ignore
   const modal = useSelector((state) => state.modal.modal);
   //#endregion
 
   //#region functions
+  const addProfessor = async () => {
+    await axios
+      .post(process.env.REACT_APP_API_URL + "/professors", {
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        gender: formData.gender,
+      })
+      .then((response) => {
+        const firstName = response.data.first_name;
+        const lastName = response.data.last_name;
+
+        setStatus(response);
+        setValidated(false);
+
+        dispatch(
+          showToast({
+            type: "success",
+            content:
+              "Professor " +
+              firstName +
+              " " +
+              lastName +
+              " was added successful!",
+          })
+        );
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
+  const editProfessor = async (id) => {
+    await axios
+      .put(process.env.REACT_APP_API_URL + "/professors/" + id, {
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        gender: formData.gender,
+      })
+      .then((response) => {
+        setStatus(response);
+        setValidated(false);
+        dispatch(
+          showToast({
+            type: "success",
+            content: "Professor with id " + id + " edited successful!",
+          })
+        );
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
+  const deleteProfessor = async (id) => {
+    await axios
+      .delete(process.env.REACT_APP_API_URL + "/professors/" + id)
+      .then((response) => {
+        setStatus(response);
+        dispatch(
+          showToast({
+            type: "success",
+            content: "Professor with id " + id + " deleted successful!",
+          })
+        );
+      })
+      .catch((error) => {
+        debugger;
+        if (error.response && error.response.status === 409) {
+          dispatch(
+            showToast({
+              type: "danger",
+              content:
+                "Cannot delete the professor because it has related records in another table.",
+            })
+          );
+        } else {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error.message,
+            })
+          );
+        }
+      });
+  };
+  const fetchOneProfessor = async (id) => {
+    await axios
+      .get(process.env.REACT_APP_API_URL + "/professors/" + id)
+      .then((response) => {
+        setFormData({
+          ...formData,
+          firstname: response.data.first_name,
+          lastname: response.data.last_name,
+          gender: response.data.gender,
+        });
+        dispatch(setModal(true));
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
+
+  const handleInputChange = (event, fieldName) => {
+    setFormData({
+      ...formData,
+      [fieldName]: event.target.value,
+    });
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+    } else {
+      if (modalOptions.editMode) editProfessor(modalOptions.selectedId);
+      else addProfessor();
+      dispatch(setModal(false));
+    }
+    setValidated(true);
+  };
+
   const RenderTableBody = () => {
     if (items.length > 0) {
       return (
@@ -112,120 +249,13 @@ const Professors = () => {
       return (
         <CTableBody>
           <CTableRow>
-            <CTableHeaderCell>{t("NoDataToDisplay")}</CTableHeaderCell>
+            <CTableHeaderCell colSpan={7}>
+              {t("NoDataToDisplay")}
+            </CTableHeaderCell>
           </CTableRow>
         </CTableBody>
       );
     }
-  };
-
-  const handleInputChange = (event, fieldName) => {
-    setFormData({
-      ...formData,
-      [fieldName]: event.target.value,
-    });
-  };
-
-  const fetchOneProfessor = async (id) => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/professors/" + id)
-      .then((response) => {
-        setFormData({
-          ...formData,
-          firstname: response.data.first_name,
-          lastname: response.data.last_name,
-          gender: response.data.gender,
-        });
-        dispatch(setModal(true));
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
-  const addProfessor = async () => {
-    await axios
-      .post(process.env.REACT_APP_API_URL + "/professors", {
-        firstname: formData.firstname,
-        lastname: formData.lastname,
-        gender: formData.gender,
-      })
-      .then((response) => {
-        const firstName = response.data.first_name;
-        const lastName = response.data.last_name;
-
-        setStatus(response);
-        dispatch(
-          showToast({
-            type: "success",
-            content:
-              "Professor " +
-              firstName +
-              " " +
-              lastName +
-              " was added successful!",
-          })
-        );
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
-  const editProfessor = async (id) => {
-    await axios
-      .put(process.env.REACT_APP_API_URL + "/professors/" + id, {
-        firstname: formData.firstname,
-        lastname: formData.lastname,
-        gender: formData.gender,
-      })
-      .then((response) => {
-        setStatus(response);
-
-        dispatch(
-          showToast({
-            type: "success",
-            content: "Professor with id " + id + " edited successful!",
-          })
-        );
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
-  const deleteProfessor = async (id) => {
-    await axios
-      .delete(process.env.REACT_APP_API_URL + "/professors/" + id)
-      .then((response) => {
-        setStatus(response);
-        dispatch(
-          showToast({
-            type: "success",
-            content: "Professor with id " + id + " deleted successful!",
-          })
-        );
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
   };
   //#endregion
 
@@ -267,16 +297,6 @@ const Professors = () => {
   }, [status]);
 
   useEffect(() => {
-    setModalOptions({
-      ...modalOptions,
-      disabled:
-        formData.firstname === "" ||
-        formData.lastname === "" ||
-        formData.gender === "",
-    });
-  }, [formData]);
-
-  useEffect(() => {
     if (modalOptions.editMode) fetchOneProfessor(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion
@@ -308,64 +328,63 @@ const Professors = () => {
           setModalOptions({
             editMode: false,
             selectedId: -1,
-            disabled: true,
           });
         }}
       >
-        <CModalHeader>
-          <CModalTitle>
-            {modalOptions.editMode ? t("Edit") : t("Add")}
-          </CModalTitle>
-        </CModalHeader>
+        <CForm
+          className="needs-validation"
+          noValidate
+          validated={validated}
+          onSubmit={handleSubmit}
+        >
+          <CModalHeader>
+            <CModalTitle>
+              {modalOptions.editMode ? t("Edit") : t("Add")}
+            </CModalTitle>
+          </CModalHeader>
 
-        <CModalBody>
-          <CFormInput
-            type="text"
-            floatingClassName="mb-3"
-            floatingLabel={t("FirstName")}
-            placeholder={t("FirstName")}
-            value={formData.firstname}
-            onChange={(event) => handleInputChange(event, "firstname")}
-          />
-          <CFormInput
-            type="text"
-            floatingClassName="mb-3"
-            floatingLabel={t("LastName")}
-            placeholder={t("LastName")}
-            value={formData.lastname}
-            onChange={(event) => handleInputChange(event, "lastname")}
-          />
-          <CFormSelect
-            floatingLabel={t("Gender")}
-            onChange={(event) => handleInputChange(event, "gender")}
-            value={formData.gender}
-          >
-            <option value="m">{t("Male")}</option>
-            <option value="f">{t("Female")}</option>
-          </CFormSelect>
-        </CModalBody>
+          <CModalBody>
+            <CFormInput
+              type="text"
+              floatingClassName="mb-3"
+              floatingLabel={t("FirstName")}
+              placeholder={t("FirstName")}
+              value={formData.firstname}
+              onChange={(event) => handleInputChange(event, "firstname")}
+            />
+            <CFormInput
+              type="text"
+              floatingClassName="mb-3"
+              floatingLabel={t("LastName")}
+              placeholder={t("LastName")}
+              value={formData.lastname}
+              onChange={(event) => handleInputChange(event, "lastname")}
+            />
+            <CFormSelect
+              floatingLabel={t("Gender")}
+              onChange={(event) => handleInputChange(event, "gender")}
+              value={formData.gender}
+            >
+              <option value="m">{t("Male")}</option>
+              <option value="f">{t("Female")}</option>
+            </CFormSelect>
+          </CModalBody>
 
-        <CModalFooter>
-          <CButton
-            color="secondary"
-            onClick={() => {
-              dispatch(setModal(false));
-            }}
-          >
-            {t("Close")}
-          </CButton>
-          <CButton
-            disabled={modalOptions.disabled}
-            onClick={() => {
-              modalOptions.editMode
-                ? editProfessor(modalOptions.selectedId)
-                : addProfessor();
-              dispatch(setModal(false));
-            }}
-          >
-            {modalOptions.editMode ? t("Edit") : t("Add")}
-          </CButton>
-        </CModalFooter>
+          <CModalFooter>
+            <CButton
+              color="secondary"
+              onClick={() => {
+                dispatch(setModal(false));
+                setValidated(false);
+              }}
+            >
+              {t("Close")}
+            </CButton>
+            <CButton type="submit">
+              {modalOptions.editMode ? t("Edit") : t("Add")}
+            </CButton>
+          </CModalFooter>
+        </CForm>
       </CModal>
     </>
   );

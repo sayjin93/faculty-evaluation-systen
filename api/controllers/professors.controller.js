@@ -113,9 +113,15 @@ exports.delete = (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).send({
-        message: "Could not delete Professors with id=" + id,
-      });
+      if (err.name === "SequelizeForeignKeyConstraintError") {
+        res.status(409).send({
+          message: `Cannot delete the Professor with id=${id} due to foreign key constraint.`,
+        });
+      } else {
+        res.status(500).send({
+          message: "Could not delete Professor with id=" + id,
+        });
+      }
     });
 };
 
@@ -129,10 +135,15 @@ exports.deleteAll = (req, res) => {
       res.send({ message: `${nums} Professors were deleted successfully!` });
     })
     .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all professors.",
-      });
+      if (err.name === "SequelizeForeignKeyConstraintError") {
+        res.status(409).send({
+          message: `Cannot delete professor due to foreign key constraint.`,
+        });
+      } else {
+        res.status(500).send({
+          message: "Some error occurred while removing all professors.",
+        });
+      }
     });
 };
 

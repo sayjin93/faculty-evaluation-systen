@@ -64,7 +64,6 @@ const Courses = () => {
   //#endregion
 
   //#region states
-
   const [items, setItems] = useState([]);
   const [formData, setFormData] = useState(defaultFormData);
   const [status, setStatus] = useState(null);
@@ -122,7 +121,6 @@ const Courses = () => {
         semester: formData.semester,
         week_hours: formData.weekHours,
         program: formData.program,
-        academic_year_id: academicYearId,
         professor_id: formData.professor,
       })
       .then((response) => {
@@ -155,6 +153,30 @@ const Courses = () => {
             content: "Course with id " + id + " deleted successful!",
           })
         );
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
+  const fetchOneCourse = async (id) => {
+    await axios
+      .get(process.env.REACT_APP_API_URL + "/courses/" + id)
+      .then((response) => {
+        setFormData({
+          ...formData,
+          courseName: response.data.name,
+          courseNumber: response.data.number,
+          semester: response.data.semester,
+          weekHours: response.data.week_hours,
+          program: response.data.program,
+          professor: response.data.professor_id,
+        });
+        dispatch(setModal(true));
       })
       .catch((error) => {
         dispatch(
@@ -342,34 +364,7 @@ const Courses = () => {
   }, [status]);
 
   useEffect(() => {
-    if (modalOptions.editMode) {
-      const fetchOneCourse = async (id) => {
-        await axios
-          .get(process.env.REACT_APP_API_URL + "/courses/" + id)
-          .then((response) => {
-            setFormData({
-              ...formData,
-              courseName: response.data.name,
-              courseNumber: response.data.number,
-              semester: response.data.semester,
-              weekHours: response.data.week_hours,
-              program: response.data.program,
-              professor: response.data.professor_id,
-            });
-            dispatch(setModal(true));
-          })
-          .catch((error) => {
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error,
-              })
-            );
-          });
-      };
-
-      fetchOneCourse(modalOptions.selectedId);
-    }
+    if (modalOptions.editMode) fetchOneCourse(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion
 
@@ -415,6 +410,7 @@ const Courses = () => {
               {modalOptions.editMode ? t("Edit") : t("Add")}
             </CModalTitle>
           </CModalHeader>
+
           <CModalBody>
             <CFormInput
               required
@@ -498,6 +494,7 @@ const Courses = () => {
               })}
             </CFormSelect>
           </CModalBody>
+
           <CModalFooter>
             <CButton
               color="secondary"
