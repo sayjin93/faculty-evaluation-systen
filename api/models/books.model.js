@@ -9,9 +9,6 @@ module.exports = (sequelize, Sequelize) => {
     publication_year: {
       type: Sequelize.DATEONLY,
     },
-    authors: {
-      type: Sequelize.STRING,
-    },
     academic_year_id: {
       type: Sequelize.INTEGER,
     },

@@ -126,6 +126,7 @@ const Courses = () => {
       .then((response) => {
         setStatus(response);
         setValidated(false);
+
         dispatch(
           showToast({
             type: "success",
@@ -147,36 +148,13 @@ const Courses = () => {
       .delete(process.env.REACT_APP_API_URL + "/courses/" + id)
       .then((response) => {
         setStatus(response);
+
         dispatch(
           showToast({
             type: "success",
             content: "Course with id " + id + " deleted successful!",
           })
         );
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
-  const fetchOneCourse = async (id) => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/courses/" + id)
-      .then((response) => {
-        setFormData({
-          ...formData,
-          courseName: response.data.name,
-          courseNumber: response.data.number,
-          semester: response.data.semester,
-          weekHours: response.data.week_hours,
-          program: response.data.program,
-          professor: response.data.professor_id,
-        });
-        dispatch(setModal(true));
       })
       .catch((error) => {
         dispatch(
@@ -221,7 +199,6 @@ const Courses = () => {
             const professor = professors.find(
               (prof) => prof.id === element.professor_id
             );
-
             const professorFullName = professor
               ? professor.first_name + " " + professor.last_name
               : "";
@@ -293,38 +270,6 @@ const Courses = () => {
 
   //#region useEffect
   useEffect(() => {
-    // const fetchCourses = async () => {
-    //   await axios
-    //     .get(process.env.REACT_APP_API_URL + "/courses")
-    //     .then((response) => {
-    //       setItems(response.data);
-    //     })
-    //     .catch((error) => {
-    //       if (error.code === "ERR_NETWORK") {
-    //         dispatch(
-    //           showToast({
-    //             type: "danger",
-    //             content: error.message,
-    //           })
-    //         );
-    //       } else if (error.code === "ERR_BAD_REQUEST") {
-    //         // Remove the JWT token from the Local Storage
-    //         localStorage.removeItem("jwt_token");
-
-    //         // Redirect the user to the login page
-    //         navigate("/login", { replace: true });
-
-    //         // Show alert
-    //         dispatch(
-    //           showToast({
-    //             type: "danger",
-    //             content: error.response.statusText,
-    //           })
-    //         );
-    //       }
-    //     });
-    // };
-
     const fetchCourses = async () => {
       await axios
         .get(
@@ -364,6 +309,31 @@ const Courses = () => {
   }, [status]);
 
   useEffect(() => {
+    const fetchOneCourse = async (id) => {
+      await axios
+        .get(process.env.REACT_APP_API_URL + "/courses/" + id)
+        .then((response) => {
+          setFormData({
+            ...formData,
+            courseName: response.data.name,
+            courseNumber: response.data.number,
+            semester: response.data.semester,
+            weekHours: response.data.week_hours,
+            program: response.data.program,
+            professor: response.data.professor_id,
+          });
+          dispatch(setModal(true));
+        })
+        .catch((error) => {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error,
+            })
+          );
+        });
+    };
+
     if (modalOptions.editMode) fetchOneCourse(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion

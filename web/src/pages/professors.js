@@ -147,27 +147,6 @@ const Professors = () => {
         }
       });
   };
-  const fetchOneProfessor = async (id) => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/professors/" + id)
-      .then((response) => {
-        setFormData({
-          ...formData,
-          firstname: response.data.first_name,
-          lastname: response.data.last_name,
-          gender: response.data.gender,
-        });
-        dispatch(setModal(true));
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
 
   const handleInputChange = (event, fieldName) => {
     setFormData({
@@ -296,6 +275,28 @@ const Professors = () => {
   }, [status]);
 
   useEffect(() => {
+    const fetchOneProfessor = async (id) => {
+      await axios
+        .get(process.env.REACT_APP_API_URL + "/professors/" + id)
+        .then((response) => {
+          setFormData({
+            ...formData,
+            firstname: response.data.first_name,
+            lastname: response.data.last_name,
+            gender: response.data.gender,
+          });
+          dispatch(setModal(true));
+        })
+        .catch((error) => {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error,
+            })
+          );
+        });
+    };
+
     if (modalOptions.editMode) fetchOneProfessor(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion

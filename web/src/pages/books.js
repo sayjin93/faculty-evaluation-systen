@@ -8,7 +8,9 @@ import {
   CButton,
   CButtonGroup,
   CContainer,
+  CForm,
   CFormInput,
+  CFormSelect,
   CHeader,
   CHeaderBrand,
   CModal,
@@ -43,31 +45,157 @@ const Books = () => {
     title: "",
     publicationHouse: "",
     publicationYear: new Date(),
-    authors: "",
+    professor: "",
   };
+  //#endregion
+
+  //#region selectors
+  const { professors, selectedProfessor, modal, academicYearId } = useSelector(
+    (state) => ({
+      // @ts-ignore
+      professors: state.professors.list,
+      // @ts-ignore
+      selectedProfessor: state.professors.selected,
+      // @ts-ignore
+      modal: state.modal.modal,
+      // @ts-ignore
+      academicYearId: state.settings.academicYear.id,
+    })
+  );
   //#endregion
 
   //#region states
   const [items, setItems] = useState([]);
   const [formData, setFormData] = useState(defaultFormData);
   const [status, setStatus] = useState(null);
+  const [validated, setValidated] = useState(false);
   const [modalOptions, setModalOptions] = useState({
     editMode: false,
     selectedId: -1,
-    disabled: true,
   });
 
-  // @ts-ignore
-  const modal = useSelector((state) => state.modal.modal);
+  const filteredItems =
+    Number(selectedProfessor) !== 0
+      ? items.filter((item) => item.professor_id === Number(selectedProfessor))
+      : items;
   //#endregion
 
   //#region functions
+  const addBook = async () => {
+    await axios
+      .post(process.env.REACT_APP_API_URL + "/books", {
+        title: formData.title,
+        publication_house: formData.publicationHouse,
+        publication_year: formData.publicationYear,
+        academic_year_id: academicYearId,
+        professor_id: formData.professor,
+      })
+      .then((response) => {
+        setStatus(response);
+        setValidated(false);
+
+        const title = response.data.title;
+        dispatch(
+          showToast({
+            type: "success",
+            content: "Book with title " + title + " was added successful!",
+          })
+        );
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
+  const editBook = async (id) => {
+    await axios
+      .put(process.env.REACT_APP_API_URL + "/books/" + id, {
+        title: formData.title,
+        publication_house: formData.publicationHouse,
+        publication_year: formData.publicationYear,
+        professor_id: formData.professor,
+      })
+      .then((response) => {
+        setStatus(response);
+        setValidated(false);
+
+        dispatch(
+          showToast({
+            type: "success",
+            content: "Book with id " + id + " edited successful!",
+          })
+        );
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
+  const deleteBook = async (id) => {
+    await axios
+      .delete(process.env.REACT_APP_API_URL + "/books/" + id)
+      .then((response) => {
+        setStatus(response);
+
+        dispatch(
+          showToast({
+            type: "success",
+            content: "Book with id " + id + " deleted successful!",
+          })
+        );
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
+
+  const handleInputChange = (event, fieldName) => {
+    setFormData({
+      ...formData,
+      [fieldName]: event.target.value,
+    });
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+    } else {
+      if (modalOptions.editMode) editBook(modalOptions.selectedId);
+      else addBook();
+      dispatch(setModal(false));
+    }
+    setValidated(true);
+  };
+
   const RenderTableBody = () => {
-    if (items.length > 0) {
+    if (filteredItems.length > 0) {
       return (
         <CTableBody>
-          {items.map((element) => {
+          {filteredItems.map((element) => {
             const id = element.id;
+
+            // Find the professor with the matching ID
+            const professor = professors.find(
+              (prof) => prof.id === element.professor_id
+            );
+            const professorFullName = professor
+              ? professor.first_name + " " + professor.last_name
+              : "";
 
             let publication = element.publication_year
               ? formatDateFromSQL(element.publication_year, true)
@@ -85,7 +213,7 @@ const Books = () => {
                 <CTableDataCell>{element.title}</CTableDataCell>
                 <CTableDataCell>{element.publication_house}</CTableDataCell>
                 <CTableDataCell>{publication}</CTableDataCell>
-                <CTableDataCell>{element.authors}</CTableDataCell>
+                <CTableDataCell>{professorFullName}</CTableDataCell>
                 <CTableDataCell>{createdAt}</CTableDataCell>
                 <CTableDataCell>{updatedAt}</CTableDataCell>
                 <CTableDataCell>
@@ -125,124 +253,25 @@ const Books = () => {
       return (
         <CTableBody>
           <CTableRow>
-            <CTableHeaderCell>{t("NoDataToDisplay")}</CTableHeaderCell>
+            <CTableHeaderCell colSpan={6}>
+              {t("NoDataToDisplay")}
+            </CTableHeaderCell>
           </CTableRow>
         </CTableBody>
       );
     }
   };
 
-  const handleInputChange = (event, fieldName) => {
-    setFormData({
-      ...formData,
-      [fieldName]: event.target.value,
-    });
-  };
-
-  const fetchOneBook = async (id) => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/books/" + id)
-      .then((response) => {
-        setFormData({
-          ...formData,
-          title: response.data.title,
-          publicationHouse: response.data.publication_house,
-          publicationYear: response.data.publication_year,
-          authors: response.data.authors,
-        });
-        dispatch(setModal(true));
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
-  const addBook = async () => {
-    await axios
-      .post(process.env.REACT_APP_API_URL + "/books", {
-        title: formData.title,
-        publication_house: formData.publicationHouse,
-        publication_year: formData.publicationYear,
-        authors: formData.authors,
-      })
-      .then((response) => {
-        const title = response.data.title;
-
-        setStatus(response);
-        dispatch(
-          showToast({
-            type: "success",
-            content: "Book with title " + title + " was added successful!",
-          })
-        );
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
-  const editBook = async (id) => {
-    await axios
-      .put(process.env.REACT_APP_API_URL + "/books/" + id, {
-        title: formData.title,
-        publication_house: formData.publicationHouse,
-        publication_year: formData.publicationYear,
-        authors: formData.authors,
-      })
-      .then((response) => {
-        setStatus(response);
-        dispatch(
-          showToast({
-            type: "success",
-            content: "Book with id " + id + " edited successful!",
-          })
-        );
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
-  const deleteBook = async (id) => {
-    await axios
-      .delete(process.env.REACT_APP_API_URL + "/books/" + id)
-      .then((response) => {
-        setStatus(response);
-        dispatch(
-          showToast({
-            type: "success",
-            content: "Book with id " + id + " deleted successful!",
-          })
-        );
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
   //#endregion
 
   //#region useEffect
   useEffect(() => {
     const fetchBooks = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/books")
+        .get(
+          process.env.REACT_APP_API_URL +
+            `/books/academic_year/${academicYearId}`
+        )
         .then((response) => {
           setItems(response.data);
         })
@@ -276,17 +305,29 @@ const Books = () => {
   }, [status]);
 
   useEffect(() => {
-    setModalOptions({
-      ...modalOptions,
-      disabled:
-        formData.title === "" ||
-        formData.publicationHouse === "" ||
-        formData.publicationYear === null ||
-        formData.authors === "",
-    });
-  }, [formData]);
+    const fetchOneBook = async (id) => {
+      await axios
+        .get(process.env.REACT_APP_API_URL + "/books/" + id)
+        .then((response) => {
+          setFormData({
+            ...formData,
+            title: response.data.title,
+            publicationHouse: response.data.publication_house,
+            publicationYear: response.data.publication_year,
+            professor: response.data.professor_id,
+          });
+          dispatch(setModal(true));
+        })
+        .catch((error) => {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error,
+            })
+          );
+        });
+    };
 
-  useEffect(() => {
     if (modalOptions.editMode) fetchOneBook(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion
@@ -307,7 +348,6 @@ const Books = () => {
 
       <CTable responsive striped hover align="middle">
         <TableHeader items={items} />
-
         <RenderTableBody />
       </CTable>
 
@@ -320,87 +360,107 @@ const Books = () => {
           setModalOptions({
             editMode: false,
             selectedId: -1,
-            disabled: true,
           });
         }}
       >
-        <CModalHeader>
-          <CModalTitle>
-            {modalOptions.editMode
-              ? t("Edit") + " " + t("Book")
-              : t("Add") + " " + t("New") + " " + t("Book")}
-          </CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CFormInput
-            type="text"
-            floatingClassName="mb-3"
-            floatingLabel={t("BookTitle")}
-            placeholder={t("BookTitle")}
-            value={formData.title}
-            onChange={(event) => handleInputChange(event, "title")}
-          />
-          <CFormInput
-            type="text"
-            floatingClassName="mb-3"
-            floatingLabel={t("Author(s)")}
-            placeholder={t("Author(s)")}
-            value={formData.authors}
-            onChange={(event) => handleInputChange(event, "authors")}
-          />
+        <CForm
+          className="needs-validation"
+          noValidate
+          validated={validated}
+          onSubmit={handleSubmit}
+        >
+          <CModalHeader>
+            <CModalTitle>
+              {modalOptions.editMode ? t("Edit") : t("Add")}
+            </CModalTitle>
+          </CModalHeader>
 
-          <CFormInput
-            type="text"
-            floatingClassName="mb-3"
-            floatingLabel={t("Publisher")}
-            placeholder={t("Publisher")}
-            value={formData.publicationHouse}
-            onChange={(event) => handleInputChange(event, "publicationHouse")}
-          />
-
-          <label className="form-label">{t("PublicationYear")}</label>
-          <div className="input-group flex-nowrap">
-            <span className="input-group-text" id="basic-addon1">
-              <CIcon icon={cilCalendar} />
-            </span>
-            <Flatpickr
-              aria-describedby="basic-addon1"
-              className="form-control"
-              value={formData.publicationYear}
-              options={{
-                dateFormat: "d-m-Y",
-              }}
-              onChange={(dateObj) => {
-                const date = dateObj[0];
-                handleInputChange(
-                  { target: { value: date } },
-                  "publicationYear"
-                );
-              }}
+          <CModalBody>
+            <CFormInput
+              required
+              feedbackInvalid={t("PleaseProvideBookTitle")}
+              type="text"
+              floatingClassName="mb-3"
+              floatingLabel={t("BookTitle")}
+              placeholder={t("BookTitle")}
+              value={formData.title}
+              onChange={(event) => handleInputChange(event, "title")}
             />
-          </div>
-        </CModalBody>
-        <CModalFooter>
-          <CButton
-            color="secondary"
-            onClick={() => {
-              dispatch(setModal(false));
-            }}
-          >
-            {t("Close")}
-          </CButton>
-          <CButton
-            disabled={modalOptions.disabled}
-            onClick={() => {
-              modalOptions.editMode
-                ? editBook(modalOptions.selectedId)
-                : addBook();
-              dispatch(setModal(false));
-            }}
-          >
-            {modalOptions.editMode ? t("Edit") : t("Add")}
-          </CButton>
-        </CModalFooter>
+
+            <CFormInput
+              required
+              feedbackInvalid={t("PleaseProvideBookPublisher")}
+              type="text"
+              floatingClassName="mb-3"
+              floatingLabel={t("Publisher")}
+              placeholder={t("Publisher")}
+              value={formData.publicationHouse}
+              onChange={(event) => handleInputChange(event, "publicationHouse")}
+            />
+
+            <div className="mb-3">
+              <label className="form-label">{t("PublicationYear")}</label>
+              <div className="input-group flex-nowrap">
+                <span className="input-group-text" id="basic-addon1">
+                  <CIcon icon={cilCalendar} />
+                </span>
+                <Flatpickr
+                  aria-describedby="basic-addon1"
+                  className="form-control"
+                  value={formData.publicationYear}
+                  options={{
+                    dateFormat: "d-m-Y",
+                  }}
+                  onChange={(dateObj) => {
+                    const date = dateObj[0];
+                    handleInputChange(
+                      { target: { value: date } },
+                      "publicationYear"
+                    );
+                  }}
+                />
+              </div>
+            </div>
+
+            <CFormSelect
+              required
+              feedbackInvalid={t("PleaseSelectAProfessor")}
+              className="cursor"
+              floatingClassName="mb-3"
+              floatingLabel={t("Author")}
+              value={formData.professor}
+              onChange={(event) => handleInputChange(event, "professor")}
+            >
+              <option value="" disabled>
+                {t("Choose") + "..."}
+              </option>
+              {professors.map((professor) => {
+                const fullName =
+                  professor.first_name + " " + professor.last_name;
+                return (
+                  <option key={professor.id} value={professor.id}>
+                    {fullName}
+                  </option>
+                );
+              })}
+            </CFormSelect>
+          </CModalBody>
+
+          <CModalFooter>
+            <CButton
+              color="secondary"
+              onClick={() => {
+                dispatch(setModal(false));
+                setValidated(false);
+              }}
+            >
+              {t("Close")}
+            </CButton>
+            <CButton type="submit">
+              {modalOptions.editMode ? t("Edit") : t("Add")}
+            </CButton>
+          </CModalFooter>
+        </CForm>
       </CModal>
     </>
   );

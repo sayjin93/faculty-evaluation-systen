@@ -18,7 +18,7 @@ exports.create = (req, res) => {
     present_title: req.body.present_title,
     authors: req.body.authors,
     dates: req.body.dates,
-    academic_year_id: req.body.academic_year_id || new Date(),
+    academic_year_id: req.body.academic_year_id,
     professor_id: req.body.professor_id,
   };
 

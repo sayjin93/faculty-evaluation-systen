@@ -92,9 +92,10 @@ const Papers = () => {
         professor_id: formData.professor,
       })
       .then((response) => {
-        const title = response.data.title;
-
         setStatus(response);
+        setValidated(false);
+
+        const title = response.data.title;
         dispatch(
           showToast({
             type: "success",
@@ -121,6 +122,7 @@ const Papers = () => {
       })
       .then((response) => {
         setStatus(response);
+
         dispatch(
           showToast({
             type: "success",
@@ -142,34 +144,13 @@ const Papers = () => {
       .delete(process.env.REACT_APP_API_URL + "/papers/" + id)
       .then((response) => {
         setStatus(response);
+
         dispatch(
           showToast({
             type: "success",
             content: "Paper with id " + id + " deleted successful!",
           })
         );
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
-      });
-  };
-  const fetchOnePaper = async (id) => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/papers/" + id)
-      .then((response) => {
-        setFormData({
-          ...formData,
-          title: response.data.title,
-          journal: response.data.journal,
-          publication: response.data.publication,
-          professor: response.data.professor_id,
-        });
-        dispatch(setModal(true));
       })
       .catch((error) => {
         dispatch(
@@ -216,7 +197,6 @@ const Papers = () => {
             const professor = professors.find(
               (prof) => prof.id === element.professor_id
             );
-
             const professorFullName = professor
               ? professor.first_name + " " + professor.last_name
               : "";
@@ -325,6 +305,29 @@ const Papers = () => {
   }, [status]);
 
   useEffect(() => {
+    const fetchOnePaper = async (id) => {
+      await axios
+        .get(process.env.REACT_APP_API_URL + "/papers/" + id)
+        .then((response) => {
+          setFormData({
+            ...formData,
+            title: response.data.title,
+            journal: response.data.journal,
+            publication: response.data.publication,
+            professor: response.data.professor_id,
+          });
+          dispatch(setModal(true));
+        })
+        .catch((error) => {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error,
+            })
+          );
+        });
+    };
+
     if (modalOptions.editMode) fetchOnePaper(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion
@@ -374,9 +377,9 @@ const Papers = () => {
 
           <CModalBody>
             <CFormInput
-              type="text"
-              feedbackInvalid={t("PleaseProvidePaperTitle")}
               required
+              feedbackInvalid={t("PleaseProvidePaperTitle")}
+              type="text"
               floatingClassName="mb-3"
               floatingLabel={t("PaperTitle")}
               placeholder={t("PaperTitle")}
@@ -384,8 +387,8 @@ const Papers = () => {
               onChange={(event) => handleInputChange(event, "title")}
             />
             <CFormInput
-              feedbackInvalid={t("PleaseProvidePaperJournal")}
               required
+              feedbackInvalid={t("PleaseProvidePaperJournal")}
               type="text"
               floatingClassName="mb-3"
               floatingLabel={t("Journal")}
@@ -420,9 +423,9 @@ const Papers = () => {
             </div>
 
             <CFormSelect
-              className="cursor"
               required
               feedbackInvalid={t("PleaseSelectAProfessor")}
+              className="cursor"
               floatingClassName="mb-3"
               floatingLabel={t("Professor")}
               value={formData.professor}

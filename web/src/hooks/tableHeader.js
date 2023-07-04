@@ -39,7 +39,11 @@ function TableHeader({ items }) {
             else if (element === "updatedAt") thead = t("UpdatedAt");
 
             return (
-              <CTableHeaderCell key={element} scope="col">
+              <CTableHeaderCell
+                key={element}
+                scope="col"
+                className={element === "external" ? "text-center" : "text-left"}
+              >
                 {thead}
               </CTableHeaderCell>
             );

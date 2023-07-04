@@ -13,11 +13,10 @@ exports.create = (req, res) => {
 
   // Create a Books
   const bookData = {
-    title: req.body.first_name,
+    title: req.body.title,
     publication_house: req.body.publication_house,
-    publication_year: req.body.publication_year,
-    authors: req.body.authors,
-    academic_year_id: req.body.academic_year_id || new Date(),
+    publication_year: req.body.publication_year || new Date(),
+    academic_year_id: req.body.academic_year_id,
     professor_id: req.body.professor_id,
   };
 
