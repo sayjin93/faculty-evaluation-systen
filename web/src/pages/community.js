@@ -82,8 +82,6 @@ const Community = () => {
       : items;
   //#endregion
 
-  console.log(formData.external);
-
   //#region functions
   const addCommunity = async () => {
     await axios
