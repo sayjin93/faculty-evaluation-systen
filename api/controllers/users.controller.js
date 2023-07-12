@@ -1,4 +1,5 @@
 const db = require("../models");
+const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const Users = db.users;
 
@@ -35,29 +36,52 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all Users from the database.
+// Retrieve all Users from the database.
 exports.findAll = (req, res) => {
-  const userData = {
-    username: req.body.username,
-    password: req.body.password,
-  };
+  const { username, password } = req.body;
+
   Users.findOne({
-    where: { username: userData.username, password: userData.password },
+    where: { username: username },
   })
-    .then((data) => {
-      const token = jwt.sign(
-        { username: userData.username, password: userData.password },
-        process.env.JWT_SECRET_KEY,
-        {
-          expiresIn: "2h",
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({
+          message: "User not found.",
+        });
+        return;
+      }
+
+      // Compare the provided password with the stored hashed password
+      bcrypt.compare(password, user.password, (err, result) => {
+        if (err) {
+          res.status(500).send({
+            message: "Internal server error.",
+          });
+          return;
         }
-      );
-      // save user token
-      data.token = token;
-      res.send(token);
+
+        if (!result) {
+          res.status(401).send({
+            message: "Invalid password.",
+          });
+          return;
+        }
+
+        const token = jwt.sign(
+          { username: username, password: password },
+          process.env.JWT_SECRET_KEY,
+          {
+            expiresIn: "2h",
+          }
+        );
+
+        // Return the token to the client
+        res.send(token);
+      });
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Username or password is incorrect!",
+        message: "Internal server error.",
       });
     });
 };

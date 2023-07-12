@@ -61,6 +61,9 @@ const LoginPage = () => {
     event.preventDefault();
     event.stopPropagation();
 
+    // Clear the JWT token from the Local Storage
+    localStorage.removeItem("jwt_token");
+
     axios
       .post(process.env.REACT_APP_API_URL + "/users/login", {
         username: formData.username,
@@ -68,9 +71,13 @@ const LoginPage = () => {
       })
       .then((response) => {
         if (response.data) {
+          // Set the JWT token to the Local Storage
           localStorage.setItem("jwt_token", response.data);
+
+          // Navigate to Dashboard
           navigate("/", { replace: true });
 
+          //Fetch user data axios function
           const fetchUserData = async () => {
             await axios
               .get(
@@ -89,6 +96,7 @@ const LoginPage = () => {
                 }
               })
               .catch((error) => {
+                debugger;
                 if (error.code === "ERR_NETWORK") {
                   dispatch(
                     showToast({
@@ -113,6 +121,8 @@ const LoginPage = () => {
                 }
               });
           };
+          
+          //Fetch user data function call
           fetchUserData();
         }
       })
