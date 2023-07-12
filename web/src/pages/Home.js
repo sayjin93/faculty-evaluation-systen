@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { batch, useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { showToast, changeAcademicYear, setFirstLogin } from "../store";
+
+import axios from "axios";
 
 import {
   CAvatar,
@@ -56,6 +57,7 @@ import WidgetsDropdown from "../widgets/WidgetsDropdown";
 import { useTranslation } from "react-i18next";
 
 const Home = () => {
+  console.log("HomePage");
   //#region constants
   const { t } = useTranslation();
   const navigate = useNavigate();
