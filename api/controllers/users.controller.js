@@ -34,37 +34,27 @@ exports.create = (req, res) => {
         return;
       }
 
-      // Hash the password
-      bcrypt.hash(password, 10, (err, hashedPassword) => {
-        if (err) {
+      // Create a Users
+      const userData = {
+        first_name,
+        last_name,
+        username,
+        password: password,
+        email,
+        isAdmin: false,
+      };
+
+      // Save Users in the database
+      Users.create(userData)
+        .then((data) => {
+          res.send(data);
+        })
+        .catch((err) => {
           res.status(500).send({
-            message: "Error hashing password!",
+            message:
+              err.message || "Some error occurred while creating the User.",
           });
-          return;
-        }
-
-        // Create a Users
-        const userData = {
-          first_name,
-          last_name,
-          username,
-          password: hashedPassword, // Store the hashed password
-          email,
-          isAdmin: false,
-        };
-
-        // Save Users in the database
-        Users.create(userData)
-          .then((data) => {
-            res.send(data);
-          })
-          .catch((err) => {
-            res.status(500).send({
-              message:
-                err.message || "Some error occurred while creating the User.",
-            });
-          });
-      });
+        });
     });
   });
 };

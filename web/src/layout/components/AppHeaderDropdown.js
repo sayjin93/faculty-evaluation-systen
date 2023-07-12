@@ -15,6 +15,7 @@ import {
 import { cilLockLocked, cilSettings, cilUser } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import { setFirstLogin, showToast } from "src/store";
+import { isNullOrUndefined } from "src/hooks";
 
 const AppHeaderDropdown = () => {
   //#region constants
@@ -26,10 +27,13 @@ const AppHeaderDropdown = () => {
   //#region selectors
   // @ts-ignore
   const loggedUser = useSelector((state) => state.user.loggedUser);
-  const initials =
-    Object.keys(loggedUser).length !== 0
-      ? loggedUser["first_name"][0] + loggedUser["last_name"][0]
-      : "";
+
+  debugger;
+  const firstName = loggedUser?.first_name;
+  const lastName = loggedUser?.last_name;
+  const fNameInit = firstName?.charAt(0);
+  const lNameInit = lastName?.charAt(0);
+  const initials = fNameInit + lNameInit;
   //#endregion
 
   //#region functions
@@ -57,7 +61,7 @@ const AppHeaderDropdown = () => {
     <CDropdown variant="nav-item">
       <CDropdownToggle className="py-0" caret={false}>
         <CAvatar color="primary" textColor="white" status="success" size="md">
-          {initials}
+          {initials ? initials : <CIcon icon={cilUser} />}
         </CAvatar>
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
