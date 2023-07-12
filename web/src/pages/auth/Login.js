@@ -96,7 +96,6 @@ const LoginPage = () => {
                 }
               })
               .catch((error) => {
-                debugger;
                 if (error.code === "ERR_NETWORK") {
                   dispatch(
                     showToast({
@@ -121,7 +120,7 @@ const LoginPage = () => {
                 }
               });
           };
-          
+
           //Fetch user data function call
           fetchUserData();
         }

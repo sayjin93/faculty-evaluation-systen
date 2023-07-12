@@ -208,16 +208,18 @@ const Home = () => {
   useEffect(() => {
     const fetchAcademicYears = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/academic-year")
+        .get(process.env.REACT_APP_API_URL + "/academic-year/active", {
+          headers: {
+            "auth-token": localStorage.getItem("jwt_token"),
+            "Content-Type": "application/json",
+          },
+        })
         .then((response) => {
-          debugger;
-          // Find the object with "active" set to true
-          const activeObject = response.data.find((obj) => obj.active === true);
+          const activeObject = response.data[0];
 
           dispatch(changeAcademicYear(activeObject));
         })
         .catch((error) => {
-          debugger;
           if (error.code === "ERR_NETWORK") {
             dispatch(
               showToast({
@@ -236,7 +238,7 @@ const Home = () => {
             dispatch(
               showToast({
                 type: "danger",
-                content: error.response.statusText,
+                content: error.response.data.message,
               })
             );
           }

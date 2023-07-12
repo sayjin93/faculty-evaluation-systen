@@ -1,41 +1,74 @@
 const db = require("../models");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Users = db.users;
 
 // Create and Save a new Users
 exports.create = (req, res) => {
+  //Destructyure object
+  const { first_name, last_name, username, password, email } = req.body;
+
   // Validate request
-  if (!req.body.username || !req.body.password || !req.body.email) {
+  if (!username || !password || !email) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
     return;
   }
 
-  // Create a Users
-  const userData = {
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
-    username: req.body.username,
-    password: req.body.password,
-    email: req.body.email,
-    isAdmin: req.body.isAdmin,
-  };
+  // Check if username already exists
+  Users.findOne({ where: { username: username } }).then((user) => {
+    if (user) {
+      res.status(400).send({
+        message: "Username already exists!",
+      });
+      return;
+    }
 
-  // Save Users in the database
-  Users.create(userData)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while creating the User.",
+    // Check if email already exists
+    Users.findOne({ where: { email: email } }).then((user) => {
+      if (user) {
+        res.status(400).send({
+          message: "Email already exists!",
+        });
+        return;
+      }
+
+      // Hash the password
+      bcrypt.hash(password, 10, (err, hashedPassword) => {
+        if (err) {
+          res.status(500).send({
+            message: "Error hashing password!",
+          });
+          return;
+        }
+
+        // Create a Users
+        const userData = {
+          first_name,
+          last_name,
+          username,
+          password: hashedPassword, // Store the hashed password
+          email,
+          isAdmin: false,
+        };
+
+        // Save Users in the database
+        Users.create(userData)
+          .then((data) => {
+            res.send(data);
+          })
+          .catch((err) => {
+            res.status(500).send({
+              message:
+                err.message || "Some error occurred while creating the User.",
+            });
+          });
       });
     });
+  });
 };
 
-// Retrieve all Users from the database.
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
   const { username, password } = req.body;
@@ -107,6 +140,21 @@ exports.findOne = (req, res) => {
     });
 };
 
+// Find a Users with a specific username
+exports.findOneByUsername = (req, res) => {
+  const username = req.params.username;
+
+  Users.findAll({ where: { username: username } })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving Courses.",
+      });
+    });
+};
+
 // Update a Users by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
@@ -169,34 +217,6 @@ exports.deleteAll = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message: err.message || "Some error occurred while removing all Users.",
-      });
-    });
-};
-
-// Find all published Users
-exports.findOneByUsername = (req, res) => {
-  Users.findAll({ where: { published: true } })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Users.",
-      });
-    });
-};
-
-// Find a Users with a specific username
-exports.findOneByUsername = (req, res) => {
-  const username = req.params.username;
-
-  Users.findAll({ where: { username: username } })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Courses.",
       });
     });
 };

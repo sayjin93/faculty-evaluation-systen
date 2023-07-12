@@ -10,7 +10,7 @@ module.exports = (app) => {
   router.get("/", auth, academic_years.findAll);
 
   // Retrieve all published Academic Years
-  router.get("/published", auth, academic_years.findAllPublished);
+  router.get("/active", auth, academic_years.findActiveOne);
 
   // Retrieve a single Academic Year with id
   router.get("/:id", auth, academic_years.findOne);

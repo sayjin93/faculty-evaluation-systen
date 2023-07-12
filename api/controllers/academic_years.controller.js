@@ -45,6 +45,20 @@ exports.findAll = (req, res) => {
     });
 };
 
+// Find active Academic Year
+exports.findActiveOne = (req, res) => {
+  AcademicYears.findAll({ where: { active: true } })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving active Academic Years.",
+      });
+    });
+};
+
 // Find a single Academic Year with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
@@ -132,20 +146,6 @@ exports.deleteAll = (req, res) => {
         message:
           err.message ||
           "Some error occurred while removing all Academic Years.",
-      });
-    });
-};
-
-// Find all published Academic Year
-exports.findAllPublished = (req, res) => {
-  AcademicYears.findAll({ where: { published: true } })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving Academic Years.",
       });
     });
 };
