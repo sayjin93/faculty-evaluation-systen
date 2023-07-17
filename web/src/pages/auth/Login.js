@@ -172,7 +172,9 @@ const LoginPage = () => {
                       <CFormInput
                         required
                         type="text"
-                        placeholder={t("Username")}
+                        placeholder={
+                          t("Username") + " " + t("Or") + " " + t("Email")
+                        }
                         autoComplete="username"
                         value={formData.username}
                         onChange={(event) =>

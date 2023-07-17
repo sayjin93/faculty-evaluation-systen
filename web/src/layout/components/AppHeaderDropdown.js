@@ -15,7 +15,6 @@ import {
 import { cilLockLocked, cilSettings, cilUser } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import { setFirstLogin, showToast } from "src/store";
-import { isNullOrUndefined } from "src/hooks";
 
 const AppHeaderDropdown = () => {
   //#region constants

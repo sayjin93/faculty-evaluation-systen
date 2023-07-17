@@ -1,6 +1,8 @@
 const db = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { Op } = require("sequelize");
+
 const Users = db.users;
 
 // Create and Save a new Users
@@ -64,7 +66,8 @@ exports.findAll = (req, res) => {
   const { username, password } = req.body;
 
   Users.findOne({
-    where: { username: username },
+    [Op.or]: [{ username: username }, { email: username }],
+    // where: { username: username },
   })
     .then((user) => {
       if (!user) {
