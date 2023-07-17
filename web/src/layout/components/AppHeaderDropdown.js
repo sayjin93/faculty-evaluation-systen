@@ -27,7 +27,6 @@ const AppHeaderDropdown = () => {
   // @ts-ignore
   const loggedUser = useSelector((state) => state.user.loggedUser);
 
-  debugger;
   const firstName = loggedUser?.first_name;
   const lastName = loggedUser?.last_name;
   const fNameInit = firstName?.charAt(0);

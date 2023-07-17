@@ -2,7 +2,8 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { setProfessors, setSelectedProfessor } from "../store";
+import { useNavigate } from "react-router-dom";
+import { setProfessors, setSelectedProfessor, showToast } from "../store";
 import axios from "axios";
 import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
 
@@ -10,6 +11,7 @@ const SelectBoxProfessors = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   //#endregion
 
   //#region selectors
@@ -37,7 +39,28 @@ const SelectBoxProfessors = () => {
           dispatch(setProfessors(response.data));
         })
         .catch((error) => {
-          console.log(error);
+          if (error.code === "ERR_NETWORK") {
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.message,
+              })
+            );
+          } else if (error.code === "ERR_BAD_REQUEST") {
+            // Remove the JWT token from the Local Storage
+            localStorage.removeItem("jwt_token");
+
+            // Redirect the user to the login page
+            navigate("/login", { replace: true });
+
+            // Show alert
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.response.statusText,
+              })
+            );
+          }
         });
     };
 
@@ -56,6 +79,7 @@ const SelectBoxProfessors = () => {
         onChange={handleChange}
       >
         <option value={0}>{t("All")}</option>
+
         {professors.map((professor) => {
           const fullName = professor.first_name + " " + professor.last_name;
           return (

@@ -1,8 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { CTableHead, CTableHeaderCell, CTableRow } from "@coreui/react";
+import {
+  CTableHead,
+  CTableHeaderCell,
+  CTableRow,
+} from "@coreui/react";
 
-function TableHeader({ items }) {
+function TableHeader({ items, report = false }) {
   const { t } = useTranslation();
 
   const fixTableHeaderName = (text) => {
@@ -23,7 +27,7 @@ function TableHeader({ items }) {
           {header.map((element) => {
             let thead = fixTableHeaderName(element);
             if (element === "id") thead = "#";
-            else if (element === "academic_year_id") return;
+            else if (element === "academic_year_id") return null;
             //professors
             else if (element === "first_name") thead = t("FirstName");
             else if (element === "last_name") thead = t("LastName");
@@ -34,10 +38,16 @@ function TableHeader({ items }) {
             else if (element === "semester") thead = t("Semester");
             else if (element === "week_hours") thead = t("WeekHours");
             else if (element === "program") thead = t("Program");
-            else if (element === "professor_id") thead = t("Professor");
-            else if (element === "createdAt") thead = t("CreatedAt");
-            else if (element === "updatedAt") thead = t("UpdatedAt");
-
+            else if (element === "professor_id") {
+              if (!report) thead = t("Professor");
+              else return null;
+            } else if (element === "createdAt") {
+              if (!report) thead = t("CreatedAt");
+              else return null;
+            } else if (element === "updatedAt") {
+              if (!report) thead = t("UpdatedAt");
+              else return null;
+            }
             return (
               <CTableHeaderCell
                 key={element}
@@ -48,7 +58,9 @@ function TableHeader({ items }) {
               </CTableHeaderCell>
             );
           })}
-          <CTableHeaderCell scope="col"></CTableHeaderCell>
+
+          {/* Kolone me ehader bosh per butonat edit/delete */}
+          {!report && <CTableHeaderCell scope="col"></CTableHeaderCell>}
         </CTableRow>
       </CTableHead>
     );
