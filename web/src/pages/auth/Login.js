@@ -85,6 +85,7 @@ const LoginPage = () => {
                   `/users/username/${formData.username}`
               )
               .then((response) => {
+                debugger;
                 if (response.data) {
                   const loggedUser = {
                     first_name: response.data[0].first_name,

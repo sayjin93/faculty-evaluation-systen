@@ -14,7 +14,8 @@ const usersSeed = require("./seeders/users_seed");
 const academicYearsSeed = require("./seeders/academic_year_seed");
 const professorsSeed = require("./seeders/professors_seed");
 const coursesSeed = require("./seeders/courses_seed");
-
+const papersSeed = require("./seeders/papers_seed");
+const booksSeed = require("./seeders/books_seed");
 
 db.sequelize
   .sync({ alter: true, logging: false })
@@ -27,6 +28,8 @@ db.sequelize
       academicYearsSeed(db.sequelize.getQueryInterface(), db.Sequelize),
       professorsSeed(db.sequelize.getQueryInterface(), db.Sequelize),
       coursesSeed(db.sequelize.getQueryInterface(), db.Sequelize),
+      papersSeed(db.sequelize.getQueryInterface(), db.Sequelize),
+      booksSeed(db.sequelize.getQueryInterface(), db.Sequelize),
       // Add more seed functions here as needed...
     ]);
   })
