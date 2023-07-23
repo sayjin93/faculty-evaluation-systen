@@ -13,7 +13,6 @@ import {
   CRow,
   CTable,
   CTableBody,
-  CTableCaption,
   CTableDataCell,
   CTableHeaderCell,
   CTableRow,

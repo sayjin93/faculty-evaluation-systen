@@ -21,8 +21,7 @@ body {
 }
 
 .header {
-  background: transparent;
-  margin-bottom: var(--cui-header-padding-y);
+  background-color: rgba(var(--cui-light-rgb), var(--cui-bg-opacity)) !important;
 }
 
 .cursor {

@@ -3,46 +3,23 @@ const cors = require("cors");
 const colors = require("colors");
 const dotenv = require("dotenv");
 
-// Loads environment variables
-dotenv.config();
+dotenv.config(); // Loads environment variables
 
-// Connect database
-const db = require("./models");
+const db = require("./models"); // Connect database
 
-// Seed database
-const usersSeed = require("./seeders/users_seed");
-const academicYearsSeed = require("./seeders/academic_year_seed");
-const professorsSeed = require("./seeders/professors_seed");
-const coursesSeed = require("./seeders/courses_seed");
-const papersSeed = require("./seeders/papers_seed");
-const booksSeed = require("./seeders/books_seed");
+// Seed files
+const seeds = [
+  require("./seeders/users_seed"),
+  require("./seeders/academic_year_seed"),
+  require("./seeders/professors_seed"),
+  require("./seeders/courses_seed"),
+  require("./seeders/papers_seed"),
+  require("./seeders/books_seed"),
+  require("./seeders/conferences_seed"),
+  require("./seeders/communities_seed"),
+];
 
-db.sequelize
-  .sync({ alter: true, logging: false })
-  .then(() => {
-    console.log("Database synced successfully!".bgGreen);
-
-    // Call all seed functions
-    return Promise.all([
-      usersSeed(db.sequelize.getQueryInterface(), db.Sequelize),
-      academicYearsSeed(db.sequelize.getQueryInterface(), db.Sequelize),
-      professorsSeed(db.sequelize.getQueryInterface(), db.Sequelize),
-      coursesSeed(db.sequelize.getQueryInterface(), db.Sequelize),
-      papersSeed(db.sequelize.getQueryInterface(), db.Sequelize),
-      booksSeed(db.sequelize.getQueryInterface(), db.Sequelize),
-      // Add more seed functions here as needed...
-    ]);
-  })
-  .then(() => {
-    console.log("Seeding completed successfully!".bgGreen);
-  })
-  .catch((error) => {
-    console.log("Error syncing database!".bgRed);
-    // console.error("Error syncing database: ", error);
-  });
-
-// Creates a new instance of the Express.js framework and assigns it to the app constant.
-const app = express();
+const app = express(); // Creates a new instance of the Express.js framework
 
 // Middleware
 app.use(express.json()); // parse requests of content-type - application/json
@@ -54,6 +31,7 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to jk WebApp." });
 });
 
+// Routes
 require("./routes/academic_years.routes")(app);
 require("./routes/books.routes")(app);
 require("./routes/community_services.routes")(app);
@@ -62,6 +40,23 @@ require("./routes/courses.routes")(app);
 require("./routes/papers.routes")(app);
 require("./routes/professors.routes")(app);
 require("./routes/users.routes")(app);
+
+db.sequelize
+  .sync({ alter: true, logging: true })
+  .then(async () => {
+    console.log("Database synced successfully!".bgGreen);
+
+    // Call all seed functions in sequence
+    for (let i = 0; i < seeds.length; i++) {
+      await seeds[i](db.sequelize.getQueryInterface(), db.Sequelize);
+    }
+
+    console.log("Seeding completed successfully!".bgGreen);
+  })
+  .catch((error) => {
+    console.log("Error syncing database!".bgRed);
+    // console.error("Error syncing database: ", error);
+  });
 
 // set port, listen for requests
 const PORT = process.env.API_PORT || 4000;

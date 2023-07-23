@@ -313,6 +313,7 @@ const Courses = () => {
       await axios
         .get(process.env.REACT_APP_API_URL + "/courses/" + id)
         .then((response) => {
+          debugger;
           setFormData({
             ...formData,
             courseName: response.data.name,
@@ -437,8 +438,8 @@ const Courses = () => {
               <option value="" disabled>
                 {t("Choose") + "..."}
               </option>
-              <option value="1">{t("Bachelor")}</option>
-              <option value="2">{t("Master")}</option>
+              <option value="Bachelor">{t("Bachelor")}</option>
+              <option value="Master">{t("Master")}</option>
             </CFormSelect>
 
             <CFormSelect
