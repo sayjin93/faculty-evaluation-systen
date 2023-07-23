@@ -189,7 +189,7 @@ const Papers = () => {
           {filteredItems.map((element) => {
             const id = element.id;
 
-            let publication = element.publication
+            const publication = element.publication
               ? convertDateFormat(element.publication, false)
               : null;
 
@@ -201,10 +201,10 @@ const Papers = () => {
               ? professor.first_name + " " + professor.last_name
               : "";
 
-            let createdAt = element.createdAt
+            const createdAt = element.createdAt
               ? convertDateFormat(element.createdAt)
               : null;
-            let updatedAt = element.updatedAt
+            const updatedAt = element.updatedAt
               ? convertDateFormat(element.updatedAt)
               : null;
 

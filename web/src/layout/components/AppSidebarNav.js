@@ -76,10 +76,6 @@ export const AppSidebarNav = () => {
       name: t("Reports"),
       to: "/reports",
       icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
-      badge: {
-        color: "info",
-        text: t("Working").toUpperCase(),
-      },
     },
     {
       component: CNavTitle,

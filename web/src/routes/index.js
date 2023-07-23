@@ -14,13 +14,13 @@ const Page404 = lazy(() => import("../pages/Page404"));
 
 //private pages
 const Home = lazy(() => import("../pages/Home"));
-const Professors = lazy(() => import("../pages/professors"));
-const Courses = lazy(() => import("../pages/courses"));
-const Papers = lazy(() => import("../pages/papers"));
-const Books = lazy(() => import("../pages/books"));
-const Conferences = lazy(() => import("../pages/conferences"));
-const Community = lazy(() => import("../pages/community"));
-const Reports = lazy(() => import("../pages/reports"));
+const Professors = lazy(() => import("../pages/Professors"));
+const Courses = lazy(() => import("../pages/Courses"));
+const Papers = lazy(() => import("../pages/Papers"));
+const Books = lazy(() => import("../pages/Books"));
+const Conferences = lazy(() => import("../pages/Conferences"));
+const Communities = lazy(() => import("../pages/Communities"));
+const Reports = lazy(() => import("../pages/Reports"));
 const Settings = lazy(() => import("../pages/Settings"));
 
 const privateRoutes = [
@@ -54,7 +54,7 @@ const privateRoutes = [
       },
       {
         path: "/community-services",
-        element: <Community />,
+        element: <Communities />,
       },
       {
         path: "/reports",

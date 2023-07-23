@@ -197,13 +197,13 @@ const Books = () => {
               ? professor.first_name + " " + professor.last_name
               : "";
 
-            let publication = element.publication_year
+            const publication = element.publication_year
               ? formatDateFromSQL(element.publication_year, true)
               : null;
-            let createdAt = element.createdAt
+            const createdAt = element.createdAt
               ? convertDateFormat(element.createdAt)
               : null;
-            let updatedAt = element.updatedAt
+            const updatedAt = element.updatedAt
               ? convertDateFormat(element.updatedAt)
               : null;
 

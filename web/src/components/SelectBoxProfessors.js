@@ -7,7 +7,7 @@ import { setProfessors, setSelectedProfessor, showToast } from "../store";
 import axios from "axios";
 import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
 
-const SelectBoxProfessors = () => {
+const SelectBoxProfessors = ({ hasAll = true }) => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -37,6 +37,11 @@ const SelectBoxProfessors = () => {
         .then((response) => {
           //set list of professors on redux state
           dispatch(setProfessors(response.data));
+
+          //Nese nuk ka opsion per te selektuar te gjith profesoret, zgjidh automatikisht profesorin e pare
+          if (!hasAll) {
+            dispatch(setSelectedProfessor(1));
+          }
         })
         .catch((error) => {
           if (error.code === "ERR_NETWORK") {
@@ -78,7 +83,7 @@ const SelectBoxProfessors = () => {
         value={selectedProfesor}
         onChange={handleChange}
       >
-        <option value={0}>{t("All")}</option>
+        {hasAll && <option value={0}>{t("All")}</option>}
 
         {professors.map((professor) => {
           const fullName = professor.first_name + " " + professor.last_name;

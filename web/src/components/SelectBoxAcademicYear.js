@@ -29,7 +29,6 @@ const SelectBoxAcademicYear = () => {
 
   //#region functions
   const handleChange = (e) => {
-    debugger;
     const seletedAcademicYear = academicYear.filter(
       (x) => x.id === Number(e.target.value)
     );

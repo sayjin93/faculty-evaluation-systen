@@ -193,7 +193,7 @@ const Courses = () => {
           {filteredItems.map((element) => {
             const id = element.id;
 
-            let program = element.program === "Bachelor" ? "Bachelor" : "MSc";
+            const program = element.program === "Bachelor" ? "Bachelor" : "MSc";
 
             // Find the professor with the matching ID
             const professor = professors.find(
@@ -203,10 +203,10 @@ const Courses = () => {
               ? professor.first_name + " " + professor.last_name
               : "";
 
-            let createdAt = element.createdAt
+            const createdAt = element.createdAt
               ? convertDateFormat(element.createdAt)
               : null;
-            let updatedAt = element.updatedAt
+            const updatedAt = element.updatedAt
               ? convertDateFormat(element.updatedAt)
               : null;
 
@@ -313,7 +313,6 @@ const Courses = () => {
       await axios
         .get(process.env.REACT_APP_API_URL + "/courses/" + id)
         .then((response) => {
-          debugger;
           setFormData({
             ...formData,
             courseName: response.data.name,

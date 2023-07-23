@@ -40,6 +40,7 @@ require("./routes/courses.routes")(app);
 require("./routes/papers.routes")(app);
 require("./routes/professors.routes")(app);
 require("./routes/users.routes")(app);
+require("./routes/reports.routes")(app);
 
 db.sequelize
   .sync({ alter: true, logging: false })

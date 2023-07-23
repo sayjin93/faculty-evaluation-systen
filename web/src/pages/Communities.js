@@ -36,7 +36,7 @@ import "flatpickr/dist/themes/airbnb.css";
 import Flatpickr from "react-flatpickr";
 import TableHeader from "src/hooks/tableHeader";
 
-const Community = () => {
+const Communities = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -202,8 +202,8 @@ const Community = () => {
         <CTableBody>
           {filteredItems.map((element) => {
             const id = element.id;
-            let date = element.time ? formatDate2(element.time) : null;
-            let checked = element.external ? (
+            const date = element.time ? formatDate2(element.time) : null;
+            const checked = element.external ? (
               <CIcon icon={cilCheckAlt} size="sm" />
             ) : (
               ""
@@ -217,10 +217,10 @@ const Community = () => {
               ? professor.first_name + " " + professor.last_name
               : "";
 
-            let createdAt = element.createdAt
+            const createdAt = element.createdAt
               ? convertDateFormat(element.createdAt)
               : null;
-            let updatedAt = element.updatedAt
+            const updatedAt = element.updatedAt
               ? convertDateFormat(element.updatedAt)
               : null;
 
@@ -493,4 +493,4 @@ const Community = () => {
   );
 };
 
-export default Community;
+export default Communities;

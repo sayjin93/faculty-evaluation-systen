@@ -82,8 +82,14 @@ The directory structure of the project is as follows:
   - professors.routes.js
   - users.routes.js
 - seeders/
-  - academic_year_seed.js
-  - user_seed.js
+  - users_seed.js
+  -academic_year_seed.js
+  -professors_seed.js
+  -courses_seed.js
+  -papers_seed.js
+  -books_seed.js
+  -conferences_seed.js
+  -communities_seed.js
 - .env
 - server.js
 ```
