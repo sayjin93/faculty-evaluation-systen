@@ -18,6 +18,14 @@ async function seed() {
       last_name: "Papajorgji",
       password: "petraq",
       email: "petraq@gmail.com",
+      isAdmin: true,
+    },
+    {
+      username: "user",
+      first_name: "John",
+      last_name: "Doe",
+      password: "user",
+      email: "info@jkruja.com",
       isAdmin: false,
     },
   ];

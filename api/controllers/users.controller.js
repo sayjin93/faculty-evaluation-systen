@@ -41,7 +41,7 @@ exports.create = (req, res) => {
         first_name,
         last_name,
         username,
-        password: password,
+        password,
         email,
         isAdmin: false,
       };
@@ -66,13 +66,14 @@ exports.findAll = (req, res) => {
   const { username, password } = req.body;
 
   Users.findOne({
-    [Op.or]: [{ username: username }, { email: username }],
-    // where: { username: username },
+    where: {
+      [Op.or]: [{ username: username }, { email: username }],
+    },
   })
     .then((user) => {
       if (!user) {
         res.status(404).send({
-          message: "User not found.",
+          message: "User not found!",
         });
         return;
       }

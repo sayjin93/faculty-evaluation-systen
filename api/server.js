@@ -42,7 +42,7 @@ require("./routes/professors.routes")(app);
 require("./routes/users.routes")(app);
 
 db.sequelize
-  .sync({ alter: true, logging: true })
+  .sync({ alter: true, logging: false })
   .then(async () => {
     console.log("Database synced successfully!".bgGreen);
 
@@ -55,7 +55,6 @@ db.sequelize
   })
   .catch((error) => {
     console.log("Error syncing database!".bgRed);
-    // console.error("Error syncing database: ", error);
   });
 
 // set port, listen for requests
