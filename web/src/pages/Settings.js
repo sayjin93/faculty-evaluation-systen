@@ -215,7 +215,6 @@ const Settings = () => {
                           className="cursor"
                           key={element.id}
                           onClick={() => {
-                            console.log(element);
                             dispatch(changeAcademicYear(element));
                             updateActiveStatus(element);
                           }}

@@ -57,7 +57,6 @@ import WidgetsDropdown from "../widgets/WidgetsDropdown";
 import { useTranslation } from "react-i18next";
 
 const Home = () => {
-  console.log("HomePage");
   //#region constants
   const { t } = useTranslation();
   const navigate = useNavigate();
