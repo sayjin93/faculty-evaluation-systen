@@ -21,7 +21,10 @@ body {
 }
 
 .header {
-  background-color: rgba(var(--cui-light-rgb), var(--cui-bg-opacity)) !important;
+  background-color: rgba(
+    var(--cui-light-rgb),
+    var(--cui-bg-opacity)
+  ) !important;
 }
 
 .cursor {
@@ -41,5 +44,16 @@ body {
     &-10 {
       gap: 10px;
     }
+  }
+}
+
+.table-custom {
+  border-radius: 0.375rem;
+  overflow: hidden;
+
+  &-header:not(caption) > * > * {
+    color: #ffffff;
+    background-color: #3c4b64;
+    text-align: center;
   }
 }

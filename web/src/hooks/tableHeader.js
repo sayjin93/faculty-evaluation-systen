@@ -1,12 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import {
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-} from "@coreui/react";
+import { CTableHead, CTableHeaderCell, CTableRow } from "@coreui/react";
 
-function TableHeader({ items, report = false }) {
+function TableHeader({ items, timestamp = true, color = "dark" }) {
   const { t } = useTranslation();
 
   const fixTableHeaderName = (text) => {
@@ -23,7 +19,7 @@ function TableHeader({ items, report = false }) {
 
     return (
       <CTableHead>
-        <CTableRow color="dark">
+        <CTableRow color={color}>
           {header.map((element) => {
             let thead = fixTableHeaderName(element);
             if (element === "id") thead = "#";
@@ -39,13 +35,13 @@ function TableHeader({ items, report = false }) {
             else if (element === "week_hours") thead = t("WeekHours");
             else if (element === "program") thead = t("Program");
             else if (element === "professor_id") {
-              if (!report) thead = t("Professor");
+              if (timestamp) thead = t("Professor");
               else return null;
             } else if (element === "createdAt") {
-              if (!report) thead = t("CreatedAt");
+              if (timestamp) thead = t("CreatedAt");
               else return null;
             } else if (element === "updatedAt") {
-              if (!report) thead = t("UpdatedAt");
+              if (timestamp) thead = t("UpdatedAt");
               else return null;
             }
             return (
@@ -60,7 +56,7 @@ function TableHeader({ items, report = false }) {
           })}
 
           {/* Kolone me ehader bosh per butonat edit/delete */}
-          {!report && <CTableHeaderCell scope="col"></CTableHeaderCell>}
+          {timestamp && <CTableHeaderCell scope="col"></CTableHeaderCell>}
         </CTableRow>
       </CTableHead>
     );

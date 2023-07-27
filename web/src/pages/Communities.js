@@ -273,7 +273,7 @@ const Communities = () => {
       return (
         <CTableBody>
           <CTableRow>
-            <CTableHeaderCell colSpan={7}>
+            <CTableHeaderCell colSpan={9}>
               {t("NoDataToDisplay")}
             </CTableHeaderCell>
           </CTableRow>
@@ -354,7 +354,7 @@ const Communities = () => {
 
   return (
     <>
-      <CHeader>
+      <CHeader className="mb-3">
         <CContainer fluid>
           <CHeaderBrand>{t("CommunityServices")}</CHeaderBrand>
 

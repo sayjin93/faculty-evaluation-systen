@@ -338,7 +338,7 @@ const Conferences = () => {
 
   return (
     <>
-      <CHeader>
+      <CHeader className="mb-3">
         <CContainer fluid>
           <CHeaderBrand>{t("Conferences")}</CHeaderBrand>
 

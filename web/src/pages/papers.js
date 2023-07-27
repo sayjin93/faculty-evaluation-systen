@@ -183,7 +183,7 @@ const Papers = () => {
   };
 
   const RenderTableBody = () => {
-    if (items.length > 0) {
+    if (filteredItems.length > 0) {
       return (
         <CTableBody>
           {filteredItems.map((element) => {
@@ -334,7 +334,7 @@ const Papers = () => {
 
   return (
     <>
-      <CHeader>
+      <CHeader className="mb-3">
         <CContainer fluid>
           <CHeaderBrand>{t("Papers")}</CHeaderBrand>
 
