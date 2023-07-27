@@ -33,7 +33,7 @@ export const AppSidebarNav = () => {
     },
     {
       component: CNavTitle,
-      name: "Components",
+      name: t("Components"),
     },
     {
       component: CNavItem,
@@ -79,7 +79,7 @@ export const AppSidebarNav = () => {
     },
     {
       component: CNavTitle,
-      name: "Extras",
+      name: t("Extras"),
     },
     {
       component: CNavItem,
