@@ -454,7 +454,7 @@ const Communities = () => {
               feedbackInvalid={t("PleaseSelectAProfessor")}
               className="cursor"
               floatingClassName="mb-3"
-              floatingLabel={t("Author")}
+              floatingLabel={t("Professor")}
               value={formData.professor}
               onChange={(event) => handleInputChange(event, "professor")}
             >
