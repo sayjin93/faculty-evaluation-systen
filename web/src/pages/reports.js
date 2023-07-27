@@ -34,6 +34,8 @@ import { cilCheckAlt } from "@coreui/icons";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
+import logoImage from "../../src/assets/images/uet_logo.png"; // Replace with the path to your logo image
+
 const Reports = () => {
   //#region constants
   const { t } = useTranslation();
@@ -42,12 +44,24 @@ const Reports = () => {
   //#endregion
 
   //#region selectors
-  const { selectedProfessor, academicYearId } = useSelector((state) => ({
-    // @ts-ignore
-    selectedProfessor: state.professors.selected,
-    // @ts-ignore
-    academicYearId: state.settings.academicYear.id,
-  }));
+  const { professors, selectedProfessor, academicYear } = useSelector(
+    (state) => ({
+      // @ts-ignore
+      professors: state.professors.list,
+      // @ts-ignore
+      selectedProfessor: state.professors.selected,
+      // @ts-ignore
+      academicYear: state.settings.academicYear,
+    })
+  );
+
+  // Find the professor with the matching ID
+  const professor = professors.find((prof) => prof.id === selectedProfessor);
+  const professorFullName = professor
+    ? `${professor.first_name} ${professor.last_name}`
+    : "";
+
+  console.log(professorFullName);
   //#endregion
 
   //#region states
@@ -61,28 +75,54 @@ const Reports = () => {
   //#endregion
 
   //#region functions
+
   const exportPDF = () => {
     const doc = new jsPDF();
 
     // Function to add table to PDF document
     const addTableToPDF = (title, head, dataArray, yPosition) => {
+      debugger;
       doc.text(title, 10, yPosition);
 
       autoTable(doc, {
         head: [head],
-        body: dataArray,
+        body: dataArray.length > 0 ? dataArray : [[t("NoDataToDisplay")]],
         startY: yPosition + 5, // Adjust the startY position for the table body
+        styles: dataArray.length === 0 && { halign: "center" }, // Center the text in the cell
       });
-      // doc.addPage();
     };
+
+    // Add an image at the top of the document
+    const logoWidth = 50; // Adjust the width of the image as needed
+    const logoHeight = 30; // Adjust the height of the image as needed
+    const logoXPosition = 10; // Adjust the horizontal position of the image
+    const logoYPosition = 10; // Adjust the vertical position of the image
+    doc.addImage(
+      logoImage,
+      "PNG",
+      logoXPosition,
+      logoYPosition,
+      logoWidth,
+      logoHeight
+    );
+
+    // Add text rows parallel to the logo
+    const textXPosition = logoXPosition + logoWidth + 20; // Adjust the horizontal position of the text rows
+    const textYPosition = logoYPosition + 10; // Adjust the vertical position of the text rows
+
+    const professorText = `${t("Professor")}: ${professorFullName}`;
+    doc.text(professorText, textXPosition, textYPosition);
+
+    const academicYearText = `${t("AcademicYear")}: ${academicYear.year}`;
+    doc.text(academicYearText, textXPosition, textYPosition + 10);
 
     const coursesHead = [
       "#",
-      "Name",
-      "Number",
-      "Semester",
-      "Week Hours",
-      "Program",
+      t("Name"),
+      t("Number"),
+      t("Semester"),
+      t("WeekHours"),
+      t("Program"),
     ];
     const coursesArray = items.courses.map((course) => [
       course.id,
@@ -93,7 +133,7 @@ const Reports = () => {
       course.program,
     ]);
 
-    const papersHead = ["#", "Title", "Journal", "Publication"];
+    const papersHead = ["#", t("Title"), t("Journal"), t("Publication")];
     const papersArray = items.papers.map((course) => [
       course.id,
       course.title,
@@ -101,7 +141,12 @@ const Reports = () => {
       convertDateFormat(course.publication, false),
     ]);
 
-    const booksHead = ["#", "Title", "Publication House", "Publication Rear"];
+    const booksHead = [
+      "#",
+      t("Title"),
+      t("PublicationHouse"),
+      t("PublicationYear"),
+    ];
     const booksArray = items.books.map((book) => [
       book.id,
       book.title,
@@ -109,22 +154,100 @@ const Reports = () => {
       convertDateFormat(book.publication_year, false),
     ]);
 
-  // Set spacing between tables
-  const spacingBetweenTables = 10;
+    const communitiesHead = [
+      "#",
+      t("Event"),
+      t("Date"),
+      t("Description"),
+      t("External"),
+    ];
+    const communitiesArray = items.communityServices.map((community) => [
+      community.id,
+      community.event,
+      convertDateFormat(community.date, false),
+      community.description,
+      community.external,
+    ]);
 
-  // Calculate the startY position for each table
-  const startYPositionForCourses = 20;
-  const startYPositionForPapers = startYPositionForCourses + 10 + coursesArray.length * 10 + 10 + spacingBetweenTables;
-  const startYPositionForBooks = startYPositionForPapers + 10 + papersArray.length * 10 + 10 + spacingBetweenTables;
+    const conferencesHead = [
+      "#",
+      t("Name"),
+      t("Location"),
+      t("PresentTitle"),
+      t("Authors"),
+      t("Dates"),
+    ];
+    const conferencesArray = items.conferences.map((conference) => [
+      conference.id,
+      conference.name,
+      conference.location,
+      conference.present_title,
+      conference.authors,
+      conference.dates,
+    ]);
 
-  // Generate each table
-  addTableToPDF("Courses", coursesHead, coursesArray, startYPositionForCourses);
-  addTableToPDF("Papers", papersHead, papersArray, startYPositionForPapers);
-  addTableToPDF("Books", booksHead, booksArray, startYPositionForBooks);
+    // Set spacing between tables
+    const spacingBetweenTables = 10;
 
+    // Calculate the startY position for each table
+    const startYPositionForCourses =
+      logoYPosition + logoHeight + spacingBetweenTables * 1.5;
+
+    const startYPositionForPapers =
+      startYPositionForCourses +
+      10 +
+      coursesArray.length * 10 +
+      10 +
+      spacingBetweenTables;
+    const startYPositionForBooks =
+      startYPositionForPapers +
+      10 +
+      papersArray.length * 10 +
+      10 +
+      spacingBetweenTables;
+    const startYPositionForCommunities =
+      startYPositionForBooks +
+      10 +
+      booksArray.length * 10 +
+      10 +
+      spacingBetweenTables;
+    const startYPositionForConferences =
+      startYPositionForCommunities +
+      10 +
+      communitiesArray.length * 10 +
+      10 +
+      spacingBetweenTables;
+
+    // Generate each table
+    addTableToPDF(
+      t("Courses"),
+      coursesHead,
+      coursesArray,
+      startYPositionForCourses
+    );
+    addTableToPDF(
+      t("Papers"),
+      papersHead,
+      papersArray,
+      startYPositionForPapers
+    );
+    addTableToPDF(t("Books"), booksHead, booksArray, startYPositionForBooks);
+    addTableToPDF(
+      t("CommunityServices"),
+      communitiesHead,
+      communitiesArray,
+      startYPositionForCommunities
+    );
+
+    addTableToPDF(
+      t("Conferences"),
+      conferencesHead,
+      conferencesArray,
+      startYPositionForConferences
+    );
 
     // Save the PDF with a filename
-    doc.save("report.pdf");
+    doc.save(`report_${professorFullName}_${academicYear.year}.pdf`);
   };
   //#endregion
 
@@ -134,7 +257,7 @@ const Reports = () => {
       await axios
         .get(
           process.env.REACT_APP_API_URL +
-            `/reports/academic_year/${academicYearId}/professor/${selectedProfessor}`
+            `/reports/academic_year/${academicYear.id}/professor/${selectedProfessor}`
         )
         .then((response) => {
           setItems(response.data);
@@ -167,7 +290,7 @@ const Reports = () => {
     };
 
     fetchReports();
-  }, [selectedProfessor, academicYearId]);
+  }, [selectedProfessor, academicYear]);
   //#endregion
 
   return (
@@ -362,7 +485,7 @@ const Reports = () => {
               {items.communityServices.length > 0 ? (
                 items.communityServices.map((element) => {
                   const id = element.id;
-                  const date = element.time ? formatDate2(element.time) : null;
+                  const date = element.date ? formatDate2(element.date) : null;
                   const checked = element.external ? (
                     <CIcon icon={cilCheckAlt} size="sm" />
                   ) : (

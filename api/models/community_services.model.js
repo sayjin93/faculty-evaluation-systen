@@ -3,7 +3,7 @@ module.exports = (sequelize, Sequelize) => {
     event: {
       type: Sequelize.STRING,
     },
-    time: {
+    date: {
       type: Sequelize.DATE,
     },
     description: {

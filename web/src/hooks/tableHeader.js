@@ -24,16 +24,7 @@ function TableHeader({ items, timestamp = true, color = "dark" }) {
             let thead = fixTableHeaderName(element);
             if (element === "id") thead = "#";
             else if (element === "academic_year_id") return null;
-            //professors
-            else if (element === "first_name") thead = t("FirstName");
-            else if (element === "last_name") thead = t("LastName");
-            else if (element === "gender") thead = t("Gender");
-            //courses
-            else if (element === "name") thead = t("Name");
-            else if (element === "number") thead = t("Number");
-            else if (element === "semester") thead = t("Semester");
-            else if (element === "week_hours") thead = t("WeekHours");
-            else if (element === "program") thead = t("Program");
+            //general
             else if (element === "professor_id") {
               if (timestamp) thead = t("Professor");
               else return null;
@@ -44,6 +35,36 @@ function TableHeader({ items, timestamp = true, color = "dark" }) {
               if (timestamp) thead = t("UpdatedAt");
               else return null;
             }
+            //professors
+            else if (element === "first_name") thead = t("FirstName");
+            else if (element === "last_name") thead = t("LastName");
+            else if (element === "gender") thead = t("Gender");
+            //courses
+            else if (element === "name") thead = t("Name");
+            else if (element === "number") thead = t("Number");
+            else if (element === "semester") thead = t("Semester");
+            else if (element === "week_hours") thead = t("WeekHours");
+            else if (element === "program") thead = t("Program");
+            //papers
+            else if (element === "title") thead = t("Title");
+            else if (element === "journal") thead = t("Journal");
+            else if (element === "publication") thead = t("Publication");
+            //books
+            else if (element === "publication_house")
+              thead = t("PublicationHouse");
+            else if (element === "publication_year")
+              thead = t("PublicationYear");
+            //conferences
+            else if (element === "location") thead = t("Location");
+            else if (element === "present_title") thead = t("PresentTitle");
+            else if (element === "authors") thead = t("Authors");
+            else if (element === "dates") thead = t("Dates");
+            //community
+            else if (element === "event") thead = t("Event");
+            else if (element === "date") thead = t("Date");
+            else if (element === "description") thead = t("Description");
+            else if (element === "external") thead = t("External");
+
             return (
               <CTableHeaderCell
                 key={element}
@@ -55,7 +76,7 @@ function TableHeader({ items, timestamp = true, color = "dark" }) {
             );
           })}
 
-          {/* Kolone me ehader bosh per butonat edit/delete */}
+          {/* Kolone me header bosh per butonat edit/delete */}
           {timestamp && <CTableHeaderCell scope="col"></CTableHeaderCell>}
         </CTableRow>
       </CTableHead>

@@ -44,7 +44,7 @@ const Communities = () => {
 
   const defaultFormData = {
     event: "",
-    time: new Date(),
+    date: new Date(),
     description: "",
     external: false,
     professor: "",
@@ -87,7 +87,7 @@ const Communities = () => {
     await axios
       .post(process.env.REACT_APP_API_URL + "/community-service", {
         event: formData.event,
-        time: formData.time,
+        date: formData.date,
         description: formData.description,
         external: formData.external,
         academic_year_id: academicYearId,
@@ -121,7 +121,7 @@ const Communities = () => {
     await axios
       .put(process.env.REACT_APP_API_URL + "/community-service/" + id, {
         event: formData.event,
-        time: formData.time,
+        date: formData.date,
         description: formData.description,
         external: formData.external,
         professor_id: formData.professor,
@@ -202,7 +202,7 @@ const Communities = () => {
         <CTableBody>
           {filteredItems.map((element) => {
             const id = element.id;
-            const date = element.time ? formatDate2(element.time) : null;
+            const date = element.date ? formatDate2(element.date) : null;
             const checked = element.external ? (
               <CIcon icon={cilCheckAlt} size="sm" />
             ) : (
@@ -331,7 +331,7 @@ const Communities = () => {
           setFormData({
             ...formData,
             event: response.data.event,
-            time: response.data.time,
+            date: response.data.date,
             description: response.data.description,
             external: response.data.external,
             professor: response.data.professor_id,
@@ -416,13 +416,13 @@ const Communities = () => {
                 <Flatpickr
                   aria-describedby="basic-addon1"
                   className="form-control"
-                  value={formData.time}
+                  value={formData.date}
                   options={{
                     dateFormat: "d-m-Y",
                   }}
                   onChange={(dateObj) => {
                     const date = dateObj[0];
-                    handleInputChange({ target: { value: date } }, "time");
+                    handleInputChange({ target: { value: date } }, "date");
                   }}
                 />
               </div>
