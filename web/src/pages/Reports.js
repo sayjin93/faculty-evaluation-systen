@@ -75,55 +75,43 @@ const Reports = () => {
   //#endregion
 
   //#region functions
-
   const exportPDF = () => {
     const doc = new jsPDF();
-
-    // Function to add table to PDF document
-    const addTableToPDF = (title, head, dataArray, yPosition) => {
-      debugger;
+    const logoWidth = 50;
+    const logoHeight = 30;
+    const logoXPosition = 10;
+    const logoYPosition = 10;
+    const textXPosition = logoXPosition + logoWidth + 30;
+    const textYPosition = logoYPosition + 10;
+    const spacingBetweenTables = 10;
+  
+    // Function to add image to PDF document
+    const addImageToPDF = () => {
+      doc.addImage(logoImage, "PNG", logoXPosition, logoYPosition, logoWidth, logoHeight);
+    };
+  
+    // Function to add text rows parallel to the logo
+    const addTextToPDF = () => {
+      const professorText = `${t("Professor")}: ${professorFullName}`;
+      doc.text(professorText, textXPosition, textYPosition);
+  
+      const academicYearText = `${t("AcademicYear")}: ${academicYear.year}`;
+      doc.text(academicYearText, textXPosition, textYPosition + 10);
+    };
+  
+    // Function to generate a table and add it to PDF document
+    const generateTable = (title, head, dataArray, yPosition) => {
       doc.text(title, 10, yPosition);
-
       autoTable(doc, {
         head: [head],
         body: dataArray.length > 0 ? dataArray : [[t("NoDataToDisplay")]],
-        startY: yPosition + 5, // Adjust the startY position for the table body
-        styles: dataArray.length === 0 && { halign: "center" }, // Center the text in the cell
+        startY: yPosition + 5,
+        styles: dataArray.length === 0 && { halign: "center" },
       });
     };
-
-    // Add an image at the top of the document
-    const logoWidth = 50; // Adjust the width of the image as needed
-    const logoHeight = 30; // Adjust the height of the image as needed
-    const logoXPosition = 10; // Adjust the horizontal position of the image
-    const logoYPosition = 10; // Adjust the vertical position of the image
-    doc.addImage(
-      logoImage,
-      "PNG",
-      logoXPosition,
-      logoYPosition,
-      logoWidth,
-      logoHeight
-    );
-
-    // Add text rows parallel to the logo
-    const textXPosition = logoXPosition + logoWidth + 20; // Adjust the horizontal position of the text rows
-    const textYPosition = logoYPosition + 10; // Adjust the vertical position of the text rows
-
-    const professorText = `${t("Professor")}: ${professorFullName}`;
-    doc.text(professorText, textXPosition, textYPosition);
-
-    const academicYearText = `${t("AcademicYear")}: ${academicYear.year}`;
-    doc.text(academicYearText, textXPosition, textYPosition + 10);
-
-    const coursesHead = [
-      "#",
-      t("Name"),
-      t("Number"),
-      t("Semester"),
-      t("WeekHours"),
-      t("Program"),
-    ];
+  
+    // Arrays and headers for different tables
+    const coursesHead = ["#", t("Name"), t("Number"), t("Semester"), t("WeekHours"), t("Program")];
     const coursesArray = items.courses.map((course) => [
       course.id,
       course.name,
@@ -132,7 +120,7 @@ const Reports = () => {
       course.week_hours,
       course.program,
     ]);
-
+  
     const papersHead = ["#", t("Title"), t("Journal"), t("Publication")];
     const papersArray = items.papers.map((course) => [
       course.id,
@@ -140,27 +128,16 @@ const Reports = () => {
       course.journal,
       convertDateFormat(course.publication, false),
     ]);
-
-    const booksHead = [
-      "#",
-      t("Title"),
-      t("PublicationHouse"),
-      t("PublicationYear"),
-    ];
+  
+    const booksHead = ["#", t("Title"), t("PublicationHouse"), t("PublicationYear")];
     const booksArray = items.books.map((book) => [
       book.id,
       book.title,
       book.publication_house,
       convertDateFormat(book.publication_year, false),
     ]);
-
-    const communitiesHead = [
-      "#",
-      t("Event"),
-      t("Date"),
-      t("Description"),
-      t("External"),
-    ];
+  
+    const communitiesHead = ["#", t("Event"), t("Date"), t("Description"), t("External")];
     const communitiesArray = items.communityServices.map((community) => [
       community.id,
       community.event,
@@ -168,15 +145,8 @@ const Reports = () => {
       community.description,
       community.external,
     ]);
-
-    const conferencesHead = [
-      "#",
-      t("Name"),
-      t("Location"),
-      t("PresentTitle"),
-      t("Authors"),
-      t("Dates"),
-    ];
+  
+    const conferencesHead = ["#", t("Name"), t("Location"), t("PresentTitle"), t("Authors"), t("Dates")];
     const conferencesArray = items.conferences.map((conference) => [
       conference.id,
       conference.name,
@@ -185,70 +155,30 @@ const Reports = () => {
       conference.authors,
       conference.dates,
     ]);
-
-    // Set spacing between tables
-    const spacingBetweenTables = 10;
-
+  
     // Calculate the startY position for each table
-    const startYPositionForCourses =
-      logoYPosition + logoHeight + spacingBetweenTables * 1.5;
-
-    const startYPositionForPapers =
-      startYPositionForCourses +
-      10 +
-      coursesArray.length * 10 +
-      10 +
-      spacingBetweenTables;
-    const startYPositionForBooks =
-      startYPositionForPapers +
-      10 +
-      papersArray.length * 10 +
-      10 +
-      spacingBetweenTables;
-    const startYPositionForCommunities =
-      startYPositionForBooks +
-      10 +
-      booksArray.length * 10 +
-      10 +
-      spacingBetweenTables;
-    const startYPositionForConferences =
-      startYPositionForCommunities +
-      10 +
-      communitiesArray.length * 10 +
-      10 +
-      spacingBetweenTables;
-
-    // Generate each table
-    addTableToPDF(
-      t("Courses"),
-      coursesHead,
-      coursesArray,
-      startYPositionForCourses
-    );
-    addTableToPDF(
-      t("Papers"),
-      papersHead,
-      papersArray,
-      startYPositionForPapers
-    );
-    addTableToPDF(t("Books"), booksHead, booksArray, startYPositionForBooks);
-    addTableToPDF(
-      t("CommunityServices"),
-      communitiesHead,
-      communitiesArray,
-      startYPositionForCommunities
-    );
-
-    addTableToPDF(
-      t("Conferences"),
-      conferencesHead,
-      conferencesArray,
-      startYPositionForConferences
-    );
-
+    const startYPositionForCourses = logoYPosition + logoHeight + spacingBetweenTables * 1.5;
+    const startYPositionForPapers = startYPositionForCourses + 10 + coursesArray.length * 10 + 10 + spacingBetweenTables;
+    const startYPositionForBooks = startYPositionForPapers + 10 + papersArray.length * 10 + 10 + spacingBetweenTables;
+    const startYPositionForCommunities = startYPositionForBooks + 10 + booksArray.length * 10 + 10 + spacingBetweenTables;
+    const startYPositionForConferences = startYPositionForCommunities + 10 + communitiesArray.length * 10 + 10 + spacingBetweenTables * 2;
+  
+    // Add image and text to PDF
+    addImageToPDF();
+    addTextToPDF();
+  
+    // Generate each table and add to PDF
+    generateTable(t("Courses"), coursesHead, coursesArray, startYPositionForCourses);
+    generateTable(t("Papers"), papersHead, papersArray, startYPositionForPapers);
+    generateTable(t("Books"), booksHead, booksArray, startYPositionForBooks);
+    generateTable(t("CommunityServices"), communitiesHead, communitiesArray, startYPositionForCommunities);
+    generateTable(t("Conferences"), conferencesHead, conferencesArray, startYPositionForConferences);
+  
     // Save the PDF with a filename
     doc.save(`report_${professorFullName}_${academicYear.year}.pdf`);
   };
+  
+  
   //#endregion
 
   //#region useEffect
