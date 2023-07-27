@@ -235,7 +235,7 @@ const Reports = () => {
         </CContainer>
       </CHeader>
 
-      <CRow sm={{ cols: 1 }} lg={{ cols: 2 }} className="align-items-start">
+      <CRow xs={{ cols: 1 }} md={{ cols: 2 }} className="align-items-start">
         <CCol>
           <SelectBoxProfessors hasAll={false} />
         </CCol>
@@ -244,7 +244,7 @@ const Reports = () => {
         </CCol>
       </CRow>
 
-      <CRow sm={{ cols: 1 }} lg={{ cols: 2 }} className="align-items-start">
+      <CRow xs={{ cols: 1 }} lg={{ cols: 2 }} className="align-items-start">
         <CCol>
           <CTable
             id="testTable"
