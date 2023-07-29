@@ -78,7 +78,6 @@ export function formatDate2(date2) {
 }
 //#endregion
 
-
 //#region others
 export function isNullOrUndefined(props) {
   try {

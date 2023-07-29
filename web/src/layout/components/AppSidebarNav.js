@@ -11,7 +11,7 @@ import {
   cilPen,
   cilBook,
   cilBullhorn,
-  cilChartPie,
+  cilChart,
   cilGlobeAlt,
   cilSettings,
 } from "@coreui/icons";
@@ -33,7 +33,7 @@ export const AppSidebarNav = () => {
     },
     {
       component: CNavTitle,
-      name: t("Components"),
+      name: "Components",
     },
     {
       component: CNavItem,
@@ -75,11 +75,11 @@ export const AppSidebarNav = () => {
       component: CNavItem,
       name: t("Reports"),
       to: "/reports",
-      icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+      icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
     },
     {
       component: CNavTitle,
-      name: t("Extras"),
+      name: "Extras",
     },
     {
       component: CNavItem,

@@ -37,6 +37,7 @@ require("./routes/books.routes")(app);
 require("./routes/community_services.routes")(app);
 require("./routes/conferences.routes")(app);
 require("./routes/courses.routes")(app);
+require("./routes/dashboard.routes")(app);
 require("./routes/papers.routes")(app);
 require("./routes/professors.routes")(app);
 require("./routes/users.routes")(app);

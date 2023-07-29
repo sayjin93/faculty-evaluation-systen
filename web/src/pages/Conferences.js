@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { convertDateFormat } from "src/hooks";
+
+import TableHeader from "src/hooks/tableHeader";
+import useErrorHandler from "../hooks/useErrorHandler";
+
+import { setModal, showToast } from "../store";
+import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import axios from "axios";
 
 import {
@@ -27,16 +33,11 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
-import { convertDateFormat } from "src/hooks";
-import { setModal, showToast } from "../store";
-import SelectBoxProfessors from "src/components/SelectBoxProfessors";
-import TableHeader from "src/hooks/tableHeader";
-
 const Conferences = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
 
   const defaultFormData = {
     name: "",
@@ -189,7 +190,7 @@ const Conferences = () => {
     if (filteredItems.length > 0) {
       return (
         <CTableBody>
-          {filteredItems.map((element) => {
+          {filteredItems.map((element, index) => {
             const id = element.id;
 
             // Find the professor with the matching ID
@@ -209,7 +210,7 @@ const Conferences = () => {
 
             return (
               <CTableRow key={id}>
-                <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
+                <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
                 <CTableDataCell>{element.name}</CTableDataCell>
                 <CTableDataCell>{element.location}</CTableDataCell>
                 <CTableDataCell>{element.present_title}</CTableDataCell>
@@ -278,28 +279,7 @@ const Conferences = () => {
           setItems(response.data);
         })
         .catch((error) => {
-          if (error.code === "ERR_NETWORK") {
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.message,
-              })
-            );
-          } else if (error.code === "ERR_BAD_REQUEST") {
-            // Remove the JWT token from the Local Storage
-            localStorage.removeItem("jwt_token");
-
-            // Redirect the user to the login page
-            navigate("/login", { replace: true });
-
-            // Show alert
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.response.statusText,
-              })
-            );
-          }
+          handleError(error);
         });
     };
 

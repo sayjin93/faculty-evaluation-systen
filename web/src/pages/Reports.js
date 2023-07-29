@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+
+import { convertDateFormat, formatDate2, formatDateFromSQL } from "src/hooks";
+import useErrorHandler from "src/hooks/useErrorHandler";
+import TableHeader from "src/hooks/tableHeader";
+
+import axios from "axios";
 import {
   CButton,
-  CCard,
-  CCardBody,
-  CCardHeader,
   CCol,
   CContainer,
   CHeader,
@@ -19,28 +21,22 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from "@coreui/react";
-import axios from "axios";
-
-import TableHeader from "src/hooks/tableHeader";
-import { convertDateFormat, formatDate2, formatDateFromSQL } from "src/hooks";
-
-import { showToast } from "src/store";
+import CIcon from "@coreui/icons-react";
+import { cilCheckAlt } from "@coreui/icons";
 
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import SelectBoxAcademicYear from "src/components/SelectBoxAcademicYear";
-import CIcon from "@coreui/icons-react";
-import { cilCheckAlt } from "@coreui/icons";
 
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
-import logoImage from "../../src/assets/images/uet_logo.png"; // Replace with the path to your logo image
+import logoImage from "src/assets/images/uet_logo.png";
 
 const Reports = () => {
   //#region constants
   const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
+
   //#endregion
 
   //#region selectors
@@ -263,29 +259,7 @@ const Reports = () => {
           setItems(response.data);
         })
         .catch((error) => {
-          debugger;
-          if (error.code === "ERR_NETWORK") {
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.message,
-              })
-            );
-          } else if (error.code === "ERR_BAD_REQUEST") {
-            // Remove the JWT token from the Local Storage
-            localStorage.removeItem("jwt_token");
-
-            // Redirect the user to the login page
-            navigate("/login", { replace: true });
-
-            // Show alert
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.response.statusText,
-              })
-            );
-          }
+          handleError(error);
         });
     };
 

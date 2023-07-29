@@ -12,7 +12,7 @@ import {
   CDropdownMenu,
   CDropdownToggle,
 } from "@coreui/react";
-import { cilLockLocked, cilSettings, cilUser } from "@coreui/icons";
+import { cilAccountLogout, cilSettings, cilUser } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import { setFirstLogin, showToast } from "src/store";
 
@@ -83,7 +83,7 @@ const AppHeaderDropdown = () => {
         </CDropdownItem>
         <CDropdownDivider />
         <CDropdownItem className="cursor" onClick={logout}>
-          <CIcon icon={cilLockLocked} className="me-2" />
+          <CIcon icon={cilAccountLogout} className="me-2" />
           {t("Logout")}
         </CDropdownItem>
       </CDropdownMenu>

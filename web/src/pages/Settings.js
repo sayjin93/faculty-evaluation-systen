@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
-import { setCookie } from "src/hooks";
 
+import { setCookie } from "src/hooks";
+import useErrorHandler from "../hooks/useErrorHandler";
+import { setModal, showToast, changeAcademicYear } from "src/store";
+
+import axios from "axios";
 import {
   CContainer,
   CHeader,
@@ -28,13 +30,12 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cifAl, cifGb, cibHtmlacademy } from "@coreui/icons";
-import { setModal, showToast, changeAcademicYear } from "src/store";
 
 const Settings = () => {
   //#region constants
   const { i18n, t } = useTranslation();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
   //#endregion
 
   //#region states
@@ -121,28 +122,7 @@ const Settings = () => {
           setAcademicYear(response.data);
         })
         .catch((error) => {
-          if (error.code === "ERR_NETWORK") {
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.message,
-              })
-            );
-          } else if (error.code === "ERR_BAD_REQUEST") {
-            // Remove the JWT token from the Local Storage
-            localStorage.removeItem("jwt_token");
-
-            // Redirect the user to the login page
-            navigate("/login", { replace: true });
-
-            // Show alert
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.response.statusText,
-              })
-            );
-          }
+          handleError(error);
         });
     };
 

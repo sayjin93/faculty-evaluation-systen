@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import useErrorHandler from "../hooks/useErrorHandler";
+
 import axios from "axios";
 
 import {
@@ -28,14 +30,13 @@ import { cilPen, cilTrash } from "@coreui/icons";
 
 import { convertDateFormat } from "src/hooks";
 import { setModal, showToast } from "../store";
-import { useNavigate } from "react-router-dom";
 import TableHeader from "src/hooks/tableHeader";
 
 const Professors = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
 
   const defaultFormData = { firstname: "", lastname: "", gender: "m" };
   //#endregion
@@ -246,28 +247,7 @@ const Professors = () => {
           setItems(response.data);
         })
         .catch((error) => {
-          if (error.code === "ERR_NETWORK") {
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.message,
-              })
-            );
-          } else if (error.code === "ERR_BAD_REQUEST") {
-            // Remove the JWT token from the Local Storage
-            localStorage.removeItem("jwt_token");
-
-            // Redirect the user to the login page
-            navigate("/login", { replace: true });
-
-            // Show alert
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.response.statusText,
-              })
-            );
-          }
+          handleError(error);
         });
     };
 

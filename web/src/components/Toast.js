@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { CToaster, CToast, CToastBody, CToastClose } from "@coreui/react";
 import { hideToast } from "../store/slices/toastSlice";
@@ -6,13 +6,9 @@ import { hideToast } from "../store/slices/toastSlice";
 const ToastComponent = ({ type, content, visible }) => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (visible) {
-      setTimeout(() => {
-        dispatch(hideToast());
-      }, 3000); // hide toast after 3 seconds
-    }
-  }, [visible, dispatch]);
+  const closeToast = () => {
+    dispatch(hideToast());
+  };
 
   if (!visible) {
     return null;
@@ -24,6 +20,7 @@ const ToastComponent = ({ type, content, visible }) => {
         visible={visible}
         color={type}
         className="text-white align-items-center"
+        onClose={closeToast}
       >
         <div className="d-flex">
           <CToastBody>

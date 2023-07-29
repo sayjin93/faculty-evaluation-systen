@@ -27,6 +27,31 @@ body {
   ) !important;
 }
 
+.body {
+  position: relative;
+
+  .placeholder-img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    max-height: 350px;
+    right: 0;
+    bottom: 0;
+    background-size: 100%;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-image: url(../images/tirana-bg.png);
+  }
+
+  .container-lg {
+    position: relative;
+  }
+}
+
+.footer {
+  background: #dddddd;
+}
+
 .cursor {
   cursor: pointer;
 }

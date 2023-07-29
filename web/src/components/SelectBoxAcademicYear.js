@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { showToast, changeAcademicYear } from "src/store";
+import useErrorHandler from "../hooks/useErrorHandler";
 
 import axios from "axios";
 import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
@@ -12,7 +12,8 @@ const SelectBoxAcademicYear = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
+
   //#endregion
 
   //#region selectors
@@ -24,7 +25,6 @@ const SelectBoxAcademicYear = () => {
 
   //#region states
   const [academicYear, setAcademicYear] = useState([]);
-  const [status, setStatus] = useState(null);
   //#endregion
 
   //#region functions
@@ -43,8 +43,6 @@ const SelectBoxAcademicYear = () => {
     await axios
       .put(process.env.REACT_APP_API_URL + "/academic-year/active/" + id)
       .then((response) => {
-        setStatus(response);
-
         dispatch(
           showToast({
             type: "success",
@@ -72,28 +70,7 @@ const SelectBoxAcademicYear = () => {
           setAcademicYear(response.data);
         })
         .catch((error) => {
-          if (error.code === "ERR_NETWORK") {
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.message,
-              })
-            );
-          } else if (error.code === "ERR_BAD_REQUEST") {
-            // Remove the JWT token from the Local Storage
-            localStorage.removeItem("jwt_token");
-
-            // Redirect the user to the login page
-            navigate("/login", { replace: true });
-
-            // Show alert
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.response.statusText,
-              })
-            );
-          }
+          handleError(error);
         });
     };
 

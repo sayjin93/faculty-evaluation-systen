@@ -1,9 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { batch, useDispatch, useSelector } from "react-redux";
 import { showToast, changeAcademicYear, setFirstLogin } from "../store";
 
 import axios from "axios";
+import WidgetsDropdown from "../widgets/WidgetsDropdown";
+import useErrorHandler from "../hooks/useErrorHandler";
 
 import {
   CAvatar,
@@ -30,20 +33,14 @@ import {
   cibCcPaypal,
   cibCcStripe,
   cibCcVisa,
-  cibGoogle,
-  cibFacebook,
-  cibLinkedin,
   cifBr,
   cifEs,
   cifFr,
   cifIn,
   cifPl,
   cifUs,
-  cibTwitter,
   cilPen,
   cilPeople,
-  cilUser,
-  cilUserFemale,
 } from "@coreui/icons";
 
 import avatar1 from "../assets/images/avatars/1.jpg";
@@ -53,14 +50,12 @@ import avatar4 from "../assets/images/avatars/4.jpg";
 import avatar5 from "../assets/images/avatars/5.jpg";
 import avatar6 from "../assets/images/avatars/6.jpg";
 
-import WidgetsDropdown from "../widgets/WidgetsDropdown";
-import { useTranslation } from "react-i18next";
-
 const Home = () => {
   //#region constants
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const handleError = useErrorHandler();
   //#endregion
 
   //#region selectors
@@ -74,41 +69,30 @@ const Home = () => {
   }));
   //#endregion
 
+  //#region states
+  const [items, setItems] = useState({
+    professors: [],
+    books: [],
+    communityServices: [],
+    conferences: [],
+    courses: [],
+    papers: [],
+  });
+  //#endregion
+
   //#region data
   const uniData = [
     { title: t("Professors"), value: "12", percent: 80, color: "success" },
     { title: t("Courses"), value: "58", percent: 72, color: "info" },
     { title: t("Papers"), value: "34", percent: 60, color: "warning" },
     { title: t("Books"), value: "18", percent: 25, color: "danger" },
-    { title: t("Conferences"), value: "7", percent: 40.15, color: "primary" },
+    { title: t("Conferences"), value: "7", percent: 40, color: "primary" },
     {
       title: t("CommunityServices"),
       value: "3",
       percent: 12.78,
       color: "secondary",
     },
-  ];
-
-  const progressGroupExample1 = [
-    { title: "Monday", value1: 34, value2: 78 },
-    { title: "Tuesday", value1: 56, value2: 94 },
-    { title: "Wednesday", value1: 12, value2: 67 },
-    { title: "Thursday", value1: 43, value2: 91 },
-    { title: "Friday", value1: 22, value2: 73 },
-    { title: "Saturday", value1: 53, value2: 82 },
-    { title: "Sunday", value1: 9, value2: 69 },
-  ];
-
-  const progressGroupExample2 = [
-    { title: "Male", icon: cilUser, value: 53 },
-    { title: "Female", icon: cilUserFemale, value: 43 },
-  ];
-
-  const progressGroupExample3 = [
-    { title: "Organic Search", icon: cibGoogle, percent: 56, value: "191,235" },
-    { title: "Facebook", icon: cibFacebook, percent: 15, value: "51,223" },
-    { title: "Twitter", icon: cibTwitter, percent: 11, value: "37,564" },
-    { title: "LinkedIn", icon: cibLinkedin, percent: 8, value: "27,319" },
   ];
 
   const tableExample = [
@@ -206,63 +190,61 @@ const Home = () => {
   //#region useEffect
   useEffect(() => {
     const fetchAcademicYears = async () => {
-      await axios
-        .get(process.env.REACT_APP_API_URL + "/academic-year/active", {
-          headers: {
-            "auth-token": localStorage.getItem("jwt_token"),
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          const activeObject = response.data[0];
-
-          dispatch(changeAcademicYear(activeObject));
-        })
-        .catch((error) => {
-          if (error.code === "ERR_NETWORK") {
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.message,
-              })
-            );
-          } else if (error.code === "ERR_BAD_REQUEST") {
-            // Remove the JWT token from the Local Storage
-            localStorage.removeItem("jwt_token");
-
-            // Redirect the user to the login page
-            navigate("/login", { replace: true });
-
-            // Show alert
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.response.data.message,
-              })
-            );
+      try {
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL + "/academic-year/active",
+          {
+            headers: {
+              "auth-token": localStorage.getItem("jwt_token"),
+              "Content-Type": "application/json",
+            },
           }
-        });
+        );
+        const activeObject = response.data[0];
+        dispatch(changeAcademicYear(activeObject));
+      } catch (error) {
+        handleError(error);
+      }
     };
 
-    fetchAcademicYears();
-
-    if (firstLogin) {
-      batch(() => {
-        dispatch(
-          showToast({
-            type: "success",
-            content:
-              t("Welcome") +
-              " " +
-              loggedUser.first_name +
-              " " +
-              loggedUser.last_name,
-          })
+    const fetchDashboard = async () => {
+      try {
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL +
+            `/dashboard/academic_year/${academicYear.id}`,
+          {
+            headers: {
+              "auth-token": localStorage.getItem("jwt_token"),
+              "Content-Type": "application/json",
+            },
+          }
         );
-        dispatch(setFirstLogin(false));
-      });
-    }
+        setItems(response.data);
+      } catch (error) {
+        handleError(error);
+      }
+    };
+
+    Promise.all([fetchAcademicYears(), fetchDashboard()]).then(() => {
+      if (firstLogin) {
+        batch(() => {
+          dispatch(
+            showToast({
+              type: "success",
+              content:
+                t("Welcome") +
+                " " +
+                loggedUser.first_name +
+                " " +
+                loggedUser.last_name,
+            })
+          );
+          dispatch(setFirstLogin(false));
+        });
+      }
+    });
   }, []);
+
   //#endregion
 
   return (
@@ -271,9 +253,7 @@ const Home = () => {
         <CCardBody>
           <CRow>
             <CCol sm={5}>
-              <h4 id="traffic" className="card-title mb-0">
-                {t("AcademicYear")}
-              </h4>
+              <h4 className="card-title mb-0">{t("AcademicYear")}</h4>
               <div className="small text-medium-emphasis">
                 {academicYear.year}
               </div>
@@ -290,27 +270,55 @@ const Home = () => {
           </CRow>
         </CCardBody>
         <CCardFooter>
-          <CRow
-            xs={{ cols: 1 }}
-            sm={{ cols: 2 }}
-            md={{ cols: 3 }}
-            lg={{ cols: 6 }}
-            className="text-center"
-          >
-            {uniData.map((item, index) => (
-              <CCol className="mb-sm-2 mb-0" key={index}>
-                <div className="text-medium-emphasis">{item.title}</div>
-                <strong>
-                  {item.value} ({item.percent}%)
-                </strong>
-                <CProgress
-                  thin
-                  className="mt-2"
-                  color={item.color}
-                  value={item.percent}
-                />
-              </CCol>
-            ))}
+          <CRow>
+            <CCol xs={6} md={4} lg={2}>
+              <div className="border-start border-start-4 border-start-info py-1 px-3">
+                <div className="text-medium-emphasis small">
+                  {t("Professors")}
+                </div>
+                <div className="fs-5 fw-semibold">
+                  {items.professors.length}
+                </div>
+              </div>
+            </CCol>
+            <CCol xs={6} md={4} lg={2}>
+              <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
+                <div className="text-medium-emphasis small">{t("Courses")}</div>
+                <div className="fs-5 fw-semibold">{items.courses.length}</div>
+              </div>
+            </CCol>
+            <CCol xs={6} md={4} lg={2}>
+              <div className="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
+                <div className="text-medium-emphasis small">{t("Papers")}</div>
+                <div className="fs-5 fw-semibold">{items.papers.length}</div>
+              </div>
+            </CCol>
+            <CCol xs={6} md={4} lg={2}>
+              <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
+                <div className="text-medium-emphasis small">{t("Books")}</div>
+                <div className="fs-5 fw-semibold">{items.books.length}</div>
+              </div>
+            </CCol>
+            <CCol xs={6} md={4} lg={2}>
+              <div className="border-start border-start-4 border-start-primary py-1 px-3 mb-3">
+                <div className="text-medium-emphasis small">
+                  {t("Conferences")}
+                </div>
+                <div className="fs-5 fw-semibold">
+                  {items.conferences.length}
+                </div>
+              </div>
+            </CCol>
+            <CCol xs={6} md={4} lg={2}>
+              <div className="border-start border-start-4 border-start-secondary py-1 px-3 mb-3">
+                <div className="text-medium-emphasis small">
+                  {t("CommunityServices")}
+                </div>
+                <div className="fs-5 fw-semibold">
+                  {items.communityServices.length}
+                </div>
+              </div>
+            </CCol>
           </CRow>
         </CCardFooter>
       </CCard>
@@ -320,102 +328,29 @@ const Home = () => {
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Traffic {" & "} Sales</CCardHeader>
+            <CCardHeader>Title {" & "} Progress</CCardHeader>
             <CCardBody>
-              <CRow>
-                <CCol xs={12} md={6} xl={6}>
-                  <CRow>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-info py-1 px-3">
-                        <div className="text-medium-emphasis small">
-                          New Clients
-                        </div>
-                        <div className="fs-5 fw-semibold">9,123</div>
-                      </div>
-                    </CCol>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">
-                          Recurring Clients
-                        </div>
-                        <div className="fs-5 fw-semibold">22,643</div>
-                      </div>
-                    </CCol>
-                  </CRow>
-
-                  <hr className="mt-0" />
-                  {progressGroupExample1.map((item, index) => (
-                    <div className="progress-group mb-4" key={index}>
-                      <div className="progress-group-prepend">
-                        <span className="text-medium-emphasis small">
-                          {item.title}
-                        </span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="info" value={item.value1} />
-                        <CProgress thin color="danger" value={item.value2} />
-                      </div>
-                    </div>
-                  ))}
-                </CCol>
-
-                <CCol xs={12} md={6} xl={6}>
-                  <CRow>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">
-                          Pageviews
-                        </div>
-                        <div className="fs-5 fw-semibold">78,623</div>
-                      </div>
-                    </CCol>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">
-                          Organic
-                        </div>
-                        <div className="fs-5 fw-semibold">49,123</div>
-                      </div>
-                    </CCol>
-                  </CRow>
-
-                  <hr className="mt-0" />
-
-                  {progressGroupExample2.map((item, index) => (
-                    <div className="progress-group mb-4" key={index}>
-                      <div className="progress-group-header">
-                        <CIcon className="me-2" icon={item.icon} size="lg" />
-                        <span>{item.title}</span>
-                        <span className="ms-auto fw-semibold">
-                          {item.value}%
-                        </span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="warning" value={item.value} />
-                      </div>
-                    </div>
-                  ))}
-
-                  <div className="mb-5"></div>
-
-                  {progressGroupExample3.map((item, index) => (
-                    <div className="progress-group" key={index}>
-                      <div className="progress-group-header">
-                        <CIcon className="me-2" icon={item.icon} size="lg" />
-                        <span>{item.title}</span>
-                        <span className="ms-auto fw-semibold">
-                          {item.value}{" "}
-                          <span className="text-medium-emphasis small">
-                            ({item.percent}%)
-                          </span>
-                        </span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="success" value={item.percent} />
-                      </div>
-                    </div>
-                  ))}
-                </CCol>
+              <CRow
+                xs={{ cols: 1 }}
+                sm={{ cols: 2 }}
+                md={{ cols: 3 }}
+                lg={{ cols: 6 }}
+                className="text-center"
+              >
+                {uniData.map((item, index) => (
+                  <CCol className="mb-sm-2 mb-0" key={index}>
+                    <div className="text-medium-emphasis">{item.title}</div>
+                    <strong>
+                      {item.value} ({item.percent}%)
+                    </strong>
+                    <CProgress
+                      thin
+                      className="mt-2"
+                      color={item.color}
+                      value={item.percent}
+                    />
+                  </CCol>
+                ))}
               </CRow>
 
               <br />

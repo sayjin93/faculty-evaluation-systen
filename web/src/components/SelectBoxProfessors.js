@@ -2,8 +2,9 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { setProfessors, setSelectedProfessor, showToast } from "../store";
+import { setProfessors, setSelectedProfessor } from "../store";
+import useErrorHandler from "../hooks/useErrorHandler";
+
 import axios from "axios";
 import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
 
@@ -11,7 +12,8 @@ const SelectBoxProfessors = ({ hasAll = true }) => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const handleError = useErrorHandler();
+
   //#endregion
 
   //#region selectors
@@ -44,28 +46,7 @@ const SelectBoxProfessors = ({ hasAll = true }) => {
           }
         })
         .catch((error) => {
-          if (error.code === "ERR_NETWORK") {
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.message,
-              })
-            );
-          } else if (error.code === "ERR_BAD_REQUEST") {
-            // Remove the JWT token from the Local Storage
-            localStorage.removeItem("jwt_token");
-
-            // Redirect the user to the login page
-            navigate("/login", { replace: true });
-
-            // Show alert
-            dispatch(
-              showToast({
-                type: "danger",
-                content: error.response.statusText,
-              })
-            );
-          }
+          handleError(error);
         });
     };
 
