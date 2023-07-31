@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { batch, useDispatch, useSelector } from "react-redux";
-import { showToast, changeAcademicYear, setFirstLogin } from "../store";
+import { showToast, setFirstLogin } from "../store";
 
 import axios from "axios";
 import WidgetsDropdown from "../widgets/WidgetsDropdown";
@@ -189,27 +189,9 @@ const Home = () => {
 
   //#region useEffect
   useEffect(() => {
-    const fetchAcademicYears = async () => {
-      try {
-        const response = await axios.get(
-          process.env.REACT_APP_API_URL + "/academic-year/active",
-          {
-            headers: {
-              "auth-token": localStorage.getItem("jwt_token"),
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const activeObject = response.data[0];
-        dispatch(changeAcademicYear(activeObject));
-      } catch (error) {
-        handleError(error);
-      }
-    };
-
     const fetchDashboard = async () => {
-      try {
-        const response = await axios.get(
+      await axios
+        .get(
           process.env.REACT_APP_API_URL +
             `/dashboard/academic_year/${academicYear.id}`,
           {
@@ -218,31 +200,33 @@ const Home = () => {
               "Content-Type": "application/json",
             },
           }
-        );
-        setItems(response.data);
-      } catch (error) {
-        handleError(error);
-      }
+        )
+        .then((response) => {
+          setItems(response.data);
+        })
+        .catch((error) => {
+          handleError(error);
+        });
     };
 
-    Promise.all([fetchAcademicYears(), fetchDashboard()]).then(() => {
-      if (firstLogin) {
-        batch(() => {
-          dispatch(
-            showToast({
-              type: "success",
-              content:
-                t("Welcome") +
-                " " +
-                loggedUser.first_name +
-                " " +
-                loggedUser.last_name,
-            })
-          );
-          dispatch(setFirstLogin(false));
-        });
-      }
-    });
+    fetchDashboard();
+
+    if (firstLogin) {
+      batch(() => {
+        dispatch(
+          showToast({
+            type: "success",
+            content:
+              t("Welcome") +
+              " " +
+              loggedUser.first_name +
+              " " +
+              loggedUser.last_name,
+          })
+        );
+        dispatch(setFirstLogin(false));
+      });
+    }
   }, []);
 
   //#endregion

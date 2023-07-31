@@ -31,6 +31,7 @@
   "Edit": "Modifiko",
   "Email": "Email",
   "Event": "Eventi",
+  "Ex": "pshmb",
   "External": "External",
   "Extras": "Të Tjera",
   "Female": "Femër",
@@ -97,5 +98,6 @@
   "Username": "Emri i përdoruesit",
   "WeekHours": "Orë Javore",
   "Welcome": "Mirësevini",
-  "Working": "Në punim"
+  "Working": "Në punim",
+  "YouNeedToDefineAcademicYearFirst": "Filimisht duhet të përcaktoni Vitin Akademik"
 }

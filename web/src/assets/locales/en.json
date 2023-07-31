@@ -31,6 +31,7 @@
   "Edit": "Edit",
   "Email": "Email",
   "Event": "Event",
+  "Ex": "ex",
   "External": "External",
   "Extras": "Extras",
   "Female": "Female",
@@ -97,5 +98,6 @@
   "Username": "Username",
   "WeekHours": "Week Hours",
   "Welcome": "Welcome",
-  "Working": "Working"
+  "Working": "Working",
+  "YouNeedToDefineAcademicYearFirst": "You need to define Academic Year first"
 }

@@ -47,7 +47,6 @@ const Settings = () => {
   const modal = useSelector((state) => state.modal.modal);
 
   const [academicYear, setAcademicYear] = useState([]);
-  const [status, setStatus] = useState(null);
   const [newAcademicYear, setNewAcademicYear] = useState("");
   //#endregion
 
@@ -68,8 +67,6 @@ const Settings = () => {
       })
       .then((response) => {
         const year = response.data.year;
-
-        setStatus(response);
         dispatch(
           showToast({
             type: "success",
@@ -93,8 +90,6 @@ const Settings = () => {
     await axios
       .put(process.env.REACT_APP_API_URL + "/academic-year/active/" + id)
       .then((response) => {
-        setStatus(response);
-
         dispatch(
           showToast({
             type: "success",
@@ -127,7 +122,7 @@ const Settings = () => {
     };
 
     fetchAcademicYears();
-  }, [status]);
+  }, [dispatch]);
   //#endregion
 
   return (
