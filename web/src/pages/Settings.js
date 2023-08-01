@@ -174,12 +174,12 @@ const Settings = () => {
         </CCol>
 
         <CCol>
-          <CCard color="dark" textColor="white" className="mb-3">
+          <CCard color="white"  className="mb-3">
             <CCardHeader>{t("AcademicYear")}</CCardHeader>
             <CCardBody>
               <div className="flex flex-justify-between flex-gap-10">
                 <CDropdown>
-                  <CDropdownToggle color="light">
+                  <CDropdownToggle color="dark">
                     <CIcon icon={cibHtmlacademy} />
                     <span className="ms-2">{activeAcademicYear}</span>
                   </CDropdownToggle>
@@ -201,7 +201,7 @@ const Settings = () => {
                   </CDropdownMenu>
                 </CDropdown>
 
-                <CButton color="light" onClick={() => dispatch(setModal(true))}>
+                <CButton color="dark" onClick={() => dispatch(setModal(true))}>
                   {t("Add")}
                 </CButton>
               </div>

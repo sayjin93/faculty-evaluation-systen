@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { CTableHead, CTableHeaderCell, CTableRow } from "@coreui/react";
 
-function TableHeader({ items, timestamp = true, color = "dark" }) {
+function TableHeader({ items, timestamp = true, color = "light" }) {
   const { t } = useTranslation();
 
   const fixTableHeaderName = (text) => {
@@ -18,8 +18,8 @@ function TableHeader({ items, timestamp = true, color = "dark" }) {
     const header = Object.keys(items[0]); // extract keys from the first object
 
     return (
-      <CTableHead>
-        <CTableRow color={color}>
+      <CTableHead color={color}>
+        <CTableRow>
           {header.map((element) => {
             let thead = fixTableHeaderName(element);
             if (element === "id") thead = "#";
@@ -69,7 +69,13 @@ function TableHeader({ items, timestamp = true, color = "dark" }) {
               <CTableHeaderCell
                 key={element}
                 scope="col"
-                className={element === "external" ? "text-center" : "text-left"}
+                className={
+                  element === "external"
+                    ? "text-center"
+                    : element === "id"
+                    ? "text-end"
+                    : "text-left"
+                }
               >
                 {thead}
               </CTableHeaderCell>

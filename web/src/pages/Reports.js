@@ -9,6 +9,9 @@ import TableHeader from "src/hooks/tableHeader";
 import axios from "axios";
 import {
   CButton,
+  CCard,
+  CCardBody,
+  CCardHeader,
   CCol,
   CContainer,
   CHeader,
@@ -185,30 +188,27 @@ const Reports = () => {
     // Calculate the startY position for each table
     const startYPositionForCourses =
       logoYPosition + logoHeight + spacingBetweenTables * 1.5;
+
     const startYPositionForPapers =
       startYPositionForCourses +
       10 +
       coursesArray.length * 10 +
-      10 +
       spacingBetweenTables;
     const startYPositionForBooks =
       startYPositionForPapers +
       10 +
       papersArray.length * 10 +
-      10 +
       spacingBetweenTables;
     const startYPositionForCommunities =
       startYPositionForBooks +
       10 +
       booksArray.length * 10 +
-      10 +
       spacingBetweenTables;
     const startYPositionForConferences =
       startYPositionForCommunities +
       10 +
       communitiesArray.length * 10 +
-      10 +
-      spacingBetweenTables * 2;
+      spacingBetweenTables;
 
     // Add image and text to PDF
     addImageToPDF();
@@ -244,7 +244,6 @@ const Reports = () => {
     // Save the PDF with a filename
     doc.save(`report_${professorFullName}_${academicYear.year}.pdf`);
   };
-
   //#endregion
 
   //#region useEffect
@@ -269,271 +268,323 @@ const Reports = () => {
 
   return (
     <>
-      <CHeader className="mb-3">
-        <CContainer fluid>
-          <CHeaderBrand>{t("Reports")}</CHeaderBrand>
-
-          <CButton color="primary" onClick={exportPDF}>
+      <CCard className="mb-4">
+        <CCardHeader className="flex justify-content-between align-items-center">
+          <h6 className="m-0">{t("Reports")}</h6>
+          <CButton color="primary" className="float-right" onClick={exportPDF}>
             {t("GeneratePdf")}
           </CButton>
-        </CContainer>
-      </CHeader>
+        </CCardHeader>
 
-      <CRow xs={{ cols: 1 }} md={{ cols: 2 }} className="align-items-start">
-        <CCol>
-          <SelectBoxProfessors hasAll={false} />
-        </CCol>
-        <CCol>
-          <SelectBoxAcademicYear />
-        </CCol>
-      </CRow>
+        <CCardBody>
+          <CRow xs={{ cols: 1 }} md={{ cols: 2 }} className="align-items-start">
+            <CCol>
+              <SelectBoxProfessors hasAll={false} />
+            </CCol>
+            <CCol>
+              <SelectBoxAcademicYear />
+            </CCol>
+          </CRow>
+        </CCardBody>
+      </CCard>
 
-      <CRow xs={{ cols: 1 }} lg={{ cols: 2 }} className="align-items-start">
+      <CRow
+        xs={{ cols: 1, gutter: 4 }}
+        lg={{ cols: 2 }}
+        className="align-items-start g-4"
+      >
         <CCol>
-          <CTable
-            id="testTable"
-            small
-            responsive
-            striped
-            hover
-            align="middle"
-            className="table-custom"
+          <CCard
+            textColor="primary"
+            className="border-primary border-top-primary border-top-3"
           >
-            <CTableHead className="table-custom-header">
-              <CTableRow>
-                <CTableHeaderCell scope="colgroup" colSpan={6}>
-                  {t("Courses")}
-                </CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
+            <CCardHeader>
+              <h6 className="m-0">{t("Courses")}</h6>
+            </CCardHeader>
 
-            <TableHeader items={items.courses} timestamp={false} />
+            <CCardBody className="p-0">
+              <CTable
+                small
+                align="middle"
+                className="mb-0"
+                hover
+                responsive
+                borderless
+                striped
+              >
+                <TableHeader
+                  color="primary"
+                  items={items.courses}
+                  timestamp={false}
+                />
 
-            <CTableBody>
-              {items.courses.length > 0 ? (
-                items.courses.map((element) => {
-                  const id = element.id;
+                <CTableBody>
+                  {items.courses.length > 0 ? (
+                    items.courses.map((element, index) => {
+                      const id = element.id;
 
-                  let program =
-                    element.program === "Bachelor" ? "Bachelor" : "MSc";
+                      let program =
+                        element.program === "Bachelor" ? "Bachelor" : "MSc";
 
-                  return (
-                    <CTableRow key={id}>
-                      <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
-                      <CTableDataCell>{element.name}</CTableDataCell>
-                      <CTableDataCell>{element.number}</CTableDataCell>
-                      <CTableDataCell>{element.semester}</CTableDataCell>
-                      <CTableDataCell>{element.week_hours}</CTableDataCell>
-                      <CTableDataCell>{program}</CTableDataCell>
-                    </CTableRow>
-                  );
-                })
-              ) : (
-                <CTableRow>
-                  <CTableHeaderCell colSpan={6}>
-                    {t("NoDataToDisplay")}
-                  </CTableHeaderCell>
-                </CTableRow>
-              )}
-            </CTableBody>
-          </CTable>
-        </CCol>
-
-        <CCol>
-          <CTable
-            small
-            responsive
-            striped
-            hover
-            align="middle"
-            className="table-custom"
-          >
-            <CTableHead className="table-custom-header">
-              <CTableRow>
-                <CTableHeaderCell scope="colgroup" colSpan={6}>
-                  {t("Papers")}
-                </CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-
-            <TableHeader items={items.papers} timestamp={false} />
-
-            <CTableBody>
-              {items.papers.length > 0 ? (
-                items.papers.map((element) => {
-                  const id = element.id;
-
-                  let publication = element.publication
-                    ? convertDateFormat(element.publication, false)
-                    : null;
-
-                  return (
-                    <CTableRow key={id}>
-                      <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
-                      <CTableDataCell>{element.title}</CTableDataCell>
-                      <CTableDataCell>{element.journal}</CTableDataCell>
-                      <CTableDataCell>{publication}</CTableDataCell>
-                    </CTableRow>
-                  );
-                })
-              ) : (
-                <CTableRow>
-                  <CTableHeaderCell colSpan={4}>
-                    {t("NoDataToDisplay")}
-                  </CTableHeaderCell>
-                </CTableRow>
-              )}
-            </CTableBody>
-          </CTable>
-        </CCol>
-
-        <CCol>
-          <CTable
-            small
-            responsive
-            striped
-            hover
-            align="middle"
-            className="table-custom"
-          >
-            <CTableHead className="table-custom-header">
-              <CTableRow>
-                <CTableHeaderCell scope="colgroup" colSpan={6}>
-                  {t("Books")}
-                </CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-
-            <TableHeader items={items.books} timestamp={false} />
-
-            <CTableBody>
-              {items.books.length > 0 ? (
-                items.books.map((element) => {
-                  const id = element.id;
-
-                  let publication = element.publication_year
-                    ? formatDateFromSQL(element.publication_year, true)
-                    : null;
-
-                  return (
-                    <CTableRow key={id}>
-                      <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
-                      <CTableDataCell>{element.title}</CTableDataCell>
-                      <CTableDataCell>
-                        {element.publication_house}
-                      </CTableDataCell>
-                      <CTableDataCell>{publication}</CTableDataCell>
-                    </CTableRow>
-                  );
-                })
-              ) : (
-                <CTableRow>
-                  <CTableHeaderCell colSpan={4}>
-                    {t("NoDataToDisplay")}
-                  </CTableHeaderCell>
-                </CTableRow>
-              )}
-            </CTableBody>
-          </CTable>
-        </CCol>
-
-        <CCol>
-          <CTable
-            small
-            responsive
-            striped
-            hover
-            align="middle"
-            className="table-custom"
-          >
-            <CTableHead className="table-custom-header">
-              <CTableRow>
-                <CTableHeaderCell scope="colgroup" colSpan={6}>
-                  {t("CommunityServices")}
-                </CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-
-            <TableHeader items={items.communityServices} timestamp={false} />
-            <CTableBody>
-              {items.communityServices.length > 0 ? (
-                items.communityServices.map((element) => {
-                  const id = element.id;
-                  const date = element.date ? formatDate2(element.date) : null;
-                  const checked = element.external ? (
-                    <CIcon icon={cilCheckAlt} size="sm" />
+                      return (
+                        <CTableRow key={id}>
+                          <CTableHeaderCell scope="row" className="text-end">
+                            {index + 1}
+                          </CTableHeaderCell>
+                          <CTableDataCell>{element.name}</CTableDataCell>
+                          <CTableDataCell>{element.number}</CTableDataCell>
+                          <CTableDataCell>{element.semester}</CTableDataCell>
+                          <CTableDataCell>{element.week_hours}</CTableDataCell>
+                          <CTableDataCell>{program}</CTableDataCell>
+                        </CTableRow>
+                      );
+                    })
                   ) : (
-                    ""
-                  );
-                  return (
-                    <CTableRow key={id}>
-                      <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
-                      <CTableDataCell>{element.event}</CTableDataCell>
-                      <CTableDataCell>{date}</CTableDataCell>
-                      <CTableDataCell>{element.description}</CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        {checked}
-                      </CTableDataCell>
+                    <CTableRow>
+                      <CTableHeaderCell colSpan={6}>
+                        {t("NoDataToDisplay")}
+                      </CTableHeaderCell>
                     </CTableRow>
-                  );
-                })
-              ) : (
-                <CTableRow>
-                  <CTableHeaderCell colSpan={5}>
-                    {t("NoDataToDisplay")}
-                  </CTableHeaderCell>
-                </CTableRow>
-              )}
-            </CTableBody>
-          </CTable>
+                  )}
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
         </CCol>
-      </CRow>
 
-      <CRow className="align-items-start">
         <CCol>
-          <CTable
-            small
-            responsive
-            striped
-            hover
-            align="middle"
-            className="table-custom"
+          <CCard
+            textColor="secondary"
+            className="border-secondary border-top-secondary border-top-3"
           >
-            <CTableHead className="table-custom-header">
-              <CTableRow>
-                <CTableHeaderCell scope="colgroup" colSpan={6}>
-                  {t("Conferences")}
-                </CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
+            <CCardHeader>
+              <h6 className="m-0">{t("Papers")}</h6>
+            </CCardHeader>
+            <CCardBody className="p-0">
+              <CTable
+                small
+                align="middle"
+                className="mb-0"
+                hover
+                responsive
+                borderless
+                striped
+              >
+                <TableHeader
+                  color="secondary"
+                  items={items.papers}
+                  timestamp={false}
+                />
 
-            <TableHeader items={items.conferences} timestamp={false} />
+                <CTableBody>
+                  {items.papers.length > 0 ? (
+                    items.papers.map((element, index) => {
+                      const id = element.id;
 
-            <CTableBody>
-              {items.conferences.length > 0 ? (
-                items.conferences.map((element) => {
-                  const id = element.id;
+                      let publication = element.publication
+                        ? convertDateFormat(element.publication, false)
+                        : null;
 
-                  return (
-                    <CTableRow key={id}>
-                      <CTableHeaderCell scope="row">{id}</CTableHeaderCell>
-                      <CTableDataCell>{element.name}</CTableDataCell>
-                      <CTableDataCell>{element.location}</CTableDataCell>
-                      <CTableDataCell>{element.present_title}</CTableDataCell>
-                      <CTableDataCell>{element.authors}</CTableDataCell>
-                      <CTableDataCell>{element.dates}</CTableDataCell>
+                      return (
+                        <CTableRow key={id}>
+                          <CTableHeaderCell scope="row" className="text-end">
+                            {index + 1}
+                          </CTableHeaderCell>
+                          <CTableDataCell>{element.title}</CTableDataCell>
+                          <CTableDataCell>{element.journal}</CTableDataCell>
+                          <CTableDataCell>{publication}</CTableDataCell>
+                        </CTableRow>
+                      );
+                    })
+                  ) : (
+                    <CTableRow>
+                      <CTableHeaderCell colSpan={4}>
+                        {t("NoDataToDisplay")}
+                      </CTableHeaderCell>
                     </CTableRow>
-                  );
-                })
-              ) : (
-                <CTableRow>
-                  <CTableHeaderCell colSpan={6}>
-                    {t("NoDataToDisplay")}
-                  </CTableHeaderCell>
-                </CTableRow>
-              )}
-            </CTableBody>
-          </CTable>
+                  )}
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
+        </CCol>
+
+        <CCol>
+          <CCard
+            textColor="success"
+            className="border-success border-top-success border-top-3"
+          >
+            <CCardHeader>
+              <h6 className="m-0">{t("Books")}</h6>
+            </CCardHeader>
+            <CCardBody className="p-0">
+              <CTable
+                small
+                align="middle"
+                className="mb-0"
+                hover
+                responsive
+                borderless
+                striped
+              >
+                <TableHeader
+                  color="success"
+                  items={items.books}
+                  timestamp={false}
+                />
+
+                <CTableBody>
+                  {items.books.length > 0 ? (
+                    items.books.map((element, index) => {
+                      const id = element.id;
+
+                      let publication = element.publication_year
+                        ? formatDateFromSQL(element.publication_year, true)
+                        : null;
+
+                      return (
+                        <CTableRow key={id}>
+                          <CTableHeaderCell scope="row" className="text-end">
+                            {index + 1}
+                          </CTableHeaderCell>
+                          <CTableDataCell>{element.title}</CTableDataCell>
+                          <CTableDataCell>
+                            {element.publication_house}
+                          </CTableDataCell>
+                          <CTableDataCell>{publication}</CTableDataCell>
+                        </CTableRow>
+                      );
+                    })
+                  ) : (
+                    <CTableRow>
+                      <CTableHeaderCell colSpan={4}>
+                        {t("NoDataToDisplay")}
+                      </CTableHeaderCell>
+                    </CTableRow>
+                  )}
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
+        </CCol>
+
+        <CCol>
+          <CCard
+            textColor="info"
+            className="border-info border-top-info border-top-3"
+          >
+            <CCardHeader>
+              <h6 className="m-0">{t("CommunityServices")}</h6>
+            </CCardHeader>
+            <CCardBody className="p-0">
+              <CTable
+                small
+                align="middle"
+                className="mb-0"
+                hover
+                responsive
+                borderless
+                striped
+              >
+                <TableHeader
+                  color="info"
+                  items={items.communityServices}
+                  timestamp={false}
+                />
+                <CTableBody>
+                  {items.communityServices.length > 0 ? (
+                    items.communityServices.map((element, index) => {
+                      const id = element.id;
+                      const date = element.date
+                        ? formatDate2(element.date)
+                        : null;
+                      const checked = element.external ? (
+                        <CIcon icon={cilCheckAlt} size="sm" />
+                      ) : (
+                        ""
+                      );
+                      return (
+                        <CTableRow key={id}>
+                          <CTableHeaderCell scope="row" className="text-end">
+                            {index + 1}
+                          </CTableHeaderCell>
+                          <CTableDataCell>{element.event}</CTableDataCell>
+                          <CTableDataCell>{date}</CTableDataCell>
+                          <CTableDataCell>{element.description}</CTableDataCell>
+                          <CTableDataCell className="text-center">
+                            {checked}
+                          </CTableDataCell>
+                        </CTableRow>
+                      );
+                    })
+                  ) : (
+                    <CTableRow>
+                      <CTableHeaderCell colSpan={5}>
+                        {t("NoDataToDisplay")}
+                      </CTableHeaderCell>
+                    </CTableRow>
+                  )}
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
+        </CCol>
+        
+        <CCol className="w-100">
+          <CCard
+            textColor="dark"
+            className="border-dark border-top-dark border-top-3"
+          >
+            <CCardHeader>
+              <h6 className="m-0">{t("Conferences")}</h6>
+            </CCardHeader>
+            <CCardBody className="p-0">
+              <CTable
+                small
+                align="middle"
+                className="mb-0"
+                hover
+                responsive
+                borderless
+                striped
+              >
+                <TableHeader
+                  color="dark"
+                  items={items.conferences}
+                  timestamp={false}
+                />
+
+                <CTableBody>
+                  {items.conferences.length > 0 ? (
+                    items.conferences.map((element, index) => {
+                      const id = element.id;
+
+                      return (
+                        <CTableRow key={id}>
+                          <CTableHeaderCell scope="row" className="text-end">
+                            {index + 1}
+                          </CTableHeaderCell>
+                          <CTableDataCell>{element.name}</CTableDataCell>
+                          <CTableDataCell>{element.location}</CTableDataCell>
+                          <CTableDataCell>
+                            {element.present_title}
+                          </CTableDataCell>
+                          <CTableDataCell>{element.authors}</CTableDataCell>
+                          <CTableDataCell>{element.dates}</CTableDataCell>
+                        </CTableRow>
+                      );
+                    })
+                  ) : (
+                    <CTableRow>
+                      <CTableHeaderCell colSpan={6}>
+                        {t("NoDataToDisplay")}
+                      </CTableHeaderCell>
+                    </CTableRow>
+                  )}
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
         </CCol>
       </CRow>
     </>

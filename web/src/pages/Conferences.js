@@ -13,12 +13,12 @@ import axios from "axios";
 import {
   CButton,
   CButtonGroup,
-  CContainer,
+  CCard,
+  CCardBody,
+  CCardHeader,
   CForm,
   CFormInput,
   CFormSelect,
-  CHeader,
-  CHeaderBrand,
   CModal,
   CModalBody,
   CModalFooter,
@@ -210,7 +210,9 @@ const Conferences = () => {
 
             return (
               <CTableRow key={id}>
-                <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
+                <CTableHeaderCell scope="row" className="text-end">
+                  {index + 1}
+                </CTableHeaderCell>
                 <CTableDataCell>{element.name}</CTableDataCell>
                 <CTableDataCell>{element.location}</CTableDataCell>
                 <CTableDataCell>{element.present_title}</CTableDataCell>
@@ -219,7 +221,7 @@ const Conferences = () => {
                 <CTableDataCell>{professorFullName}</CTableDataCell>
                 <CTableDataCell>{createdAt}</CTableDataCell>
                 <CTableDataCell>{updatedAt}</CTableDataCell>
-                <CTableDataCell>
+                <CTableDataCell className="text-center">
                   <CButtonGroup
                     role="group"
                     aria-label="Basic example"
@@ -318,23 +320,33 @@ const Conferences = () => {
 
   return (
     <>
-      <CHeader className="mb-3">
-        <CContainer fluid>
-          <CHeaderBrand>{t("Conferences")}</CHeaderBrand>
-
-          <CButton color="dark" onClick={() => dispatch(setModal(true))}>
+      <CCard>
+        <CCardHeader className="flex justify-content-between align-items-center">
+          <h6 className="m-0">{t("Conferences")}</h6>
+          <CButton
+            color="primary"
+            className="float-right"
+            onClick={() => dispatch(setModal(true))}
+          >
             {t("Add")}
           </CButton>
-        </CContainer>
-      </CHeader>
+        </CCardHeader>
+        <CCardBody>
+          <SelectBoxProfessors className="mb-3" />
 
-      <SelectBoxProfessors />
+          <CTable
+            align="middle"
+            className="mb-0 border"
+            hover
+            responsive
+            bordered
+          >
+            <TableHeader items={items} />
 
-      <CTable responsive striped hover align="middle">
-        <TableHeader items={items} />
-        <RenderTableBody />
-      </CTable>
-
+            <RenderTableBody />
+          </CTable>
+        </CCardBody>
+      </CCard>
       <CModal
         backdrop="static"
         visible={modal}

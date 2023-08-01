@@ -89,4 +89,9 @@ export function isNullOrUndefined(props) {
   }
   return false;
 }
+
+// Helper function to count the occurrences of an item in an array
+export function countOccurrences(array, key, value) {
+  return array.filter((item) => item[key] === value).length;
+}
 //#endregion

@@ -8,7 +8,7 @@ import useErrorHandler from "../hooks/useErrorHandler";
 import axios from "axios";
 import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
 
-const SelectBoxAcademicYear = () => {
+const SelectBoxAcademicYear = ({ className = "" }) => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -79,7 +79,7 @@ const SelectBoxAcademicYear = () => {
   //#endregion
 
   return (
-    <CInputGroup className="mb-3">
+    <CInputGroup className={className}>
       <CInputGroupText component="label">{t("AcademicYear")}</CInputGroupText>
       <CFormSelect
         className="cursor"
