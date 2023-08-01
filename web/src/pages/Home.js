@@ -3,25 +3,19 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { batch, useDispatch, useSelector } from "react-redux";
 import { showToast, setFirstLogin } from "../store";
-import {
-  convertDateFormat,
-  countOccurrences,
-  formatDateFromSQL,
-} from "../hooks";
+import { convertDateFormat, countOccurrences } from "../hooks";
 
 import axios from "axios";
 import WidgetsDropdown from "../widgets/WidgetsDropdown";
 import useErrorHandler from "../hooks/useErrorHandler";
 
 import {
-  CAvatar,
   CButton,
   CCard,
   CCardBody,
   CCardFooter,
   CCardHeader,
   CCol,
-  CProgress,
   CRow,
   CTable,
   CTableBody,
@@ -31,29 +25,7 @@ import {
   CTableRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import {
-  cibCcAmex,
-  cibCcApplePay,
-  cibCcMastercard,
-  cibCcPaypal,
-  cibCcStripe,
-  cibCcVisa,
-  cifBr,
-  cifEs,
-  cifFr,
-  cifIn,
-  cifPl,
-  cifUs,
-  cilPen,
-  cilPeople,
-} from "@coreui/icons";
-
-import avatar1 from "../assets/images/avatars/1.jpg";
-import avatar2 from "../assets/images/avatars/2.jpg";
-import avatar3 from "../assets/images/avatars/3.jpg";
-import avatar4 from "../assets/images/avatars/4.jpg";
-import avatar5 from "../assets/images/avatars/5.jpg";
-import avatar6 from "../assets/images/avatars/6.jpg";
+import { cilPen } from "@coreui/icons";
 
 const Home = () => {
   //#region constants
@@ -86,6 +58,17 @@ const Home = () => {
   //#endregion
 
   //#region functions
+
+  function calculateTotalWeekHours(professorId) {
+    // Function to calculate total week hours for a professor
+    const professorCourses = items.courses.filter(
+      (course) => course.professor_id === professorId
+    );
+    return professorCourses.reduce(
+      (totalHours, course) => totalHours + course.week_hours,
+      0
+    );
+  }
   function getProfessorStatistics() {
     // Function to get statistics for all professors
     const professors = items.professors;
@@ -119,6 +102,7 @@ const Home = () => {
         "professor_id",
         professor.id
       );
+      const totalWeekHours = calculateTotalWeekHours(professor.id);
 
       const professorStat = {
         professor: professorName,
@@ -128,6 +112,7 @@ const Home = () => {
         books: booksCount,
         conferences: conferencesCount,
         community_service: communityServiceCount,
+        total_week_hours: totalWeekHours,
       };
 
       statistics.push(professorStat);
@@ -278,6 +263,9 @@ const Home = () => {
                       {t("Courses")}
                     </CTableHeaderCell>
                     <CTableHeaderCell className="text-center">
+                      {t("WeekHours")}
+                    </CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">
                       {t("Papers")}
                     </CTableHeaderCell>
                     <CTableHeaderCell className="text-center">
@@ -308,6 +296,9 @@ const Home = () => {
                         </CTableDataCell>
                         <CTableDataCell className="text-center">
                           {item.courses}
+                        </CTableDataCell>
+                        <CTableDataCell className="text-center">
+                          {item.total_week_hours}
                         </CTableDataCell>
                         <CTableDataCell className="text-center">
                           {item.papers}

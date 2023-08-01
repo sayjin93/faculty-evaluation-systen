@@ -13,14 +13,10 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
-  CContainer,
-  CHeader,
-  CHeaderBrand,
   CRow,
   CTable,
   CTableBody,
   CTableDataCell,
-  CTableHead,
   CTableHeaderCell,
   CTableRow,
 } from "@coreui/react";
@@ -55,7 +51,10 @@ const Reports = () => {
   );
 
   // Find the professor with the matching ID
-  const professor = professors.find((prof) => prof.id === selectedProfessor);
+  debugger;
+  const professor = professors.find(
+    (prof) => prof.id === Number(selectedProfessor)
+  );
   const professorFullName = professor
     ? `${professor.first_name} ${professor.last_name}`
     : "";
@@ -529,7 +528,7 @@ const Reports = () => {
             </CCardBody>
           </CCard>
         </CCol>
-        
+
         <CCol className="w-100">
           <CCard
             textColor="dark"
