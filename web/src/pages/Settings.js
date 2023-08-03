@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import { setCookie } from "src/hooks";
-import useErrorHandler from "../hooks/useErrorHandler";
+import useErrorHandler from "src/hooks/useErrorHandler";
+
+import { getActiveAcademicYear, getModal } from "../store/selectors/selectors";
 import { setModal, showToast, changeAcademicYear } from "src/store";
 
 import axios from "axios";
@@ -36,13 +38,9 @@ const Settings = () => {
   const { i18n, t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
-  //#endregion
 
-  //#region selectors
-  const { activeAcademicYear, modal } = useSelector((state) => ({
-    activeAcademicYear: state.settings.academicYear.year,
-    modal: state.modal.modal,
-  }));
+  const activeAcademicYear = useSelector(getActiveAcademicYear);
+  const modal = useSelector(getModal);
   //#endregion
 
   //#region states

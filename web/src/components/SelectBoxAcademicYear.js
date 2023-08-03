@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast, changeAcademicYear } from "src/store";
-import useErrorHandler from "../hooks/useErrorHandler";
+import useErrorHandler from "src/hooks/useErrorHandler";
 
 import axios from "axios";
 import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";

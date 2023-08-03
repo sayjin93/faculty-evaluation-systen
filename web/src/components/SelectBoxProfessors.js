@@ -2,8 +2,13 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
+
+import {
+  getProfessors,
+  getSelectedProfessor,
+} from "../store/selectors/selectors";
 import { setProfessors, setSelectedProfessor } from "../store";
-import useErrorHandler from "../hooks/useErrorHandler";
+import useErrorHandler from "src/hooks/useErrorHandler";
 
 import axios from "axios";
 import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
@@ -13,13 +18,9 @@ const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
-  //#endregion
 
-  //#region selectors
-  const { professors, selectedProfesor } = useSelector((state) => ({
-    professors: state.professors.list,
-    selectedProfesor: state.professors.selected,
-  }));
+  const professors = useSelector(getProfessors);
+  const selectedProfessor = useSelector(getSelectedProfessor);
   //#endregion
 
   //#region functions
@@ -58,7 +59,7 @@ const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
       </CInputGroupText>
       <CFormSelect
         className="cursor"
-        value={selectedProfesor}
+        value={selectedProfessor}
         onChange={handleChange}
       >
         {hasAll && <option value={0}>{t("All")}</option>}

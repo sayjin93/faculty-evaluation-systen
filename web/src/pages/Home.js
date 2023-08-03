@@ -2,12 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { batch, useDispatch, useSelector } from "react-redux";
+
+import {
+  getAcademicYear,
+  getLoggedUser,
+  isFirstLogin,
+} from "../store/selectors/selectors";
 import { showToast, setFirstLogin } from "../store";
 import { convertDateFormat, countOccurrences } from "../hooks";
 
 import axios from "axios";
 import WidgetsDropdown from "../widgets/WidgetsDropdown";
-import useErrorHandler from "../hooks/useErrorHandler";
+import useErrorHandler from "src/hooks/useErrorHandler";
 
 import {
   CButton,
@@ -33,14 +39,11 @@ const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
-  //#endregion
 
-  //#region selectors
-  const { academicYear, loggedUser, firstLogin } = useSelector((state) => ({
-    academicYear: state.settings.academicYear,
-    loggedUser: state.user.loggedUser,
-    firstLogin: state.settings.firstLogin,
-  }));
+  const academicYear = useSelector(getAcademicYear);
+  const loggedUser = useSelector(getLoggedUser);
+  const firstLogin = useSelector(isFirstLogin);
+
   //#endregion
 
   //#region states

@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { setModal, showToast } from "../store";
-import { convertDateFormat, formatDate2 } from "src/hooks";
-import useErrorHandler from "../hooks/useErrorHandler";
-import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 
+import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import axios from "axios";
 
 import {
@@ -32,15 +29,31 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar, cilCheckAlt } from "@coreui/icons";
 
+import {
+  getAcademicYearId,
+  getProfessors,
+  getSelectedProfessor,
+  getModal,
+} from "../store/selectors/selectors";
+import { setModal, showToast } from "../store";
+
+import { convertDateFormat, formatDate2 } from "src/hooks";
+import TableHeader from "src/hooks/tableHeader";
+import useErrorHandler from "src/hooks/useErrorHandler";
+
 import "flatpickr/dist/themes/airbnb.css";
 import Flatpickr from "react-flatpickr";
-import TableHeader from "src/hooks/tableHeader";
 
 const Communities = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
+
+  const professors = useSelector(getProfessors);
+  const selectedProfessor = useSelector(getSelectedProfessor);
+  const modal = useSelector(getModal);
+  const academicYearId = useSelector(getAcademicYearId);
 
   const defaultFormData = {
     event: "",
@@ -49,17 +62,6 @@ const Communities = () => {
     external: false,
     professor: "",
   };
-  //#endregion
-
-  //#region selectors
-  const { professors, selectedProfessor, modal, academicYearId } = useSelector(
-    (state) => ({
-      professors: state.professors.list,
-      selectedProfessor: state.professors.selected,
-      modal: state.modal.modal,
-      academicYearId: state.settings.academicYear.id,
-    })
-  );
   //#endregion
 
   //#region states

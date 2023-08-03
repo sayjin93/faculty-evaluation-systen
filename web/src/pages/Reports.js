@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-
-import { convertDateFormat, formatDate2, formatDateFromSQL } from "src/hooks";
-import useErrorHandler from "src/hooks/useErrorHandler";
-import TableHeader from "src/hooks/tableHeader";
-
 import axios from "axios";
 import {
   CButton,
@@ -26,6 +21,16 @@ import { cilCheckAlt } from "@coreui/icons";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import SelectBoxAcademicYear from "src/components/SelectBoxAcademicYear";
 
+import {
+  getAcademicYear,
+  getProfessors,
+  getSelectedProfessor,
+} from "../store/selectors/selectors";
+
+import { convertDateFormat, formatDate2, formatDateFromSQL } from "src/hooks";
+import useErrorHandler from "src/hooks/useErrorHandler";
+import TableHeader from "src/hooks/tableHeader";
+
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
@@ -36,16 +41,9 @@ const Reports = () => {
   const { t } = useTranslation();
   const handleError = useErrorHandler();
 
-  //#endregion
-
-  //#region selectors
-  const { professors, selectedProfessor, academicYear } = useSelector(
-    (state) => ({
-      professors: state.professors.list,
-      selectedProfessor: state.professors.selected,
-      academicYear: state.settings.academicYear,
-    })
-  );
+  const professors = useSelector(getProfessors);
+  const selectedProfessor = useSelector(getSelectedProfessor);
+  const academicYear = useSelector(getAcademicYear);
 
   // Find the professor with the matching ID
   const professor = professors.find(

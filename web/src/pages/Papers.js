@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import useErrorHandler from "../hooks/useErrorHandler";
+import useErrorHandler from "src/hooks/useErrorHandler";
 
 import axios from "axios";
 
@@ -27,14 +27,21 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
+import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 
 import { convertDateFormat } from "src/hooks";
+import TableHeader from "src/hooks/tableHeader";
+
+import {
+  getAcademicYearId,
+  getProfessors,
+  getSelectedProfessor,
+  getModal,
+} from "../store/selectors/selectors";
 import { setModal, showToast } from "../store";
-import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 
 import "flatpickr/dist/themes/airbnb.css";
 import Flatpickr from "react-flatpickr";
-import TableHeader from "src/hooks/tableHeader";
 
 const Papers = () => {
   //#region constants
@@ -42,23 +49,17 @@ const Papers = () => {
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
 
+  const professors = useSelector(getProfessors);
+  const selectedProfessor = useSelector(getSelectedProfessor);
+  const modal = useSelector(getModal);
+  const academicYearId = useSelector(getAcademicYearId);
+
   const defaultFormData = {
     title: "",
     journal: "",
     publication: new Date(),
     professor: "",
   };
-  //#endregion
-
-  //#region selectors
-  const { professors, selectedProfessor, modal, academicYearId } = useSelector(
-    (state) => ({
-      professors: state.professors.list,
-      selectedProfessor: state.professors.selected,
-      modal: state.modal.modal,
-      academicYearId: state.settings.academicYear.id,
-    })
-  );
   //#endregion
 
   //#region states

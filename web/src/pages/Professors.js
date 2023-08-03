@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import useErrorHandler from "../hooks/useErrorHandler";
+import useErrorHandler from "src/hooks/useErrorHandler";
 
 import axios from "axios";
 
@@ -29,6 +29,8 @@ import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
 import { convertDateFormat } from "src/hooks";
+
+import { getModal } from "../store/selectors/selectors";
 import { setModal, showToast } from "../store";
 import TableHeader from "src/hooks/tableHeader";
 
@@ -38,11 +40,9 @@ const Professors = () => {
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
 
-  const defaultFormData = { firstname: "", lastname: "", gender: "m" };
-  //#endregion
+  const modal = useSelector(getModal);
 
-  //#region selectors
-  const modal = useSelector((state) => state.modal.modal);
+  const defaultFormData = { firstname: "", lastname: "", gender: "m" };
   //#endregion
 
   //#region states

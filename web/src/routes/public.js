@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { isNullOrUndefined } from "../hooks";
-import useAuthToken from "../hooks/token";
+import { isNullOrUndefined } from "src/hooks";
+import useAuthToken from "src/hooks/token";
 
 const PublicRoute = ({ children }) => {
   const jwtToken = useAuthToken();

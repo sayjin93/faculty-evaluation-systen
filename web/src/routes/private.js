@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { isNullOrUndefined } from "src/hooks";
-import useAuthToken from "../hooks/token";
+import useAuthToken from "src/hooks/token";
 
 const PrivateRoute = ({ children }) => {
   const jwtToken = useAuthToken();

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import useErrorHandler from "../hooks/useErrorHandler";
+import useErrorHandler from "src/hooks/useErrorHandler";
 
 import axios from "axios";
 
@@ -29,7 +29,15 @@ import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
 import { convertDateFormat } from "src/hooks";
+
+import {
+  getAcademicYearId,
+  getProfessors,
+  getSelectedProfessor,
+  getModal,
+} from "../store/selectors/selectors";
 import { setModal, showToast } from "../store";
+
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import TableHeader from "src/hooks/tableHeader";
 
@@ -39,6 +47,11 @@ const Courses = () => {
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
 
+  const professors = useSelector(getProfessors);
+  const selectedProfessor = useSelector(getSelectedProfessor);
+  const modal = useSelector(getModal);
+  const academicYearId = useSelector(getAcademicYearId);
+
   const defaultFormData = {
     courseName: "",
     courseNumber: "",
@@ -47,17 +60,6 @@ const Courses = () => {
     program: "",
     professor: "",
   };
-  //#endregion
-
-  //#region selectors
-  const { professors, selectedProfessor, modal, academicYearId } = useSelector(
-    (state) => ({
-      professors: state.professors.list,
-      selectedProfessor: state.professors.selected,
-      modal: state.modal.modal,
-      academicYearId: state.settings.academicYear.id,
-    })
-  );
   //#endregion
 
   //#region states
