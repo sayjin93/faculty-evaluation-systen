@@ -1,7 +1,7 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, batch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { showToast } from "../store";
+import { showToast, setFirstLogin } from "../store";
 
 const useErrorHandler = () => {
   const dispatch = useDispatch();
@@ -22,13 +22,16 @@ const useErrorHandler = () => {
       // Redirect the user to the login page
       navigate("/login", { replace: true });
 
-      // Show alert
-      dispatch(
-        showToast({
-          type: "danger",
-          content: error.response.statusText,
-        })
-      );
+      batch(() => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error.response.statusText,
+          })
+        );
+
+        dispatch(setFirstLogin(true));
+      });
     }
   };
 
