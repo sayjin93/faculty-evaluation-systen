@@ -14,13 +14,10 @@ import {
   CCard,
   CCardBody,
   CCardHeader,
-  CContainer,
   CForm,
   CFormCheck,
   CFormInput,
   CFormSelect,
-  CHeader,
-  CHeaderBrand,
   CModal,
   CModalBody,
   CModalFooter,
@@ -57,13 +54,9 @@ const Communities = () => {
   //#region selectors
   const { professors, selectedProfessor, modal, academicYearId } = useSelector(
     (state) => ({
-      // @ts-ignore
       professors: state.professors.list,
-      // @ts-ignore
       selectedProfessor: state.professors.selected,
-      // @ts-ignore
       modal: state.modal.modal,
-      // @ts-ignore
       academicYearId: state.settings.academicYear.id,
     })
   );

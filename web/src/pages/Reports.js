@@ -41,17 +41,13 @@ const Reports = () => {
   //#region selectors
   const { professors, selectedProfessor, academicYear } = useSelector(
     (state) => ({
-      // @ts-ignore
       professors: state.professors.list,
-      // @ts-ignore
       selectedProfessor: state.professors.selected,
-      // @ts-ignore
       academicYear: state.settings.academicYear,
     })
   );
 
   // Find the professor with the matching ID
-  debugger;
   const professor = professors.find(
     (prof) => prof.id === Number(selectedProfessor)
   );

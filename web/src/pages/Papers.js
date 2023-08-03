@@ -53,13 +53,9 @@ const Papers = () => {
   //#region selectors
   const { professors, selectedProfessor, modal, academicYearId } = useSelector(
     (state) => ({
-      // @ts-ignore
       professors: state.professors.list,
-      // @ts-ignore
       selectedProfessor: state.professors.selected,
-      // @ts-ignore
       modal: state.modal.modal,
-      // @ts-ignore
       academicYearId: state.settings.academicYear.id,
     })
   );

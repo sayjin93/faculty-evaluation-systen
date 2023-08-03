@@ -38,14 +38,14 @@ const Settings = () => {
   const handleError = useErrorHandler();
   //#endregion
 
-  //#region states
-  const activeAcademicYear = useSelector(
-    // @ts-ignore
-    (state) => state.settings.academicYear.year
-  );
-  // @ts-ignore
-  const modal = useSelector((state) => state.modal.modal);
+  //#region selectors
+  const { activeAcademicYear, modal } = useSelector((state) => ({
+    activeAcademicYear: state.settings.academicYear.year,
+    modal: state.modal.modal,
+  }));
+  //#endregion
 
+  //#region states
   const [academicYear, setAcademicYear] = useState([]);
   const [newAcademicYear, setNewAcademicYear] = useState("");
   //#endregion
@@ -174,7 +174,7 @@ const Settings = () => {
         </CCol>
 
         <CCol>
-          <CCard color="white"  className="mb-3">
+          <CCard color="white" className="mb-3">
             <CCardHeader>{t("AcademicYear")}</CCardHeader>
             <CCardBody>
               <div className="flex flex-justify-between flex-gap-10">

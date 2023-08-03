@@ -15,9 +15,11 @@ import { AppSidebarNav } from "./AppSidebarNav";
 import logo from "../../assets/images/logo.svg";
 
 const AppSidebar = () => {
-  //#region redux
+  //#region constants
   const dispatch = useDispatch();
-  // @ts-ignore
+  //#endregion
+  
+  //#region selectors
   const show = useSelector((state) => state.sidebar.show);
   //#endregion
 

@@ -24,7 +24,6 @@ const AppHeaderDropdown = () => {
   //#endregion
 
   //#region selectors
-  // @ts-ignore
   const loggedUser = useSelector((state) => state.user.loggedUser);
 
   const firstName = loggedUser?.first_name;

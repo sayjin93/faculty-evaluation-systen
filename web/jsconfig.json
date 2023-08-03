@@ -2,7 +2,7 @@
   "compilerOptions": {
     "jsx": "react",
     "baseUrl": ".",
-    "checkJs": true,
+    "checkJs": false,
     "resolveJsonModule": true
   },
   "exclude": ["node_modules"],

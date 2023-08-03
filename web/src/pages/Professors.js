@@ -41,6 +41,10 @@ const Professors = () => {
   const defaultFormData = { firstname: "", lastname: "", gender: "m" };
   //#endregion
 
+  //#region selectors
+  const modal = useSelector((state) => state.modal.modal);
+  //#endregion
+
   //#region states
   const [items, setItems] = useState([]);
   const [formData, setFormData] = useState(defaultFormData);
@@ -50,9 +54,6 @@ const Professors = () => {
     editMode: false,
     selectedId: -1,
   });
-
-  // @ts-ignore
-  const modal = useSelector((state) => state.modal.modal);
   //#endregion
 
   //#region functions

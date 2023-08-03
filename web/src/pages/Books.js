@@ -29,12 +29,13 @@ import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
 
 import { convertDateFormat, formatDateFromSQL } from "src/hooks";
+import TableHeader from "src/hooks/tableHeader";
+
 import { setModal, showToast } from "../store";
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 
 import "flatpickr/dist/themes/airbnb.css";
 import Flatpickr from "react-flatpickr";
-import TableHeader from "src/hooks/tableHeader";
 
 const Books = () => {
   //#region constants
@@ -53,13 +54,9 @@ const Books = () => {
   //#region selectors
   const { professors, selectedProfessor, modal, academicYearId } = useSelector(
     (state) => ({
-      // @ts-ignore
       professors: state.professors.list,
-      // @ts-ignore
       selectedProfessor: state.professors.selected,
-      // @ts-ignore
       modal: state.modal.modal,
-      // @ts-ignore
       academicYearId: state.settings.academicYear.id,
     })
   );

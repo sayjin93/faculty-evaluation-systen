@@ -37,11 +37,8 @@ const Home = () => {
 
   //#region selectors
   const { academicYear, loggedUser, firstLogin } = useSelector((state) => ({
-    // @ts-ignore
     academicYear: state.settings.academicYear,
-    // @ts-ignore
     loggedUser: state.user.loggedUser,
-    // @ts-ignore
     firstLogin: state.settings.firstLogin,
   }));
   //#endregion

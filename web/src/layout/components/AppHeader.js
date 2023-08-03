@@ -19,9 +19,11 @@ import AppHeaderDropdown from "./AppHeaderDropdown";
 import logoBlue from "../../assets/images/logo_blue.svg";
 
 const AppHeader = () => {
-  //#region redux
+  //#region constants
   const dispatch = useDispatch();
-  // @ts-ignore
+  //#endregion
+
+  //#region selectors
   const show = useSelector((state) => state.sidebar.show);
   //#endregion
 

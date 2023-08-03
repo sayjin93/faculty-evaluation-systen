@@ -13,14 +13,11 @@ const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
-
   //#endregion
 
   //#region selectors
   const { professors, selectedProfesor } = useSelector((state) => ({
-    // @ts-ignore
     professors: state.professors.list,
-    // @ts-ignore
     selectedProfesor: state.professors.selected,
   }));
   //#endregion

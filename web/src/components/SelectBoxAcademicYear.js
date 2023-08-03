@@ -13,12 +13,10 @@ const SelectBoxAcademicYear = ({ className = "" }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
-
   //#endregion
 
   //#region selectors
   const activeAcademicYear = useSelector(
-    // @ts-ignore
     (state) => state.settings.academicYear
   );
   //#endregion

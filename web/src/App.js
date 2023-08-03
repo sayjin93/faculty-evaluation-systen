@@ -12,8 +12,9 @@ import AppRoutes from "./routes";
 function App() {
   //#region constants
   const { i18n } = useTranslation();
+  //#endregion
 
-  // @ts-ignore
+  //#region selectors
   const toast = useSelector((state) => state.toast);
   //#endregion
 

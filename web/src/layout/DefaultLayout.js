@@ -13,12 +13,16 @@ import AcademicYearAdd from "./AcademicYearAdd";
 import { changeAcademicYear } from "../store";
 
 const Layout = () => {
+  //#region constants
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
+  //#endregion
 
-  // @ts-ignore
+  //#region selectors
   const academicYear = useSelector((state) => state.settings.academicYear);
+  //#endregion
 
+  //#region useEffect
   useEffect(() => {
     const fetchAcademicYears = async () => {
       await axios
@@ -43,7 +47,8 @@ const Layout = () => {
 
     fetchAcademicYears();
   }, [dispatch]);
-
+  //#endregion
+  
   if (!academicYear) return <AcademicYearAdd />;
 
   return (
