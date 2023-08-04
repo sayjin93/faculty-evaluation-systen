@@ -22,6 +22,7 @@ const Conferences = lazy(() => import("../pages/Conferences"));
 const Communities = lazy(() => import("../pages/Communities"));
 const Reports = lazy(() => import("../pages/Reports"));
 const Settings = lazy(() => import("../pages/Settings"));
+const Profile = lazy(() => import("../pages/Profile"));
 
 const privateRoutes = [
   {
@@ -63,6 +64,10 @@ const privateRoutes = [
       {
         path: "/settings",
         element: <Settings />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
       },
     ],
   },

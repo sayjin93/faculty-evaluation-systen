@@ -170,9 +170,6 @@ const Register = () => {
             </CCard>
           </CCol>
         </CRow>
-        <CRow>
-          <CCol xs={6} className="text-right"></CCol>
-        </CRow>
       </CContainer>
     </div>
   );

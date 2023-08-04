@@ -24,7 +24,7 @@ i18n
     resources,
     lng: languageCookie, // default language
     fallbackLng: "en",
-    debug: false,
+    debug: process.env.REACT_APP_ENV === "development" ? true : false,
 
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default

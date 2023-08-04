@@ -65,14 +65,7 @@ const AppHeaderDropdown = () => {
         <CDropdownHeader className="bg-light fw-semibold py-2">
           {t("UserMenu")}
         </CDropdownHeader>
-        <CDropdownItem
-          className="cursor"
-          onClick={() =>
-            dispatch(
-              showToast({ type: "warning", content: "Work in progress" })
-            )
-          }
-        >
+        <CDropdownItem className="cursor" onClick={() => navigate("/profile")}>
           <CIcon icon={cilUser} className="me-2" />
           {t("Profile")}
         </CDropdownItem>
