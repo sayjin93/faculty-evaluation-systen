@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector, batch } from "react-redux";
 import { useTranslation } from "react-i18next";
 
-import useErrorHandler from "src/hooks/useErrorHandler";
-
 import { getModal, getLoggedUser } from "../store/selectors/selectors";
-import { setModal, showToast } from "src/store";
+import { setModal, showToast, setUser } from "src/store";
 
 import axios from "axios";
 import {
@@ -28,7 +26,6 @@ const Settings = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const handleError = useErrorHandler();
 
   const modal = useSelector(getModal);
   const currentUser = useSelector(getLoggedUser);
@@ -36,7 +33,7 @@ const Settings = () => {
   //#endregion
 
   //#region states
-  const [user, setUser] = useState({
+  const [userData, setUserData] = useState({
     firstName: currentUser.first_name,
     lastName: currentUser.last_name,
     username: currentUser.username,
@@ -49,64 +46,69 @@ const Settings = () => {
 
   //#region functions
   const handleInputChange = (event, fieldName) => {
-    setUser({
-      ...user,
+    setUserData({
+      ...userData,
       [fieldName]: event.target.value,
     });
   };
 
-  const handleUserUpdate = async (event) => {
+  const handleUserUpdate = (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (user.password !== user.repeatPassword) {
-      dispatch(
-        showToast({
-          type: "danger",
-          content: t("PasswordDoesNotMatch"),
+    if (userData.newPassword === userData.repeatPassword) {
+      axios
+        .put(process.env.REACT_APP_API_URL + "/users/" + currentUser.id, {
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          username: userData.username,
+          email: userData.email,
+          currentPassword: userData.currentPassword,
+          newPassword: userData.newPassword,
         })
-      );
-    } else {
-      try {
-        // Send a POST request to the '/api/users' endpoint with the user data
-        await axios
-          .post(process.env.REACT_APP_API_URL + "/users", {
-            username: user.username,
-            email: user.email,
-            password: user.password,
-          })
-          .then((response) => {
-            // Handle the success response
+        .then((response) => {
+          const loggedUser = {
+            id: currentUser.id,
+            first_name: response.data.first_name,
+            last_name: response.data.last_name,
+            username: response.data.username,
+            email: response.data.email,
+          };
+
+          batch(() => {
+            dispatch(setUser(loggedUser));
             dispatch(
               showToast({
                 type: "success",
-                content: t("AccountCreatedSuccesfully"),
+                content: t("UserWasEditedSuccessfully"),
               })
             );
-
-            setUser((prevState) => ({
-              ...prevState,
-              username: "",
-              email: "",
-              password: "",
-              repeatPassword: "",
-            }));
           });
-      } catch (error) {
-        // Handle any errors
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error.response.data.message,
-          })
-        );
-      }
+
+          setUserData({
+            ...userData,
+            currentPassword: "",
+            newPassword: "",
+            repeatPassword: "",
+          });
+        })
+        .catch((error) => {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error.response.data.message,
+            })
+          );
+        });
+    } else {
+      dispatch(
+        showToast({
+          type: "danger",
+          content: t("NewAndRepeatPasswordDidNotMatch"),
+        })
+      );
     }
   };
-  //#endregion
-
-  //#region useEffect
-  useEffect(() => {}, []);
   //#endregion
 
   return (
@@ -128,7 +130,7 @@ const Settings = () => {
                   required
                   type="text"
                   placeholder={t("FirstName")}
-                  value={user.firstName}
+                  value={userData.firstName}
                   onChange={(event) => handleInputChange(event, "firstName")}
                 />
               </CCol>
@@ -138,7 +140,7 @@ const Settings = () => {
                   required
                   type="text"
                   placeholder={t("LastName")}
-                  value={user.lastName}
+                  value={userData.lastName}
                   onChange={(event) => handleInputChange(event, "lastName")}
                 />
               </CCol>
@@ -150,7 +152,7 @@ const Settings = () => {
                     required
                     type="email"
                     placeholder={t("Email")}
-                    value={user.email}
+                    value={userData.email}
                     size="sm"
                     onChange={(event) => handleInputChange(event, "email")}
                   />
@@ -172,7 +174,7 @@ const Settings = () => {
                     required
                     type="text"
                     placeholder={t("Username")}
-                    value={user.username}
+                    value={userData.username}
                     onChange={(event) => handleInputChange(event, "username")}
                   />
                 </CInputGroup>
@@ -187,7 +189,7 @@ const Settings = () => {
                     required
                     type="password"
                     placeholder={t("CurrentPassword")}
-                    value={user.currentPassword}
+                    value={userData.currentPassword}
                     onChange={(event) =>
                       handleInputChange(event, "currentPassword")
                     }
@@ -204,7 +206,7 @@ const Settings = () => {
                     required
                     type="password"
                     placeholder={t("NewPassword")}
-                    value={user.newPassword}
+                    value={userData.newPassword}
                     onChange={(event) =>
                       handleInputChange(event, "newPassword")
                     }
@@ -221,7 +223,7 @@ const Settings = () => {
                     required
                     type="password"
                     placeholder={t("RepeatPassword")}
-                    value={user.repeatPassword}
+                    value={userData.repeatPassword}
                     onChange={(event) =>
                       handleInputChange(event, "repeatPassword")
                     }

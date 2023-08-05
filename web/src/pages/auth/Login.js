@@ -89,6 +89,7 @@ const LoginPage = () => {
               .then((response) => {
                 if (response.data) {
                   const loggedUser = {
+                    id:response.data[0].id,
                     first_name: response.data[0].first_name,
                     last_name: response.data[0].last_name,
                     username: response.data[0].username,

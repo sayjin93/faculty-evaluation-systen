@@ -63,6 +63,19 @@ exports.create = (req, res) => {
 
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
+  Users.findAll()
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving users.",
+      });
+    });
+};
+
+// Login a User
+exports.login = (req, res) => {
   const { username, password } = req.body;
 
   Users.findOne({
@@ -95,7 +108,7 @@ exports.findAll = (req, res) => {
         }
 
         const token = jwt.sign(
-          { username: username, password: password },
+          { username: username, isAdmin: user.isAdmin },
           process.env.JWT_SECRET_KEY,
           {
             expiresIn: "2h",
@@ -150,26 +163,101 @@ exports.findOneByUsername = (req, res) => {
 };
 
 // Update a Users by the id in the request
+// Update a Users by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
+  const { firstName, lastName, username, email, currentPassword, newPassword } =
+    req.body;
 
-  Users.update(req.body, {
-    where: { id: id },
-  })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "Users was updated successfully.",
+  // Fetch the user
+  Users.findByPk(id)
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({
+          message: "User not found!",
         });
-      } else {
-        res.send({
-          message: `Cannot update Users with id=${id}. Maybe Users was not found or req.body is empty!`,
-        });
+        return;
       }
+
+      // Check if current password is correct
+      bcrypt.compare(currentPassword, user.password, (err, result) => {
+        if (err) {
+          res.status(500).send({
+            message: "Internal server error.",
+          });
+          return;
+        }
+
+        // If the current password is not correct, return an error message
+        if (!result) {
+          res.status(401).send({
+            message: "Current password is not correct.",
+          });
+          return;
+        }
+
+        // Check if the new username or email already exists
+        Users.findOne({
+          where: {
+            [Op.or]: [{ username: username }, { email: email }],
+            [Op.not]: { id: id },
+          },
+        })
+          .then((existingUser) => {
+            if (existingUser) {
+              res.status(400).send({
+                message: "Email or Username already exists!",
+              });
+              return;
+            }
+
+            // Update the user
+            // const hashedPassword = bcrypt.hashSync(newPassword, 10);
+            Users.update(
+              {
+                first_name: firstName,
+                last_name: lastName,
+                username: username,
+                email: email,
+                password: newPassword,
+              },
+              { where: { id: id } }
+            )
+              .then((num) => {
+                if (num == 1) {
+                  // Fetch updated user data
+                  Users.findByPk(id, {
+                    attributes: [
+                      "first_name",
+                      "last_name",
+                      "username",
+                      "email",
+                    ],
+                  }).then((updatedUser) => {
+                    res.send(updatedUser);
+                  });
+                } else {
+                  res.send({
+                    message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`,
+                  });
+                }
+              })
+              .catch((err) => {
+                res.status(500).send({
+                  message: "Error updating User with id=" + id,
+                });
+              });
+          })
+          .catch((err) => {
+            res.status(500).send({
+              message: "Internal server error.",
+            });
+          });
+      });
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating Users with id=" + id,
+        message: "Error retrieving User with id=" + id,
       });
     });
 };

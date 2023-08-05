@@ -6,7 +6,10 @@ module.exports = (app) => {
   router.post("/", users.create);
 
   // Retrieve all Users
-  router.post("/login", users.findAll);
+  router.get("/", users.findAll);
+
+  // Authenticate a User
+  router.post("/login", users.login);
 
   // Retrieve User with a specific username
   router.get("/username/:username", users.findOneByUsername);

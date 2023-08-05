@@ -74,6 +74,7 @@ exports.update = (req, res) => {
     last_name: req.body.lastname,
     gender: req.body.gender,
   };
+  
   Professors.update(professorData, {
     where: { id: id },
   })
