@@ -47,21 +47,19 @@ const Home = () => {
   //#endregion
 
   //#region states
-  const [items, setItems] = useState({
-    professors: [],
-    books: [],
-    communityServices: [],
-    conferences: [],
-    courses: [],
-    papers: [],
-  });
+  const [items, setItems] = useState(null);
+  if (items) console.log("items", items);
+
+  // Filtered Data for Selected academic Year
+  const filteredAcademicYear = items?.academic_years_data.find(
+    (year) => year.academic_year_id === academicYear.id
+  );
   //#endregion
 
   //#region functions
-
   function calculateTotalWeekHours(professorId) {
     // Function to calculate total week hours for a professor
-    const professorCourses = items.courses.filter(
+    const professorCourses = filteredAcademicYear.courses.filter(
       (course) => course.professor_id === professorId
     );
     return professorCourses.reduce(
@@ -69,54 +67,58 @@ const Home = () => {
       0
     );
   }
+
   function getProfessorStatistics() {
     // Function to get statistics for all professors
-    const professors = items.professors;
+    const professors = items?.professors;
     const statistics = [];
 
-    professors.forEach((professor) => {
-      const professorName = `${professor.first_name} ${professor.last_name}`;
+    if (professors) {
+      professors.forEach((professor) => {
+        const professorName = `${professor.first_name} ${professor.last_name}`;
 
-      const coursesCount = countOccurrences(
-        items.courses,
-        "professor_id",
-        professor.id
-      );
-      const papersCount = countOccurrences(
-        items.papers,
-        "professor_id",
-        professor.id
-      );
-      const booksCount = countOccurrences(
-        items.books,
-        "professor_id",
-        professor.id
-      );
-      const conferencesCount = countOccurrences(
-        items.conferences,
-        "professor_id",
-        professor.id
-      );
-      const communityServiceCount = countOccurrences(
-        items.communityServices,
-        "professor_id",
-        professor.id
-      );
-      const totalWeekHours = calculateTotalWeekHours(professor.id);
+        const coursesCount = countOccurrences(
+          filteredAcademicYear.courses,
+          "professor_id",
+          professor.id
+        );
+        const papersCount = countOccurrences(
+          filteredAcademicYear.papers,
+          "professor_id",
+          professor.id
+        );
+        const booksCount = countOccurrences(
+          filteredAcademicYear.books,
+          "professor_id",
+          professor.id
+        );
+        const conferencesCount = countOccurrences(
+          filteredAcademicYear.conferences,
+          "professor_id",
+          professor.id
+        );
+        const communityServiceCount = countOccurrences(
+          filteredAcademicYear.communityServices,
+          "professor_id",
+          professor.id
+        );
 
-      const professorStat = {
-        professor: professorName,
-        createdAt: professor.createdAt,
-        courses: coursesCount,
-        papers: papersCount,
-        books: booksCount,
-        conferences: conferencesCount,
-        community_service: communityServiceCount,
-        total_week_hours: totalWeekHours,
-      };
+        const totalWeekHours = calculateTotalWeekHours(professor.id) || 0;
 
-      statistics.push(professorStat);
-    });
+        const professorStat = {
+          professor: professorName,
+          createdAt: professor.createdAt,
+          courses: coursesCount,
+          papers: papersCount,
+          books: booksCount,
+          conferences: conferencesCount,
+          community_service: communityServiceCount,
+          total_week_hours: totalWeekHours,
+        };
+
+        statistics.push(professorStat);
+      });
+    }
 
     return statistics;
   }
@@ -129,16 +131,12 @@ const Home = () => {
   useEffect(() => {
     const fetchDashboard = async () => {
       await axios
-        .get(
-          process.env.REACT_APP_API_URL +
-            `/dashboard/academic_year/${academicYear.id}`,
-          {
-            headers: {
-              "auth-token": localStorage.getItem("jwt_token"),
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .get(process.env.REACT_APP_API_URL + `/dashboard`, {
+          headers: {
+            "auth-token": localStorage.getItem("jwt_token"),
+            "Content-Type": "application/json",
+          },
+        })
         .then((response) => {
           setItems(response.data);
         })
@@ -166,7 +164,6 @@ const Home = () => {
       });
     }
   }, []);
-
   //#endregion
 
   return (
@@ -199,26 +196,32 @@ const Home = () => {
                   {t("Professors")}
                 </div>
                 <div className="fs-5 fw-semibold">
-                  {items.professors.length}
+                  {items?.professors.length}
                 </div>
               </div>
             </CCol>
             <CCol xs={6} md={4} lg={2}>
               <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
                 <div className="text-medium-emphasis small">{t("Courses")}</div>
-                <div className="fs-5 fw-semibold">{items.courses.length}</div>
+                <div className="fs-5 fw-semibold">
+                  {filteredAcademicYear?.courses.length}
+                </div>
               </div>
             </CCol>
             <CCol xs={6} md={4} lg={2}>
               <div className="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
                 <div className="text-medium-emphasis small">{t("Papers")}</div>
-                <div className="fs-5 fw-semibold">{items.papers.length}</div>
+                <div className="fs-5 fw-semibold">
+                  {filteredAcademicYear?.papers.length}
+                </div>
               </div>
             </CCol>
             <CCol xs={6} md={4} lg={2}>
               <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
                 <div className="text-medium-emphasis small">{t("Books")}</div>
-                <div className="fs-5 fw-semibold">{items.books.length}</div>
+                <div className="fs-5 fw-semibold">
+                  {filteredAcademicYear?.books.length}
+                </div>
               </div>
             </CCol>
             <CCol xs={6} md={4} lg={2}>
@@ -227,7 +230,7 @@ const Home = () => {
                   {t("Conferences")}
                 </div>
                 <div className="fs-5 fw-semibold">
-                  {items.conferences.length}
+                  {filteredAcademicYear?.conferences.length}
                 </div>
               </div>
             </CCol>
@@ -237,7 +240,7 @@ const Home = () => {
                   {t("CommunityServices")}
                 </div>
                 <div className="fs-5 fw-semibold">
-                  {items.communityServices.length}
+                  {filteredAcademicYear?.communityServices.length}
                 </div>
               </div>
             </CCol>
@@ -247,80 +250,72 @@ const Home = () => {
 
       <WidgetsDropdown />
 
-      <CRow>
-        <CCol xs>
-          <CCard
-            textColor="primary"
-            className="border-primary border-top-primary border-top-3 mb-4"
-          >
-            <CCardHeader>{t("ProfessorsStatistics")}</CCardHeader>
-            <CCardBody>
-              <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead color="light">
-                  <CTableRow>
-                    <CTableHeaderCell>{t("Professor")}</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">
-                      {t("Courses")}
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">
-                      {t("WeekHours")}
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">
-                      {t("Papers")}
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">
-                      {t("Books")}
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">
-                      {t("Conferences")}
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">
-                      {t("CommunityServices")}
-                    </CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
+      <CCard
+        textColor="primary"
+        className="border-primary border-top-primary border-top-3 mb-4"
+      >
+        <CCardHeader>{t("ProfessorsStatistics")}</CCardHeader>
+        <CCardBody>
+          <CTable align="middle" className="mb-0 border" hover responsive>
+            <CTableHead color="light">
+              <CTableRow>
+                <CTableHeaderCell>{t("Professor")}</CTableHeaderCell>
+                <CTableHeaderCell className="text-center">
+                  {t("Courses")}
+                </CTableHeaderCell>
+                <CTableHeaderCell className="text-center">
+                  {t("WeekHours")}
+                </CTableHeaderCell>
+                <CTableHeaderCell className="text-center">
+                  {t("Papers")}
+                </CTableHeaderCell>
+                <CTableHeaderCell className="text-center">
+                  {t("Books")}
+                </CTableHeaderCell>
+                <CTableHeaderCell className="text-center">
+                  {t("Conferences")}
+                </CTableHeaderCell>
+                <CTableHeaderCell className="text-center">
+                  {t("CommunityServices")}
+                </CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
 
-                <CTableBody>
-                  {professorStatistics.map((item, index) => {
-                    return (
-                      <CTableRow
-                        v-for="item in professorStatistics"
-                        key={index}
-                      >
-                        <CTableDataCell>
-                          <div>{item.professor}</div>
-                          <div className="small text-medium-emphasis">
-                            {t("CreatedAt")}:{" "}
-                            {convertDateFormat(item.createdAt)}
-                          </div>
-                        </CTableDataCell>
-                        <CTableDataCell className="text-center">
-                          {item.courses}
-                        </CTableDataCell>
-                        <CTableDataCell className="text-center">
-                          {item.total_week_hours}
-                        </CTableDataCell>
-                        <CTableDataCell className="text-center">
-                          {item.papers}
-                        </CTableDataCell>
-                        <CTableDataCell className="text-center">
-                          {item.books}
-                        </CTableDataCell>
-                        <CTableDataCell className="text-center">
-                          {item.conferences}
-                        </CTableDataCell>
-                        <CTableDataCell className="text-center">
-                          {item.community_service}
-                        </CTableDataCell>
-                      </CTableRow>
-                    );
-                  })}
-                </CTableBody>
-              </CTable>
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
+            <CTableBody>
+              {professorStatistics.map((item, index) => {
+                return (
+                  <CTableRow v-for="item in professorStatistics" key={index}>
+                    <CTableDataCell>
+                      <div>{item.professor}</div>
+                      <div className="small text-medium-emphasis">
+                        {t("CreatedAt")}: {convertDateFormat(item.createdAt)}
+                      </div>
+                    </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      {item.courses}
+                    </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      {item.total_week_hours}
+                    </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      {item.papers}
+                    </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      {item.books}
+                    </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      {item.conferences}
+                    </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      {item.community_service}
+                    </CTableDataCell>
+                  </CTableRow>
+                );
+              })}
+            </CTableBody>
+          </CTable>
+        </CCardBody>
+      </CCard>
     </>
   );
 };
