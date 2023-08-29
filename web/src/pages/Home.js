@@ -48,7 +48,9 @@ const Home = () => {
 
   //#region states
   const [items, setItems] = useState(null);
-  if (items) console.log("items", items);
+  if (items && process.env.REACT_APP_ENV === "development") {
+    console.log("items", items);
+  }
 
   // Filtered Data for Selected academic Year
   const filteredAcademicYear = items?.academic_years_data.find(

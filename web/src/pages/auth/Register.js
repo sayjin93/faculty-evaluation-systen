@@ -56,40 +56,47 @@ const Register = () => {
         })
       );
     } else {
-      try {
-        // Send a POST request to the '/api/users' endpoint with the user data
-        await axios
-          .post(process.env.REACT_APP_API_URL + "/users", {
-            username: user.username,
-            email: user.email,
-            password: user.password,
-          })
-          .then((response) => {
-            // Handle the success response
+      // Send a POST request to the '/api/users' endpoint with the user data
+      await axios
+        .post(process.env.REACT_APP_API_URL + "/users", {
+          username: user.username,
+          email: user.email,
+          password: user.password,
+        })
+        .then((response) => {
+          // Handle the success response
+          dispatch(
+            showToast({
+              type: "success",
+              content: t("AccountCreatedSuccesfully"),
+            })
+          );
+
+          setUser((prevState) => ({
+            ...prevState,
+            username: "",
+            email: "",
+            password: "",
+            repeatPassword: "",
+          }));
+        })
+        .catch((error) => {
+          if (error.response) {
             dispatch(
               showToast({
-                type: "success",
-                content: t("AccountCreatedSuccesfully"),
+                type: "danger",
+                content: error.response.data.message,
               })
             );
-
-            setUser((prevState) => ({
-              ...prevState,
-              username: "",
-              email: "",
-              password: "",
-              repeatPassword: "",
-            }));
-          });
-      } catch (error) {
-        // Handle any errors
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error.response.data.message,
-          })
-        );
-      }
+          } else {
+            dispatch(
+              showToast({
+                type: "danger",
+                content: error.message,
+              })
+            );
+          }
+        });
     }
   };
   //#endregion
@@ -123,6 +130,7 @@ const Register = () => {
                     <CFormInput
                       required
                       type="email"
+                      autoComplete="email"
                       placeholder={t("Email")}
                       value={user.email}
                       size="sm"
@@ -136,6 +144,7 @@ const Register = () => {
                     <CFormInput
                       required
                       type="password"
+                      autoComplete="new-password"
                       placeholder={t("Password")}
                       value={user.password}
                       onChange={(event) => handleInputChange(event, "password")}
@@ -148,6 +157,7 @@ const Register = () => {
                     <CFormInput
                       required
                       type="password"
+                      autoComplete="new-password"
                       placeholder={t("RepeatPassword")}
                       value={user.repeatPassword}
                       onChange={(event) =>

@@ -108,12 +108,21 @@ const LoginPage = () => {
         }
       })
       .catch((error) => {
+        if(error.response){
         dispatch(
           showToast({
             type: "danger",
             content: error.response.data.message,
           })
         );
+        }else{
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error.message,
+            })
+          );
+        }
       });
   };
   //#endregion

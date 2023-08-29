@@ -30,7 +30,13 @@ function App() {
   //#endregion
 
   return (
-    <Suspense fallback={<CSpinner color="primary" />}>
+    <Suspense
+      fallback={
+        <div className="d-flex justify-content-center align-items-center vh-100">
+          <CSpinner color="primary" />
+        </div>
+      }
+    >
       <AppRoutes />
 
       <ToastComponent
