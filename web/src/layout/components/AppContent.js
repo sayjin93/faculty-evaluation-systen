@@ -5,7 +5,13 @@ import { CContainer, CSpinner } from "@coreui/react";
 const AppContent = () => {
   return (
     <CContainer lg>
-      <Suspense fallback={<CSpinner color="primary" />}>
+      <Suspense
+        fallback={
+          <div className="d-flex justify-content-center align-items-center vh-100">
+            <CSpinner color="primary" />
+          </div>
+        }
+      >
         <Outlet />
       </Suspense>
     </CContainer>

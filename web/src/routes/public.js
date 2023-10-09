@@ -1,16 +1,17 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-import { isNullOrUndefined } from "src/hooks";
+import { useNavigate } from "react-router-dom";
 import useAuthToken from "src/hooks/token";
 
-const PublicRoute = ({ children }) => {
+const Public = ({ children }) => {
   const jwtToken = useAuthToken();
+  const navigate = useNavigate();
 
-  if (isNullOrUndefined(jwtToken)) {
-    return <Navigate to="/" replace />;
+  if (jwtToken) {
+    // User is authenticated, redirect to home
+    navigate("/", { replace: true });
+    return null; // Render nothing, since we're redirecting
   }
 
   return children;
 };
 
-export default PublicRoute;
+export default Public;

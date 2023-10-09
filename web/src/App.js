@@ -1,12 +1,11 @@
 import "./assets/slyles/App.scss";
 
-import React, { Suspense, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { CSpinner } from "@coreui/react";
 import ToastComponent from "./components/Toast";
-import { getCookie, isNullOrUndefined } from "./hooks";
+import { getCookie } from "./hooks";
 import AppRoutes from "./routes";
 
 function App() {
@@ -22,21 +21,15 @@ function App() {
   useEffect(() => {
     //Check default language
     const language = getCookie({ key: "language" });
-    const languageCookie = isNullOrUndefined(language) ? language : "en";
+    const languageCookie = language ? language : "en";
     if (i18n.language !== languageCookie) {
       i18n.changeLanguage(languageCookie);
     }
-  }, [i18n]);
+  }, [i18n.language]);
   //#endregion
 
   return (
-    <Suspense
-      fallback={
-        <div className="d-flex justify-content-center align-items-center vh-100">
-          <CSpinner color="primary" />
-        </div>
-      }
-    >
+    <>
       <AppRoutes />
 
       <ToastComponent
@@ -44,7 +37,7 @@ function App() {
         content={toast.content}
         visible={toast.visible}
       />
-    </Suspense>
+    </>
   );
 }
 
