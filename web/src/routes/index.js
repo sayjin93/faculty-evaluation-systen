@@ -1,16 +1,17 @@
-import React, { lazy } from "react";
+import React, { lazy, Suspense } from "react";
 import { useRoutes } from "react-router-dom";
+import { CSpinner } from "@coreui/react";
 
 import Public from "./public";
 import Private from "./private";
 
 //default layout for private pages
 import DefaultLayout from "../layout/DefaultLayout";
+import Page404 from "../pages/Page404";
 
 //public pages
 const Login = lazy(() => import("../pages/auth/Login"));
 const Register = lazy(() => import("../pages/auth/Register"));
-const Page404 = lazy(() => import("../pages/Page404"));
 
 //private pages
 const Home = lazy(() => import("../pages/Home"));
@@ -92,7 +93,19 @@ const AppRoutes = () => {
     })),
     ...publicRoutes.map((route) => ({
       ...route,
-      element: <Public>{route.element}</Public>,
+      element: (
+        <Public>
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <CSpinner color="primary" />
+              </div>
+            }
+          >
+            {route.element}
+          </Suspense>
+        </Public>
+      ),
     })),
     {
       path: "*",
