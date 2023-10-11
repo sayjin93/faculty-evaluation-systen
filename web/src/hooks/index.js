@@ -1,10 +1,10 @@
+//#region cookies
 import Cookies from "universal-cookie";
 
-//#region cookies
 export function setCookie(props) {
   try {
     const cookies = new Cookies();
-    cookies.set(props.key, props.value, props.options);
+    cookies.set(props.name, props.value, props.options);
   } catch (ex) {
     //log ex
   }
@@ -12,19 +12,7 @@ export function setCookie(props) {
 export function getCookie(props) {
   try {
     const cookies = new Cookies();
-    return cookies.get(props.key);
-  } catch (ex) {
-    //log ex
-    return "";
-  }
-}
-export function removeCookie(props) {
-  try {
-    if (process.env.https) {
-      document.cookie = "" + props.key + "=; Max-Age=0;secure;path=/";
-    } else {
-      document.cookie = "" + props.key + "=; Max-Age=0;path=/";
-    }
+    return cookies.get(props.name);
   } catch (ex) {
     //log ex
     return "";
@@ -79,19 +67,8 @@ export function formatDate2(date2) {
 //#endregion
 
 //#region others
-export function isNullOrUndefined(props) {
-  try {
-    if (props !== null && props !== undefined && props !== "") {
-      return true;
-    }
-  } catch (ex) {
-    //ignre ex
-  }
-  return false;
-}
-
-// Helper function to count the occurrences of an item in an array
 export function countOccurrences(array, key, value) {
+  // Helper function to count the occurrences of an item in an array
   return array.filter((item) => item[key] === value).length;
 }
 //#endregion

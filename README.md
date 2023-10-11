@@ -91,7 +91,7 @@ The directory structure of the project is as follows:
   -conferences_seed.js
   -communities_seed.js
 - .env
-- main.js
+- app.js
 ```
 
 ### Models and Associations

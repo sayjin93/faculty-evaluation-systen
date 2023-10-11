@@ -52,9 +52,9 @@ const Settings = () => {
   const handleLanguageChange = (language) => {
     i18n.changeLanguage(language);
     setCookie({
-      key: "language",
+      name: "language",
       value: language,
-      options: { path: "/" },
+      options: { path: "/", sameSite: "strict" },
     });
   };
   const addAcademicYear = async () => {

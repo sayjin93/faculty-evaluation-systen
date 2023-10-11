@@ -1,4 +1,7 @@
+// Importing Sequelize library
 const { Sequelize } = require("sequelize");
+
+// Creating a new Sequelize instance with provided database credentials
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -15,6 +18,7 @@ const sequelize = new Sequelize(
   }
 );
 
+// Creating an object to hold sequelize and Sequelize instances
 const db = {
   sequelize,
   Sequelize,
@@ -54,4 +58,5 @@ db.courses.belongsTo(db.academic_years, { foreignKey: "academic_year_id" });
 db.papers.belongsTo(db.professors, { foreignKey: "professor_id" });
 db.papers.belongsTo(db.academic_years, { foreignKey: "academic_year_id" });
 
+// Exporting the database object
 module.exports = db;

@@ -26,7 +26,7 @@ app.use(express.json()); // parse requests of content-type - application/json
 app.use(express.urlencoded({ extended: true })); // parse requests of content-type - application/x-www-form-urlencoded
 app.use(cors());
 
-// simple route
+// Endpoint route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to jk WebApp." });
 });
@@ -43,6 +43,7 @@ require("./routes/professors.routes")(app);
 require("./routes/users.routes")(app);
 require("./routes/reports.routes")(app);
 
+// Syncing the database and handling the result
 db.sequelize
   .sync({ alter: true, logging: false })
   .then(async () => {
@@ -59,7 +60,7 @@ db.sequelize
     console.log("Error syncing database!".bgRed);
   });
 
-// set port, listen for requests
+// Setting up the server to listen for requests
 const PORT = process.env.API_PORT || 4000;
 app.listen(PORT, () => {
   console.log(colors.bgYellow("Server is running on port %s"), PORT);

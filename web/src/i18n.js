@@ -6,7 +6,7 @@ import translationEN from "./assets/locales/en.json";
 import { getCookie } from "./hooks";
 
 //language cookie
-const language = getCookie({ key: "language" });
+const language = getCookie({ name: "language" });
 const languageCookie = language || "en";
 
 // the translations

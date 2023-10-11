@@ -20,7 +20,7 @@ function App() {
   //#region useEffect
   useEffect(() => {
     //Check default language
-    const language = getCookie({ key: "language" });
+    const language = getCookie({ name: "language" });
     const languageCookie = language ? language : "en";
     if (i18n.language !== languageCookie) {
       i18n.changeLanguage(languageCookie);

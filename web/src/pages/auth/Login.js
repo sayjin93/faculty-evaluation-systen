@@ -46,9 +46,9 @@ const LoginPage = () => {
   const handleLanguageChange = (language) => {
     i18n.changeLanguage(language);
     setCookie({
-      key: "language",
+      name: "language",
       value: language,
-      options: { path: "/" },
+      options: { path: "/", sameSite: "strict" },
     });
   };
 
@@ -89,7 +89,7 @@ const LoginPage = () => {
               .then((response) => {
                 if (response.data) {
                   const loggedUser = {
-                    id:response.data[0].id,
+                    id: response.data[0].id,
                     first_name: response.data[0].first_name,
                     last_name: response.data[0].last_name,
                     username: response.data[0].username,
@@ -108,14 +108,14 @@ const LoginPage = () => {
         }
       })
       .catch((error) => {
-        if(error.response){
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error.response.data.message,
-          })
-        );
-        }else{
+        if (error.response) {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error.response.data.message,
+            })
+          );
+        } else {
           dispatch(
             showToast({
               type: "danger",

@@ -7,7 +7,7 @@ const Conferences = db.conferences;
 const CommunityServices = db.community_services;
 const AcademicYears = db.academic_years;
 
-// Retrieve all data for all academic years from the database and also all professors.
+// Retrieve all professors data for selected academic year.
 exports.findAllData = (req, res) => {
   AcademicYears.findAll()
     .then((academicYears) => {
