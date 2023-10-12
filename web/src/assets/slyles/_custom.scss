@@ -1,7 +1,7 @@
-// Here you can add other styles
 body {
   min-width: 290px;
 }
+
 .wrapper {
   width: 100%;
   @include ltr-rtl("padding-left", var(--cui-sidebar-occupy-start, 0));
@@ -80,5 +80,25 @@ body {
     color: #ffffff;
     background-color: #3c4b64;
     text-align: center;
+  }
+}
+
+.filter {
+  &-uet {
+    filter: invert(22%) sepia(40%) saturate(1495%) hue-rotate(192deg)
+      brightness(99%) contrast(85%);
+  }
+}
+
+.simplebar {
+  &-track {
+    &.simplebar-vertical {
+      width: 7px;
+    }
+  }
+  &-scrollbar {
+    &:before {
+      background: rgba(255, 255, 255.5);
+    }
   }
 }

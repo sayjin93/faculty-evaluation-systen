@@ -67,13 +67,14 @@ const Reports = () => {
   //#region functions
   const exportPDF = () => {
     const doc = new jsPDF();
-    const logoWidth = 50;
+    const logoWidth = 60;
     const logoHeight = 30;
     const logoXPosition = 10;
     const logoYPosition = 10;
     const textXPosition = logoXPosition + logoWidth + 30;
     const textYPosition = logoYPosition + 10;
     const spacingBetweenTables = 10;
+    const spaceEmptyTable = 30;
 
     // Function to add image to PDF document
     const addImageToPDF = () => {
@@ -99,6 +100,7 @@ const Reports = () => {
     // Function to generate a table and add it to PDF document
     const generateTable = (title, head, dataArray, yPosition) => {
       doc.text(title, 10, yPosition);
+
       autoTable(doc, {
         head: [head],
         body: dataArray.length > 0 ? dataArray : [[t("NoDataToDisplay")]],
@@ -107,7 +109,7 @@ const Reports = () => {
       });
     };
 
-    // Arrays and headers for different tables
+    //#region columns
     const coursesHead = [
       "#",
       t("Name"),
@@ -177,62 +179,55 @@ const Reports = () => {
       conference.authors,
       conference.dates,
     ]);
-
-    // Calculate the startY position for each table
-    const startYPositionForCourses =
-      logoYPosition + logoHeight + spacingBetweenTables * 1.5;
-
-    const startYPositionForPapers =
-      startYPositionForCourses +
-      10 +
-      coursesArray.length * 10 +
-      spacingBetweenTables;
-    const startYPositionForBooks =
-      startYPositionForPapers +
-      10 +
-      papersArray.length * 10 +
-      spacingBetweenTables;
-    const startYPositionForCommunities =
-      startYPositionForBooks +
-      10 +
-      booksArray.length * 10 +
-      spacingBetweenTables;
-    const startYPositionForConferences =
-      startYPositionForCommunities +
-      10 +
-      communitiesArray.length * 10 +
-      spacingBetweenTables;
+    //#endregion
 
     // Add image and text to PDF
     addImageToPDF();
     addTextToPDF();
 
     // Generate each table and add to PDF
-    generateTable(
-      t("Courses"),
-      coursesHead,
-      coursesArray,
-      startYPositionForCourses
-    );
-    generateTable(
-      t("Papers"),
-      papersHead,
-      papersArray,
-      startYPositionForPapers
-    );
-    generateTable(t("Books"), booksHead, booksArray, startYPositionForBooks);
+    let cumulativeHeight =
+      logoYPosition + logoHeight + spacingBetweenTables + 5;
+
+    generateTable(t("Courses"), coursesHead, coursesArray, cumulativeHeight);
+    cumulativeHeight +=
+      items.courses.length > 0
+        ? 10 + coursesArray.length * 10 + spacingBetweenTables
+        : spaceEmptyTable;
+
+    generateTable(t("Papers"), papersHead, papersArray, cumulativeHeight);
+    cumulativeHeight +=
+      items.papers.length > 0
+        ? 10 + papersArray.length * 10 + spacingBetweenTables
+        : spaceEmptyTable;
+
+    generateTable(t("Books"), booksHead, booksArray, cumulativeHeight);
+    cumulativeHeight +=
+      items.books.length > 0
+        ? 10 + booksArray.length * 10 + spacingBetweenTables
+        : spaceEmptyTable;
+
     generateTable(
       t("CommunityServices"),
       communitiesHead,
       communitiesArray,
-      startYPositionForCommunities
+      cumulativeHeight
     );
+    cumulativeHeight +=
+      items.communityServices.length > 0
+        ? 10 + communitiesArray.length * 10 + spacingBetweenTables
+        : spaceEmptyTable;
+
     generateTable(
       t("Conferences"),
       conferencesHead,
       conferencesArray,
-      startYPositionForConferences
+      cumulativeHeight
     );
+    cumulativeHeight +=
+      items.conferences.length > 0
+        ? 10 + booksArray.length * 10 + spacingBetweenTables
+        : spaceEmptyTable;
 
     // Save the PDF with a filename
     doc.save(`report_${professorFullName}_${academicYear.year}.pdf`);

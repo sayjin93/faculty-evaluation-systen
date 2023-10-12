@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { CImage, CSidebar, CSidebarBrand, CSidebarNav } from "@coreui/react";
+
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 
@@ -18,7 +19,7 @@ const AppSidebar = () => {
   //#region constants
   const dispatch = useDispatch();
   //#endregion
-  
+
   //#region selectors
   const show = useSelector((state) => state.sidebar.show);
   //#endregion
@@ -34,7 +35,7 @@ const AppSidebar = () => {
     >
       <CSidebarBrand className="d-none d-md-flex text-center">
         <Link to="/">
-          <CImage src={logo} height={36} />
+          <CImage src={logo} height={54} style={{ filter: "invert(0.9)" }} />
         </Link>
       </CSidebarBrand>
       <CSidebarNav>

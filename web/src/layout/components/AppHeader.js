@@ -16,7 +16,7 @@ import CIcon from "@coreui/icons-react";
 import { cilMenu } from "@coreui/icons";
 
 import AppHeaderDropdown from "./AppHeaderDropdown";
-import logoBlue from "../../assets/images/logo_blue.svg";
+import logo from "../../assets/images/logo.svg";
 
 const AppHeader = () => {
   //#region constants
@@ -39,7 +39,7 @@ const AppHeader = () => {
         </CHeaderToggler>
         {/* Brand logo in center for mobile */}
         <CHeaderBrand className="mx-auto d-md-none" href="/">
-          <CImage src={logoBlue} height={36} />
+          <CImage src={logo} height={36} className="filter-uet" />
         </CHeaderBrand>
         {/* User menu */}
         <CHeaderNav className="ms-3">
