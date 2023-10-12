@@ -265,7 +265,11 @@ const Reports = () => {
         </CCardHeader>
 
         <CCardBody>
-          <CRow xs={{ cols: 1 }} md={{ cols: 2 }} className="align-items-start">
+          <CRow
+            xs={{ cols: 1, gutterY: 3 }}
+            md={{ cols: 2, gutterX: 4 }}
+            className="align-items-start"
+          >
             <CCol>
               <SelectBoxProfessors hasAll={false} />
             </CCol>

@@ -93,12 +93,12 @@ body {
 .simplebar {
   &-track {
     &.simplebar-vertical {
-      width: 7px;
+      width: 7px !important;
     }
   }
   &-scrollbar {
     &:before {
-      background: rgba(255, 255, 255.5);
+      background: rgba(255, 255, 255.5) !important;
     }
   }
 }
