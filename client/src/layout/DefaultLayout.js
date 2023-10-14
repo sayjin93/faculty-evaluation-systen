@@ -26,12 +26,7 @@ const Layout = () => {
   useEffect(() => {
     const fetchAcademicYears = async () => {
       await axios
-        .get("academic-year/active", {
-          headers: {
-            "Authorization": localStorage.getItem("jwt_token"),
-            "Content-Type": "application/json",
-          },
-        })
+        .get("academic-year/active")
         .then((response) => {
           const data = response.data;
           if (data.length > 0) {
@@ -46,7 +41,7 @@ const Layout = () => {
     };
 
     fetchAcademicYears();
-  }, [dispatch]);
+  }, []);
   //#endregion
 
   if (!academicYear) return <AcademicYearAdd />;

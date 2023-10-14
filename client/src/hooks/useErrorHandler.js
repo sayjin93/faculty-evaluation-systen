@@ -9,6 +9,7 @@ const useErrorHandler = () => {
 
   const handleError = (error) => {
     if (error.code === "ERR_NETWORK") {
+      // Dispatches a Redux action to show a danger toast with the error message.
       dispatch(
         showToast({
           type: "danger",
@@ -22,14 +23,17 @@ const useErrorHandler = () => {
       // Redirect the user to the login page
       navigate("/login", { replace: true });
 
+      // Dispatches multiple Redux actions in a batch to update the state.
       batch(() => {
+        // Dispatches a Redux action to show a danger toast with the error message or status text.
         dispatch(
           showToast({
             type: "danger",
-            content: error.response.statusText,
+            content: error.response.data.message || error.response.statusText,
           })
         );
 
+        // Dispatches a Redux action to set the 'firstLogin' flag to true.
         dispatch(setFirstLogin(true));
       });
     }

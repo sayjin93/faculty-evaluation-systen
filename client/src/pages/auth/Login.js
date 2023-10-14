@@ -73,6 +73,8 @@ const LoginPage = () => {
       })
       .then((response) => {
         if (response.data) {
+          // console.log(atob(response.data.split(".")[1]));
+
           // Set the JWT token to the Local Storage
           localStorage.setItem("jwt_token", response.data);
 
