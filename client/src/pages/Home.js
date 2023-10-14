@@ -131,7 +131,7 @@ const Home = () => {
       await axios
         .get("dashboard", {
           headers: {
-            "auth-token": localStorage.getItem("jwt_token"),
+            "Authorization": localStorage.getItem("jwt_token"),
             "Content-Type": "application/json",
           },
         })

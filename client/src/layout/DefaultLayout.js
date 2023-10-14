@@ -28,7 +28,7 @@ const Layout = () => {
       await axios
         .get("academic-year/active", {
           headers: {
-            "auth-token": localStorage.getItem("jwt_token"),
+            "Authorization": localStorage.getItem("jwt_token"),
             "Content-Type": "application/json",
           },
         })
