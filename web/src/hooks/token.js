@@ -21,10 +21,10 @@ const useAuthToken = () => {
   useEffect(() => {
     if (jwtToken) {
       axios.defaults.headers.common["auth-token"] = jwtToken;
-      axios.defaults.headers.common["Content-Type"] = "application/json";
+      axios.defaults.headers.post["Content-Type"] = "application/json";
     } else {
       delete axios.defaults.headers.common["auth-token"];
-      delete axios.defaults.headers.common["Content-Type"];
+      delete axios.defaults.headers.post["Content-Type"];
     }
   }, [jwtToken]);
 

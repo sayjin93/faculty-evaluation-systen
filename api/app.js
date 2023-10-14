@@ -28,7 +28,7 @@ app.use(cors());
 
 // Endpoint route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to jk WebApp." });
+  res.send("Welcome to jk WebApp.");
 });
 
 // Routes
