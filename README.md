@@ -13,7 +13,7 @@ git clone https://github.com/sayjin93/faculty-evaluation-systen.git
 2. Navigate into the project directory:
 
 ```bash
-cd api
+cd server
 ```
 
 3. Install dependencies:
