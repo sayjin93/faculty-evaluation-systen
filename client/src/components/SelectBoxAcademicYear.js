@@ -39,7 +39,7 @@ const SelectBoxAcademicYear = ({ className = "" }) => {
     const { id, year } = item;
 
     await axios
-      .put(process.env.REACT_APP_API_URL + "/academic-year/active/" + id)
+      .put("academic-year/active/" + id)
       .then((response) => {
         dispatch(
           showToast({
@@ -63,7 +63,7 @@ const SelectBoxAcademicYear = ({ className = "" }) => {
   useEffect(() => {
     const fetchAcademicYears = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/academic-year")
+        .get("academic-year")
         .then((response) => {
           setAcademicYear(response.data);
         })

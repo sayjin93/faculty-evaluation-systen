@@ -58,7 +58,7 @@ const Register = () => {
     } else {
       // Send a POST request to the '/api/users' endpoint with the user data
       await axios
-        .post(process.env.REACT_APP_API_URL + "/users", {
+        .post("users", {
           username: user.username,
           email: user.email,
           password: user.password,

@@ -83,7 +83,7 @@ const Communities = () => {
   //#region functions
   const addCommunity = async () => {
     await axios
-      .post(process.env.REACT_APP_API_URL + "/community-service", {
+      .post("community-service", {
         event: formData.event,
         date: formData.date,
         description: formData.description,
@@ -117,7 +117,7 @@ const Communities = () => {
   };
   const editCommunity = async (id) => {
     await axios
-      .put(process.env.REACT_APP_API_URL + "/community-service/" + id, {
+      .put("community-service/" + id, {
         event: formData.event,
         date: formData.date,
         description: formData.description,
@@ -146,7 +146,7 @@ const Communities = () => {
   };
   const deleteCommunity = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/community-service/" + id)
+      .delete("community-service/" + id)
       .then((response) => {
         setStatus(response);
 
@@ -287,10 +287,7 @@ const Communities = () => {
   useEffect(() => {
     const fetchCommunity = async () => {
       await axios
-        .get(
-          process.env.REACT_APP_API_URL +
-            `/community-service/academic_year/${academicYearId}`
-        )
+        .get(`community-service/academic_year/${academicYearId}`)
         .then((response) => {
           setItems(response.data);
         })
@@ -305,7 +302,7 @@ const Communities = () => {
   useEffect(() => {
     const fetchOneCommunity = async (id) => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/community-service/" + id)
+        .get("community-service/" + id)
         .then((response) => {
           setFormData({
             ...formData,

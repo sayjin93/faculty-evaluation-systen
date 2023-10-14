@@ -82,7 +82,7 @@ const Courses = () => {
   //#region functions
   const addCourse = async () => {
     await axios
-      .post(process.env.REACT_APP_API_URL + "/courses", {
+      .post("courses", {
         name: formData.courseName,
         number: formData.courseNumber,
         semester: formData.semester,
@@ -114,7 +114,7 @@ const Courses = () => {
   };
   const editCourse = async (id) => {
     await axios
-      .put(process.env.REACT_APP_API_URL + "/courses/" + id, {
+      .put("courses/" + id, {
         name: formData.courseName,
         number: formData.courseNumber,
         semester: formData.semester,
@@ -144,7 +144,7 @@ const Courses = () => {
   };
   const deleteCourse = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/courses/" + id)
+      .delete("courses/" + id)
       .then((response) => {
         setStatus(response);
 
@@ -273,10 +273,7 @@ const Courses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       await axios
-        .get(
-          process.env.REACT_APP_API_URL +
-            `/courses/academic_year/${academicYearId}`
-        )
+        .get(`courses/academic_year/${academicYearId}`)
         .then((response) => {
           setItems(response.data);
         })
@@ -291,7 +288,7 @@ const Courses = () => {
   useEffect(() => {
     const fetchOneCourse = async (id) => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/courses/" + id)
+        .get("courses/" + id)
         .then((response) => {
           setFormData({
             ...formData,

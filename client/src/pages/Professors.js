@@ -59,7 +59,7 @@ const Professors = () => {
   //#region functions
   const addProfessor = async () => {
     await axios
-      .post(process.env.REACT_APP_API_URL + "/professors", {
+      .post("professors", {
         firstname: formData.firstname,
         lastname: formData.lastname,
         gender: formData.gender,
@@ -94,7 +94,7 @@ const Professors = () => {
   };
   const editProfessor = async (id) => {
     await axios
-      .put(process.env.REACT_APP_API_URL + "/professors/" + id, {
+      .put("professors/" + id, {
         firstname: formData.firstname,
         lastname: formData.lastname,
         gender: formData.gender,
@@ -120,7 +120,7 @@ const Professors = () => {
   };
   const deleteProfessor = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/professors/" + id)
+      .delete("professors/" + id)
       .then((response) => {
         setStatus(response);
         dispatch(
@@ -245,7 +245,7 @@ const Professors = () => {
   useEffect(() => {
     const fetchProfessors = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/professors")
+        .get("professors")
         .then((response) => {
           setItems(response.data);
         })
@@ -260,7 +260,7 @@ const Professors = () => {
   useEffect(() => {
     const fetchOneProfessor = async (id) => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/professors/" + id)
+        .get("professors/" + id)
         .then((response) => {
           setFormData({
             ...formData,

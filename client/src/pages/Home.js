@@ -129,7 +129,7 @@ const Home = () => {
   useEffect(() => {
     const fetchDashboard = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + `/dashboard`, {
+        .get("dashboard", {
           headers: {
             "auth-token": localStorage.getItem("jwt_token"),
             "Content-Type": "application/json",

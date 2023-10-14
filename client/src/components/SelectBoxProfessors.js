@@ -33,7 +33,7 @@ const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
   useEffect(() => {
     const fetchProfessors = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/professors")
+        .get("professors")
         .then((response) => {
           //set list of professors on redux state
           dispatch(setProfessors(response.data));

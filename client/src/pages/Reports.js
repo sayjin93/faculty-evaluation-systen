@@ -239,8 +239,7 @@ const Reports = () => {
     const fetchReports = async () => {
       await axios
         .get(
-          process.env.REACT_APP_API_URL +
-            `/reports/academic_year/${academicYear.id}/professor/${selectedProfessor}`
+          `reports/academic_year/${academicYear.id}/professor/${selectedProfessor}`
         )
         .then((response) => {
           setItems(response.data);

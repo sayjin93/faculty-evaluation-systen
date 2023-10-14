@@ -80,7 +80,7 @@ const Conferences = () => {
   //#region functions
   const addConference = async () => {
     await axios
-      .post(process.env.REACT_APP_API_URL + "/conferences", {
+      .post("conferences", {
         name: formData.name,
         location: formData.location,
         present_title: formData.presentTitle,
@@ -112,7 +112,7 @@ const Conferences = () => {
   };
   const editConference = async (id) => {
     await axios
-      .put(process.env.REACT_APP_API_URL + "/conferences/" + id, {
+      .put("conferences/" + id, {
         name: formData.name,
         location: formData.location,
         present_title: formData.presentTitle,
@@ -141,7 +141,7 @@ const Conferences = () => {
   };
   const deleteConference = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/conferences/" + id)
+      .delete("conferences/" + id)
       .then((response) => {
         setStatus(response);
 
@@ -269,10 +269,7 @@ const Conferences = () => {
   useEffect(() => {
     const fetchConferences = async () => {
       await axios
-        .get(
-          process.env.REACT_APP_API_URL +
-            `/conferences/academic_year/${academicYearId}`
-        )
+        .get(`conferences/academic_year/${academicYearId}`)
         .then((response) => {
           setItems(response.data);
         })
@@ -287,7 +284,7 @@ const Conferences = () => {
   useEffect(() => {
     const fefetchOneConference = async (id) => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/conferences/" + id)
+        .get("conferences/" + id)
         .then((response) => {
           setFormData({
             ...formData,

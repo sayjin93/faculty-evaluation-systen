@@ -80,7 +80,7 @@ const Books = () => {
   //#region functions
   const addBook = async () => {
     await axios
-      .post(process.env.REACT_APP_API_URL + "/books", {
+      .post("books", {
         title: formData.title,
         publication_house: formData.publicationHouse,
         publication_year: formData.publicationYear,
@@ -110,7 +110,7 @@ const Books = () => {
   };
   const editBook = async (id) => {
     await axios
-      .put(process.env.REACT_APP_API_URL + "/books/" + id, {
+      .put("books/" + id, {
         title: formData.title,
         publication_house: formData.publicationHouse,
         publication_year: formData.publicationYear,
@@ -138,7 +138,7 @@ const Books = () => {
   };
   const deleteBook = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/books/" + id)
+      .delete("books/" + id)
       .then((response) => {
         setStatus(response);
 
@@ -267,10 +267,7 @@ const Books = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       await axios
-        .get(
-          process.env.REACT_APP_API_URL +
-            `/books/academic_year/${academicYearId}`
-        )
+        .get(`books/academic_year/${academicYearId}`)
         .then((response) => {
           setItems(response.data);
         })
@@ -285,7 +282,7 @@ const Books = () => {
   useEffect(() => {
     const fetchOneBook = async (id) => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/books/" + id)
+        .get("books/" + id)
         .then((response) => {
           setFormData({
             ...formData,

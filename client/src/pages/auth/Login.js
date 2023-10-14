@@ -67,7 +67,7 @@ const LoginPage = () => {
     localStorage.removeItem("jwt_token");
 
     axios
-      .post(process.env.REACT_APP_API_URL + "/users/login", {
+      .post("users/login", {
         username: formData.username,
         password: formData.password,
       })
@@ -82,10 +82,7 @@ const LoginPage = () => {
           //Fetch user data axios function
           const fetchUserData = async () => {
             await axios
-              .get(
-                process.env.REACT_APP_API_URL +
-                  `/users/username/${formData.username}`
-              )
+              .get(`users/username/${formData.username}`)
               .then((response) => {
                 if (response.data) {
                   const loggedUser = {

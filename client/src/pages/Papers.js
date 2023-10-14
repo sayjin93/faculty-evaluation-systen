@@ -82,7 +82,7 @@ const Papers = () => {
   //#region functions
   const addPaper = async () => {
     await axios
-      .post(process.env.REACT_APP_API_URL + "/papers", {
+      .post("papers", {
         title: formData.title,
         journal: formData.journal,
         publication: formData.publication,
@@ -112,7 +112,7 @@ const Papers = () => {
   };
   const editPaper = async (id) => {
     await axios
-      .put(process.env.REACT_APP_API_URL + "/papers/" + id, {
+      .put("papers/" + id, {
         title: formData.title,
         journal: formData.journal,
         publication: formData.publication,
@@ -139,7 +139,7 @@ const Papers = () => {
   };
   const deletePaper = async (id) => {
     await axios
-      .delete(process.env.REACT_APP_API_URL + "/papers/" + id)
+      .delete("papers/" + id)
       .then((response) => {
         setStatus(response);
 
@@ -268,10 +268,7 @@ const Papers = () => {
   useEffect(() => {
     const fetchPapers = async () => {
       await axios
-        .get(
-          process.env.REACT_APP_API_URL +
-            `/papers/academic_year/${academicYearId}`
-        )
+        .get(`papers/academic_year/${academicYearId}`)
         .then((response) => {
           setItems(response.data);
         })
@@ -286,7 +283,7 @@ const Papers = () => {
   useEffect(() => {
     const fetchOnePaper = async (id) => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/papers/" + id)
+        .get("papers/" + id)
         .then((response) => {
           setFormData({
             ...formData,

@@ -58,7 +58,7 @@ const Settings = () => {
 
     if (userData.newPassword === userData.repeatPassword) {
       axios
-        .put(process.env.REACT_APP_API_URL + "/users/" + currentUser.id, {
+        .put("users/" + currentUser.id, {
           firstName: userData.firstName,
           lastName: userData.lastName,
           username: userData.username,

@@ -26,7 +26,7 @@ const Layout = () => {
   useEffect(() => {
     const fetchAcademicYears = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + "/academic-year/active", {
+        .get("academic-year/active", {
           headers: {
             "auth-token": localStorage.getItem("jwt_token"),
             "Content-Type": "application/json",

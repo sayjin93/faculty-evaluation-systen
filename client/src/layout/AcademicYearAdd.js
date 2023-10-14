@@ -34,7 +34,7 @@ const AcademicYearAdd = () => {
 
   const addAcademicYear = async () => {
     await axios
-      .post(process.env.REACT_APP_API_URL + "/academic-year", {
+      .post("academic-year", {
         year: newAcademicYear,
         active: 1,
       })
