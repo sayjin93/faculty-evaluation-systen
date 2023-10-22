@@ -1,5 +1,5 @@
 module.exports = (app) => {
-  const books = require('../controllers/books.controller.js');
+  const books = require('../controllers/books');
   const auth = require('../config/authenticate');
   const router = require('express').Router();
 

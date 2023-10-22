@@ -1,6 +1,6 @@
 module.exports = (app) => {
-  const reports = require('../controllers/reports.controller.js');
-  const auth = require('../config/authenticate.js');
+  const reports = require('../controllers/reports');
+  const auth = require('../config/authenticate');
   const router = require('express').Router();
 
   // Retrieve all Papers with a specific academic_year_id and professor_id

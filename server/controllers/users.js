@@ -30,8 +30,8 @@ exports.create = (req, res) => {
     }
 
     // Check if email already exists
-    Users.findOne({ where: { email } }).then((user) => {
-      if (user) {
+    Users.findOne({ where: { email } }).then((user1) => {
+      if (user1) {
         res.status(400).send({
           message: 'Email already exists!',
         });
@@ -124,7 +124,7 @@ exports.login = (req, res) => {
         res.send(token);
       });
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(500).send({
         message: 'Internal server error.',
       });
@@ -145,7 +145,7 @@ exports.findOne = (req, res) => {
         });
       }
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(500).send({
         message: `Error retrieving Users with id=${id}`,
       });
@@ -230,7 +230,7 @@ exports.update = (req, res) => {
               { where: { id } },
             )
               .then((num) => {
-                if (num == 1) {
+                if (num === 1) {
                   // Fetch updated user data
                   Users.findByPk(id, {
                     attributes: [
@@ -248,20 +248,20 @@ exports.update = (req, res) => {
                   });
                 }
               })
-              .catch((err) => {
+              .catch(() => {
                 res.status(500).send({
                   message: `Error updating User with id=${id}`,
                 });
               });
           })
-          .catch((err) => {
+          .catch(() => {
             res.status(500).send({
               message: 'Internal server error.',
             });
           });
       });
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(500).send({
         message: `Error retrieving User with id=${id}`,
       });
@@ -276,7 +276,7 @@ exports.delete = (req, res) => {
     where: { id },
   })
     .then((num) => {
-      if (num == 1) {
+      if (num === 1) {
         res.send({
           message: 'Users was deleted successfully!',
         });
@@ -286,7 +286,7 @@ exports.delete = (req, res) => {
         });
       }
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(500).send({
         message: `Could not delete Users with id=${id}`,
       });

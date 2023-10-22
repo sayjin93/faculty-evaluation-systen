@@ -36,7 +36,7 @@ const modelNames = [
   'users',
 ];
 for (const modelName of modelNames) {
-  const modelDefiner = require(`./${modelName}.model.js`);
+  const modelDefiner = require(`./${modelName}.js`);
   db[modelName] = modelDefiner(sequelize, Sequelize);
 }
 

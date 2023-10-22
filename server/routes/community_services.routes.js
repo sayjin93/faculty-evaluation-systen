@@ -1,5 +1,5 @@
 module.exports = (app) => {
-  const community_services = require('../controllers/community_services.controller.js');
+  const community_services = require('../controllers/community_services');
   const auth = require('../config/authenticate');
   const router = require('express').Router();
 

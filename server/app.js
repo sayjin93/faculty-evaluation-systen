@@ -42,18 +42,25 @@ require('./routes/reports.routes')(app);
 
     // Seed files
     const seeds = [
-      require('./seeders/users_seed'),
-      require('./seeders/academic_year_seed'),
-      require('./seeders/professors_seed'),
-      require('./seeders/courses_seed'),
-      require('./seeders/papers_seed'),
-      require('./seeders/books_seed'),
-      require('./seeders/conferences_seed'),
-      require('./seeders/communities_seed'),
+      require('./seeders/users'),
+      require('./seeders/academic_year'),
+      require('./seeders/professors'),
+      require('./seeders/courses'),
+      require('./seeders/papers'),
+      require('./seeders/books'),
+      require('./seeders/conferences'),
+      require('./seeders/community_services'),
     ];
 
     // Execute seeding functions concurrently
-    await Promise.all(seeds.map((seed) => seed()));
+
+    // await Promise.all(seeds.map((seed) => seed()));
+
+    // Call all seed functions in sequence
+    for (let i = 0; i < seeds.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await seeds[i](db.sequelize.getQueryInterface(), db.Sequelize);
+    }
 
     console.log('Seeding completed successfully!'.bgGreen);
   } catch (error) {

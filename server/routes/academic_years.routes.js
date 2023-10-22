@@ -1,6 +1,6 @@
 module.exports = (app) => {
-  const academic_years = require('../controllers/academic_years.controller.js');
-  const auth = require('../config/authenticate.js');
+  const academic_years = require('../controllers/academic_years');
+  const auth = require('../config/authenticate');
   const router = require('express').Router();
 
   // Create a new Academic Year

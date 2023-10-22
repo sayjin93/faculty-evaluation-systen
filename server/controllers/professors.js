@@ -59,7 +59,7 @@ exports.findOne = (req, res) => {
         });
       }
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(500).send({
         message: `Error retrieving Professors with id=${id}`,
       });
@@ -80,7 +80,7 @@ exports.update = (req, res) => {
     where: { id },
   })
     .then((num) => {
-      if (num == 1) {
+      if (num === 1) {
         res.send({
           message: 'Professors was updated successfully.',
         });
@@ -90,7 +90,7 @@ exports.update = (req, res) => {
         });
       }
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(500).send({
         message: `Error updating Professors with id=${id}`,
       });
@@ -104,7 +104,7 @@ exports.delete = (req, res) => {
     where: { id },
   })
     .then((num) => {
-      if (num == 1) {
+      if (num === 1) {
         res.send({
           message: 'Professors was deleted successfully!',
         });
@@ -151,7 +151,7 @@ exports.deleteAll = (req, res) => {
 
 // Find all published Professors
 exports.findAllPublished = (req, res) => {
-  Tutorial.findAll({ where: { published: true } })
+  Professors.findAll({ where: { published: true } })
     .then((data) => {
       res.send(data);
     })

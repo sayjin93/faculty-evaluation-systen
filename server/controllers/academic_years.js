@@ -74,7 +74,7 @@ exports.findOne = (req, res) => {
         });
       }
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(500).send({
         message: `Error retrieving Academic Year with id=${id}`,
       });
@@ -89,7 +89,7 @@ exports.update = (req, res) => {
     where: { id },
   })
     .then((num) => {
-      if (num == 1) {
+      if (num === 1) {
         res.send({
           message: 'Academic Year was updated successfully.',
         });
@@ -99,7 +99,7 @@ exports.update = (req, res) => {
         });
       }
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(500).send({
         message: `Error updating Academic Year with id=${id}`,
       });
@@ -114,7 +114,7 @@ exports.delete = (req, res) => {
     where: { id },
   })
     .then((num) => {
-      if (num == 1) {
+      if (num === 1) {
         res.send({
           message: 'Academic Year was deleted successfully!',
         });
@@ -124,7 +124,7 @@ exports.delete = (req, res) => {
         });
       }
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(500).send({
         message: `Could not delete Academic Year with id=${id}`,
       });
@@ -169,7 +169,7 @@ exports.updateActiveStatus = (req, res) => {
               message: 'Academic Year active status updated successfully.',
             });
           })
-          .catch((err) => {
+          .catch(() => {
             res.status(500).send({
               message: 'Error updating Academic Year active status.',
             });
@@ -181,7 +181,7 @@ exports.updateActiveStatus = (req, res) => {
         });
       }
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(500).send({
         message: 'Error updating Academic Year active status.',
       });

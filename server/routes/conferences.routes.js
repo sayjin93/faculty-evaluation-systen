@@ -1,5 +1,5 @@
 module.exports = (app) => {
-  const conferences = require('../controllers/conferences.controller.js');
+  const conferences = require('../controllers/conferences');
   const auth = require('../config/authenticate');
   const router = require('express').Router();
 
