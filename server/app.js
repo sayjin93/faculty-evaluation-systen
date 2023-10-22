@@ -53,20 +53,13 @@ require('./routes/reports.routes')(app);
     ];
 
     // Execute seeding functions concurrently
-
-    // await Promise.all(seeds.map((seed) => seed()));
-
-    // Call all seed functions in sequence
-    for (let i = 0; i < seeds.length; i += 1) {
-      // eslint-disable-next-line no-await-in-loop
-      await seeds[i](db.sequelize.getQueryInterface(), db.Sequelize);
-    }
-
+    await Promise.all(seeds.map((seed) => seed()));
     console.log('Seeding completed successfully!'.bgGreen);
   } catch (error) {
     console.log('Unable to connect to the database:', error);
   }
 })();
+
 // Setting up the server to listen for requests
 const PORT = process.env.API_PORT || 4000;
 app.listen(PORT, () => {
