@@ -1,4 +1,6 @@
 const express = require('express');
+const morgan = require('morgan');
+const helmet = require('helmet');
 const cors = require('cors');
 const colors = require('colors');
 const dotenv = require('dotenv');
@@ -6,13 +8,18 @@ const dotenv = require('dotenv');
 dotenv.config(); // Loads environment variables
 
 const db = require('./models'); // Connect database
+const middlewares = require('./middlewares');
 
 const app = express(); // Creates a new instance of the Express.js framework
 
 // Middleware
+app.use(morgan('dev'));
+app.use(helmet());
+app.use(cors());
 app.use(express.json()); // parse requests of content-type - application/json
 app.use(express.urlencoded({ extended: true })); // parse requests of content-type - application/x-www-form-urlencoded
-app.use(cors());
+// app.use(middlewares.notFound);
+app.use(middlewares.errorHandler);
 
 // Endpoint route
 app.get('/', (req, res) => {
