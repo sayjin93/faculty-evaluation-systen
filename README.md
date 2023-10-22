@@ -33,7 +33,7 @@ DB_PASSWORD=your_db_password
 DB_HOST=localhost
 DB_DIALECT=mysql
 API_PORT=4000
-JWT_SECRET_KEY=your_jwt_secret_key
+JWT_SECRET=your_jwt_secret_key
 ```
 
 5. Run the server:

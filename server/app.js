@@ -23,7 +23,9 @@ app.use(middlewares.errorHandler);
 
 // Endpoint route
 app.get('/', (req, res) => {
-  res.send('Welcome to jk WebApp.');
+  res.json({
+    message: '🦄🌈✨👋🌎🌍🌏✨🌈🦄',
+  });
 });
 
 // Routes
