@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Courses = sequelize.define("courses", {
+  const Courses = sequelize.define('courses', {
     name: {
       type: Sequelize.STRING,
     },
@@ -13,7 +13,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
     },
     program: {
-      type: Sequelize.ENUM("Bachelor", "Master"),
+      type: Sequelize.ENUM('Bachelor', 'Master'),
     },
     academic_year_id: {
       type: Sequelize.INTEGER,

@@ -1,31 +1,29 @@
-"use strict";
-
-const db = require("../models");
+const db = require('../models');
 
 async function seed() {
   const usersData = [
     {
-      username: "admin",
-      first_name: "Jurgen",
-      last_name: "Kruja",
-      password: "admin",
-      email: "jurgen-kruja@live.com",
+      username: 'admin',
+      first_name: 'Jurgen',
+      last_name: 'Kruja',
+      password: 'admin',
+      email: 'jurgen-kruja@live.com',
       isAdmin: true,
     },
     {
-      username: "petraq",
-      first_name: "Petraq",
-      last_name: "Papajorgji",
-      password: "petraq",
-      email: "petraq@gmail.com",
+      username: 'petraq',
+      first_name: 'Petraq',
+      last_name: 'Papajorgji',
+      password: 'petraq',
+      email: 'petraq@gmail.com',
       isAdmin: true,
     },
     {
-      username: "user",
-      first_name: "John",
-      last_name: "Doe",
-      password: "user",
-      email: "info@jkruja.com",
+      username: 'user',
+      first_name: 'John',
+      last_name: 'Doe',
+      password: 'user',
+      email: 'info@jkruja.com',
       isAdmin: false,
     },
   ];

@@ -1,4 +1,5 @@
-const db = require("../models");
+const db = require('../models');
+
 const CommunityServices = db.community_services;
 
 // Create and Save a new Community Service
@@ -6,7 +7,7 @@ exports.create = (req, res) => {
   // Validate request
   if (!req.body.event) {
     res.status(400).send({
-      message: "Content can not be empty!",
+      message: 'Content can not be empty!',
     });
     return;
   }
@@ -29,8 +30,8 @@ exports.create = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message ||
-          "Some error occurred while creating the Community Service.",
+          err.message
+          || 'Some error occurred while creating the Community Service.',
       });
     });
 };
@@ -44,15 +45,15 @@ exports.findAll = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message ||
-          "Some error occurred while retrieving Community Services.",
+          err.message
+          || 'Some error occurred while retrieving Community Services.',
       });
     });
 };
 
 // Find a single Community Service with an id
 exports.findOne = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   CommunityServices.findByPk(id)
     .then((data) => {
@@ -66,22 +67,22 @@ exports.findOne = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Community Service with id=" + id,
+        message: `Error retrieving Community Service with id=${id}`,
       });
     });
 };
 
 // Update a Community Service by the id in the request
 exports.update = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   CommunityServices.update(req.body, {
-    where: { id: id },
+    where: { id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Community Service was updated successfully.",
+          message: 'Community Service was updated successfully.',
         });
       } else {
         res.send({
@@ -91,22 +92,22 @@ exports.update = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating Community Service with id=" + id,
+        message: `Error updating Community Service with id=${id}`,
       });
     });
 };
 
 // Delete a Community Service with the specified id in the request
 exports.delete = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   CommunityServices.destroy({
-    where: { id: id },
+    where: { id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Community Service was deleted successfully!",
+          message: 'Community Service was deleted successfully!',
         });
       } else {
         res.send({
@@ -116,7 +117,7 @@ exports.delete = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Community Service with id=" + id,
+        message: `Could not delete Community Service with id=${id}`,
       });
     });
 };
@@ -135,23 +136,23 @@ exports.deleteAll = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message ||
-          "Some error occurred while removing all Community Services.",
+          err.message
+          || 'Some error occurred while removing all Community Services.',
       });
     });
 };
 
 // Find all Community Servics with a specific academic_year_id
 exports.findAllByAcademicYear = (req, res) => {
-  const academic_year_id = req.params.academic_year_id;
+  const { academic_year_id } = req.params;
 
-  CommunityServices.findAll({ where: { academic_year_id: academic_year_id } })
+  CommunityServices.findAll({ where: { academic_year_id } })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Courses.",
+        message: err.message || 'Some error occurred while retrieving Courses.',
       });
     });
 };

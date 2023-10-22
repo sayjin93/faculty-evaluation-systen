@@ -1,15 +1,13 @@
-"use strict";
-
-const db = require("../models");
+const db = require('../models');
 
 async function seed() {
   const academicYearsData = [
     {
-      year: "2021-2022",
+      year: '2021-2022',
       active: 0,
     },
     {
-      year: "2022-2023",
+      year: '2022-2023',
       active: 1,
     },
   ];

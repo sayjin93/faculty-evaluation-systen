@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const AcademicYears = sequelize.define("academic_years", {
+  const AcademicYears = sequelize.define('academic_years', {
     year: {
       type: Sequelize.STRING,
     },

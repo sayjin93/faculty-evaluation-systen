@@ -1,7 +1,7 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 
 module.exports = (sequelize, Sequelize) => {
-  const Users = sequelize.define("users", {
+  const Users = sequelize.define('users', {
     first_name: {
       type: Sequelize.STRING,
     },
@@ -17,7 +17,7 @@ module.exports = (sequelize, Sequelize) => {
       set(value) {
         const saltRounds = 10;
         const hashedPassword = bcrypt.hashSync(value, saltRounds);
-        this.setDataValue("password", hashedPassword);
+        this.setDataValue('password', hashedPassword);
       },
     },
     email: {

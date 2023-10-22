@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const CommunityServices = sequelize.define("community_services", {
+  const CommunityServices = sequelize.define('community_services', {
     event: {
       type: Sequelize.STRING,
     },

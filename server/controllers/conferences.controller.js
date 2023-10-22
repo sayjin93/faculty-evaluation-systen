@@ -1,4 +1,5 @@
-const db = require("../models");
+const db = require('../models');
+
 const Conferences = db.conferences;
 
 // Create and Save a new Conferences
@@ -6,7 +7,7 @@ exports.create = (req, res) => {
   // Validate request
   if (!req.body.name) {
     res.status(400).send({
-      message: "Content can not be empty!",
+      message: 'Content can not be empty!',
     });
     return;
   }
@@ -30,7 +31,7 @@ exports.create = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Conference.",
+          err.message || 'Some error occurred while creating the Conference.',
       });
     });
 };
@@ -44,14 +45,14 @@ exports.findAll = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving Conferencess.",
+          err.message || 'Some error occurred while retrieving Conferencess.',
       });
     });
 };
 
 // Find a single Conferences with an id
 exports.findOne = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   Conferences.findByPk(id)
     .then((data) => {
@@ -65,22 +66,22 @@ exports.findOne = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Conferences with id=" + id,
+        message: `Error retrieving Conferences with id=${id}`,
       });
     });
 };
 
 // Update a Conferences by the id in the request
 exports.update = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   Conferences.update(req.body, {
-    where: { id: id },
+    where: { id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Conferences was updated successfully.",
+          message: 'Conferences was updated successfully.',
         });
       } else {
         res.send({
@@ -90,22 +91,22 @@ exports.update = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating Conferences with id=" + id,
+        message: `Error updating Conferences with id=${id}`,
       });
     });
 };
 
 // Delete a Conferences with the specified id in the request
 exports.delete = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   Conferences.destroy({
-    where: { id: id },
+    where: { id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Conferences was deleted successfully!",
+          message: 'Conferences was deleted successfully!',
         });
       } else {
         res.send({
@@ -115,7 +116,7 @@ exports.delete = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Conferences with id=" + id,
+        message: `Could not delete Conferences with id=${id}`,
       });
     });
 };
@@ -132,22 +133,22 @@ exports.deleteAll = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while removing all Conferencess.",
+          err.message || 'Some error occurred while removing all Conferencess.',
       });
     });
 };
 
 // Find all Conferences with a specific academic_year_id
 exports.findAllByAcademicYear = (req, res) => {
-  const academic_year_id = req.params.academic_year_id;
+  const { academic_year_id } = req.params;
 
-  Conferences.findAll({ where: { academic_year_id: academic_year_id } })
+  Conferences.findAll({ where: { academic_year_id } })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Courses.",
+        message: err.message || 'Some error occurred while retrieving Courses.',
       });
     });
 };

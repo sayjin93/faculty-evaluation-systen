@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "lint": "eslint --fix auth controllers database models routes seeders app.js",
+    "lint": "eslint --fix config controllers models routes seeders app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

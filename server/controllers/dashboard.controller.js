@@ -1,4 +1,5 @@
-const db = require("../models");
+const db = require('../models');
+
 const Professors = db.professors;
 const Courses = db.courses;
 const Papers = db.papers;
@@ -17,31 +18,28 @@ exports.findAllData = (req, res) => {
         .then((professors) => {
           const professorsData = professors;
 
-          const promises = academic_year_ids.map((academic_year_id) =>
-            Promise.all([
-              Courses.findAll({
-                where: { academic_year_id: academic_year_id },
-              }),
-              Papers.findAll({
-                where: { academic_year_id: academic_year_id },
-              }),
-              Books.findAll({
-                where: { academic_year_id: academic_year_id },
-              }),
-              Conferences.findAll({
-                where: { academic_year_id: academic_year_id },
-              }),
-              CommunityServices.findAll({
-                where: { academic_year_id: academic_year_id },
-              }),
-            ])
-          );
+          const promises = academic_year_ids.map((academic_year_id) => Promise.all([
+            Courses.findAll({
+              where: { academic_year_id },
+            }),
+            Papers.findAll({
+              where: { academic_year_id },
+            }),
+            Books.findAll({
+              where: { academic_year_id },
+            }),
+            Conferences.findAll({
+              where: { academic_year_id },
+            }),
+            CommunityServices.findAll({
+              where: { academic_year_id },
+            }),
+          ]));
 
           return Promise.all(promises).then((results) => {
             const allDataForEachYear = results.map((data, index) => {
               const academic_year_id = academic_year_ids[index];
-              const [courses, papers, books, conferences, communityServices] =
-                data;
+              const [courses, papers, books, conferences, communityServices] = data;
 
               // Extracting only the professor_id and week_hours properties for each course
               const coursesData = courses.map((course) => ({
@@ -54,7 +52,7 @@ exports.findAllData = (req, res) => {
                 professor_id: book.professor_id,
               }));
               const communityServicesData = communityServices.map(
-                (service) => ({ professor_id: service.professor_id })
+                (service) => ({ professor_id: service.professor_id }),
               );
               const conferencesData = conferences.map((conference) => ({
                 professor_id: conference.professor_id,
@@ -64,7 +62,7 @@ exports.findAllData = (req, res) => {
               }));
 
               return {
-                academic_year_id: academic_year_id,
+                academic_year_id,
                 books: booksData,
                 communityServices: communityServicesData,
                 conferences: conferencesData,
@@ -82,14 +80,14 @@ exports.findAllData = (req, res) => {
         .catch((err) => {
           res.status(500).send({
             message:
-              err.message || "Some error occurred while retrieving data.",
+              err.message || 'Some error occurred while retrieving data.',
           });
         });
     })
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving academic years.",
+          err.message || 'Some error occurred while retrieving academic years.',
       });
     });
 };

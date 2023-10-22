@@ -1,37 +1,39 @@
-const db = require("../models");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { Op } = require("sequelize");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { Op } = require('sequelize');
+const db = require('../models');
 
 const Users = db.users;
 
 // Create and Save a new Users
 exports.create = (req, res) => {
-  //Destructyure object
-  const { first_name, last_name, username, password, email } = req.body;
+  // Destructyure object
+  const {
+    first_name, last_name, username, password, email,
+  } = req.body;
 
   // Validate request
   if (!username || !password || !email) {
     res.status(400).send({
-      message: "Content can not be empty!",
+      message: 'Content can not be empty!',
     });
     return;
   }
 
   // Check if username already exists
-  Users.findOne({ where: { username: username } }).then((user) => {
+  Users.findOne({ where: { username } }).then((user) => {
     if (user) {
       res.status(400).send({
-        message: "Username already exists!",
+        message: 'Username already exists!',
       });
       return;
     }
 
     // Check if email already exists
-    Users.findOne({ where: { email: email } }).then((user) => {
+    Users.findOne({ where: { email } }).then((user) => {
       if (user) {
         res.status(400).send({
-          message: "Email already exists!",
+          message: 'Email already exists!',
         });
         return;
       }
@@ -54,7 +56,7 @@ exports.create = (req, res) => {
         .catch((err) => {
           res.status(500).send({
             message:
-              err.message || "Some error occurred while creating the User.",
+              err.message || 'Some error occurred while creating the User.',
           });
         });
     });
@@ -69,7 +71,7 @@ exports.findAll = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving users.",
+        message: err.message || 'Some error occurred while retrieving users.',
       });
     });
 };
@@ -80,13 +82,13 @@ exports.login = (req, res) => {
 
   Users.findOne({
     where: {
-      [Op.or]: [{ username: username }, { email: username }],
+      [Op.or]: [{ username }, { email: username }],
     },
   })
     .then((user) => {
       if (!user) {
         res.status(404).send({
-          message: "User not found!",
+          message: 'User not found!',
         });
         return;
       }
@@ -95,27 +97,27 @@ exports.login = (req, res) => {
       bcrypt.compare(password, user.password, (err, result) => {
         if (err) {
           res.status(500).send({
-            message: "Internal server error.",
+            message: 'Internal server error.',
           });
           return;
         }
 
         if (!result) {
           res.status(401).send({
-            message: "Invalid password.",
+            message: 'Invalid password.',
           });
           return;
         }
 
         const token = jwt.sign(
           {
-            username: username,
+            username,
             email: user.email,
           },
           process.env.JWT_SECRET_KEY,
           {
-            expiresIn: "2h",
-          }
+            expiresIn: '2h',
+          },
         );
 
         // Return the token to the client
@@ -124,14 +126,14 @@ exports.login = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Internal server error.",
+        message: 'Internal server error.',
       });
     });
 };
 
 // Find a single Users with an id
 exports.findOne = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   Users.findByPk(id)
     .then((data) => {
@@ -145,22 +147,22 @@ exports.findOne = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Users with id=" + id,
+        message: `Error retrieving Users with id=${id}`,
       });
     });
 };
 
 // Find a Users with a specific username
 exports.findOneByUsername = (req, res) => {
-  const username = req.params.username;
+  const { username } = req.params;
 
-  Users.findAll({ where: { username: username } })
+  Users.findAll({ where: { username } })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Courses.",
+        message: err.message || 'Some error occurred while retrieving Courses.',
       });
     });
 };
@@ -168,16 +170,17 @@ exports.findOneByUsername = (req, res) => {
 // Update a Users by the id in the request
 // Update a Users by the id in the request
 exports.update = (req, res) => {
-  const id = req.params.id;
-  const { firstName, lastName, username, email, currentPassword, newPassword } =
-    req.body;
+  const { id } = req.params;
+  const {
+    firstName, lastName, username, email, currentPassword, newPassword,
+  } = req.body;
 
   // Fetch the user
   Users.findByPk(id)
     .then((user) => {
       if (!user) {
         res.status(404).send({
-          message: "User not found!",
+          message: 'User not found!',
         });
         return;
       }
@@ -186,7 +189,7 @@ exports.update = (req, res) => {
       bcrypt.compare(currentPassword, user.password, (err, result) => {
         if (err) {
           res.status(500).send({
-            message: "Internal server error.",
+            message: 'Internal server error.',
           });
           return;
         }
@@ -194,7 +197,7 @@ exports.update = (req, res) => {
         // If the current password is not correct, return an error message
         if (!result) {
           res.status(401).send({
-            message: "Current password is not correct.",
+            message: 'Current password is not correct.',
           });
           return;
         }
@@ -202,14 +205,14 @@ exports.update = (req, res) => {
         // Check if the new username or email already exists
         Users.findOne({
           where: {
-            [Op.or]: [{ username: username }, { email: email }],
-            [Op.not]: { id: id },
+            [Op.or]: [{ username }, { email }],
+            [Op.not]: { id },
           },
         })
           .then((existingUser) => {
             if (existingUser) {
               res.status(400).send({
-                message: "Email or Username already exists!",
+                message: 'Email or Username already exists!',
               });
               return;
             }
@@ -220,21 +223,21 @@ exports.update = (req, res) => {
               {
                 first_name: firstName,
                 last_name: lastName,
-                username: username,
-                email: email,
+                username,
+                email,
                 password: newPassword,
               },
-              { where: { id: id } }
+              { where: { id } },
             )
               .then((num) => {
                 if (num == 1) {
                   // Fetch updated user data
                   Users.findByPk(id, {
                     attributes: [
-                      "first_name",
-                      "last_name",
-                      "username",
-                      "email",
+                      'first_name',
+                      'last_name',
+                      'username',
+                      'email',
                     ],
                   }).then((updatedUser) => {
                     res.send(updatedUser);
@@ -247,35 +250,35 @@ exports.update = (req, res) => {
               })
               .catch((err) => {
                 res.status(500).send({
-                  message: "Error updating User with id=" + id,
+                  message: `Error updating User with id=${id}`,
                 });
               });
           })
           .catch((err) => {
             res.status(500).send({
-              message: "Internal server error.",
+              message: 'Internal server error.',
             });
           });
       });
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving User with id=" + id,
+        message: `Error retrieving User with id=${id}`,
       });
     });
 };
 
 // Delete a Users with the specified id in the request
 exports.delete = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   Users.destroy({
-    where: { id: id },
+    where: { id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Users was deleted successfully!",
+          message: 'Users was deleted successfully!',
         });
       } else {
         res.send({
@@ -285,7 +288,7 @@ exports.delete = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Users with id=" + id,
+        message: `Could not delete Users with id=${id}`,
       });
     });
 };
@@ -301,7 +304,7 @@ exports.deleteAll = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while removing all Users.",
+        message: err.message || 'Some error occurred while removing all Users.',
       });
     });
 };

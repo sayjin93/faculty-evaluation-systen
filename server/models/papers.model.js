@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Papers = sequelize.define("papers", {
+  const Papers = sequelize.define('papers', {
     title: {
       type: Sequelize.STRING,
     },

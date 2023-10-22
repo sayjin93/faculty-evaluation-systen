@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Professors = sequelize.define("professors", {
+  const Professors = sequelize.define('professors', {
     first_name: {
       type: Sequelize.STRING,
     },
@@ -7,7 +7,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     gender: {
-      type: Sequelize.ENUM("m", "f"),
+      type: Sequelize.ENUM('m', 'f'),
     },
   });
 

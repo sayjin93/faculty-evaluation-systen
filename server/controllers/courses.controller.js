@@ -1,4 +1,5 @@
-const db = require("../models");
+const db = require('../models');
+
 const Courses = db.courses;
 
 // Create and Save a new Courses
@@ -6,7 +7,7 @@ exports.create = (req, res) => {
   // Validate request
   if (!req.body.name) {
     res.status(400).send({
-      message: "Content can not be empty!",
+      message: 'Content can not be empty!',
     });
     return;
   }
@@ -30,7 +31,7 @@ exports.create = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Courses.",
+          err.message || 'Some error occurred while creating the Courses.',
       });
     });
 };
@@ -43,14 +44,14 @@ exports.findAll = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Course.",
+        message: err.message || 'Some error occurred while retrieving Course.',
       });
     });
 };
 
 // Find a single Courses with an id
 exports.findOne = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   Courses.findByPk(id)
     .then((data) => {
@@ -64,22 +65,22 @@ exports.findOne = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Courses with id=" + id,
+        message: `Error retrieving Courses with id=${id}`,
       });
     });
 };
 
 // Update a Courses by the id in the request
 exports.update = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   Courses.update(req.body, {
-    where: { id: id },
+    where: { id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Courses was updated successfully.",
+          message: 'Courses was updated successfully.',
         });
       } else {
         res.send({
@@ -89,22 +90,22 @@ exports.update = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating Courses with id=" + id,
+        message: `Error updating Courses with id=${id}`,
       });
     });
 };
 
 // Delete a Courses with the specified id in the request
 exports.delete = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   Courses.destroy({
-    where: { id: id },
+    where: { id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Courses was deleted successfully!",
+          message: 'Courses was deleted successfully!',
         });
       } else {
         res.send({
@@ -114,7 +115,7 @@ exports.delete = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Courses with id=" + id,
+        message: `Could not delete Courses with id=${id}`,
       });
     });
 };
@@ -131,22 +132,22 @@ exports.deleteAll = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while removing all Coursess.",
+          err.message || 'Some error occurred while removing all Coursess.',
       });
     });
 };
 
 // Find all Courses with a specific academic_year_id
 exports.findAllByAcademicYear = (req, res) => {
-  const academic_year_id = req.params.academic_year_id;
+  const { academic_year_id } = req.params;
 
-  Courses.findAll({ where: { academic_year_id: academic_year_id } })
+  Courses.findAll({ where: { academic_year_id } })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Courses.",
+        message: err.message || 'Some error occurred while retrieving Courses.',
       });
     });
 };

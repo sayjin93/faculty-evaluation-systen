@@ -1,4 +1,5 @@
-const db = require("../models");
+const db = require('../models');
+
 const AcademicYears = db.academic_years;
 
 // Create and Save a new Academic Year
@@ -6,7 +7,7 @@ exports.create = (req, res) => {
   // Validate request
   if (!req.body.year) {
     res.status(400).send({
-      message: "Content can not be empty!",
+      message: 'Content can not be empty!',
     });
     return;
   }
@@ -25,8 +26,8 @@ exports.create = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message ||
-          "Some error occurred while creating the Academic Year.",
+          err.message
+          || 'Some error occurred while creating the Academic Year.',
       });
     });
 };
@@ -40,7 +41,7 @@ exports.findAll = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving Academic Years.",
+          err.message || 'Some error occurred while retrieving Academic Years.',
       });
     });
 };
@@ -54,14 +55,14 @@ exports.findActiveOne = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving active Academic Years.",
+          err.message || 'Some error occurred while retrieving active Academic Years.',
       });
     });
 };
 
 // Find a single Academic Year with an id
 exports.findOne = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   AcademicYears.findByPk(id)
     .then((data) => {
@@ -75,22 +76,22 @@ exports.findOne = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Academic Year with id=" + id,
+        message: `Error retrieving Academic Year with id=${id}`,
       });
     });
 };
 
 // Update a Academic Year by the id in the request
 exports.update = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   AcademicYears.update(req.body, {
-    where: { id: id },
+    where: { id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Academic Year was updated successfully.",
+          message: 'Academic Year was updated successfully.',
         });
       } else {
         res.send({
@@ -100,22 +101,22 @@ exports.update = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating Academic Year with id=" + id,
+        message: `Error updating Academic Year with id=${id}`,
       });
     });
 };
 
 // Delete a Academic Year with the specified id in the request
 exports.delete = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   AcademicYears.destroy({
-    where: { id: id },
+    where: { id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Academic Year was deleted successfully!",
+          message: 'Academic Year was deleted successfully!',
         });
       } else {
         res.send({
@@ -125,7 +126,7 @@ exports.delete = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Academic Year with id=" + id,
+        message: `Could not delete Academic Year with id=${id}`,
       });
     });
 };
@@ -144,8 +145,8 @@ exports.deleteAll = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message ||
-          "Some error occurred while removing all Academic Years.",
+          err.message
+          || 'Some error occurred while removing all Academic Years.',
       });
     });
 };
@@ -157,7 +158,7 @@ exports.updateActiveStatus = (req, res) => {
   // Set the active property to false for all rows except the specified id
   AcademicYears.update(
     { active: false },
-    { where: { id: { [db.Sequelize.Op.ne]: activeId } } }
+    { where: { id: { [db.Sequelize.Op.ne]: activeId } } },
   )
     .then((num) => {
       if (num > 0) {
@@ -165,24 +166,24 @@ exports.updateActiveStatus = (req, res) => {
         AcademicYears.update({ active: true }, { where: { id: activeId } })
           .then(() => {
             res.send({
-              message: "Academic Year active status updated successfully.",
+              message: 'Academic Year active status updated successfully.',
             });
           })
           .catch((err) => {
             res.status(500).send({
-              message: "Error updating Academic Year active status.",
+              message: 'Error updating Academic Year active status.',
             });
           });
       } else {
         res.send({
           message:
-            "No Academic Years found to update the active status. Make sure the specified id exists.",
+            'No Academic Years found to update the active status. Make sure the specified id exists.',
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating Academic Year active status.",
+        message: 'Error updating Academic Year active status.',
       });
     });
 };
