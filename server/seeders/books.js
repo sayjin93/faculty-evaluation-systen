@@ -74,7 +74,7 @@ async function seed() {
     },
   ];
 
-  for (const book of booksData) {
+  const promises = booksData.map(async (book) => {
     const defaultBooksData = {
       ...book,
       createdAt: new Date(),
@@ -89,7 +89,9 @@ async function seed() {
       },
       defaults: defaultBooksData,
     });
-  }
+  });
+
+  await Promise.all(promises);
 }
 
 module.exports = seed;

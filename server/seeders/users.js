@@ -28,7 +28,7 @@ async function seed() {
     },
   ];
 
-  for (const user of usersData) {
+  const promises = usersData.map(async (user) => {
     const defaultUserData = {
       ...user,
       createdAt: new Date(),
@@ -39,7 +39,9 @@ async function seed() {
       where: { username: user.username },
       defaults: defaultUserData,
     });
-  }
+  });
+
+  await Promise.all(promises);
 }
 
 module.exports = seed;

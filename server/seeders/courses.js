@@ -94,7 +94,7 @@ async function seed() {
     },
   ];
 
-  for (const course of coursesData) {
+  const promises = coursesData.map(async (course) => {
     const defaultCourseData = {
       ...course,
       createdAt: new Date(),
@@ -110,7 +110,9 @@ async function seed() {
       },
       defaults: defaultCourseData,
     });
-  }
+  });
+
+  await Promise.all(promises);
 }
 
 module.exports = seed;

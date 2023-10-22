@@ -54,7 +54,7 @@ async function seed() {
     },
   ];
 
-  for (const professor of professorsData) {
+  const promises = professorsData.map(async (professor) => {
     const defaultProfessorData = {
       ...professor,
       createdAt: new Date(),
@@ -68,7 +68,9 @@ async function seed() {
       },
       defaults: defaultProfessorData,
     });
-  }
+  });
+
+  await Promise.all(promises);
 }
 
 module.exports = seed;

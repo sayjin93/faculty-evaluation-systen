@@ -94,7 +94,7 @@ async function seed() {
     },
   ];
 
-  for (const conference of conferencesData) {
+  const promises = conferencesData.map(async (conference) => {
     const defaultConferencesData = {
       ...conference,
       createdAt: new Date(),
@@ -109,7 +109,9 @@ async function seed() {
       },
       defaults: defaultConferencesData,
     });
-  }
+  });
+
+  await Promise.all(promises);
 }
 
 module.exports = seed;

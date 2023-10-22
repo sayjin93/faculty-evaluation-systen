@@ -84,7 +84,7 @@ async function seed() {
     },
   ];
 
-  for (const community of communitiesData) {
+  const promises = communitiesData.map(async (community) => {
     const defaultCommunitiesData = {
       ...community,
       createdAt: new Date(),
@@ -99,7 +99,9 @@ async function seed() {
       },
       defaults: defaultCommunitiesData,
     });
-  }
+  });
+
+  await Promise.all(promises);
 }
 
 module.exports = seed;

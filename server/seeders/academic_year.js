@@ -12,7 +12,7 @@ async function seed() {
     },
   ];
 
-  for (const academicYear of academicYearsData) {
+  const promises = academicYearsData.map(async (academicYear) => {
     const defaultAcademicYearData = {
       ...academicYear,
       createdAt: new Date(),
@@ -23,7 +23,9 @@ async function seed() {
       where: { year: academicYear.year },
       defaults: defaultAcademicYearData,
     });
-  }
+  });
+
+  await Promise.all(promises);
 }
 
 module.exports = seed;

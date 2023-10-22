@@ -74,7 +74,7 @@ async function seed() {
     },
   ];
 
-  for (const paper of papersData) {
+  const promises = papersData.map(async (paper) => {
     const defaultPapersData = {
       ...paper,
       createdAt: new Date(),
@@ -89,7 +89,9 @@ async function seed() {
       },
       defaults: defaultPapersData,
     });
-  }
+  });
+
+  await Promise.all(promises);
 }
 
 module.exports = seed;
