@@ -4,7 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "dev": "nodemon app.js",
+    "lint": "eslint --fix auth controllers database models routes seeders app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -15,9 +17,18 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.6.1",
-    "nodemon": "^3.0.1",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.6.2",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
     "sequelize": "^6.33.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.42.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "nodemon": "^3.0.1"
   }
 }
