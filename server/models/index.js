@@ -35,10 +35,11 @@ const modelNames = [
   'professors',
   'users',
 ];
-for (const modelName of modelNames) {
+
+modelNames.forEach((modelName) => {
   const modelDefiner = require(`./${modelName}.js`);
   db[modelName] = modelDefiner(sequelize, Sequelize);
-}
+});
 
 // Setting up associations between models using foreign key constraints
 db.books.belongsTo(db.professors, { foreignKey: 'professor_id' });
