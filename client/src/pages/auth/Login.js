@@ -25,7 +25,6 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser, cifAl, cifGb } from "@coreui/icons";
-import axios from "axios";
 import api from "src/hooks/api";
 
 const LoginPage = () => {
@@ -60,50 +59,46 @@ const LoginPage = () => {
     });
   };
 
+  //Fetch user data axios function
+  const fetchUserData = async () => {
+    await api
+      .get(`users/username/${formData.username}`)
+      .then((response) => {
+        if (response.data) {
+          const loggedUser = {
+            id: response.data[0].id,
+            first_name: response.data[0].first_name,
+            last_name: response.data[0].last_name,
+            username: response.data[0].username,
+            email: response.data[0].email,
+          };
+          dispatch(setUser(loggedUser));
+        }
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    axios
-      .post(process.env.REACT_APP_API_URL + "/users/login", {
+    api
+      .post("users/login", {
         username: formData.username,
         password: formData.password,
-      }, {
-        headers: {
-          "Content-Type": "application/json"
-        }
       })
-      .then((response) => {
+      .then(async (response) => {
         if (response.data) {
           // Set the JWT token to the Local Storage
           localStorage.setItem("jwt_token", response.data);
 
+          //Fetch user data function call
+          await fetchUserData();
+
           // Navigate to Dashboard
           navigate("/", { replace: true });
-
-          //Fetch user data axios function
-          const fetchUserData = async () => {
-            await api
-              .get(`users/username/${formData.username}`)
-              .then((response) => {
-                if (response.data) {
-                  const loggedUser = {
-                    id: response.data[0].id,
-                    first_name: response.data[0].first_name,
-                    last_name: response.data[0].last_name,
-                    username: response.data[0].username,
-                    email: response.data[0].email,
-                  };
-                  dispatch(setUser(loggedUser));
-                }
-              })
-              .catch((error) => {
-                handleError(error);
-              });
-          };
-
-          //Fetch user data function call
-          fetchUserData();
         }
       })
       .catch((error) => {
