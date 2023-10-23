@@ -3,9 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast, changeAcademicYear } from "src/store";
+import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
-
-import axios from "axios";
 import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
 
 const SelectBoxAcademicYear = ({ className = "" }) => {
@@ -38,7 +37,7 @@ const SelectBoxAcademicYear = ({ className = "" }) => {
   const updateActiveStatus = async (item) => {
     const { id, year } = item;
 
-    await axios
+    await api
       .put("academic-year/active/" + id)
       .then((response) => {
         dispatch(
@@ -62,7 +61,7 @@ const SelectBoxAcademicYear = ({ className = "" }) => {
   //#region useEffect
   useEffect(() => {
     const fetchAcademicYears = async () => {
-      await axios
+      await api
         .get("academic-year")
         .then((response) => {
           setAcademicYear(response.data);

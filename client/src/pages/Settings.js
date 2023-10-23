@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 
 import { setCookie } from "src/hooks";
 import useErrorHandler from "src/hooks/useErrorHandler";
+import api from "src/hooks/api";
 
 import { getActiveAcademicYear, getModal } from "../store/selectors/selectors";
 import { setModal, showToast, changeAcademicYear } from "src/store";
 
-import axios from "axios";
 import {
   CContainer,
   CHeader,
@@ -58,7 +58,7 @@ const Settings = () => {
     });
   };
   const addAcademicYear = async () => {
-    await axios
+    await api
       .post("academic-year", {
         year: newAcademicYear,
         active: false,
@@ -85,7 +85,7 @@ const Settings = () => {
   const updateActiveStatus = async (item) => {
     const { id, year } = item;
 
-    await axios
+    await api
       .put("academic-year/active/" + id)
       .then((response) => {
         dispatch(
@@ -109,7 +109,7 @@ const Settings = () => {
   //#region useEffect
   useEffect(() => {
     const fetchAcademicYears = async () => {
-      await axios
+      await api
         .get("academic-year")
         .then((response) => {
           setAcademicYear(response.data);

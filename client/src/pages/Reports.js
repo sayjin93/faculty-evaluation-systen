@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import api from "src/hooks/api";
+
 import {
   CButton,
   CCard,
@@ -237,7 +238,7 @@ const Reports = () => {
   //#region useEffect
   useEffect(() => {
     const fetchReports = async () => {
-      await axios
+      await api
         .get(
           `reports/academic_year/${academicYear.id}/professor/${selectedProfessor}`
         )

@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import { getModal, getLoggedUser } from "../store/selectors/selectors";
 import { setModal, showToast, setUser } from "src/store";
+import api from "src/hooks/api";
 
-import axios from "axios";
 import {
   CForm,
   CFormInput,
@@ -57,7 +57,7 @@ const Settings = () => {
     event.stopPropagation();
 
     if (userData.newPassword === userData.repeatPassword) {
-      axios
+      api
         .put("users/" + currentUser.id, {
           firstName: userData.firstName,
           lastName: userData.lastName,

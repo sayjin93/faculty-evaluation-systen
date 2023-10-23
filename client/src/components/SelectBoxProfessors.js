@@ -10,8 +10,8 @@ import {
 import { setProfessors, setSelectedProfessor } from "../store";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
-import axios from "axios";
 import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
+import api from "src/hooks/api";
 
 const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
   //#region constants
@@ -32,7 +32,7 @@ const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
   //#region useEffect
   useEffect(() => {
     const fetchProfessors = async () => {
-      await axios
+      await api
         .get("professors")
         .then((response) => {
           //set list of professors on redux state

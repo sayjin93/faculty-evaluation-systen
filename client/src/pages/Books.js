@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
-
 import {
   CButton,
   CButtonGroup,
@@ -30,7 +28,7 @@ import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import { convertDateFormat, formatDateFromSQL } from "src/hooks";
 import TableHeader from "src/hooks/tableHeader";
 import useErrorHandler from "src/hooks/useErrorHandler";
-
+import api from "src/hooks/api";
 import {
   getAcademicYearId,
   getProfessors,
@@ -79,7 +77,7 @@ const Books = () => {
 
   //#region functions
   const addBook = async () => {
-    await axios
+    await api
       .post("books", {
         title: formData.title,
         publication_house: formData.publicationHouse,
@@ -109,7 +107,7 @@ const Books = () => {
       });
   };
   const editBook = async (id) => {
-    await axios
+    await api
       .put("books/" + id, {
         title: formData.title,
         publication_house: formData.publicationHouse,
@@ -137,7 +135,7 @@ const Books = () => {
       });
   };
   const deleteBook = async (id) => {
-    await axios
+    await api
       .delete("books/" + id)
       .then((response) => {
         setStatus(response);
@@ -266,7 +264,7 @@ const Books = () => {
   //#region useEffect
   useEffect(() => {
     const fetchBooks = async () => {
-      await axios
+      await api
         .get(`books/academic_year/${academicYearId}`)
         .then((response) => {
           setItems(response.data);
@@ -281,7 +279,7 @@ const Books = () => {
 
   useEffect(() => {
     const fetchOneBook = async (id) => {
-      await axios
+      await api
         .get("books/" + id)
         .then((response) => {
           setFormData({

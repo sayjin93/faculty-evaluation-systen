@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import useErrorHandler from "src/hooks/useErrorHandler";
-
-import axios from "axios";
+import api from "src/hooks/api";
 
 import {
   CButton,
@@ -81,7 +80,7 @@ const Papers = () => {
 
   //#region functions
   const addPaper = async () => {
-    await axios
+    await api
       .post("papers", {
         title: formData.title,
         journal: formData.journal,
@@ -111,7 +110,7 @@ const Papers = () => {
       });
   };
   const editPaper = async (id) => {
-    await axios
+    await api
       .put("papers/" + id, {
         title: formData.title,
         journal: formData.journal,
@@ -138,7 +137,7 @@ const Papers = () => {
       });
   };
   const deletePaper = async (id) => {
-    await axios
+    await api
       .delete("papers/" + id)
       .then((response) => {
         setStatus(response);
@@ -267,7 +266,7 @@ const Papers = () => {
   //#region useEffect
   useEffect(() => {
     const fetchPapers = async () => {
-      await axios
+      await api
         .get(`papers/academic_year/${academicYearId}`)
         .then((response) => {
           setItems(response.data);
@@ -282,7 +281,7 @@ const Papers = () => {
 
   useEffect(() => {
     const fetchOnePaper = async (id) => {
-      await axios
+      await api
         .get("papers/" + id)
         .then((response) => {
           setFormData({

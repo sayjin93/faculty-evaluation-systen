@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
-
 import {
   CButton,
   CCard,
@@ -19,6 +17,7 @@ import { useTranslation } from "react-i18next";
 
 import { useDispatch } from "react-redux";
 import { showToast } from "src/store";
+import api from "src/hooks/api";
 
 const AcademicYearAdd = () => {
   //#region constants
@@ -33,7 +32,7 @@ const AcademicYearAdd = () => {
   //#region functions
 
   const addAcademicYear = async () => {
-    await axios
+    await api
       .post("academic-year", {
         year: newAcademicYear,
         active: 1,

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import useErrorHandler from "src/hooks/useErrorHandler";
-
-import axios from "axios";
+import api from "src/hooks/api";
 
 import {
   CButton,
@@ -81,7 +80,7 @@ const Courses = () => {
 
   //#region functions
   const addCourse = async () => {
-    await axios
+    await api
       .post("courses", {
         name: formData.courseName,
         number: formData.courseNumber,
@@ -113,7 +112,7 @@ const Courses = () => {
       });
   };
   const editCourse = async (id) => {
-    await axios
+    await api
       .put("courses/" + id, {
         name: formData.courseName,
         number: formData.courseNumber,
@@ -143,7 +142,7 @@ const Courses = () => {
       });
   };
   const deleteCourse = async (id) => {
-    await axios
+    await api
       .delete("courses/" + id)
       .then((response) => {
         setStatus(response);
@@ -272,7 +271,7 @@ const Courses = () => {
   //#region useEffect
   useEffect(() => {
     const fetchCourses = async () => {
-      await axios
+      await api
         .get(`courses/academic_year/${academicYearId}`)
         .then((response) => {
           setItems(response.data);
@@ -287,7 +286,7 @@ const Courses = () => {
 
   useEffect(() => {
     const fetchOneCourse = async (id) => {
-      await axios
+      await api
         .get("courses/" + id)
         .then((response) => {
           setFormData({

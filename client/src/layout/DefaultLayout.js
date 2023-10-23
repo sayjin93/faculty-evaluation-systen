@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
 //components
@@ -11,6 +10,9 @@ import AppFooter from "./components/AppFooter";
 import AcademicYearAdd from "./AcademicYearAdd";
 
 import { changeAcademicYear } from "../store";
+
+import api from "../hooks/api";
+
 
 const Layout = () => {
   //#region constants
@@ -25,13 +27,8 @@ const Layout = () => {
   //#region useEffect
   useEffect(() => {
     const fetchAcademicYears = async () => {
-      await axios
-        .get("academic-year/active", {
-          headers: {
-            Authorization: localStorage.getItem("jwt_token"),
-            "Content-Type": "application/json",
-          },
-        })
+      await api
+        .get("academic-year/active")
         .then((response) => {
           const data = response.data;
           if (data.length > 0) {

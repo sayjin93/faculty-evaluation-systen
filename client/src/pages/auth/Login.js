@@ -25,7 +25,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser, cifAl, cifGb } from "@coreui/icons";
-import axios from "axios";
+import api from "src/hooks/api";
 
 const LoginPage = () => {
   //#region constants
@@ -63,10 +63,7 @@ const LoginPage = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    // Clear the JWT token from the Local Storage
-    localStorage.removeItem("jwt_token");
-
-    axios
+    api
       .post("users/login", {
         username: formData.username,
         password: formData.password,
@@ -83,7 +80,7 @@ const LoginPage = () => {
 
           //Fetch user data axios function
           const fetchUserData = async () => {
-            await axios
+            await api
               .get(`users/username/${formData.username}`)
               .then((response) => {
                 if (response.data) {

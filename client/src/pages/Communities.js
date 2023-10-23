@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
-import axios from "axios";
+import api from "src/hooks/api";
 
 import {
   CButton,
@@ -82,7 +82,7 @@ const Communities = () => {
 
   //#region functions
   const addCommunity = async () => {
-    await axios
+    await api
       .post("community-service", {
         event: formData.event,
         date: formData.date,
@@ -116,7 +116,7 @@ const Communities = () => {
       });
   };
   const editCommunity = async (id) => {
-    await axios
+    await api
       .put("community-service/" + id, {
         event: formData.event,
         date: formData.date,
@@ -145,7 +145,7 @@ const Communities = () => {
       });
   };
   const deleteCommunity = async (id) => {
-    await axios
+    await api
       .delete("community-service/" + id)
       .then((response) => {
         setStatus(response);
@@ -286,7 +286,7 @@ const Communities = () => {
   //#region useEffect
   useEffect(() => {
     const fetchCommunity = async () => {
-      await axios
+      await api
         .get(`community-service/academic_year/${academicYearId}`)
         .then((response) => {
           setItems(response.data);
@@ -301,7 +301,7 @@ const Communities = () => {
 
   useEffect(() => {
     const fetchOneCommunity = async (id) => {
-      await axios
+      await api
         .get("community-service/" + id)
         .then((response) => {
           setFormData({

@@ -11,7 +11,6 @@ import {
 import { showToast, setFirstLogin } from "../store";
 import { convertDateFormat, countOccurrences } from "../hooks";
 
-import axios from "axios";
 import WidgetsDropdown from "../widgets/WidgetsDropdown";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
@@ -32,6 +31,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen } from "@coreui/icons";
+import api from "src/hooks/api";
 
 const Home = () => {
   //#region constants
@@ -128,13 +128,8 @@ const Home = () => {
   //#region useEffect
   useEffect(() => {
     const fetchDashboard = async () => {
-      await axios
-        .get("dashboard", {
-          headers: {
-            "Authorization": localStorage.getItem("jwt_token"),
-            "Content-Type": "application/json",
-          },
-        })
+      await api
+        .get("dashboard")
         .then((response) => {
           setItems(response.data);
         })

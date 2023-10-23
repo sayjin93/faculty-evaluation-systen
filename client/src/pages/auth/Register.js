@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "src/hooks/api";
 
 import {
   CButton,
@@ -57,7 +57,7 @@ const Register = () => {
       );
     } else {
       // Send a POST request to the '/api/users' endpoint with the user data
-      await axios
+      await api
         .post("users", {
           username: user.username,
           email: user.email,

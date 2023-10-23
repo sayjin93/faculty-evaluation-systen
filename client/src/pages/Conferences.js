@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
+import api from "src/hooks/api";
 
 import { convertDateFormat } from "src/hooks";
 import TableHeader from "src/hooks/tableHeader";
@@ -79,7 +79,7 @@ const Conferences = () => {
 
   //#region functions
   const addConference = async () => {
-    await axios
+    await api
       .post("conferences", {
         name: formData.name,
         location: formData.location,
@@ -111,7 +111,7 @@ const Conferences = () => {
       });
   };
   const editConference = async (id) => {
-    await axios
+    await api
       .put("conferences/" + id, {
         name: formData.name,
         location: formData.location,
@@ -140,7 +140,7 @@ const Conferences = () => {
       });
   };
   const deleteConference = async (id) => {
-    await axios
+    await api
       .delete("conferences/" + id)
       .then((response) => {
         setStatus(response);
@@ -268,7 +268,7 @@ const Conferences = () => {
   //#region useEffect
   useEffect(() => {
     const fetchConferences = async () => {
-      await axios
+      await api
         .get(`conferences/academic_year/${academicYearId}`)
         .then((response) => {
           setItems(response.data);
@@ -283,7 +283,7 @@ const Conferences = () => {
 
   useEffect(() => {
     const fefetchOneConference = async (id) => {
-      await axios
+      await api
         .get("conferences/" + id)
         .then((response) => {
           setFormData({

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import useErrorHandler from "src/hooks/useErrorHandler";
-
-import axios from "axios";
+import api from "src/hooks/api";
 
 import {
   CButton,
@@ -58,7 +57,7 @@ const Professors = () => {
 
   //#region functions
   const addProfessor = async () => {
-    await axios
+    await api
       .post("professors", {
         firstname: formData.firstname,
         lastname: formData.lastname,
@@ -93,7 +92,7 @@ const Professors = () => {
       });
   };
   const editProfessor = async (id) => {
-    await axios
+    await api
       .put("professors/" + id, {
         firstname: formData.firstname,
         lastname: formData.lastname,
@@ -119,7 +118,7 @@ const Professors = () => {
       });
   };
   const deleteProfessor = async (id) => {
-    await axios
+    await api
       .delete("professors/" + id)
       .then((response) => {
         setStatus(response);
@@ -244,7 +243,7 @@ const Professors = () => {
   //#region useEffect
   useEffect(() => {
     const fetchProfessors = async () => {
-      await axios
+      await api
         .get("professors")
         .then((response) => {
           setItems(response.data);
@@ -259,7 +258,7 @@ const Professors = () => {
 
   useEffect(() => {
     const fetchOneProfessor = async (id) => {
-      await axios
+      await api
         .get("professors/" + id)
         .then((response) => {
           setFormData({
