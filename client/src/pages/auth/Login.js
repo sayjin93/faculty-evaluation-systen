@@ -25,6 +25,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser, cifAl, cifGb } from "@coreui/icons";
+import axios from "axios";
 import api from "src/hooks/api";
 
 const LoginPage = () => {
@@ -63,15 +64,17 @@ const LoginPage = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    api
-      .post("users/login", {
+    axios
+      .post(process.env.REACT_APP_API_URL + "/users/login", {
         username: formData.username,
         password: formData.password,
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }
       })
       .then((response) => {
         if (response.data) {
-          // console.log(atob(response.data.split(".")[1]));
-
           // Set the JWT token to the Local Storage
           localStorage.setItem("jwt_token", response.data);
 

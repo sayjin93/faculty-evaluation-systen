@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import api from "src/hooks/api";
+import axios from "axios";
 
 import {
   CButton,
@@ -57,11 +57,15 @@ const Register = () => {
       );
     } else {
       // Send a POST request to the '/api/users' endpoint with the user data
-      await api
+      await axios
         .post("users", {
           username: user.username,
           email: user.email,
           password: user.password,
+        }, {
+          headers: {
+            "Content-Type": "application/json"
+          }
         })
         .then((response) => {
           // Handle the success response
