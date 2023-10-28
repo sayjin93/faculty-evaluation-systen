@@ -85,16 +85,27 @@ const LoginPage = () => {
         navigate("/", { replace: true });
       })
       .catch((error) => {
-        const { data, status } = error.response;
+        if (error.response) {
+          const { data, status } = error.response;
 
-        dispatch(
-          showToast({
-            type: "danger",
-            content: status !== 500 ? t(convertToKey(data.message)) : data.message,
-          })
-        );
+          dispatch(
+            showToast({
+              type: "danger",
+              content: status !== 500 ? t(convertToKey(data.message)) : data.message,
+            })
+          );
 
-      });
+        }
+        else {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error.message,
+            })
+          );
+
+        }
+      })
   };
   //#endregion
 

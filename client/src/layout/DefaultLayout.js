@@ -26,6 +26,7 @@ const Layout = () => {
 
   //#region states
   const [isLoading, setIsLoading] = useState(true);
+  //#endregion
 
   //#region useEffect
   useEffect(() => {
