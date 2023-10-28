@@ -1,5 +1,3 @@
-// store/selectors/selectors.js
-
 import { createSelector } from 'reselect';
 
 const selectSettings = (state) => state.settings;
@@ -13,9 +11,9 @@ export const getAcademicYear = createSelector(
 );
 
 export const getActiveAcademicYear = createSelector(
-    [selectSettings],
-    (settings) => settings.academicYear.year
-  );
+  [selectSettings],
+  (settings) => settings.academicYear.year
+);
 
 export const getAcademicYearId = createSelector(
   [selectSettings],

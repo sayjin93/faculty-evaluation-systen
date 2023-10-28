@@ -30,7 +30,7 @@ import {
   CTableRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilPen } from "@coreui/icons";
+import { cilSettings } from "@coreui/icons";
 import api from "src/hooks/api";
 
 const Home = () => {
@@ -129,7 +129,7 @@ const Home = () => {
   useEffect(() => {
     const fetchDashboard = async () => {
       await api
-        .get("dashboard")
+        .get("/report/dashboard")
         .then((response) => {
           setItems(response.data);
         })
@@ -176,7 +176,7 @@ const Home = () => {
                 className="float-end"
                 onClick={() => navigate("/settings")}
               >
-                <CIcon icon={cilPen} />
+                <CIcon icon={cilSettings} />
               </CButton>
             </CCol>
           </CRow>

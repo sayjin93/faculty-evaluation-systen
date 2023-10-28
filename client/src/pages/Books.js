@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+
+//coreUI
 import {
   CButton,
   CButtonGroup,
@@ -23,20 +25,24 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
-import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 
-import { convertDateFormat, formatDateFromSQL } from "src/hooks";
+//hooks
+import api from "src/hooks/api";
 import TableHeader from "src/hooks/tableHeader";
 import useErrorHandler from "src/hooks/useErrorHandler";
-import api from "src/hooks/api";
+import { convertDateFormat, convertToKey, formatDateFromSQL } from "src/hooks";
+
+//store
+import { setModal, showToast } from "../store";
 import {
   getAcademicYearId,
   getProfessors,
   getSelectedProfessor,
   getModal,
 } from "../store/selectors/selectors";
-import { setModal, showToast } from "../store";
 
+//components
+import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import "flatpickr/dist/themes/airbnb.css";
 import Flatpickr from "react-flatpickr";
 
@@ -76,9 +82,41 @@ const Books = () => {
   //#endregion
 
   //#region functions
+  const fetchBooks = async () => {
+    await api
+      .get(`/book/academic_year/${academicYearId}`)
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+  const fetchOneBook = async (id) => {
+    await api
+      .get("/book/" + id)
+      .then((response) => {
+        setFormData({
+          ...formData,
+          title: response.data.title,
+          publicationHouse: response.data.publication_house,
+          publicationYear: response.data.publication_year,
+          professor: response.data.professor_id,
+        });
+        dispatch(setModal(true));
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
   const addBook = async () => {
     await api
-      .post("books", {
+      .post("/book", {
         title: formData.title,
         publication_house: formData.publicationHouse,
         publication_year: formData.publicationYear,
@@ -89,11 +127,11 @@ const Books = () => {
         setStatus(response);
         setValidated(false);
 
-        const title = response.data.title;
+        const bookName = response.data.title;
         dispatch(
           showToast({
             type: "success",
-            content: "Book with title " + title + " was added successful!",
+            content: t("Book") + " " + bookName + " " + t("WasAddedSuccessfully"),
           })
         );
       })
@@ -108,7 +146,7 @@ const Books = () => {
   };
   const editBook = async (id) => {
     await api
-      .put("books/" + id, {
+      .put("/book/" + id, {
         title: formData.title,
         publication_house: formData.publicationHouse,
         publication_year: formData.publicationYear,
@@ -121,7 +159,7 @@ const Books = () => {
         dispatch(
           showToast({
             type: "success",
-            content: "Book with id " + id + " edited successful!",
+            content: t(convertToKey(response.data.message)),
           })
         );
       })
@@ -136,24 +174,34 @@ const Books = () => {
   };
   const deleteBook = async (id) => {
     await api
-      .delete("books/" + id)
+      .delete("/book/" + id)
       .then((response) => {
         setStatus(response);
 
         dispatch(
           showToast({
             type: "success",
-            content: "Book with id " + id + " deleted successful!",
+            content: t("BookWithId") + " " + id + " " + t("DeletedSuccessfully"),
           })
         );
       })
       .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        if (error.response && error.response.status === 409) {
+          dispatch(
+            showToast({
+              type: "danger",
+              content:
+                t("CannotDeleteItDueToForeignKeyConstraint")
+            })
+          );
+        } else {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error,
+            })
+          );
+        }
       });
   };
 
@@ -258,49 +306,14 @@ const Books = () => {
       );
     }
   };
-
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    const fetchBooks = async () => {
-      await api
-        .get(`books/academic_year/${academicYearId}`)
-        .then((response) => {
-          setItems(response.data);
-        })
-        .catch((error) => {
-          handleError(error);
-        });
-    };
-
     fetchBooks();
   }, [status]);
 
   useEffect(() => {
-    const fetchOneBook = async (id) => {
-      await api
-        .get("books/" + id)
-        .then((response) => {
-          setFormData({
-            ...formData,
-            title: response.data.title,
-            publicationHouse: response.data.publication_house,
-            publicationYear: response.data.publication_year,
-            professor: response.data.professor_id,
-          });
-          dispatch(setModal(true));
-        })
-        .catch((error) => {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: error,
-            })
-          );
-        });
-    };
-
     if (modalOptions.editMode) fetchOneBook(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion

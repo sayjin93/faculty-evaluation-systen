@@ -1,21 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import api from "src/hooks/api";
 
-import { convertDateFormat } from "src/hooks";
-import TableHeader from "src/hooks/tableHeader";
-import useErrorHandler from "src/hooks/useErrorHandler";
-import SelectBoxProfessors from "src/components/SelectBoxProfessors";
-
-import {
-  getAcademicYearId,
-  getProfessors,
-  getSelectedProfessor,
-  getModal,
-} from "../store/selectors/selectors";
-import { setModal, showToast } from "../store";
-
+//coreUI
 import {
   CButton,
   CButtonGroup,
@@ -38,6 +25,25 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
+
+//hooks
+import api from "src/hooks/api";
+import TableHeader from "src/hooks/tableHeader";
+import useErrorHandler from "src/hooks/useErrorHandler";
+import { convertDateFormat, convertToKey } from "src/hooks";
+
+//store
+import { setModal, showToast } from "../store";
+import {
+  getAcademicYearId,
+  getProfessors,
+  getSelectedProfessor,
+  getModal,
+} from "../store/selectors/selectors";
+
+//components
+import SelectBoxProfessors from "src/components/SelectBoxProfessors";
+
 
 const Conferences = () => {
   //#region constants
@@ -78,9 +84,43 @@ const Conferences = () => {
   //#endregion
 
   //#region functions
+  const fetchConferences = async () => {
+    await api
+      .get(`/conference/academic_year/${academicYearId}`)
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+  const fefetchOneConference = async (id) => {
+    await api
+      .get("/conference/" + id)
+      .then((response) => {
+        setFormData({
+          ...formData,
+          name: response.data.name,
+          location: response.data.location,
+          presentTitle: response.data.present_title,
+          authors: response.data.authors,
+          dates: response.data.dates,
+          professor: response.data.professor_id,
+        });
+        dispatch(setModal(true));
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
   const addConference = async () => {
     await api
-      .post("conferences", {
+      .post("/conference", {
         name: formData.name,
         location: formData.location,
         present_title: formData.presentTitle,
@@ -93,11 +133,11 @@ const Conferences = () => {
         setStatus(response);
         setValidated(false);
 
-        const name = response.data.name;
+        const conferenceName = response.data.name;
         dispatch(
           showToast({
             type: "success",
-            content: "Conference with name " + name + " was added successful!",
+            content: t("Conference") + " " + conferenceName + " " + t("WasAddedSuccessfully"),
           })
         );
       })
@@ -112,7 +152,7 @@ const Conferences = () => {
   };
   const editConference = async (id) => {
     await api
-      .put("conferences/" + id, {
+      .put("/conference/" + id, {
         name: formData.name,
         location: formData.location,
         present_title: formData.presentTitle,
@@ -126,7 +166,7 @@ const Conferences = () => {
         dispatch(
           showToast({
             type: "success",
-            content: "Conference with id " + id + " edited successful!",
+            content: t(convertToKey(response.data.message)),
           })
         );
       })
@@ -141,24 +181,34 @@ const Conferences = () => {
   };
   const deleteConference = async (id) => {
     await api
-      .delete("conferences/" + id)
+      .delete("/conference/" + id)
       .then((response) => {
         setStatus(response);
 
         dispatch(
           showToast({
             type: "success",
-            content: "Conference with id " + id + " deleted successful!",
+            content: t("ConferenceWithId") + " " + id + " " + t("DeletedSuccessfully"),
           })
         );
       })
       .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        if (error.response && error.response.status === 409) {
+          dispatch(
+            showToast({
+              type: "danger",
+              content:
+                t("CannotDeleteItDueToForeignKeyConstraint")
+            })
+          );
+        } else {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error,
+            })
+          );
+        }
       });
   };
 
@@ -262,51 +312,14 @@ const Conferences = () => {
       );
     }
   };
-
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    const fetchConferences = async () => {
-      await api
-        .get(`conferences/academic_year/${academicYearId}`)
-        .then((response) => {
-          setItems(response.data);
-        })
-        .catch((error) => {
-          handleError(error);
-        });
-    };
-
     fetchConferences();
   }, [status]);
 
   useEffect(() => {
-    const fefetchOneConference = async (id) => {
-      await api
-        .get("conferences/" + id)
-        .then((response) => {
-          setFormData({
-            ...formData,
-            name: response.data.name,
-            location: response.data.location,
-            presentTitle: response.data.present_title,
-            authors: response.data.authors,
-            dates: response.data.dates,
-            professor: response.data.professor_id,
-          });
-          dispatch(setModal(true));
-        })
-        .catch((error) => {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: error,
-            })
-          );
-        });
-    };
-
     if (modalOptions.editMode) fefetchOneConference(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion

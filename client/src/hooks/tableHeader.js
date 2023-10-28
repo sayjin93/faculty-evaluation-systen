@@ -2,19 +2,19 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { CTableHead, CTableHeaderCell, CTableRow } from "@coreui/react";
 
-function TableHeader({ items, timestamp = true, color = "light" }) {
+const fixTableHeaderName = (text) => {
+  // Replace underscores with spaces and capitalize the first letter of each word
+  const formattedName = text
+    .replace(/_/g, " ")
+    .replace(/(?:^|\s)\S/g, (a) => a.toUpperCase());
+
+  return formattedName;
+};
+
+const TableHeader = ({ items, timestamp = true, color = "light" }) => {
   const { t } = useTranslation();
 
-  const fixTableHeaderName = (text) => {
-    // Replace underscores with spaces and capitalize the first letter of each word
-    const formattedName = text
-      .replace(/_/g, " ")
-      .replace(/(?:^|\s)\S/g, (a) => a.toUpperCase());
-
-    return formattedName;
-  };
-
-  if (items.length > 0) {
+  if (items && items.length > 0) {
     const header = Object.keys(items[0]); // extract keys from the first object
 
     return (
@@ -73,8 +73,8 @@ function TableHeader({ items, timestamp = true, color = "light" }) {
                   element === "external"
                     ? "text-center"
                     : element === "id"
-                    ? "text-end"
-                    : "text-left"
+                      ? "text-end"
+                      : "text-left"
                 }
               >
                 {thead}

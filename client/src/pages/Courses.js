@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import useErrorHandler from "src/hooks/useErrorHandler";
-import api from "src/hooks/api";
 
+//coreUI
 import {
   CButton,
   CButtonGroup,
@@ -27,18 +26,23 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
-import { convertDateFormat } from "src/hooks";
+//hooks
+import api from "src/hooks/api";
+import TableHeader from "src/hooks/tableHeader";
+import useErrorHandler from "src/hooks/useErrorHandler";
+import { convertDateFormat, convertToKey } from "src/hooks";
 
+//store
+import { setModal, showToast } from "../store";
 import {
   getAcademicYearId,
   getProfessors,
   getSelectedProfessor,
   getModal,
 } from "../store/selectors/selectors";
-import { setModal, showToast } from "../store";
 
+//components
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
-import TableHeader from "src/hooks/tableHeader";
 
 const Courses = () => {
   //#region constants
@@ -79,9 +83,43 @@ const Courses = () => {
   //#endregion
 
   //#region functions
+  const fetchCourses = async () => {
+    await api
+      .get(`/course/academic_year/${academicYearId}`)
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+  const fetchOneCourse = async (id) => {
+    await api
+      .get("/course/" + id)
+      .then((response) => {
+        setFormData({
+          ...formData,
+          courseName: response.data.name,
+          courseNumber: response.data.number,
+          semester: response.data.semester,
+          weekHours: response.data.week_hours,
+          program: response.data.program,
+          professor: response.data.professor_id,
+        });
+        dispatch(setModal(true));
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
   const addCourse = async () => {
     await api
-      .post("courses", {
+      .post("/course", {
         name: formData.courseName,
         number: formData.courseNumber,
         semester: formData.semester,
@@ -98,7 +136,7 @@ const Courses = () => {
         dispatch(
           showToast({
             type: "success",
-            content: "Course " + courseName + " was added successful!",
+            content: t("Course") + " " + courseName + " " + t("WasAddedSuccessfully"),
           })
         );
       })
@@ -113,7 +151,7 @@ const Courses = () => {
   };
   const editCourse = async (id) => {
     await api
-      .put("courses/" + id, {
+      .put("/course/" + id, {
         name: formData.courseName,
         number: formData.courseNumber,
         semester: formData.semester,
@@ -128,7 +166,7 @@ const Courses = () => {
         dispatch(
           showToast({
             type: "success",
-            content: "Course with id " + id + " edited successful!",
+            content: t(convertToKey(response.data.message)),
           })
         );
       })
@@ -143,24 +181,34 @@ const Courses = () => {
   };
   const deleteCourse = async (id) => {
     await api
-      .delete("courses/" + id)
+      .delete("/course/" + id)
       .then((response) => {
         setStatus(response);
 
         dispatch(
           showToast({
             type: "success",
-            content: "Course with id " + id + " deleted successful!",
+            content: t("CourseWithId") + " " + id + " " + t("DeletedSuccessfully"),
           })
         );
       })
       .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        if (error.response && error.response.status === 409) {
+          dispatch(
+            showToast({
+              type: "danger",
+              content:
+                t("CannotDeleteItDueToForeignKeyConstraint")
+            })
+          );
+        } else {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error,
+            })
+          );
+        }
       });
   };
 
@@ -270,45 +318,13 @@ const Courses = () => {
 
   //#region useEffect
   useEffect(() => {
-    const fetchCourses = async () => {
-      await api
-        .get(`courses/academic_year/${academicYearId}`)
-        .then((response) => {
-          setItems(response.data);
-        })
-        .catch((error) => {
-          handleError(error);
-        });
-    };
+
 
     fetchCourses();
   }, [status]);
 
   useEffect(() => {
-    const fetchOneCourse = async (id) => {
-      await api
-        .get("courses/" + id)
-        .then((response) => {
-          setFormData({
-            ...formData,
-            courseName: response.data.name,
-            courseNumber: response.data.number,
-            semester: response.data.semester,
-            weekHours: response.data.week_hours,
-            program: response.data.program,
-            professor: response.data.professor_id,
-          });
-          dispatch(setModal(true));
-        })
-        .catch((error) => {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: error,
-            })
-          );
-        });
-    };
+
 
     if (modalOptions.editMode) fetchOneCourse(modalOptions.selectedId);
   }, [modalOptions.editMode]);

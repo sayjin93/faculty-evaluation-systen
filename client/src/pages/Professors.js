@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import useErrorHandler from "src/hooks/useErrorHandler";
-import api from "src/hooks/api";
 
+//coreUI
 import {
   CButton,
   CButtonGroup,
@@ -27,11 +26,16 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
-import { convertDateFormat } from "src/hooks";
+//hooks
+import api from "src/hooks/api";
+import TableHeader from "src/hooks/tableHeader";
+import useErrorHandler from "src/hooks/useErrorHandler";
+import { convertDateFormat, convertToKey } from "src/hooks";
 
+//store
 import { getModal } from "../store/selectors/selectors";
 import { setModal, showToast } from "../store";
-import TableHeader from "src/hooks/tableHeader";
+
 
 const Professors = () => {
   //#region constants
@@ -56,9 +60,40 @@ const Professors = () => {
   //#endregion
 
   //#region functions
+  const fetchProfessors = async () => {
+    await api
+      .get("/professor")
+      .then((response) => {
+        setItems(response.data.data);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+  const fetchOneProfessor = async (id) => {
+    await api
+      .get("/professor/" + id)
+      .then((response) => {
+        setFormData({
+          ...formData,
+          firstname: response.data.first_name,
+          lastname: response.data.last_name,
+          gender: response.data.gender,
+        });
+        dispatch(setModal(true));
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
   const addProfessor = async () => {
     await api
-      .post("professors", {
+      .post("/professor", {
         firstname: formData.firstname,
         lastname: formData.lastname,
         gender: formData.gender,
@@ -74,11 +109,7 @@ const Professors = () => {
           showToast({
             type: "success",
             content:
-              "Professor " +
-              firstName +
-              " " +
-              lastName +
-              " was added successful!",
+              t("Professor") + " " + firstName + " " + lastName + " " + t("WasAddedSuccessfully"),
           })
         );
       })
@@ -93,7 +124,7 @@ const Professors = () => {
   };
   const editProfessor = async (id) => {
     await api
-      .put("professors/" + id, {
+      .put("/professor/" + id, {
         firstname: formData.firstname,
         lastname: formData.lastname,
         gender: formData.gender,
@@ -101,10 +132,11 @@ const Professors = () => {
       .then((response) => {
         setStatus(response);
         setValidated(false);
+
         dispatch(
           showToast({
             type: "success",
-            content: "Professor with id " + id + " edited successful!",
+            content: t(convertToKey(response.data.message)),
           })
         );
       })
@@ -119,13 +151,13 @@ const Professors = () => {
   };
   const deleteProfessor = async (id) => {
     await api
-      .delete("professors/" + id)
+      .delete("/professor/" + id)
       .then((response) => {
         setStatus(response);
         dispatch(
           showToast({
             type: "success",
-            content: "Professor with id " + id + " deleted successful!",
+            content: t("ProfessorWithId") + " " + id + " " + t("DeletedSuccessfully"),
           })
         );
       })
@@ -135,7 +167,7 @@ const Professors = () => {
             showToast({
               type: "danger",
               content:
-                "Cannot delete the professor because it has related records in another table.",
+                t("CannotDeleteItDueToForeignKeyConstraint")
             })
           );
         } else {
@@ -170,7 +202,7 @@ const Professors = () => {
   };
 
   const RenderTableBody = () => {
-    if (items.length > 0) {
+    if (items && items.length > 0) {
       return (
         <CTableBody>
           {items.map((element) => {
@@ -242,43 +274,10 @@ const Professors = () => {
 
   //#region useEffect
   useEffect(() => {
-    const fetchProfessors = async () => {
-      await api
-        .get("professors")
-        .then((response) => {
-          setItems(response.data);
-        })
-        .catch((error) => {
-          handleError(error);
-        });
-    };
-
     fetchProfessors();
   }, [status]);
 
   useEffect(() => {
-    const fetchOneProfessor = async (id) => {
-      await api
-        .get("professors/" + id)
-        .then((response) => {
-          setFormData({
-            ...formData,
-            firstname: response.data.first_name,
-            lastname: response.data.last_name,
-            gender: response.data.gender,
-          });
-          dispatch(setModal(true));
-        })
-        .catch((error) => {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: error,
-            })
-          );
-        });
-    };
-
     if (modalOptions.editMode) fetchOneProfessor(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion

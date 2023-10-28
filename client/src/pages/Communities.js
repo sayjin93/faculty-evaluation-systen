@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
-import SelectBoxProfessors from "src/components/SelectBoxProfessors";
-import api from "src/hooks/api";
-
+//coreUI
 import {
   CButton,
   CButtonGroup,
@@ -29,18 +27,23 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar, cilCheckAlt } from "@coreui/icons";
 
+//hooks
+import api from "src/hooks/api";
+import TableHeader from "src/hooks/tableHeader";
+import useErrorHandler from "src/hooks/useErrorHandler";
+import { convertDateFormat, convertToKey, formatDate2 } from "src/hooks";
+
+//store
+import { setModal, showToast } from "../store";
 import {
   getAcademicYearId,
   getProfessors,
   getSelectedProfessor,
   getModal,
 } from "../store/selectors/selectors";
-import { setModal, showToast } from "../store";
 
-import { convertDateFormat, formatDate2 } from "src/hooks";
-import TableHeader from "src/hooks/tableHeader";
-import useErrorHandler from "src/hooks/useErrorHandler";
-
+//component
+import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import "flatpickr/dist/themes/airbnb.css";
 import Flatpickr from "react-flatpickr";
 
@@ -81,9 +84,42 @@ const Communities = () => {
   //#endregion
 
   //#region functions
+  const fetchCommunity = async () => {
+    await api
+      .get(`/community/academic_year/${academicYearId}`)
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+  const fetchOneCommunity = async (id) => {
+    await api
+      .get("/community/" + id)
+      .then((response) => {
+        setFormData({
+          ...formData,
+          event: response.data.event,
+          date: response.data.date,
+          description: response.data.description,
+          external: response.data.external,
+          professor: response.data.professor_id,
+        });
+        dispatch(setModal(true));
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
   const addCommunity = async () => {
     await api
-      .post("community-service", {
+      .post("/community", {
         event: formData.event,
         date: formData.date,
         description: formData.description,
@@ -95,14 +131,12 @@ const Communities = () => {
         setStatus(response);
         setValidated(false);
 
-        const event = response.data.event;
+        const communityName = response.data.event;
         dispatch(
           showToast({
             type: "success",
-            content:
-              "Community service with title " +
-              event +
-              " was added successful!",
+            content: t("Community") + " " + communityName + " " + t("WasAddedSuccessfully"),
+
           })
         );
       })
@@ -117,7 +151,7 @@ const Communities = () => {
   };
   const editCommunity = async (id) => {
     await api
-      .put("community-service/" + id, {
+      .put("/community/" + id, {
         event: formData.event,
         date: formData.date,
         description: formData.description,
@@ -131,7 +165,7 @@ const Communities = () => {
         dispatch(
           showToast({
             type: "success",
-            content: "Community service with id " + id + " edited successful!",
+            content: t(convertToKey(response.data.message)),
           })
         );
       })
@@ -146,24 +180,34 @@ const Communities = () => {
   };
   const deleteCommunity = async (id) => {
     await api
-      .delete("community-service/" + id)
+      .delete("/community/" + id)
       .then((response) => {
         setStatus(response);
 
         dispatch(
           showToast({
             type: "success",
-            content: "Community service with id " + id + " deleted successful!",
+            content: t("CommunityWithId") + " " + id + " " + t("DeletedSuccessfully"),
           })
         );
       })
       .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        if (error.response && error.response.status === 409) {
+          dispatch(
+            showToast({
+              type: "danger",
+              content:
+                t("CannotDeleteItDueToForeignKeyConstraint")
+            })
+          );
+        } else {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error,
+            })
+          );
+        }
       });
   };
 
@@ -285,45 +329,10 @@ const Communities = () => {
 
   //#region useEffect
   useEffect(() => {
-    const fetchCommunity = async () => {
-      await api
-        .get(`community-service/academic_year/${academicYearId}`)
-        .then((response) => {
-          setItems(response.data);
-        })
-        .catch((error) => {
-          handleError(error);
-        });
-    };
-
     fetchCommunity();
   }, [status]);
 
   useEffect(() => {
-    const fetchOneCommunity = async (id) => {
-      await api
-        .get("community-service/" + id)
-        .then((response) => {
-          setFormData({
-            ...formData,
-            event: response.data.event,
-            date: response.data.date,
-            description: response.data.description,
-            external: response.data.external,
-            professor: response.data.professor_id,
-          });
-          dispatch(setModal(true));
-        })
-        .catch((error) => {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: error,
-            })
-          );
-        });
-    };
-
     if (modalOptions.editMode) fetchOneCommunity(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion

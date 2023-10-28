@@ -1,24 +1,31 @@
-// @ts-ignore
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
+//coreUI
+import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
+
+//hooks
+import api from "src/hooks/api";
+import useErrorHandler from "src/hooks/useErrorHandler";
+
+//store
+import { setProfessors, setSelectedProfessor } from "../store";
+
+//selectors
 import {
   getProfessors,
   getSelectedProfessor,
 } from "../store/selectors/selectors";
-import { setProfessors, setSelectedProfessor } from "../store";
-import useErrorHandler from "src/hooks/useErrorHandler";
-
-import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
-import api from "src/hooks/api";
 
 const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
+  //#endregion
 
+  //#region selectors
   const professors = useSelector(getProfessors);
   const selectedProfessor = useSelector(getSelectedProfessor);
   //#endregion
@@ -27,27 +34,29 @@ const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
   const handleChange = (event) => {
     dispatch(setSelectedProfessor(event.target.value));
   };
+  const fetchProfessors = async () => {
+    await api
+      .get("/professor")
+      .then((response) => {
+        const { data } = response.data;
+
+        //Set list of professors on redux state
+        dispatch(setProfessors(data));
+
+        //If there is no option to select all professors, automatically select the first professor    
+        if (!hasAll) {
+          const firstId = data[0].id;
+          dispatch(setSelectedProfessor(firstId));
+        }
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    const fetchProfessors = async () => {
-      await api
-        .get("professors")
-        .then((response) => {
-          //set list of professors on redux state
-          dispatch(setProfessors(response.data));
-
-          //Nese nuk ka opsion per te selektuar te gjith profesoret, zgjidh automatikisht profesorin e pare
-          if (!hasAll) {
-            dispatch(setSelectedProfessor(1));
-          }
-        })
-        .catch((error) => {
-          handleError(error);
-        });
-    };
-
     fetchProfessors();
   }, []);
   //#endregion
@@ -57,6 +66,7 @@ const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
       <CInputGroupText component="label">
         {t("ChooseProfessor")}
       </CInputGroupText>
+
       <CFormSelect
         className="cursor"
         value={selectedProfessor}

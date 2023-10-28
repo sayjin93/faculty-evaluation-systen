@@ -33,7 +33,7 @@ const AcademicYearAdd = () => {
 
   const addAcademicYear = async () => {
     await api
-      .post("academic-year", {
+      .post("/academic-year", {
         year: newAcademicYear,
         active: 1,
       })
@@ -76,7 +76,7 @@ const AcademicYearAdd = () => {
                     <CFormInput
                       required
                       type="text"
-                      placeholder={t("Ex") + ". 2022-2023"}
+                      placeholder={t("Ex") + ". 2023-2024"}
                       value={newAcademicYear}
                       onChange={(event) =>
                         setNewAcademicYear(event.target.value)

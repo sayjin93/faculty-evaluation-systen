@@ -1,8 +1,10 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+
+//coreUI
 import { CButton, CCol, CContainer, CRow } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilHome } from "@coreui/icons";
-import { useTranslation } from "react-i18next";
 
 const Page404 = () => {
   //#region constants

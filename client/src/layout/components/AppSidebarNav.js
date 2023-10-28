@@ -33,7 +33,7 @@ export const AppSidebarNav = () => {
     },
     {
       component: CNavTitle,
-      name: "Components",
+      name: t("Components"),
     },
     {
       component: CNavItem,
@@ -79,7 +79,7 @@ export const AppSidebarNav = () => {
     },
     {
       component: CNavTitle,
-      name: "Extras",
+      name: t("Extras"),
     },
     {
       component: CNavItem,
@@ -109,8 +109,8 @@ export const AppSidebarNav = () => {
       <Component
         {...(rest.to &&
           !rest.items && {
-            component: NavLink,
-          })}
+          component: NavLink,
+        })}
         key={index}
         {...rest}
       >

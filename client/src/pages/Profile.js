@@ -29,7 +29,6 @@ const Settings = () => {
 
   const modal = useSelector(getModal);
   const currentUser = useSelector(getLoggedUser);
-
   //#endregion
 
   //#region states
@@ -58,9 +57,9 @@ const Settings = () => {
 
     if (userData.newPassword === userData.repeatPassword) {
       api
-        .put("users/" + currentUser.id, {
-          firstName: userData.firstName,
-          lastName: userData.lastName,
+        .put("user/" + currentUser.id, {
+          first_name: userData.firstName,
+          last_name: userData.lastName,
           username: userData.username,
           email: userData.email,
           currentPassword: userData.currentPassword,
@@ -172,8 +171,10 @@ const Settings = () => {
                   </CInputGroupText>
                   <CFormInput
                     required
+                    disabled
                     type="text"
                     placeholder={t("Username")}
+                    autoComplete="username"
                     value={userData.username}
                     onChange={(event) => handleInputChange(event, "username")}
                   />
@@ -189,6 +190,7 @@ const Settings = () => {
                     required
                     type="password"
                     placeholder={t("CurrentPassword")}
+                    autoComplete="current-password"
                     value={userData.currentPassword}
                     onChange={(event) =>
                       handleInputChange(event, "currentPassword")
@@ -206,6 +208,7 @@ const Settings = () => {
                     required
                     type="password"
                     placeholder={t("NewPassword")}
+                    autoComplete="new-password"
                     value={userData.newPassword}
                     onChange={(event) =>
                       handleInputChange(event, "newPassword")
@@ -223,6 +226,7 @@ const Settings = () => {
                     required
                     type="password"
                     placeholder={t("RepeatPassword")}
+                    autoComplete="new-password"
                     value={userData.repeatPassword}
                     onChange={(event) =>
                       handleInputChange(event, "repeatPassword")

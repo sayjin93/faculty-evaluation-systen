@@ -1,7 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
+import { showToast } from "src/store";
+import api from "src/hooks/api";
+
+//coreUI
 import {
   CButton,
   CCard,
@@ -16,14 +21,11 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
-import { useTranslation } from "react-i18next";
-
-import { useDispatch } from "react-redux";
-import { showToast } from "src/store";
 
 const Register = () => {
   //#region constants
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   //#endregion
 
@@ -56,18 +58,16 @@ const Register = () => {
         })
       );
     } else {
-      // Send a POST request to the '/api/users' endpoint with the user data
-      await axios
-        .post("users", {
+      await api
+        .post("/register", {
           username: user.username,
           email: user.email,
           password: user.password,
-        }, {
-          headers: {
-            "Content-Type": "application/json"
-          }
         })
         .then((response) => {
+          // Redirect the user to the login page
+          navigate("/login", { replace: true });
+
           // Handle the success response
           dispatch(
             showToast({
@@ -75,14 +75,6 @@ const Register = () => {
               content: t("AccountCreatedSuccesfully"),
             })
           );
-
-          setUser((prevState) => ({
-            ...prevState,
-            username: "",
-            email: "",
-            password: "",
-            repeatPassword: "",
-          }));
         })
         .catch((error) => {
           if (error.response) {

@@ -1,18 +1,24 @@
 import React from "react";
 import { useDispatch } from "react-redux";
+
+//coreUI
 import { CToaster, CToast, CToastBody, CToastClose } from "@coreui/react";
+
+//store
 import { hideToast } from "../store/slices/toastSlice";
 
 const ToastComponent = ({ type, content, visible }) => {
+  //#region constants
   const dispatch = useDispatch();
+  //#endregion
 
+  //#region functions
   const closeToast = () => {
     dispatch(hideToast());
   };
+  //#endregion
 
-  if (!visible) {
-    return null;
-  }
+  if (!visible) return null;
 
   return (
     <CToaster placement="bottom-end">

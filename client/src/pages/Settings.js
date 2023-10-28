@@ -57,13 +57,27 @@ const Settings = () => {
       options: { path: "/", sameSite: "strict" },
     });
   };
+
+  const fetchAcademicYears = async () => {
+    await api
+      .get("/academic-year")
+      .then((response) => {
+        setAcademicYear(response.data);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+
   const addAcademicYear = async () => {
     await api
-      .post("academic-year", {
+      .post("/academic-year", {
         year: newAcademicYear,
         active: false,
       })
       .then((response) => {
+        fetchAcademicYears();
+
         const year = response.data.year;
         dispatch(
           showToast({
@@ -86,7 +100,7 @@ const Settings = () => {
     const { id, year } = item;
 
     await api
-      .put("academic-year/active/" + id)
+      .put("/academic-year/active/" + id)
       .then((response) => {
         dispatch(
           showToast({
@@ -108,17 +122,6 @@ const Settings = () => {
 
   //#region useEffect
   useEffect(() => {
-    const fetchAcademicYears = async () => {
-      await api
-        .get("academic-year")
-        .then((response) => {
-          setAcademicYear(response.data);
-        })
-        .catch((error) => {
-          handleError(error);
-        });
-    };
-
     fetchAcademicYears();
   }, [dispatch]);
   //#endregion

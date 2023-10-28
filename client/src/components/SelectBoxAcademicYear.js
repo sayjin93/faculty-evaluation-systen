@@ -1,11 +1,19 @@
-// @ts-ignore
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { showToast, changeAcademicYear } from "src/store";
+
+//coreUI
+import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
+
+//hooks
 import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
-import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
+
+//store
+import {
+  getAcademicYearId
+} from "../store/selectors/selectors";
+import { showToast, changeAcademicYear } from "src/store";
 
 const SelectBoxAcademicYear = ({ className = "" }) => {
   //#region constants
@@ -15,9 +23,7 @@ const SelectBoxAcademicYear = ({ className = "" }) => {
   //#endregion
 
   //#region selectors
-  const activeAcademicYear = useSelector(
-    (state) => state.settings.academicYear
-  );
+  const activeAcademicYear = useSelector(getAcademicYearId);
   //#endregion
 
   //#region states
@@ -25,52 +31,47 @@ const SelectBoxAcademicYear = ({ className = "" }) => {
   //#endregion
 
   //#region functions
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const seletedAcademicYear = academicYear.filter(
       (x) => x.id === Number(e.target.value)
     );
 
-    dispatch(changeAcademicYear(seletedAcademicYear[0]));
-    updateActiveStatus(seletedAcademicYear[0]);
+    const { id, year } = seletedAcademicYear[0];
+
+    try {
+      await api.put("academic-year/active/" + id);
+
+      dispatch(changeAcademicYear(seletedAcademicYear[0]));
+      dispatch(
+        showToast({
+          type: "success",
+          content: t("AcademicYear") + " " + year + " " + t("IsSetAsActive"),
+        })
+      );
+    } catch (error) {
+      dispatch(
+        showToast({
+          type: "danger",
+          content: error,
+        })
+      );
+    }
   };
 
-  const updateActiveStatus = async (item) => {
-    const { id, year } = item;
-
+  const fetchAcademicYears = async () => {
     await api
-      .put("academic-year/active/" + id)
+      .get("/academic-year")
       .then((response) => {
-        dispatch(
-          showToast({
-            type: "success",
-            content: "Academic Year " + year + " is set as active!",
-          })
-        );
+        setAcademicYear(response.data);
       })
       .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        handleError(error);
       });
   };
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    const fetchAcademicYears = async () => {
-      await api
-        .get("academic-year")
-        .then((response) => {
-          setAcademicYear(response.data);
-        })
-        .catch((error) => {
-          handleError(error);
-        });
-    };
-
     fetchAcademicYears();
   }, []);
   //#endregion
@@ -80,7 +81,7 @@ const SelectBoxAcademicYear = ({ className = "" }) => {
       <CInputGroupText component="label">{t("AcademicYear")}</CInputGroupText>
       <CFormSelect
         className="cursor"
-        value={activeAcademicYear.id}
+        value={activeAcademicYear}
         onChange={handleChange}
       >
         {academicYear.map((item) => {

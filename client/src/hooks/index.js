@@ -71,4 +71,10 @@ export function countOccurrences(array, key, value) {
   // Helper function to count the occurrences of an item in an array
   return array.filter((item) => item[key] === value).length;
 }
+export function convertToKey(text) {
+  return text
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
+}
 //#endregion

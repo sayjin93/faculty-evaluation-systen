@@ -1,0 +1,35 @@
+const express = require('express');
+
+const registerApi = require('./register');
+const loginApi = require('./login');
+const academicYearApi = require('./academicYear');
+const bookApi = require('./book');
+const communityApi = require('./community');
+const conferenceApi = require('./conference');
+const courseApi = require('./course');
+const paperApi = require('./paper');
+const professorApi = require('./professor');
+const reportApi = require('./report');
+const userApi = require('./user');
+
+const router = express.Router();
+
+router.get('/', (req, res) => {
+  res.json({
+    message: 'API - 👋🌎🌍🌏',
+  });
+});
+
+router.use(registerApi);
+router.use(loginApi);
+router.use('/academic-year', academicYearApi);
+router.use('/book', bookApi);
+router.use('/community', communityApi);
+router.use('/conference', conferenceApi);
+router.use('/course', courseApi);
+router.use('/paper', paperApi);
+router.use('/professor', professorApi);
+router.use('/report', reportApi);
+router.use('/user', userApi);
+
+module.exports = router;

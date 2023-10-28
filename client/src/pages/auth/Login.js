@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { setCookie } from "src/hooks";
+import { convertToKey, setCookie } from "src/hooks";
 import { setUser, showToast } from "../../store";
-import useErrorHandler from "../../hooks/useErrorHandler";
 
 import {
   CButton,
@@ -32,7 +31,6 @@ const LoginPage = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleError = useErrorHandler();
   //#endregion
 
   //#region states
@@ -59,64 +57,43 @@ const LoginPage = () => {
     });
   };
 
-  //Fetch user data axios function
-  const fetchUserData = async () => {
-    await api
-      .get(`users/username/${formData.username}`)
-      .then((response) => {
-        if (response.data) {
-          const loggedUser = {
-            id: response.data[0].id,
-            first_name: response.data[0].first_name,
-            last_name: response.data[0].last_name,
-            username: response.data[0].username,
-            email: response.data[0].email,
-          };
-          dispatch(setUser(loggedUser));
-        }
-      })
-      .catch((error) => {
-        handleError(error);
-      });
-  };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    api
-      .post("users/login", {
+    await api
+      .post("/login", {
         username: formData.username,
         password: formData.password,
       })
-      .then(async (response) => {
-        if (response.data) {
-          // Set the JWT token to the Local Storage
-          localStorage.setItem("jwt_token", response.data);
+      .then((response) => {
+        const { user, token } = response.data;
+        // Set the JWT token to the Local Storage
+        localStorage.setItem("jwt_token", token);
 
-          //Fetch user data function call
-          await fetchUserData();
+        // Set leggedUser into redux store
+        const loggedUser = {
+          id: user.id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          username: user.username,
+          email: user.email,
+        };
+        dispatch(setUser(loggedUser));
 
-          // Navigate to Dashboard
-          navigate("/", { replace: true });
-        }
+        // Navigate to Dashboard
+        navigate("/", { replace: true });
       })
       .catch((error) => {
-        if (error.response) {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: error.response.data.message,
-            })
-          );
-        } else {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: error.message,
-            })
-          );
-        }
+        const { data, status } = error.response;
+
+        dispatch(
+          showToast({
+            type: "danger",
+            content: status !== 500 ? t(convertToKey(data.message)) : data.message,
+          })
+        );
+
       });
   };
   //#endregion

@@ -1,15 +1,15 @@
 {
-  "name": "uet_server",
+  "name": "uet-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "description": "API for Daculty Evaluation System",
+  "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
-    "lint": "eslint --fix config controllers models routes seeders app.js",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "lint": "eslint --fix src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Jurgen Kruja",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",

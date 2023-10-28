@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import useErrorHandler from "src/hooks/useErrorHandler";
-import api from "src/hooks/api";
 
+//coreUI
 import {
   CButton,
   CButtonGroup,
@@ -26,19 +25,24 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
-import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 
-import { convertDateFormat } from "src/hooks";
+//hooks
+import api from "src/hooks/api";
 import TableHeader from "src/hooks/tableHeader";
+import useErrorHandler from "src/hooks/useErrorHandler";
+import { convertDateFormat, convertToKey } from "src/hooks";
 
+//store
+import { setModal, showToast } from "../store";
 import {
   getAcademicYearId,
   getProfessors,
   getSelectedProfessor,
   getModal,
 } from "../store/selectors/selectors";
-import { setModal, showToast } from "../store";
 
+//components
+import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import "flatpickr/dist/themes/airbnb.css";
 import Flatpickr from "react-flatpickr";
 
@@ -79,9 +83,41 @@ const Papers = () => {
   //#endregion
 
   //#region functions
+  const fetchPapers = async () => {
+    await api
+      .get(`/paper/academic_year/${academicYearId}`)
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+  const fetchOnePaper = async (id) => {
+    await api
+      .get("/paper/" + id)
+      .then((response) => {
+        setFormData({
+          ...formData,
+          title: response.data.title,
+          journal: response.data.journal,
+          publication: response.data.publication,
+          professor: response.data.professor_id,
+        });
+        dispatch(setModal(true));
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
   const addPaper = async () => {
     await api
-      .post("papers", {
+      .post("/paper", {
         title: formData.title,
         journal: formData.journal,
         publication: formData.publication,
@@ -92,11 +128,11 @@ const Papers = () => {
         setStatus(response);
         setValidated(false);
 
-        const title = response.data.title;
+        const paperName = response.data.title;
         dispatch(
           showToast({
             type: "success",
-            content: "Paper with title " + title + " was added successful!",
+            content: t("Paper") + " " + paperName + " " + t("WasAddedSuccessfully"),
           })
         );
       })
@@ -111,7 +147,7 @@ const Papers = () => {
   };
   const editPaper = async (id) => {
     await api
-      .put("papers/" + id, {
+      .put("/paper/" + id, {
         title: formData.title,
         journal: formData.journal,
         publication: formData.publication,
@@ -123,7 +159,7 @@ const Papers = () => {
         dispatch(
           showToast({
             type: "success",
-            content: "Paper with id " + id + " edited successful!",
+            content: t(convertToKey(response.data.message)),
           })
         );
       })
@@ -138,24 +174,34 @@ const Papers = () => {
   };
   const deletePaper = async (id) => {
     await api
-      .delete("papers/" + id)
+      .delete("/paper/" + id)
       .then((response) => {
         setStatus(response);
 
         dispatch(
           showToast({
             type: "success",
-            content: "Paper with id " + id + " deleted successful!",
+            content: t("PaperWithId") + " " + id + " " + t("DeletedSuccessfully"),
           })
         );
       })
       .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        if (error.response && error.response.status === 409) {
+          dispatch(
+            showToast({
+              type: "danger",
+              content:
+                t("CannotDeleteItDueToForeignKeyConstraint")
+            })
+          );
+        } else {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error,
+            })
+          );
+        }
       });
   };
 
@@ -265,44 +311,10 @@ const Papers = () => {
 
   //#region useEffect
   useEffect(() => {
-    const fetchPapers = async () => {
-      await api
-        .get(`papers/academic_year/${academicYearId}`)
-        .then((response) => {
-          setItems(response.data);
-        })
-        .catch((error) => {
-          handleError(error);
-        });
-    };
-
     fetchPapers();
   }, [status]);
 
   useEffect(() => {
-    const fetchOnePaper = async (id) => {
-      await api
-        .get("papers/" + id)
-        .then((response) => {
-          setFormData({
-            ...formData,
-            title: response.data.title,
-            journal: response.data.journal,
-            publication: response.data.publication,
-            professor: response.data.professor_id,
-          });
-          dispatch(setModal(true));
-        })
-        .catch((error) => {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: error,
-            })
-          );
-        });
-    };
-
     if (modalOptions.editMode) fetchOnePaper(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion

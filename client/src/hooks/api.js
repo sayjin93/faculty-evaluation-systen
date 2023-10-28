@@ -5,15 +5,20 @@ const api = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
 });
 
-api.interceptors.request.use((config) => {
-    let token = localStorage.getItem("jwt_token");
-    const headers = { ...config.headers };
-    if (token) {
-        headers.Authorization = `${token}`;
+// Add a request interceptor
+api.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem("jwt_token");
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        config.headers['Content-Type'] = 'application/json';
+
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
     }
-    // headers.post["Content-Type"] = "application/json";
-    headers['Content-Type'] = 'application/json; charset=utf-8';
-    return { ...config, headers };
-});
+);
 
 export default api;
