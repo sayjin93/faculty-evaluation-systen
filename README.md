@@ -130,6 +130,15 @@ The directory structure of the project is as follows:
 This project is licensed under the ISC License.
 
 
+## Fix passenger
+/etc/apache2/conf.d/userdata/ssl/2_4/jkruja/uetapi.jkruja.com
+/etc/apache2/conf.d/userdata/std/2_4/jkruja
+
+add this 2 lines:
+	PassengerAppType node
+	PassengerStartupFile "/home/jkruja/public_html/uet/server/src/index.js"
+
+
 ## PM2 (https://pm2.keymetrics.io/)
 
 ### Start all applications
