@@ -1,5 +1,8 @@
 RewriteEngine On
-RewriteRule ^$ http://127.0.0.1:5000/ [P,L]
+
+# If the request is not for an existing file or directory
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+
+# Proxy requests to the Node.js app
 RewriteRule ^(.*)$ http://127.0.0.1:5000/$1 [P,L]

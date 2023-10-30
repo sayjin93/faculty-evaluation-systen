@@ -128,3 +128,21 @@ The directory structure of the project is as follows:
 ## License
 
 This project is licensed under the ISC License.
+
+
+## PM2 (https://pm2.keymetrics.io/)
+
+### Start all applications
+pm2 start ecosystem.config.js
+
+### Stop all
+pm2 stop ecosystem.config.js
+
+### Restart all
+pm2 restart ecosystem.config.js
+
+### Reload all
+pm2 reload ecosystem.config.js
+
+### Delete all
+pm2 delete ecosystem.config.js
