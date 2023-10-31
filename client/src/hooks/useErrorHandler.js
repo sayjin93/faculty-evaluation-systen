@@ -29,7 +29,7 @@ const useErrorHandler = () => {
         dispatch(
           showToast({
             type: "danger",
-            content: error.response.data.message || error.response.statusText,
+            content: error.response.data,
           })
         );
 

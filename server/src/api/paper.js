@@ -5,8 +5,10 @@ const Paper = require('../models/paper');
 
 const router = express.Router();
 
+const auth = passport.authenticate('jwt', { session: false });
+
 // Create a new Paper
-router.post('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.post('/', auth, async (req, res) => {
   // Validate request
   if (!req.body.title) {
     res.status(400).send({
@@ -38,7 +40,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), async (req, r
 });
 
 // Retrieve all Papers
-router.get('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/', auth, async (req, res) => {
   const result = await Paper.findAll().catch((err) => {
     console.log('Error: ', err);
   });
@@ -53,7 +55,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
 });
 
 // Retrieve all Papers with a specific academic_year_id
-router.get('/academic_year/:academic_year_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/academic_year/:academic_year_id', auth, async (req, res) => {
   const { academic_year_id } = req.params;
 
   Paper.findAll({ where: { academic_year_id } })
@@ -68,7 +70,7 @@ router.get('/academic_year/:academic_year_id', passport.authenticate('jwt', { se
 });
 
 // Retrieve a single Paper with id
-router.get('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   Paper.findByPk(id)
@@ -89,7 +91,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), async (req,
 });
 
 // Update a Paper with id
-router.put('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   Paper.update(req.body, {
@@ -114,7 +116,7 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), async (req,
 });
 
 // Delete a Paper with id
-router.delete('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   Paper.destroy({
@@ -139,7 +141,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), async (r
 });
 
 // Delete all Papers
-router.delete('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.delete('/', auth, async (req, res) => {
   Paper.destroy({
     where: {},
     truncate: false,

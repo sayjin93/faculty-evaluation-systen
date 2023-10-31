@@ -6,8 +6,10 @@ const AcademicYear = require('../models/academicYear');
 
 const router = express.Router();
 
+const auth = passport.authenticate('jwt', { session: false });
+
 // Create a new Academic Year
-router.post('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.post('/', auth, async (req, res) => {
   // Validate request
   if (!req.body.year) {
     res.status(400).send({
@@ -37,7 +39,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), async (req, r
 });
 
 // Retrieve all Academic Years
-router.get('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/', auth, async (req, res) => {
   const result = await AcademicYear.findAll().catch((err) => {
     console.log('Error: ', err);
   });
@@ -52,7 +54,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
 });
 
 // Retrieve all published Academic Years
-router.get('/active', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/active', auth, async (req, res) => {
   AcademicYear.findAll({ where: { active: true } })
     .then((data) => {
       res.send(data);
@@ -66,7 +68,7 @@ router.get('/active', passport.authenticate('jwt', { session: false }), async (r
 });
 
 // Retrieve a single Academic Year with id
-router.get('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   AcademicYear.findByPk(id)
@@ -87,7 +89,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), async (req,
 });
 
 // Update a Academic Year with id
-router.put('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   AcademicYear.update(req.body, {
@@ -112,7 +114,7 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), async (req,
 });
 
 // Update the active status of academic years
-router.put('/active/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put('/active/:id', auth, async (req, res) => {
   const activeId = req.params.id;
 
   // Set the active property to false for all rows except the specified id
@@ -149,7 +151,7 @@ router.put('/active/:id', passport.authenticate('jwt', { session: false }), asyn
 });
 
 // Delete a Academic Year with id
-router.delete('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   AcademicYear.destroy({
@@ -174,7 +176,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), async (r
 });
 
 // Delete all Academic Years
-router.delete('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.delete('/', auth, async (req, res) => {
   AcademicYear.destroy({
     where: {},
     truncate: false,

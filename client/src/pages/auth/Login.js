@@ -213,7 +213,7 @@ const LoginPage = () => {
                         </CDropdown>
                       </CCol>
                       <CCol xs={12} className="text-center">
-                        <CButton disabled color="link" className="pt-4">
+                        <CButton color="link" className="pt-4" onClick={() => navigate("/reset")}>
                           {t("ForgotPassword") + "?"}
                         </CButton>
                       </CCol>

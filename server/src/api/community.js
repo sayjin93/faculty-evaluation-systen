@@ -5,8 +5,10 @@ const Community = require('../models/community');
 
 const router = express.Router();
 
+const auth = passport.authenticate('jwt', { session: false });
+
 // Create a new Community Service
-router.post('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.post('/', auth, async (req, res) => {
   // Validate request
   if (!req.body.event) {
     res.status(400).send({
@@ -40,7 +42,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), async (req, r
 });
 
 // Retrieve all Community Services
-router.get('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/', auth, async (req, res) => {
   const result = await Community.findAll().catch((err) => {
     console.log('Error: ', err);
   });
@@ -55,7 +57,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
 });
 
 // Retrieve all Community Services with a specific academic_year_id
-router.get('/academic_year/:academic_year_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/academic_year/:academic_year_id', auth, async (req, res) => {
   const { academic_year_id } = req.params;
 
   Community.findAll({ where: { academic_year_id } })
@@ -70,7 +72,7 @@ router.get('/academic_year/:academic_year_id', passport.authenticate('jwt', { se
 });
 
 // Retrieve a single Community Service with id
-router.get('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   Community.findByPk(id)
@@ -91,7 +93,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), async (req,
 });
 
 // Update a Community Service with id
-router.put('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   Community.update(req.body, {
@@ -116,7 +118,7 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), async (req,
 });
 
 // Delete a Community Service with id
-router.delete('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   Community.destroy({
@@ -141,7 +143,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), async (r
 });
 
 // Delete all Community Services
-router.delete('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.delete('/', auth, async (req, res) => {
   Community.destroy({
     where: {},
     truncate: false,

@@ -28,27 +28,28 @@ const Layout = () => {
   const [isLoading, setIsLoading] = useState(true);
   //#endregion
 
+  //#region functions
+  const fetchAcademicYears = async () => {
+    await api
+      .get("/academic-year/active")
+      .then((response) => {
+        const activeAcademicYear = response.data;
+        if (activeAcademicYear.length > 0) {
+          dispatch(changeAcademicYear(activeAcademicYear[0]));
+        } else {
+          dispatch(changeAcademicYear(""));
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+  //#endregion
+
   //#region useEffect
   useEffect(() => {
-    const fetchAcademicYears = async () => {
-      await api
-        .get("/academic-year/active")
-        .then((response) => {
-          const activeAcademicYear = response.data;
-          if (activeAcademicYear.length > 0) {
-            dispatch(changeAcademicYear(activeAcademicYear[0]));
-          } else {
-            dispatch(changeAcademicYear(""));
-          }
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          handleError(error);
-        });
-    };
-
     fetchAcademicYears();
-
   }, []);
   //#endregion
 

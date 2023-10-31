@@ -1,7 +1,6 @@
 const express = require('express');
 
-const registerApi = require('./register');
-const loginApi = require('./login');
+const authApi = require('./auth');
 const academicYearApi = require('./academicYear');
 const bookApi = require('./book');
 const communityApi = require('./community');
@@ -20,8 +19,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.use(registerApi);
-router.use(loginApi);
+router.use(authApi);
 router.use('/academic-year', academicYearApi);
 router.use('/book', bookApi);
 router.use('/community', communityApi);

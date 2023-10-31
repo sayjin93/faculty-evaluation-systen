@@ -7,8 +7,10 @@ const User = require('../models/user');
 
 const router = express.Router();
 
+const auth = passport.authenticate('jwt', { session: false });
+
 // Retrieve all Users
-router.get('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/', auth, async (req, res) => {
   const result = await User.findAll().catch((err) => {
     console.log('Error: ', err);
   });
@@ -23,7 +25,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
 });
 
 // Retrieve User with a specific username
-router.get('/username/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/username/:username', auth, async (req, res) => {
   const { username } = req.params;
 
   User.findAll({ where: { username } })
@@ -38,7 +40,7 @@ router.get('/username/:username', passport.authenticate('jwt', { session: false 
 });
 
 // Retrieve a single User with id
-router.get('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   User.findByPk(id)
@@ -59,7 +61,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), async (req,
 });
 
 // Update a User with id
-router.put('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
   const {
     first_name, last_name, username, email, currentPassword, newPassword,
@@ -159,7 +161,7 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), async (req,
 });
 
 // Delete a User with id
-router.delete('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   User.destroy({
@@ -184,7 +186,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), async (r
 });
 
 // Delete all Users
-router.delete('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.delete('/', auth, async (req, res) => {
   User.destroy({
     where: {},
     truncate: false,

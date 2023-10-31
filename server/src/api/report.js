@@ -11,8 +11,10 @@ const Professor = require('../models/professor');
 
 const router = express.Router();
 
+const auth = passport.authenticate('jwt', { session: false });
+
 // Retrieve all professors data for selected academic year.
-router.get('/dashboard', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/dashboard', auth, async (req, res) => {
   await AcademicYear.findAll()
     .then((academicYears) => {
       const academic_year_ids = academicYears.map((year) => year.id);
@@ -96,7 +98,7 @@ router.get('/dashboard', passport.authenticate('jwt', { session: false }), async
 });
 
 // Retrieve all Data for a professor in a specific academic year
-router.get('/academic_year/:academic_year_id/professor/:professor_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/academic_year/:academic_year_id/professor/:professor_id', auth, async (req, res) => {
   const { professor_id } = req.params;
   const { academic_year_id } = req.params;
 

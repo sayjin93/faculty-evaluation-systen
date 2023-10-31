@@ -135,8 +135,8 @@ This project is licensed under the ISC License.
 /etc/apache2/conf.d/userdata/std/2_4/jkruja
 
 add this 2 lines:
-	PassengerAppType node
-	PassengerStartupFile "/home/jkruja/public_html/uet/server/src/index.js"
+		PassengerAppType node
+		PassengerStartupFile "/home/jkruja/public_html/uet/server/src/index.js"
 
 
 ## PM2 (https://pm2.keymetrics.io/)
@@ -155,3 +155,9 @@ pm2 reload ecosystem.config.js
 
 ### Delete all
 pm2 delete ecosystem.config.js
+
+### Generating a Startup Script
+pm2 startup
+
+[PM2] You have to run this command as root. Execute the following command:
+      sudo su -c "env PATH=$PATH:/home/unitech/.nvm/versions/node/v14.3/bin pm2 startup <distribution> -u <user> --hp <home-path>

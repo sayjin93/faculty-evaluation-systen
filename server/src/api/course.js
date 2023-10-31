@@ -5,8 +5,10 @@ const Course = require('../models/course');
 
 const router = express.Router();
 
+const auth = passport.authenticate('jwt', { session: false });
+
 // Create a new Course
-router.post('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.post('/', auth, async (req, res) => {
   // Validate request
   if (!req.body.name) {
     res.status(400).send({
@@ -40,7 +42,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), async (req, r
 });
 
 // Retrieve all Courses
-router.get('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/', auth, async (req, res) => {
   const result = await Course.findAll().catch((err) => {
     console.log('Error: ', err);
   });
@@ -55,7 +57,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
 });
 
 // Retrieve all Courses with a specific academic_year_id
-router.get('/academic_year/:academic_year_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/academic_year/:academic_year_id', auth, async (req, res) => {
   const { academic_year_id } = req.params;
 
   Course.findAll({ where: { academic_year_id } })
@@ -70,7 +72,7 @@ router.get('/academic_year/:academic_year_id', passport.authenticate('jwt', { se
 });
 
 // Retrieve a single Course with id
-router.get('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   Course.findByPk(id)
@@ -91,7 +93,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), async (req,
 });
 
 // Update a Course with id
-router.put('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   Course.update(req.body, {
@@ -116,7 +118,7 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), async (req,
 });
 
 // Delete a Course with id
-router.delete('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   Course.destroy({
@@ -141,7 +143,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), async (r
 });
 
 // Delete all Courses
-router.delete('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.delete('/', auth, async (req, res) => {
   Course.destroy({
     where: {},
     truncate: false,
