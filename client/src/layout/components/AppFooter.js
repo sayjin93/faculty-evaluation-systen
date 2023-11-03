@@ -1,12 +1,10 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "i18next";
+
+//coreUI
 import { CFooter } from "@coreui/react";
 
 const AppFooter = () => {
-  //#region constants
-  const { t } = useTranslation();
-  //#endregion
-
   return (
     <CFooter>
       <div>

@@ -64,7 +64,7 @@ router.get('/:id', auth, async (req, res) => {
 router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
   const {
-    first_name, last_name, username, email, currentPassword, newPassword,
+    first_name, last_name, email, currentPassword, newPassword,
   } = req.body;
 
   // Fetch the user
@@ -89,36 +89,41 @@ router.put('/:id', auth, async (req, res) => {
         // If the current password is not correct, return an error message
         if (!result) {
           res.status(401).send({
-            message: 'Current password is not correct.',
+            message: 'Current password is not correct',
           });
           return;
         }
 
-        // Check if the new username or email already exists
+        // Check if the new email already exists
         User.findOne({
           where: {
-            [Op.or]: [{ username }, { email }],
+            email,
             [Op.not]: { id },
           },
         })
           .then((existingUser) => {
             if (existingUser) {
               res.status(400).send({
-                message: 'Email or Username already exists!',
+                message: 'Email already exists',
               });
               return;
             }
 
+            // Prepare the update object
+            const updateObject = {
+              first_name,
+              last_name,
+              email,
+            };
+
+            // Check if newPassword is provided
+            if (newPassword) {
+              updateObject.password = newPassword;
+            }
+
             // Update the user
-            // const hashedPassword = bcrypt.hashSync(newPassword, 10);
             User.update(
-              {
-                first_name,
-                last_name,
-                username,
-                email,
-                password: newPassword,
-              },
+              updateObject,
               { where: { id } },
             )
               .then((num) => {

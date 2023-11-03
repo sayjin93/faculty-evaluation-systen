@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-
-import { showToast } from "src/store";
-import api from "src/hooks/api";
+import { t } from "i18next";
 
 //coreUI
 import {
@@ -22,15 +19,23 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
 
+//hooks
+import api from "src/hooks/api";
+import { capitalizeWords } from "src/hooks"
+
+//store
+import { showToast } from "src/store";
+
 const Register = () => {
   //#region constants
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //#endregion
 
   //#region states
   const [user, setUser] = useState({
+    firstName: "",
+    lastName: "",
     username: "",
     email: "",
     password: "",
@@ -60,6 +65,8 @@ const Register = () => {
     } else {
       await api
         .post("/register", {
+          first_name: capitalizeWords(user.firstName),
+          last_name: capitalizeWords(user.lastName),
           username: user.username,
           email: user.email,
           password: user.password,
@@ -101,14 +108,47 @@ const Register = () => {
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md={9} lg={7} xl={6}>
+          <CCol md={10} lg={8} xl={7}>
             <CCard className="mx-4">
               <CCardBody className="p-4">
+                <h1>{t("Register")}</h1>
+                <p className="text-medium-emphasis">{t("CreateYourAccount")}</p>
+
                 <CForm onSubmit={handleRegister}>
-                  <h1>{t("Register")}</h1>
-                  <p className="text-medium-emphasis">
-                    {t("CreateYourAccount")}
-                  </p>
+
+                  <CRow>
+                    <CCol md={6} className="mb-3">
+                      <CInputGroup>
+                        <CInputGroupText>
+                          <CIcon icon={cilLockLocked} />
+                        </CInputGroupText>
+                        <CFormInput
+                          type="text"
+                          autoComplete="first-name"
+                          placeholder={t("FirstName")}
+                          value={user.firstName}
+                          onChange={(event) => handleInputChange(event, "firstName")}
+                        />
+                      </CInputGroup>
+                    </CCol>
+                    <CCol md={6} className="mb-3">
+                      <CInputGroup>
+                        <CInputGroupText>
+                          <CIcon icon={cilLockLocked} />
+                        </CInputGroupText>
+                        <CFormInput
+                          type="text"
+                          autoComplete="last-name"
+                          placeholder={t("LastName")}
+                          value={user.lastName}
+                          onChange={(event) =>
+                            handleInputChange(event, "lastName")
+                          }
+                        />
+                      </CInputGroup>
+                    </CCol>
+                  </CRow>
+
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
@@ -116,7 +156,7 @@ const Register = () => {
                     <CFormInput
                       required
                       type="text"
-                      placeholder={t("Username")}
+                      placeholder={t("Username") + "*"}
                       value={user.username}
                       onChange={(event) => handleInputChange(event, "username")}
                     />
@@ -127,48 +167,56 @@ const Register = () => {
                       required
                       type="email"
                       autoComplete="email"
-                      placeholder={t("Email")}
+                      placeholder={t("Email") + "*"}
                       value={user.email}
                       size="sm"
                       onChange={(event) => handleInputChange(event, "email")}
                     />
                   </CInputGroup>
+
+                  <CRow>
+                    <CCol md={6} className="mb-3">
+                      <CInputGroup>
+                        <CInputGroupText>
+                          <CIcon icon={cilLockLocked} />
+                        </CInputGroupText>
+                        <CFormInput
+                          required
+                          type="password"
+                          autoComplete="new-password"
+                          placeholder={t("Password") + "*"}
+                          value={user.password}
+                          onChange={(event) => handleInputChange(event, "password")}
+                        />
+                      </CInputGroup>
+                    </CCol>
+                    <CCol md={6} className="mb-3">
+                      <CInputGroup>
+                        <CInputGroupText>
+                          <CIcon icon={cilLockLocked} />
+                        </CInputGroupText>
+                        <CFormInput
+                          required
+                          type="password"
+                          autoComplete="new-password"
+                          placeholder={t("RepeatPassword") + "*"}
+                          value={user.repeatPassword}
+                          onChange={(event) =>
+                            handleInputChange(event, "repeatPassword")
+                          }
+                        />
+                      </CInputGroup>
+                    </CCol>
+                  </CRow>
+
                   <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon icon={cilLockLocked} />
-                    </CInputGroupText>
-                    <CFormInput
-                      required
-                      type="password"
-                      autoComplete="new-password"
-                      placeholder={t("Password")}
-                      value={user.password}
-                      onChange={(event) => handleInputChange(event, "password")}
-                    />
-                  </CInputGroup>
-                  <CInputGroup className="mb-4">
-                    <CInputGroupText>
-                      <CIcon icon={cilLockLocked} />
-                    </CInputGroupText>
-                    <CFormInput
-                      required
-                      type="password"
-                      autoComplete="new-password"
-                      placeholder={t("RepeatPassword")}
-                      value={user.repeatPassword}
-                      onChange={(event) =>
-                        handleInputChange(event, "repeatPassword")
-                      }
-                    />
-                  </CInputGroup>
-                  <div className="d-grid">
-                    <CButton color="success" type="submit">
+                    <CButton color="success" type="submit" className="w-100">
                       {t("CreateAccount")}
                     </CButton>
-                  </div>
+                  </CInputGroup>
                 </CForm>
                 <Link to="/login">
-                  <CButton color="link" className="mt-4 d-block mx-auto">
+                  <CButton color="link" className="d-block mx-auto">
                     {t("BackToLogin") + "?"}
                   </CButton>
                 </Link>

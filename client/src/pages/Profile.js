@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector, batch } from "react-redux";
-import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { t } from "i18next";
 
-import { getModal, getLoggedUser } from "../store/selectors/selectors";
-import { setModal, showToast, setUser } from "src/store";
-import api from "src/hooks/api";
-
+//coreUI
 import {
   CForm,
   CFormInput,
@@ -22,9 +19,16 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
 
+//hooks
+import { convertToKey } from "../hooks"
+import api from "src/hooks/api";
+
+//store
+import { setModal, showToast, setUser } from "src/store";
+import { getModal, getLoggedUser } from "src/store/selectors/selectors";
+
 const Settings = () => {
   //#region constants
-  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const modal = useSelector(getModal);
@@ -55,58 +59,60 @@ const Settings = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (userData.newPassword === userData.repeatPassword) {
-      api
-        .put("user/" + currentUser.id, {
-          first_name: userData.firstName,
-          last_name: userData.lastName,
-          username: userData.username,
-          email: userData.email,
-          currentPassword: userData.currentPassword,
-          newPassword: userData.newPassword,
-        })
-        .then((response) => {
-          const loggedUser = {
-            id: currentUser.id,
-            first_name: response.data.first_name,
-            last_name: response.data.last_name,
-            username: response.data.username,
-            email: response.data.email,
-          };
-
-          batch(() => {
-            dispatch(setUser(loggedUser));
-            dispatch(
-              showToast({
-                type: "success",
-                content: t("UserWasEditedSuccessfully"),
-              })
-            );
-          });
-
-          setUserData({
-            ...userData,
-            currentPassword: "",
-            newPassword: "",
-            repeatPassword: "",
-          });
-        })
-        .catch((error) => {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: error.response.data.message,
-            })
-          );
-        });
-    } else {
+    if (userData.newPassword !== "" && (userData.newPassword !== userData.repeatPassword)) {
       dispatch(
         showToast({
           type: "danger",
           content: t("NewAndRepeatPasswordDidNotMatch"),
         })
       );
+      return;
     }
+
+    api
+      .put("user/" + currentUser.id, {
+        first_name: userData.firstName,
+        last_name: userData.lastName,
+        username: userData.username,
+        email: userData.email,
+        currentPassword: userData.currentPassword,
+        newPassword: userData.newPassword,
+      })
+      .then((response) => {
+        const loggedUser = {
+          id: currentUser.id,
+          first_name: response.data.first_name,
+          last_name: response.data.last_name,
+          username: response.data.username,
+          email: response.data.email,
+        };
+
+        setUserData((prevState) => {
+          dispatch(setUser(loggedUser));
+          dispatch(
+            showToast({
+              type: "success",
+              content: t("UserWasEditedSuccessfully"),
+            })
+          );
+
+          return {
+            ...prevState,
+            currentPassword: "",
+            newPassword: "",
+            repeatPassword: "",
+          }
+        })
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: t(convertToKey(error.response.data.message)),
+          })
+        );
+      });
+
   };
   //#endregion
 
@@ -120,13 +126,12 @@ const Settings = () => {
         <CCardBody>
           <CForm onSubmit={handleUserUpdate}>
             <CRow
-              xs={{ cols: 1, gutter: 4 }}
+              xs={{ cols: 1, gutter: 3 }}
               lg={{ cols: 3 }}
               className="align-items-start mb-3"
             >
-              <CCol xs={6}>
+              <CCol sm={6}>
                 <CFormInput
-                  required
                   type="text"
                   placeholder={t("FirstName")}
                   value={userData.firstName}
@@ -134,9 +139,8 @@ const Settings = () => {
                 />
               </CCol>
 
-              <CCol xs={6}>
+              <CCol sm={6}>
                 <CFormInput
-                  required
                   type="text"
                   placeholder={t("LastName")}
                   value={userData.lastName}
@@ -148,7 +152,6 @@ const Settings = () => {
                 <CInputGroup>
                   <CInputGroupText>@</CInputGroupText>
                   <CFormInput
-                    required
                     type="email"
                     placeholder={t("Email")}
                     value={userData.email}
@@ -170,7 +173,6 @@ const Settings = () => {
                     <CIcon icon={cilUser} />
                   </CInputGroupText>
                   <CFormInput
-                    required
                     disabled
                     type="text"
                     placeholder={t("Username")}
@@ -189,7 +191,7 @@ const Settings = () => {
                   <CFormInput
                     required
                     type="password"
-                    placeholder={t("CurrentPassword")}
+                    placeholder={t("CurrentPassword") + "*"}
                     autoComplete="current-password"
                     value={userData.currentPassword}
                     onChange={(event) =>
@@ -205,7 +207,6 @@ const Settings = () => {
                     <CIcon icon={cilLockLocked} />
                   </CInputGroupText>
                   <CFormInput
-                    required
                     type="password"
                     placeholder={t("NewPassword")}
                     autoComplete="new-password"
@@ -223,8 +224,8 @@ const Settings = () => {
                     <CIcon icon={cilLockLocked} />
                   </CInputGroupText>
                   <CFormInput
-                    required
                     type="password"
+                    disabled={userData.newPassword === ""}
                     placeholder={t("RepeatPassword")}
                     autoComplete="new-password"
                     value={userData.repeatPassword}

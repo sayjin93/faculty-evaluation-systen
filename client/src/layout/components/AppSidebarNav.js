@@ -1,7 +1,8 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
+//coreUI
 import { CBadge, CNavItem, CNavTitle } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -17,8 +18,8 @@ import {
 } from "@coreui/icons";
 
 export const AppSidebarNav = () => {
+  //#region constants
   const location = useLocation();
-  const { t } = useTranslation();
 
   const items = [
     {
@@ -88,7 +89,9 @@ export const AppSidebarNav = () => {
       icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
     },
   ];
+  //#endregion
 
+  //#region functions
   const navLink = (name, icon, badge) => {
     return (
       <>
@@ -135,6 +138,7 @@ export const AppSidebarNav = () => {
       </Component>
     );
   };
+  //#endregion
 
   return (
     <React.Fragment>

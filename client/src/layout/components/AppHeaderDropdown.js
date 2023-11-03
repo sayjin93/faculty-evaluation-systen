@@ -1,8 +1,9 @@
 import React from "react";
 import { batch, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
+//coreUI
 import {
   CAvatar,
   CDropdown,
@@ -14,11 +15,12 @@ import {
 } from "@coreui/react";
 import { cilAccountLogout, cilSettings, cilUser } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
+
+//store
 import { setFirstLogin, showToast } from "src/store";
 
 const AppHeaderDropdown = () => {
   //#region constants
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //#endregion

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { t } from "i18next";
 
 //coreUI
 import {
@@ -31,7 +31,7 @@ import {
   getAcademicYear,
   getProfessors,
   getSelectedProfessor,
-} from "../store/selectors/selectors";
+} from "src/store/selectors/selectors";
 
 //components
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
@@ -46,7 +46,6 @@ import logoImage from "src/assets/images/uet_logo.png";
 
 const Reports = () => {
   //#region constants
-  const { t } = useTranslation();
   const handleError = useErrorHandler();
   //#endregion
 

@@ -1,19 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { batch, useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { t } from "i18next";
 
-import {
-  getAcademicYear,
-  getLoggedUser,
-  isFirstLogin,
-} from "../store/selectors/selectors";
-import { showToast, setFirstLogin } from "../store";
-import { convertDateFormat, countOccurrences } from "../hooks";
-
-import WidgetsDropdown from "../widgets/WidgetsDropdown";
-import useErrorHandler from "src/hooks/useErrorHandler";
-
+//coreUI
 import {
   CButton,
   CCard,
@@ -31,11 +21,25 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilSettings } from "@coreui/icons";
+
+//hooks
 import api from "src/hooks/api";
+import useErrorHandler from "src/hooks/useErrorHandler";
+
+//store
+import {
+  getAcademicYear,
+  getLoggedUser,
+  isFirstLogin,
+} from "src/store/selectors/selectors";
+import { showToast, setFirstLogin } from "src/store";
+import { convertDateFormat, countOccurrences } from "src/hooks";
+
+//widgets
+import WidgetsDropdown from "src/widgets/WidgetsDropdown";
 
 const Home = () => {
   //#region constants
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();

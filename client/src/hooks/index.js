@@ -77,4 +77,7 @@ export function convertToKey(text) {
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join('');
 }
+export function capitalizeWords(str) {
+  return str.replace(/\b\w/g, function (l) { return l.toUpperCase() });
+}
 //#endregion

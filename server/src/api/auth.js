@@ -69,7 +69,7 @@ router.post('/login', (req, res) => {
 
 router.post('/register', (req, res) => {
   const {
-    username, password, email,
+    first_name, last_name, username, password, email,
   } = req.body;
 
   // Check if username already exists
@@ -90,8 +90,8 @@ router.post('/register', (req, res) => {
 
       // Create a Users
       const newUser = new User({
-        first_name: '',
-        last_name: '',
+        first_name,
+        last_name,
         username,
         password,
         email,
@@ -105,9 +105,9 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/reset', (req, res) => {
-  const { username, email } = req.body;
+  const { username } = req.body;
 
-  if (!username && !email) {
+  if (!username) {
     return res.status(400).json({
       message: 'Please provide either username or email',
     });
@@ -115,10 +115,7 @@ router.post('/reset', (req, res) => {
 
   User.findOne({
     where: {
-      [Op.or]: [
-        { username: username || null },
-        { email: email || null },
-      ],
+      [Op.or]: [{ username }, { email: username }],
     },
   })
     .then((user) => {

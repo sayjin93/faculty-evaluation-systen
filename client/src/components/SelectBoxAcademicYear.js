@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
+import { t } from "i18next";
 
 //coreUI
 import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
@@ -17,7 +17,6 @@ import { showToast, changeAcademicYear } from "src/store";
 
 const SelectBoxAcademicYear = ({ className = "" }) => {
   //#region constants
-  const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
   //#endregion

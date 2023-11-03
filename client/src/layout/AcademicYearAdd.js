@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { t } from "i18next";
+
+//coreUI
 import {
   CButton,
   CCard,
@@ -13,15 +17,15 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cibHtmlacademy } from "@coreui/icons";
-import { useTranslation } from "react-i18next";
 
-import { useDispatch } from "react-redux";
-import { showToast } from "src/store";
+//hooks
 import api from "src/hooks/api";
+
+//store
+import { showToast } from "src/store";
 
 const AcademicYearAdd = () => {
   //#region constants
-  const { t } = useTranslation();
   const dispatch = useDispatch();
   //#endregion
 
@@ -30,7 +34,6 @@ const AcademicYearAdd = () => {
   //#endregion
 
   //#region functions
-
   const addAcademicYear = async () => {
     await api
       .post("/academic-year", {

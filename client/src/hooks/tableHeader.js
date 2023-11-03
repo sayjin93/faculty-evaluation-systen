@@ -1,5 +1,7 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "i18next";
+
+//coreUI
 import { CTableHead, CTableHeaderCell, CTableRow } from "@coreui/react";
 
 const fixTableHeaderName = (text) => {
@@ -12,7 +14,6 @@ const fixTableHeaderName = (text) => {
 };
 
 const TableHeader = ({ items, timestamp = true, color = "light" }) => {
-  const { t } = useTranslation();
 
   if (items && items.length > 0) {
     const header = Object.keys(items[0]); // extract keys from the first object

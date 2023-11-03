@@ -32,10 +32,7 @@ const ResetPage = () => {
   //#endregion
 
   //#region states
-  const [user, setUser] = useState({
-    username: "",
-    email: "",
-  });
+  const [user, setUser] = useState("");
   //#endregion
 
   //#region functions
@@ -48,22 +45,19 @@ const ResetPage = () => {
     });
   };
 
-  const handleInputChange = (event, fieldName) => {
-    setUser({
-      ...user,
-      [fieldName]: event.target.value,
-    });
+  const handleInputChange = (event) => {
+    setUser(event.target.value);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (user.username === "" && user.email === "") {
+    if (user === "") {
       dispatch(
         showToast({
           type: "warning",
-          content: t("PleaseFillUsernameOrEmail")
+          content: t("PleaseWriteYourUsernameOrEmail")
         })
       );
       return;
@@ -71,21 +65,16 @@ const ResetPage = () => {
 
     await api
       .post("/reset", {
-        username: user.username,
-        email: user.email,
+        username: user,
       })
       .then((response) => {
-        debugger;
         dispatch(
           showToast({
             type: "success",
             content: t(convertToKey(response.data.message))
           })
         );
-        setUser({
-          username: "",
-          email: "",
-        })
+        setUser("")
       })
       .catch((error) => {
         const { data, status } = error.response;
@@ -122,31 +111,21 @@ const ResetPage = () => {
           <CCol md={9} lg={7} xl={6}>
             <CCard className="p-4">
               <CCardBody className="p-4">
+                <h1>{t("ResetPassword")}</h1>
+                <p className="text-medium-emphasis">
+                  {t("EnterYourUsernameOrEmailBelowToTesetYourPassword")}
+                </p>
+
                 <CForm onSubmit={handleSubmit}>
-                  <h1>{t("ResetPassword")}</h1>
-                  <p className="text-medium-emphasis">
-                    {t("EnterYourUsernameOrEmailBelowToTesetYourPassword")}
-                  </p>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
                     <CFormInput
                       type="text"
-                      placeholder={t("Username")}
-                      value={user.username}
-                      onChange={(event) => handleInputChange(event, "username")}
-                    />
-                  </CInputGroup>
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>@</CInputGroupText>
-                    <CFormInput
-                      type="email"
-                      autoComplete="email"
-                      placeholder={t("Email")}
-                      value={user.email}
-                      size="sm"
-                      onChange={(event) => handleInputChange(event, "email")}
+                      placeholder={t("Username") + " " + t("Or") + " " + t("Email")}
+                      value={user}
+                      onChange={(event) => handleInputChange(event)}
                     />
                   </CInputGroup>
                   <CRow>
