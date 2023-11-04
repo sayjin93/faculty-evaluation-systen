@@ -132,8 +132,6 @@ router.post('/reset', (req, res) => {
       user.resetPasswordToken = resetToken;
       user.resetPasswordExpires = resetTokenExpiration;
 
-      console.log(process.env.SMTP_HOST);
-
       user.save().then(() => {
         // Configure nodemailer to send the email
         const transporter = nodemailer.createTransport({
@@ -146,10 +144,13 @@ router.post('/reset', (req, res) => {
           },
         });
 
-        const base_url = `${req.protocol}://${req.headers.host}`;
+        const base_url = req.headers.origin;
 
         const mailOptions = {
-          from: process.env.SMTP_USER || 'info@jkruja.com', // Your email address
+          from: {
+            name: 'UET Support', // Your Sender name
+            address: process.env.SMTP_USER || 'info@jkruja.com>', // Your email address
+          },
           to: user.email, // User's email address
           subject: 'Password Reset',
           text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n'
@@ -169,7 +170,7 @@ router.post('/reset', (req, res) => {
           console.log('Email sent:', info);
 
           res.json({
-            message: 'Reset password email sent successfully',
+            message: 'Reset password email sent successfully. The Token will expire for 3 hours.',
           });
         });
       });
@@ -197,8 +198,11 @@ router.get('/reset/:token', (req, res) => {
         });
       }
 
-      // Here you can render a form for the user to reset their password
-      res.render('resetPasswordForm', { resetToken });
+      res.json({
+        token: resetToken,
+      });
+      // // Here you can render a form for the user to reset their password
+      // res.render('resetPasswordForm', { resetToken });
     })
     .catch((err) => {
       res.status(500).json({
@@ -225,20 +229,13 @@ router.post('/reset/:token', (req, res) => {
       }
 
       // Update the user's password
-      // Hash the new password and save it to the database
-      bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
-        if (err) {
-          return res.status(500).json({ message: err });
-        }
+      user.password = newPassword;
+      user.resetPasswordToken = null;
+      user.resetPasswordExpires = null;
 
-        user.password = hashedPassword;
-        user.resetPasswordToken = null;
-        user.resetPasswordExpires = null;
-
-        user.save().then(() => {
-          res.json({
-            message: 'Password reset successful',
-          });
+      user.save().then(() => {
+        res.json({
+          message: 'Password reset successful',
         });
       });
     })

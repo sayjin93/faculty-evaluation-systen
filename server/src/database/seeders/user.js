@@ -33,6 +33,8 @@ async function seed() {
       ...user,
       createdAt: new Date(),
       updatedAt: new Date(),
+      resetPasswordToken: null,
+      resetPasswordExpires: null,
     };
 
     await User.findOrCreate({

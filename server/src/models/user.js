@@ -28,6 +28,12 @@ const Users = sequelize.define('Users', {
   isAdmin: {
     type: DataTypes.BOOLEAN,
   },
+  resetPasswordToken: {
+    type: DataTypes.STRING,
+  },
+  resetPasswordExpires: {
+    type: DataTypes.DATE,
+  },
 });
 
 module.exports = Users;

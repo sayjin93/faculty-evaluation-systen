@@ -13,6 +13,7 @@ import Page404 from "../pages/Page404";
 const Login = lazy(() => import("../pages/auth/Login"));
 const Register = lazy(() => import("../pages/auth/Register"));
 const Reset = lazy(() => import("../pages/auth/Reset"));
+const ResetToken = lazy(() => import("../pages/auth/ResetToken"));
 
 //private pages
 const Home = lazy(() => import("../pages/Home"));
@@ -87,6 +88,10 @@ const publicRoutes = [
   {
     path: "/reset",
     element: <Reset />,
+  },
+  {
+    path: "/reset/:token",
+    element: <ResetToken />,
   },
 ];
 

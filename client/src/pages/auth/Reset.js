@@ -25,7 +25,7 @@ import CIcon from "@coreui/icons-react";
 import { cilUser, cifAl, cifGb } from "@coreui/icons";
 import api from "src/hooks/api";
 
-const ResetPage = () => {
+const Reset = () => {
   //#region constants
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
@@ -90,16 +90,16 @@ const ResetPage = () => {
 
   //#region useEffect
   useEffect(() => {
-    const keyDownHandler = (event) => {
+    const keyUpHandler = (event) => {
       if (event.key === "Enter") {
         const el = document.getElementById("BtnReset");
         el.click();
       }
     };
-    document.addEventListener("keydown", keyDownHandler);
+    document.addEventListener("keyup", keyUpHandler);
 
     return () => {
-      document.removeEventListener("keydown", keyDownHandler);
+      document.removeEventListener("keyup", keyUpHandler);
     };
   }, []);
   //#endregion
@@ -186,4 +186,4 @@ const ResetPage = () => {
   );
 };
 
-export default ResetPage;
+export default Reset;

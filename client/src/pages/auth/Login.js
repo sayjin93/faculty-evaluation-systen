@@ -26,7 +26,7 @@ import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser, cifAl, cifGb } from "@coreui/icons";
 import api from "src/hooks/api";
 
-const LoginPage = () => {
+const Login = () => {
   //#region constants
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -111,16 +111,16 @@ const LoginPage = () => {
 
   //#region useEffect
   useEffect(() => {
-    const keyDownHandler = (event) => {
+    const keyUpHandler = (event) => {
       if (event.key === "Enter") {
         const el = document.getElementById("BtnLogin");
         el.click();
       }
     };
-    document.addEventListener("keydown", keyDownHandler);
+    document.addEventListener("keyup", keyUpHandler);
 
     return () => {
-      document.removeEventListener("keydown", keyDownHandler);
+      document.removeEventListener("keyup", keyUpHandler);
     };
   }, []);
   //#endregion
@@ -251,4 +251,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;
