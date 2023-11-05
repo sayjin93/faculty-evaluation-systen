@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 //coreUI
 import {
@@ -46,6 +46,7 @@ import logoImage from "src/assets/images/uet_logo.png";
 
 const Reports = () => {
   //#region constants
+  const { t } = useTranslation();
   const handleError = useErrorHandler();
   //#endregion
 

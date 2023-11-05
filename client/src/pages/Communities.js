@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 //coreUI
 import {
@@ -34,21 +34,25 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 import { convertDateFormat, convertToKey, formatDate2 } from "src/hooks";
 
 //store
-import { setModal, showToast } from "../store";
+import { setModal, showToast } from "src/store";
 import {
   getAcademicYearId,
   getProfessors,
   getSelectedProfessor,
   getModal,
-} from "../store/selectors/selectors";
+} from "src/store/selectors/selectors";
 
 //component
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
+
+//flatpick
 import "flatpickr/dist/themes/airbnb.css";
 import Flatpickr from "react-flatpickr";
 
+
 const Communities = () => {
   //#region constants
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
 

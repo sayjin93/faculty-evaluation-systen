@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 //coreUI
 import { CFormSelect, CInputGroup, CInputGroupText } from "@coreui/react";
@@ -10,16 +10,17 @@ import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
-import { setProfessors, setSelectedProfessor } from "../store";
+import { setProfessors, setSelectedProfessor } from "src/store";
 
 //selectors
 import {
   getProfessors,
   getSelectedProfessor,
-} from "../store/selectors/selectors";
+} from "src/store/selectors/selectors";
 
 const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
   //#region constants
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
   //#endregion

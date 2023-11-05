@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 //coreUI
 import {
@@ -28,6 +28,7 @@ import { showToast } from "src/store";
 
 const Register = () => {
   //#region constants
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //#endregion

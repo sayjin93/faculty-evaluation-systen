@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 //coreUI
 import {
@@ -20,7 +20,7 @@ import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
 
 //hooks
-import { convertToKey } from "../hooks"
+import { convertToKey } from "src/hooks"
 import api from "src/hooks/api";
 
 //store
@@ -29,6 +29,7 @@ import { getModal, getLoggedUser } from "src/store/selectors/selectors";
 
 const Settings = () => {
   //#region constants
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const modal = useSelector(getModal);

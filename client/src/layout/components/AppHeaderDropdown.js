@@ -1,7 +1,7 @@
 import React from "react";
 import { batch, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 //coreUI
 import {
@@ -21,11 +21,13 @@ import { setFirstLogin, showToast } from "src/store";
 
 const AppHeaderDropdown = () => {
   //#region constants
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //#endregion
 
   //#region selectors
+  // @ts-ignore
   const loggedUser = useSelector((state) => state.user.loggedUser);
 
   const firstName = loggedUser?.first_name;
@@ -63,7 +65,9 @@ const AppHeaderDropdown = () => {
           {initials ? initials : <CIcon icon={cilUser} />}
         </CAvatar>
       </CDropdownToggle>
-      <CDropdownMenu className="pt-0" placement="bottom-end">
+      <CDropdownMenu className="pt-0"
+        // @ts-ignore
+        placement='bottom-end'>
         <CDropdownHeader className="bg-light fw-semibold py-2">
           {t("UserMenu")}
         </CDropdownHeader>

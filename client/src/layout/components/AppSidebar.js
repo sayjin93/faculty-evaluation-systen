@@ -1,19 +1,22 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+
+//coreUI
 import { CImage, CSidebar, CSidebarBrand, CSidebarNav } from "@coreui/react";
 
+//simpleBar
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 
-//redux
-import { useSelector, useDispatch } from "react-redux";
-import { changeState } from "../../store";
+//store
+import { changeState } from "src/store";
 
 //components
 import { AppSidebarNav } from "./AppSidebarNav";
 
 //images
-import logo from "../../assets/images/logo.svg";
+import logo from "src/assets/images/logo.svg";
 
 const AppSidebar = () => {
   //#region constants
@@ -21,6 +24,7 @@ const AppSidebar = () => {
   //#endregion
 
   //#region selectors
+  // @ts-ignore
   const show = useSelector((state) => state.sidebar.show);
   //#endregion
 

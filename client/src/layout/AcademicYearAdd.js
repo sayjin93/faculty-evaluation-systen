@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 //coreUI
 import {
@@ -26,6 +26,7 @@ import { showToast } from "src/store";
 
 const AcademicYearAdd = () => {
   //#region constants
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   //#endregion
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { batch, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 //coreUI
 import {
@@ -40,6 +40,7 @@ import WidgetsDropdown from "src/widgets/WidgetsDropdown";
 
 const Home = () => {
   //#region constants
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();

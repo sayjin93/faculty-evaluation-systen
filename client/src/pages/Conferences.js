@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 //coreUI
 import {
@@ -44,9 +44,9 @@ import {
 //components
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 
-
 const Conferences = () => {
   //#region constants
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
 

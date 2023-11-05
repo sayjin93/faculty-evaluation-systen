@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 //coreUI
 import {
@@ -33,12 +33,12 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 import { convertDateFormat, convertToKey } from "src/hooks";
 
 //store
-import { getModal } from "../store/selectors/selectors";
-import { setModal, showToast } from "../store";
-
+import { setModal, showToast } from "src/store";
+import { getModal } from "src/store/selectors/selectors";
 
 const Professors = () => {
   //#region constants
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
 

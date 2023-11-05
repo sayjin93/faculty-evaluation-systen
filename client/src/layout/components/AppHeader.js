@@ -1,9 +1,7 @@
 import React from "react";
-
-//redux
 import { useSelector, useDispatch } from "react-redux";
-import { changeState } from "../../store";
 
+//coreUI
 import {
   CContainer,
   CHeader,
@@ -15,8 +13,14 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilMenu } from "@coreui/icons";
 
+//store
+import { changeState } from "src/store";
+
+//components
 import AppHeaderDropdown from "./AppHeaderDropdown";
-import logo from "../../assets/images/logo.svg";
+
+//image
+import logo from "src/assets/images/logo.svg";
 
 const AppHeader = () => {
   //#region constants
@@ -24,6 +28,7 @@ const AppHeader = () => {
   //#endregion
 
   //#region selectors
+  // @ts-ignore
   const show = useSelector((state) => state.sidebar.show);
   //#endregion
 

@@ -21,6 +21,7 @@ const Layout = () => {
   //#endregion
 
   //#region selectors
+  // @ts-ignore
   const academicYear = useSelector((state) => state.settings.academicYear);
   //#endregion
 

@@ -1,12 +1,17 @@
 import React from "react";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 //coreUI
 import { CButton, CCol, CContainer, CRow } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilHome } from "@coreui/icons";
 
+
 const Page404 = () => {
+  //#region constants
+  const { t } = useTranslation();
+  //#endregion
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
