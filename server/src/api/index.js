@@ -10,6 +10,7 @@ const paperApi = require('./paper');
 const professorApi = require('./professor');
 const reportApi = require('./report');
 const userApi = require('./user');
+const settingsApi = require('./settings');
 
 const router = express.Router();
 
@@ -29,5 +30,6 @@ router.use('/paper', paperApi);
 router.use('/professor', professorApi);
 router.use('/report', reportApi);
 router.use('/user', userApi);
+router.use('/settings', settingsApi);
 
 module.exports = router;

@@ -77,11 +77,10 @@ const Reset = () => {
         setUser("")
       })
       .catch((error) => {
-        const { data, status } = error.response;
         dispatch(
           showToast({
             type: "danger",
-            content: status !== 500 ? t(convertToKey(data.message)) : error.message,
+            content: t(convertToKey(error.response.data.message)),
           })
         );
       })

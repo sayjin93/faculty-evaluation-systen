@@ -18,7 +18,11 @@ const sequelize = new Sequelize(
     console.log('Connection has been established successfully.'.bgBlue);
 
     // Synchronize the models with the database (alter: true means it will alter tables if they already exist)
-    await sequelize.sync({ alter: true, logging: false });
+    await sequelize.sync({
+      alter: true,
+      force: false, // process.env.NODE_ENV === 'development',
+      logging: false,
+    });
     console.log('Models synchronized'.bgGreen);
 
     if (process.env.DEFAULT_DATA === 'true') {
@@ -32,6 +36,7 @@ const sequelize = new Sequelize(
         require('./seeders/book'),
         require('./seeders/conference'),
         require('./seeders/community'),
+        require('./seeders/settings'),
       ];
 
       // Execute all seed functions in parallel using Promise.all

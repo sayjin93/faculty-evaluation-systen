@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
 const User = require('../models/user');
+const Settings = require('../models/settings');
 
 const router = express.Router();
 
@@ -104,7 +105,7 @@ router.post('/register', (req, res) => {
   });
 });
 
-router.post('/reset', (req, res) => {
+router.post('/reset', async (req, res) => {
   const { username } = req.body;
 
   if (!username) {
@@ -113,73 +114,85 @@ router.post('/reset', (req, res) => {
     });
   }
 
-  User.findOne({
-    where: {
-      [Op.or]: [{ username }, { email: username }],
-    },
-  })
-    .then((user) => {
-      if (!user) {
-        return res.status(404).json({
-          message: 'User not found',
-        });
-      }
+  try {
+    const emailSettings = await Settings.findOne({ where: { name: 'Email' } });
 
-      // Update the user with the reset token and expiration
-      const resetToken = crypto.randomBytes(20).toString('hex');
-      const resetTokenExpiration = Date.now() + 3600000;
+    if (!emailSettings) {
+      return res.status(500).json({
+        message: 'SMTP settings not found',
+      });
+    }
 
-      user.resetPasswordToken = resetToken;
-      user.resetPasswordExpires = resetTokenExpiration;
+    const transporter = nodemailer.createTransport({
+      host: emailSettings.settings.smtp_host,
+      port: emailSettings.settings.smtp_port,
+      secure: emailSettings.settings.smtp_secure,
+      auth: {
+        user: emailSettings.settings.smtp_user,
+        pass: emailSettings.settings.smtp_pass,
+      },
+    });
 
-      user.save().then(() => {
-        // Configure nodemailer to send the email
-        const transporter = nodemailer.createTransport({
-          host: process.env.SMTP_HOST || 'mail.jkruja.com',
-          port: process.env.SMTP_PORT || 465,
-          secure: process.env.SMTP_SECURE || true,
-          auth: {
-            user: process.env.SMTP_USER || 'info@jkruja.com',
-            pass: process.env.SMTP_PASS || 'Kruja2021..',
-          },
-        });
+    User.findOne({
+      where: {
+        [Op.or]: [{ username }, { email: username }],
+      },
+    })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({
+            message: 'User not found',
+          });
+        }
 
-        const base_url = req.headers.origin;
+        // Update the user with the reset token and expiration
+        const resetToken = crypto.randomBytes(20).toString('hex');
+        const resetTokenExpiration = Date.now() + 3600000;
 
-        const mailOptions = {
-          from: {
-            name: 'UET Support', // Your Sender name
-            address: process.env.SMTP_USER || 'info@jkruja.com>', // Your email address
-          },
-          to: user.email, // User's email address
-          subject: 'Password Reset',
-          text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n'
-            + 'Please click on the following link, or paste this into your browser to complete the process:\n\n'
-            + `${base_url}/reset/${resetToken}\n\n`
-            + 'If you did not request this, please ignore this email and your password will remain unchanged.\n',
-        };
+        user.resetPasswordToken = resetToken;
+        user.resetPasswordExpires = resetTokenExpiration;
 
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            return res.status(500).json({
-              message: error.message,
+        user.save().then(() => {
+          const base_url = req.headers.origin;
+
+          const mailOptions = {
+            from: {
+              name: 'UET Support', // Your Sender name
+              address: emailSettings.settings.smtp_user, // Your email address
+            },
+            to: user.email, // User's email address
+            subject: 'Password Reset',
+            text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n'
+              + 'Please click on the following link, or paste this into your browser to complete the process:\n\n'
+              + `${base_url}/reset/${resetToken}\n\n`
+              + 'If you did not request this, please ignore this email and your password will remain unchanged.\n',
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              return res.status(500).json({
+                message: error.response,
+              });
+            }
+
+            // You can log or use 'info' for debugging or auditing purposes
+            console.log('Email sent:', info);
+
+            res.json({
+              message: 'Reset password email sent successfully. The Token will expire for 3 hours.',
             });
-          }
-
-          // You can log or use 'info' for debugging or auditing purposes
-          console.log('Email sent:', info);
-
-          res.json({
-            message: 'Reset password email sent successfully. The Token will expire for 3 hours.',
           });
         });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          message: err,
+        });
       });
-    })
-    .catch((err) => {
-      res.status(500).json({
-        message: err,
-      });
-    });
+  } catch (error) {
+    console.error('Error retrieving SMTP settings:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
 });
 
 router.get('/reset/:token', (req, res) => {
