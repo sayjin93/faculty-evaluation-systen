@@ -58,6 +58,10 @@ const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
   //#region useEffect
   useEffect(() => {
     fetchProfessors();
+
+    return (() => {
+      dispatch(setSelectedProfessor(0));
+    })
   }, []);
   //#endregion
 

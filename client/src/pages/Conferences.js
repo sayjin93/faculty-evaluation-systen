@@ -494,7 +494,7 @@ const Conferences = () => {
         </CModalHeader>
 
         <CModalBody>
-          <span>Are you sure to delete selected congerence?</span>
+          <span>{t("AreYouSureToDeleteTheSelected") + " " + t("Conference").toLocaleLowerCase() + " ?"}</span>
         </CModalBody>
 
         <CModalFooter>

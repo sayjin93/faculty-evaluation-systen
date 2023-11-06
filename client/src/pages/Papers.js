@@ -485,7 +485,7 @@ const Papers = () => {
         </CModalHeader>
 
         <CModalBody>
-          <span>Are you sure to delete selected paper?</span>
+          <span>{t("AreYouSureToDeleteTheSelected") + " " + t("Paper").toLocaleLowerCase() + " ?"}</span>
         </CModalBody>
 
         <CModalFooter>

@@ -400,7 +400,7 @@ const Professors = () => {
         </CModalHeader>
 
         <CModalBody>
-          <span>Are you sure to delete selected professor?</span>
+          <span>{t("AreYouSureToDeleteTheSelected") + " " + t("Professor").toLocaleLowerCase() + " ?"}</span>
         </CModalBody>
 
         <CModalFooter>

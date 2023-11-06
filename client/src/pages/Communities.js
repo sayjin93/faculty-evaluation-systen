@@ -510,7 +510,7 @@ const Communities = () => {
         </CModalHeader>
 
         <CModalBody>
-          <span>Are you sure to delete selected comunity?</span>
+          <span>{t("AreYouSureToDeleteTheSelected") + " " + t("Community").toLocaleLowerCase() + " ?"}</span>
         </CModalBody>
 
         <CModalFooter>
