@@ -21,8 +21,12 @@ import {
   CInputGroupText,
   CRow,
 } from "@coreui/react";
+
+
+//icons
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cifAl, cifGb } from "@coreui/icons";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 //hooks
 import { convertToKey, setCookie } from "src/hooks";
@@ -45,6 +49,10 @@ const ResetToken = () => {
     newPassword: "",
     retypePassword: ""
   });
+  const [viewPass, setViewPass] = useState({
+    new: false,
+    retype: false,
+  });
   //#endregion
 
   //#region functions
@@ -56,6 +64,15 @@ const ResetToken = () => {
       options: { path: "/", sameSite: "strict" },
     });
   };
+
+  const handeViewPassStateChange = (key, value) => {
+    setViewPass(prevState => {
+      return {
+        ...prevState,
+        [key]: !value,
+      };
+    })
+  }
 
   const handleInputChange = (event, fieldName) => {
     setState({
@@ -181,6 +198,7 @@ const ResetToken = () => {
                         value={state.newPassword}
                         onChange={(event) => handleInputChange(event, "newPassword")}
                       />
+                      <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("new", viewPass.new)}>{viewPass.new ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
                     </CInputGroup>
 
                     <CInputGroup className="mb-3">
@@ -194,6 +212,7 @@ const ResetToken = () => {
                         value={state.retypePassword}
                         onChange={(event) => handleInputChange(event, "retypePassword")}
                       />
+                      <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("retype", viewPass.retype)}>{viewPass.retype ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
                     </CInputGroup>
 
                     <CRow>

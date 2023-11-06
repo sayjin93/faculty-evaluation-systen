@@ -17,8 +17,11 @@ import {
   CRow,
   CSpinner,
 } from "@coreui/react";
+
+//icons
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 //hooks
 import api from "src/hooks/api";
@@ -44,6 +47,10 @@ const Register = () => {
     repeatPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [viewPass, setViewPass] = useState({
+    new: false,
+    retype: false,
+  });
   //#endregion
 
   //#region functions
@@ -53,6 +60,15 @@ const Register = () => {
       [fieldName]: event.target.value,
     });
   };
+
+  const handeViewPassStateChange = (key, value) => {
+    setViewPass(prevState => {
+      return {
+        ...prevState,
+        [key]: !value,
+      };
+    })
+  }
 
   const handleRegister = async (event) => {
     event.preventDefault();
@@ -189,12 +205,13 @@ const Register = () => {
                         </CInputGroupText>
                         <CFormInput
                           required
-                          type="password"
+                          type={viewPass.new ? "text" : "password"}
                           autoComplete="new-password"
                           placeholder={t("Password") + "*"}
                           value={user.password}
                           onChange={(event) => handleInputChange(event, "password")}
                         />
+                        <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("new", viewPass.new)}>{viewPass.new ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
                       </CInputGroup>
                     </CCol>
                     <CCol md={6} className="mb-3">
@@ -204,7 +221,7 @@ const Register = () => {
                         </CInputGroupText>
                         <CFormInput
                           required
-                          type="password"
+                          type={viewPass.retype ? "text" : "password"}
                           autoComplete="new-password"
                           placeholder={t("RepeatPassword") + "*"}
                           value={user.repeatPassword}
@@ -212,6 +229,8 @@ const Register = () => {
                             handleInputChange(event, "repeatPassword")
                           }
                         />
+                        <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("retype", viewPass.retype)}>{viewPass.retype ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
+
                       </CInputGroup>
                     </CCol>
                   </CRow>
@@ -232,7 +251,7 @@ const Register = () => {
           </CCol>
         </CRow>
       </CContainer>
-    </div>
+    </div >
   );
 };
 

@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { convertToKey, setCookie } from "src/hooks";
-import { setUser, showToast } from "../../store";
 
+//coreUI
 import {
   CButton,
   CCard,
@@ -23,9 +22,18 @@ import {
   CRow,
   CSpinner,
 } from "@coreui/react";
+
+//icons
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser, cifAl, cifGb } from "@coreui/icons";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+
+//hooks
+import { convertToKey, setCookie } from "src/hooks";
 import api from "src/hooks/api";
+
+//store
+import { setUser, showToast } from "src/store";
 
 const Login = () => {
   //#region constants
@@ -40,6 +48,7 @@ const Login = () => {
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [viewPass, setViewPass] = useState(false);
   //#endregion
 
   //#region functions
@@ -51,6 +60,10 @@ const Login = () => {
       options: { path: "/", sameSite: "strict" },
     });
   };
+
+  const handeViewPassStateChange = () => {
+    setViewPass(!viewPass)
+  }
 
   const handleInputChange = (event, fieldName) => {
     setFormData({
@@ -166,7 +179,7 @@ const Login = () => {
                       </CInputGroupText>
                       <CFormInput
                         required
-                        type="password"
+                        type={viewPass ? "text" : "password"}
                         placeholder={t("Password")}
                         autoComplete="current-password"
                         value={formData.password}
@@ -174,6 +187,7 @@ const Login = () => {
                           handleInputChange(event, "password")
                         }
                       />
+                      <CButton type="button" color="secondary" variant="outline" onClick={handeViewPassStateChange}>{viewPass ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>

@@ -15,8 +15,11 @@ import {
   CRow,
   CCol,
 } from "@coreui/react";
+
+//icons
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 //hooks
 import { convertToKey } from "src/hooks"
@@ -44,6 +47,11 @@ const Settings = () => {
     newPassword: "",
     repeatPassword: "",
   });
+  const [viewPass, setViewPass] = useState({
+    current: false,
+    new: false,
+    retype: false,
+  });
   //#endregion
 
   //#region functions
@@ -53,6 +61,15 @@ const Settings = () => {
       [fieldName]: event.target.value,
     });
   };
+
+  const handeViewPassStateChange = (key, value) => {
+    setViewPass(prevState => {
+      return {
+        ...prevState,
+        [key]: !value,
+      };
+    })
+  }
 
   const handleUserUpdate = (event) => {
     event.preventDefault();
@@ -190,7 +207,7 @@ const Settings = () => {
                   </CInputGroupText>
                   <CFormInput
                     required
-                    type="password"
+                    type={viewPass.current ? "text" : "password"}
                     placeholder={t("CurrentPassword") + "*"}
                     autoComplete="current-password"
                     value={userData.currentPassword}
@@ -198,6 +215,7 @@ const Settings = () => {
                       handleInputChange(event, "currentPassword")
                     }
                   />
+                  <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("current", viewPass.current)}>{viewPass.current ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
                 </CInputGroup>
               </CCol>
 
@@ -207,7 +225,7 @@ const Settings = () => {
                     <CIcon icon={cilLockLocked} />
                   </CInputGroupText>
                   <CFormInput
-                    type="password"
+                    type={viewPass.new ? "text" : "password"}
                     placeholder={t("NewPassword")}
                     autoComplete="new-password"
                     value={userData.newPassword}
@@ -215,6 +233,7 @@ const Settings = () => {
                       handleInputChange(event, "newPassword")
                     }
                   />
+                  <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("new", viewPass.new)}>{viewPass.new ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
                 </CInputGroup>
               </CCol>
 
@@ -224,7 +243,7 @@ const Settings = () => {
                     <CIcon icon={cilLockLocked} />
                   </CInputGroupText>
                   <CFormInput
-                    type="password"
+                    type={viewPass.retype ? "text" : "password"}
                     disabled={userData.newPassword === ""}
                     placeholder={t("RepeatPassword")}
                     autoComplete="new-password"
@@ -233,6 +252,8 @@ const Settings = () => {
                       handleInputChange(event, "repeatPassword")
                     }
                   />
+                  <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("retype", viewPass.retype)}>{viewPass.retype ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
+
                 </CInputGroup>
               </CCol>
             </CRow>
