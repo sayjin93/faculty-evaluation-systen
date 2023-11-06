@@ -49,7 +49,6 @@ import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import "flatpickr/dist/themes/airbnb.css";
 import Flatpickr from "react-flatpickr";
 
-
 const Communities = () => {
   //#region constants
   const { t } = useTranslation();
@@ -79,6 +78,7 @@ const Communities = () => {
     editMode: false,
     selectedId: -1,
   });
+  const [selectedId, setSelectedId] = useState(null);
 
   const filteredItems =
     Number(selectedProfessor) !== 0
@@ -109,7 +109,7 @@ const Communities = () => {
           external: response.data.external,
           professor: response.data.professor_id,
         });
-        dispatch(setModal(true));
+        dispatch(setModal("editCommunity"));
       })
       .catch((error) => {
         dispatch(
@@ -212,6 +212,7 @@ const Communities = () => {
           );
         }
       });
+    dispatch(setModal());
   };
 
   const handleInputChange = (event, fieldName) => {
@@ -236,7 +237,7 @@ const Communities = () => {
     } else {
       if (modalOptions.editMode) editCommunity(modalOptions.selectedId);
       else addCommunity();
-      dispatch(setModal(false));
+      dispatch(setModal());
     }
     setValidated(true);
   };
@@ -305,7 +306,10 @@ const Communities = () => {
                     <CButton
                       color="danger"
                       variant="outline"
-                      onClick={() => deleteCommunity(id)}
+                      onClick={() => {
+                        setSelectedId(id);
+                        dispatch(setModal('deleteCommunity'));
+                      }}
                     >
                       <CIcon icon={cilTrash} />
                     </CButton>
@@ -348,7 +352,7 @@ const Communities = () => {
           <CButton
             color="primary"
             className="float-right"
-            onClick={() => dispatch(setModal(true))}
+            onClick={() => dispatch(setModal("editConference"))}
           >
             {t("Add")}
           </CButton>
@@ -371,10 +375,11 @@ const Communities = () => {
       </CCard>
 
       <CModal
+        id="editCommunity"
         backdrop="static"
-        visible={modal}
+        visible={modal.isOpen && modal.id === "editCommunity"}
         onClose={() => {
-          dispatch(setModal(false));
+          dispatch(setModal());
           setFormData(defaultFormData);
           setModalOptions({
             editMode: false,
@@ -476,7 +481,7 @@ const Communities = () => {
             <CButton
               color="secondary"
               onClick={() => {
-                dispatch(setModal(false));
+                dispatch(setModal());
                 setValidated(false);
               }}
             >
@@ -487,6 +492,41 @@ const Communities = () => {
             </CButton>
           </CModalFooter>
         </CForm>
+      </CModal>
+
+      <CModal
+        id="deleteCommunity"
+        backdrop="static"
+        visible={modal.isOpen && modal.id === "deleteCommunity"}
+        onClose={() => {
+          dispatch(setModal());
+        }}
+      >
+
+        <CModalHeader>
+          <CModalTitle>
+            {t("Confirmation")}
+          </CModalTitle>
+        </CModalHeader>
+
+        <CModalBody>
+          <span>Are you sure to delete selected comunity?</span>
+        </CModalBody>
+
+        <CModalFooter>
+          <CButton
+            color="light"
+            onClick={() => {
+              dispatch(setModal())
+            }}
+          >
+            {t("Cancel")}
+          </CButton>
+          <CButton onClick={() => deleteCommunity(selectedId)} color="danger">
+            {t("Delete")}
+          </CButton>
+        </CModalFooter>
+
       </CModal>
     </>
   );

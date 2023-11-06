@@ -70,11 +70,11 @@ const Conferences = () => {
   const [formData, setFormData] = useState(defaultFormData);
   const [status, setStatus] = useState(null);
   const [validated, setValidated] = useState(false);
-
   const [modalOptions, setModalOptions] = useState({
     editMode: false,
     selectedId: -1,
   });
+  const [selectedId, setSelectedId] = useState(null);
 
   const filteredItems =
     Number(selectedProfessor) !== 0
@@ -106,7 +106,7 @@ const Conferences = () => {
           dates: response.data.dates,
           professor: response.data.professor_id,
         });
-        dispatch(setModal(true));
+        dispatch(setModal("editConference"));
       })
       .catch((error) => {
         dispatch(
@@ -209,6 +209,8 @@ const Conferences = () => {
           );
         }
       });
+
+    dispatch(setModal());
   };
 
   const handleInputChange = (event, fieldName) => {
@@ -226,7 +228,7 @@ const Conferences = () => {
     } else {
       if (modalOptions.editMode) editConference(modalOptions.selectedId);
       else addConference();
-      dispatch(setModal(false));
+      dispatch(setModal());
     }
     setValidated(true);
   };
@@ -288,7 +290,10 @@ const Conferences = () => {
                     <CButton
                       color="danger"
                       variant="outline"
-                      onClick={() => deleteConference(id)}
+                      onClick={() => {
+                        setSelectedId(id);
+                        dispatch(setModal('deleteConference'));
+                      }}
                     >
                       <CIcon icon={cilTrash} />
                     </CButton>
@@ -331,7 +336,7 @@ const Conferences = () => {
           <CButton
             color="primary"
             className="float-right"
-            onClick={() => dispatch(setModal(true))}
+            onClick={() => dispatch(setModal("editConference"))}
           >
             {t("Add")}
           </CButton>
@@ -352,11 +357,13 @@ const Conferences = () => {
           </CTable>
         </CCardBody>
       </CCard>
+
       <CModal
+        id="editConference"
         backdrop="static"
-        visible={modal}
+        visible={modal.isOpen && modal.id === "editConference"}
         onClose={() => {
-          dispatch(setModal(false));
+          dispatch(setModal());
           setFormData(defaultFormData);
           setModalOptions({
             editMode: false,
@@ -458,7 +465,7 @@ const Conferences = () => {
             <CButton
               color="secondary"
               onClick={() => {
-                dispatch(setModal(false));
+                dispatch(setModal());
                 setValidated(false);
               }}
             >
@@ -469,6 +476,41 @@ const Conferences = () => {
             </CButton>
           </CModalFooter>
         </CForm>
+      </CModal>
+
+      <CModal
+        id="deleteConference"
+        backdrop="static"
+        visible={modal.isOpen && modal.id === "deleteConference"}
+        onClose={() => {
+          dispatch(setModal());
+        }}
+      >
+
+        <CModalHeader>
+          <CModalTitle>
+            {t("Confirmation")}
+          </CModalTitle>
+        </CModalHeader>
+
+        <CModalBody>
+          <span>Are you sure to delete selected congerence?</span>
+        </CModalBody>
+
+        <CModalFooter>
+          <CButton
+            color="light"
+            onClick={() => {
+              dispatch(setModal())
+            }}
+          >
+            {t("Cancel")}
+          </CButton>
+          <CButton onClick={() => deleteConference(selectedId)} color="danger">
+            {t("Delete")}
+          </CButton>
+        </CModalFooter>
+
       </CModal>
     </>
   );

@@ -48,7 +48,6 @@ import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import "flatpickr/dist/themes/airbnb.css";
 import Flatpickr from "react-flatpickr";
 
-
 const Books = () => {
   //#region constants
   const { t } = useTranslation();
@@ -77,6 +76,7 @@ const Books = () => {
     editMode: false,
     selectedId: -1,
   });
+  const [selectedId, setSelectedId] = useState(null);
 
   const filteredItems =
     Number(selectedProfessor) !== 0
@@ -106,7 +106,7 @@ const Books = () => {
           publicationYear: response.data.publication_year,
           professor: response.data.professor_id,
         });
-        dispatch(setModal(true));
+        dispatch(setModal('editBook'));
       })
       .catch((error) => {
         dispatch(
@@ -180,7 +180,6 @@ const Books = () => {
       .delete("/book/" + id)
       .then((response) => {
         setStatus(response);
-
         dispatch(
           showToast({
             type: "success",
@@ -206,6 +205,8 @@ const Books = () => {
           );
         }
       });
+
+    dispatch(setModal());
   };
 
   const handleInputChange = (event, fieldName) => {
@@ -223,7 +224,7 @@ const Books = () => {
     } else {
       if (modalOptions.editMode) editBook(modalOptions.selectedId);
       else addBook();
-      dispatch(setModal(false));
+      dispatch(setModal())
     }
     setValidated(true);
   };
@@ -286,7 +287,10 @@ const Books = () => {
                     <CButton
                       color="danger"
                       variant="outline"
-                      onClick={() => deleteBook(id)}
+                      onClick={() => {
+                        setSelectedId(id);
+                        dispatch(setModal('deleteBook'));
+                      }}
                     >
                       <CIcon icon={cilTrash} />
                     </CButton>
@@ -329,7 +333,7 @@ const Books = () => {
           <CButton
             color="primary"
             className="float-right"
-            onClick={() => dispatch(setModal(true))}
+            onClick={() => dispatch(setModal("editBook"))}
           >
             {t("Add")}
           </CButton>
@@ -352,10 +356,11 @@ const Books = () => {
       </CCard>
 
       <CModal
+        id="editBook"
         backdrop="static"
-        visible={modal}
+        visible={modal.isOpen && modal.id === "editBook"}
         onClose={() => {
-          dispatch(setModal(false));
+          dispatch(setModal());
           setFormData(defaultFormData);
           setModalOptions({
             editMode: false,
@@ -450,7 +455,7 @@ const Books = () => {
             <CButton
               color="secondary"
               onClick={() => {
-                dispatch(setModal(false));
+                dispatch(setModal())
                 setValidated(false);
               }}
             >
@@ -461,6 +466,41 @@ const Books = () => {
             </CButton>
           </CModalFooter>
         </CForm>
+      </CModal>
+
+      <CModal
+        id="deleteBook"
+        backdrop="static"
+        visible={modal.isOpen && modal.id === "deleteBook"}
+        onClose={() => {
+          dispatch(setModal());
+        }}
+      >
+
+        <CModalHeader>
+          <CModalTitle>
+            {t("Confirmation")}
+          </CModalTitle>
+        </CModalHeader>
+
+        <CModalBody>
+          <span>Are you sure to delete selected book?</span>
+        </CModalBody>
+
+        <CModalFooter>
+          <CButton
+            color="light"
+            onClick={() => {
+              dispatch(setModal())
+            }}
+          >
+            {t("Cancel")}
+          </CButton>
+          <CButton onClick={() => deleteBook(selectedId)} color="danger">
+            {t("Delete")}
+          </CButton>
+        </CModalFooter>
+
       </CModal>
     </>
   );

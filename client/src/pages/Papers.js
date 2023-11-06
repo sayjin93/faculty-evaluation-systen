@@ -76,6 +76,7 @@ const Papers = () => {
     editMode: false,
     selectedId: -1,
   });
+  const [selectedId, setSelectedId] = useState(null);
 
   const filteredItems =
     Number(selectedProfessor) !== 0
@@ -106,7 +107,7 @@ const Papers = () => {
           publication: response.data.publication,
           professor: response.data.professor_id,
         });
-        dispatch(setModal(true));
+        dispatch(setModal("editPaper"));
       })
       .catch((error) => {
         dispatch(
@@ -205,6 +206,8 @@ const Papers = () => {
           );
         }
       });
+
+    dispatch(setModal());
   };
 
   const handleInputChange = (event, fieldName) => {
@@ -222,7 +225,7 @@ const Papers = () => {
     } else {
       if (modalOptions.editMode) editPaper(modalOptions.selectedId);
       else addPaper();
-      dispatch(setModal(false));
+      dispatch(setModal());
     }
     setValidated(true);
   };
@@ -286,7 +289,10 @@ const Papers = () => {
                     <CButton
                       color="danger"
                       variant="outline"
-                      onClick={() => deletePaper(id)}
+                      onClick={() => {
+                        setSelectedId(id);
+                        dispatch(setModal('deletePaper'));
+                      }}
                     >
                       <CIcon icon={cilTrash} />
                     </CButton>
@@ -329,7 +335,7 @@ const Papers = () => {
           <CButton
             color="primary"
             className="float-right"
-            onClick={() => dispatch(setModal(true))}
+            onClick={() => dispatch(setModal("editPaper"))}
           >
             {t("Add")}
           </CButton>
@@ -351,10 +357,11 @@ const Papers = () => {
       </CCard>
 
       <CModal
+        id="editPaper"
         backdrop="static"
-        visible={modal}
+        visible={modal.isOpen && modal.id === "editPaper"}
         onClose={() => {
-          dispatch(setModal(false));
+          dispatch(setModal());
           setFormData(defaultFormData);
           setModalOptions({
             editMode: false,
@@ -449,7 +456,7 @@ const Papers = () => {
             <CButton
               color="secondary"
               onClick={() => {
-                dispatch(setModal(false));
+                dispatch(setModal());
                 setValidated(false);
               }}
             >
@@ -460,6 +467,41 @@ const Papers = () => {
             </CButton>
           </CModalFooter>
         </CForm>
+      </CModal>
+
+      <CModal
+        id="deletePaper"
+        backdrop="static"
+        visible={modal.isOpen && modal.id === "deletePaper"}
+        onClose={() => {
+          dispatch(setModal());
+        }}
+      >
+
+        <CModalHeader>
+          <CModalTitle>
+            {t("Confirmation")}
+          </CModalTitle>
+        </CModalHeader>
+
+        <CModalBody>
+          <span>Are you sure to delete selected paper?</span>
+        </CModalBody>
+
+        <CModalFooter>
+          <CButton
+            color="light"
+            onClick={() => {
+              dispatch(setModal())
+            }}
+          >
+            {t("Cancel")}
+          </CButton>
+          <CButton onClick={() => deletePaper(selectedId)} color="danger">
+            {t("Delete")}
+          </CButton>
+        </CModalFooter>
+
       </CModal>
     </>
   );

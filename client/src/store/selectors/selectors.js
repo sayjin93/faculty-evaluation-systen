@@ -32,7 +32,7 @@ export const isFirstLogin = createSelector(
 
 export const getModal = createSelector(
   [selectModal],
-  (modal) => modal.modal
+  (modal) => modal
 );
 
 export const getProfessors = createSelector(

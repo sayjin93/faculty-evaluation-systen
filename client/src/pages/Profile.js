@@ -12,7 +12,6 @@ import {
   CCardBody,
   CCardHeader,
   CButton,
-  CModal,
   CRow,
   CCol,
 } from "@coreui/react";
@@ -24,15 +23,14 @@ import { convertToKey } from "src/hooks"
 import api from "src/hooks/api";
 
 //store
-import { setModal, showToast, setUser } from "src/store";
-import { getModal, getLoggedUser } from "src/store/selectors/selectors";
+import { showToast, setUser } from "src/store";
+import { getLoggedUser } from "src/store/selectors/selectors";
 
 const Settings = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const modal = useSelector(getModal);
   const currentUser = useSelector(getLoggedUser);
   //#endregion
 
@@ -175,6 +173,7 @@ const Settings = () => {
                   </CInputGroupText>
                   <CFormInput
                     disabled
+                    title={t("NotAllowedToEdit")}
                     type="text"
                     placeholder={t("Username")}
                     autoComplete="username"
@@ -248,16 +247,6 @@ const Settings = () => {
           </CForm>
         </CCardBody>
       </CCard>
-
-      <CModal
-        backdrop="static"
-        visible={modal}
-        onClose={() => {
-          dispatch(setModal(false));
-        }}
-      >
-        <p>dsfsfdsf</p>
-      </CModal>
     </>
   );
 };

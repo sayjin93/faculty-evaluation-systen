@@ -267,7 +267,7 @@ const Settings = () => {
                   </CDropdownMenu>
                 </CDropdown>
 
-                <CButton color="light" onClick={() => dispatch(setModal(true))}>
+                <CButton color="light" onClick={() => dispatch(setModal("addAcdemicYear"))}>
                   {t("Add")}
                 </CButton>
               </div>
@@ -355,10 +355,11 @@ const Settings = () => {
       </CRow>
 
       <CModal
+        id="addAcdemicYear"
         backdrop="static"
-        visible={modal}
+        visible={modal.isOpen && modal.id === "addAcdemicYear"}
         onClose={() => {
-          dispatch(setModal(false));
+          dispatch(setModal());
           setNewAcademicYear("");
         }}
       >
@@ -381,7 +382,7 @@ const Settings = () => {
           <CButton
             color="secondary"
             onClick={() => {
-              dispatch(setModal(false));
+              dispatch(setModal());
             }}
           >
             {t("Close")}
@@ -390,7 +391,7 @@ const Settings = () => {
             disabled={newAcademicYear.length === 0}
             onClick={() => {
               addAcademicYear();
-              dispatch(setModal(false));
+              dispatch(setModal());
             }}
           >
             {t("Add")}

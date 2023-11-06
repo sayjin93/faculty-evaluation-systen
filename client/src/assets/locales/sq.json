@@ -79,6 +79,8 @@
   "NewAndRepeatPasswordDidNotMatch": "Fjalëkalimet e reja nuk përputhen",
   "NewPassword": "Fjalëkalimi i ri",
   "NoDataToDisplay": "Nu ka të dhëna",
+  "NoDatatoDisplay": "Nuk ka të dhëna për të shfaqur",
+  "NotAllowedToEdit": "Nuk lejohet të editohet",
   "Number": "Numri",
   "Oops!You'reLost": "Ups! Ju keni humbur",
   "Or": "ose",

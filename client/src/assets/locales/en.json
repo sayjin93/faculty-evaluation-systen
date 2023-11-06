@@ -79,6 +79,8 @@
   "NewAndRepeatPasswordDidNotMatch": "New and Repeat Password did not match",
   "NewPassword": "New Password",
   "NoDataToDisplay": "No data to display",
+  "NoDatatoDisplay": "No data to display",
+  "NotAllowedToEdit": "Not allowed to edit",
   "Number": "Number",
   "Oops!You'reLost": "Oops! You're Lost",
   "Or": "or",
