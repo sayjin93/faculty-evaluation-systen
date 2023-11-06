@@ -21,6 +21,7 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CSpinner,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser, cifAl, cifGb } from "@coreui/icons";
@@ -38,6 +39,7 @@ const Login = () => {
     username: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
   //#endregion
 
   //#region functions
@@ -60,6 +62,8 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     event.stopPropagation();
+
+    setIsLoading(true);
 
     await api
       .post("/login", {
@@ -106,6 +110,7 @@ const Login = () => {
 
         }
       })
+    setIsLoading(false);
   };
   //#endregion
 
@@ -173,12 +178,13 @@ const Login = () => {
                     <CRow>
                       <CCol xs={6}>
                         <CButton
+                          disabled={isLoading}
                           type="submit"
                           id="BtnLogin"
                           color="primary"
                           className="px-4"
                         >
-                          {t("Login")}
+                          {isLoading ? <CSpinner color="light" size="sm" /> : t("Login")}
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-end">

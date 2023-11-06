@@ -43,10 +43,11 @@ router.get('/email', auth, async (req, res) => {
 router.put('/email', auth, async (req, res) => {
   try {
     const {
-      smtp_host, smtp_port, smtp_secure, smtp_user, smtp_pass,
+      sender_name, smtp_host, smtp_port, smtp_secure, smtp_user, smtp_pass,
     } = req.body;
 
     const settingsData = {
+      sender_name,
       smtp_host,
       smtp_port,
       smtp_secure,

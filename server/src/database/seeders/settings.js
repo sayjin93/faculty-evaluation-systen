@@ -6,6 +6,7 @@ async function seed() {
     {
       name: 'Email',
       settings: {
+        sender_name: 'UET Support',
         smtp_host: 'mail.jkruja.com',
         smtp_port: 465,
         smtp_secure: 1,

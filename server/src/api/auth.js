@@ -106,7 +106,7 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/reset', async (req, res) => {
-  const { username } = req.body;
+  const { username, language } = req.body;
 
   if (!username) {
     return res.status(400).json({
@@ -123,13 +123,17 @@ router.post('/reset', async (req, res) => {
       });
     }
 
+    const {
+      sender_name, smtp_host, smtp_port, smtp_secure, smtp_user, smtp_pass,
+    } = emailSettings.settings;
+
     const transporter = nodemailer.createTransport({
-      host: emailSettings.settings.smtp_host,
-      port: emailSettings.settings.smtp_port,
-      secure: emailSettings.settings.smtp_secure,
+      host: smtp_host,
+      port: smtp_port,
+      secure: smtp_secure,
       auth: {
-        user: emailSettings.settings.smtp_user,
-        pass: emailSettings.settings.smtp_pass,
+        user: smtp_user,
+        pass: smtp_pass,
       },
     });
 
@@ -155,17 +159,30 @@ router.post('/reset', async (req, res) => {
         user.save().then(() => {
           const base_url = req.headers.origin;
 
-          const mailOptions = {
-            from: {
-              name: 'UET Support', // Your Sender name
-              address: emailSettings.settings.smtp_user, // Your email address
-            },
-            to: user.email, // User's email address
-            subject: 'Password Reset',
-            text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n'
+          let emailSubject;
+          let emailText;
+          if (language === 'sq') {
+            emailSubject = 'Rivendosja e fjalëkalimit';
+            emailText = 'Ju po e merrni këtë sepse ju (ose dikush tjetër) keni kërkuar rivendosjen e fjalëkalimit për llogarinë tuaj.\n\n'
+              + 'Ju lutemi klikoni në linkun e mëposhtme ose ngjisni këtë në shfletuesin tuaj për të përfunduar procesin:\n\n'
+              + `${base_url}/reset/${resetToken}\n\n`
+              + 'Nëse nuk e keni kërkuar këtë, ju lutemi injoroni këtë email dhe fjalëkalimi juaj do të mbetet i pandryshuar.\n';
+          } else {
+            emailSubject = 'Password Reset';
+            emailText = 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n'
               + 'Please click on the following link, or paste this into your browser to complete the process:\n\n'
               + `${base_url}/reset/${resetToken}\n\n`
-              + 'If you did not request this, please ignore this email and your password will remain unchanged.\n',
+              + 'If you did not request this, please ignore this email and your password will remain unchanged.\n';
+          }
+
+          const mailOptions = {
+            from: {
+              name: sender_name, // Your Sender name
+              address: smtp_user, // Your email address
+            },
+            to: user.email, // User's email address
+            subject: emailSubject,
+            text: emailText,
           };
 
           transporter.sendMail(mailOptions, (error, info) => {

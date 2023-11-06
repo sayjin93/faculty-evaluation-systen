@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { convertToKey, setCookie } from "src/hooks";
+import { convertToKey, getCookie, setCookie } from "src/hooks";
 import { showToast } from "../../store";
 
 import {
@@ -20,6 +20,7 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CSpinner,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilUser, cifAl, cifGb } from "@coreui/icons";
@@ -33,6 +34,7 @@ const Reset = () => {
 
   //#region states
   const [user, setUser] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   //#endregion
 
   //#region functions
@@ -63,9 +65,15 @@ const Reset = () => {
       return;
     }
 
+    const language = getCookie({ name: "language" });
+    const languageCookie = language || "en";
+
+    setIsLoading(true);
+
     await api
       .post("/reset", {
         username: user,
+        language: languageCookie
       })
       .then((response) => {
         dispatch(
@@ -74,7 +82,7 @@ const Reset = () => {
             content: t(convertToKey(response.data.message))
           })
         );
-        setUser("")
+        setUser("");
       })
       .catch((error) => {
         dispatch(
@@ -84,6 +92,8 @@ const Reset = () => {
           })
         );
       })
+
+    setIsLoading(false);
   };
   //#endregion
 
@@ -130,12 +140,13 @@ const Reset = () => {
                   <CRow>
                     <CCol xs={6}>
                       <CButton
+                        disabled={isLoading}
                         type="submit"
                         id="BtnReset"
                         color="primary"
                         className="px-4"
                       >
-                        {t("Reset")}
+                        {isLoading ? <CSpinner color="light" size="sm" /> : t("Reset")}
                       </CButton>
                     </CCol>
                     <CCol xs={6} className="text-end">

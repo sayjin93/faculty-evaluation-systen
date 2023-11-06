@@ -36,6 +36,7 @@ import CIcon from "@coreui/icons-react";
 import { cifAl, cifGb, cibHtmlacademy } from "@coreui/icons";
 
 const defaultSmtpConfigs = {
+  sender_name: "UET Support",
   smtp_host: "",
   smtp_port: 465,
   smtp_secure: 1,
@@ -148,11 +149,11 @@ const Settings = () => {
       [fieldName]: value
     }));
   };
-
   const handleSubmitSMTP = async (event) => {
     event.preventDefault();
 
     const updatedSTMP = {
+      sender_name: smtpConfig.sender_name,
       smtp_host: smtpConfig.smtp_host,
       smtp_port: smtpConfig.smtp_port,
       smtp_secure: smtpConfig.smtp_secure,
@@ -282,6 +283,15 @@ const Settings = () => {
               <CForm
                 onSubmit={handleSubmitSMTP}
               >
+                <CFormInput
+                  size="sm"
+                  type="text"
+                  floatingClassName="mb-3"
+                  floatingLabel={t("SenderName")}
+                  placeholder={t("SenderName")}
+                  value={smtpConfig.sender_name}
+                  onChange={(event) => handleSmtpChange(event.target.value, "sender_name")}
+                />
                 <CFormInput
                   size="sm"
                   type="text"

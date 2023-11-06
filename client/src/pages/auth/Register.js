@@ -15,6 +15,7 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CSpinner,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
@@ -42,6 +43,7 @@ const Register = () => {
     password: "",
     repeatPassword: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
   //#endregion
 
   //#region functions
@@ -64,6 +66,8 @@ const Register = () => {
         })
       );
     } else {
+      setIsLoading(true);
+
       await api
         .post("/register", {
           first_name: capitalizeWords(user.firstName),
@@ -101,6 +105,8 @@ const Register = () => {
             );
           }
         });
+
+      setIsLoading(false);
     }
   };
   //#endregion
@@ -211,8 +217,8 @@ const Register = () => {
                   </CRow>
 
                   <CInputGroup className="mb-3">
-                    <CButton color="success" type="submit" className="w-100">
-                      {t("CreateAccount")}
+                    <CButton disabled={isLoading} color="success" type="submit" className="w-100">
+                      {isLoading ? <CSpinner color="light" size="sm" /> : t("CreateAccount")}
                     </CButton>
                   </CInputGroup>
                 </CForm>
