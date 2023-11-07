@@ -484,7 +484,7 @@ const Books = () => {
         </CModalHeader>
 
         <CModalBody>
-          <span>{t("AreYouSureToDeleteTheSelected") + " " + t("Book").toLocaleLowerCase() + " ?"}</span>
+          <span>{t("AreYouSureToDeleteTheSelected") + " ?"}</span>
         </CModalBody>
 
         <CModalFooter>

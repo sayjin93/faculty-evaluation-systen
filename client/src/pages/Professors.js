@@ -17,24 +17,22 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHeaderCell,
-  CTableRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
+import { BsGenderMale, BsGenderFemale } from "react-icons/bs"
 
 //hooks
+import { convertToKey } from "src/hooks";
 import api from "src/hooks/api";
-import TableHeader from "src/hooks/tableHeader";
 import useErrorHandler from "src/hooks/useErrorHandler";
-import { convertDateFormat, convertToKey } from "src/hooks";
+
 
 //store
 import { setModal, showToast } from "src/store";
 import { getModal } from "src/store/selectors/selectors";
+import CustomDataGrid from "src/components/CustomDataGrid";
+import { Column } from "devextreme-react/data-grid";
 
 const Professors = () => {
   //#region constants
@@ -203,78 +201,54 @@ const Professors = () => {
     setValidated(true);
   };
 
-  const RenderTableBody = () => {
-    if (items && items.length > 0) {
-      return (
-        <CTableBody>
-          {items.map((element) => {
-            const id = element.id;
-            let gender = element.gender === "m" ? t("Male") : t("Female");
-            let createdAt = element.createdAt
-              ? convertDateFormat(element.createdAt)
-              : null;
-            let updatedAt = element.updatedAt
-              ? convertDateFormat(element.updatedAt)
-              : null;
 
-            return (
-              <CTableRow key={id}>
-                <CTableHeaderCell scope="row" className="text-end">
-                  {id}
-                </CTableHeaderCell>
-                <CTableDataCell>{element.first_name}</CTableDataCell>
-                <CTableDataCell>{element.last_name}</CTableDataCell>
-                <CTableDataCell>{gender}</CTableDataCell>
-                <CTableDataCell>{createdAt}</CTableDataCell>
-                <CTableDataCell>{updatedAt}</CTableDataCell>
-                <CTableDataCell className="text-center">
-                  <CButtonGroup
-                    role="group"
-                    aria-label="Basic example"
-                    size="sm"
-                  >
-                    <CButton
-                      color="primary"
-                      variant="outline"
-                      onClick={() => {
-                        setModalOptions({
-                          ...modalOptions,
-                          editMode: true,
-                          selectedId: id,
-                        });
-                      }}
-                    >
-                      <CIcon icon={cilPen} />
-                    </CButton>
-                    <CButton
-                      color="danger"
-                      variant="outline"
-                      onClick={() => {
-                        setSelectedId(id);
-                        dispatch(setModal('deleteProfessor'));
-                      }}
-                    >
-                      <CIcon icon={cilTrash} />
-                    </CButton>
-                  </CButtonGroup>
-                </CTableDataCell>
-              </CTableRow>
-            );
-          })}
-        </CTableBody>
-      );
-    } else {
-      return (
-        <CTableBody>
-          <CTableRow>
-            <CTableHeaderCell colSpan={7}>
-              {t("NoDataToDisplay")}
-            </CTableHeaderCell>
-          </CTableRow>
-        </CTableBody>
-      );
-    }
-  };
+  //DataGrid
+  const cellRenderGender = (data) => {
+    let icon = data.value === "m" ? <BsGenderMale className="text-primary" /> : <BsGenderFemale className="text-danger" />
+    let gender = data.value === "m" ? t("Male") : t("Female");
+
+    return (
+      <div className="flex flex-gap-10">
+        <span>{icon}</span>
+        <span>{gender}</span>
+      </div>)
+  }
+  const cellRenderGenderActions = ({ data }) => {
+    const { id } = data;
+
+    return (
+      <CButtonGroup
+        role="group"
+        aria-label="Button Actions"
+        size="sm"
+      >
+        <CButton
+          color="primary"
+          variant="outline"
+          onClick={() => {
+            setModalOptions({
+              ...modalOptions,
+              editMode: true,
+              selectedId: id,
+            });
+          }}
+        >
+          <CIcon icon={cilPen} />
+        </CButton>
+
+        <CButton
+          color="danger"
+          variant="outline"
+          onClick={() => {
+            setSelectedId(id);
+            dispatch(setModal('deleteProfessor'));
+          }}
+        >
+          <CIcon icon={cilTrash} />
+        </CButton>
+      </CButtonGroup>
+    )
+  }
   //#endregion
 
   //#region useEffect
@@ -300,18 +274,51 @@ const Professors = () => {
             {t("Add")}
           </CButton>
         </CCardHeader>
-        <CCardBody>
-          <CTable
-            align="middle"
-            className="mb-0 border"
-            hover
-            responsive
-            bordered
-          >
-            <TableHeader items={items} />
 
-            <RenderTableBody />
-          </CTable>
+        <CCardBody>
+          <CustomDataGrid dataSource={items}>
+            <Column
+              cssClass="bold"
+              dataField="id"
+              caption="#"
+              dataType="number"
+              width={55}
+            />
+            <Column
+              dataField="first_name"
+              caption={t("FirstName")}
+              dataType="string"
+            />
+            <Column
+              dataField="last_name"
+              caption={t("LastName")}
+              dataType="string"
+            />
+            <Column
+              dataField="gender"
+              caption={t("Gender")}
+              dataType="string"
+              cellRender={cellRenderGender}
+            />
+            <Column
+              dataField="createdAt"
+              caption={t("CreatedAt")}
+              dataType="datetime"
+              visible={false}
+            />
+            <Column
+              dataField="updatedAt"
+              caption={t("UpdatedAt")}
+              dataType="datetime"
+              visible={false}
+            />
+            <Column
+              alignment="center"
+              caption={t("Actions")}
+              width={120}
+              cellRender={cellRenderGenderActions}
+            />
+          </CustomDataGrid>
         </CCardBody>
       </CCard>
 
@@ -400,7 +407,7 @@ const Professors = () => {
         </CModalHeader>
 
         <CModalBody>
-          <span>{t("AreYouSureToDeleteTheSelected") + " " + t("Professor").toLocaleLowerCase() + " ?"}</span>
+          <span>{t("AreYouSureToDeleteTheSelected") + " ?"}</span>
         </CModalBody>
 
         <CModalFooter>

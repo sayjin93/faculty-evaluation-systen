@@ -58,6 +58,7 @@ body {
 
 .flex {
   display: flex;
+  align-items: center;
 
   &-justify {
     &-between {
@@ -103,4 +104,8 @@ body {
       background: rgba(255, 255, 255.5) !important;
     }
   }
+}
+
+.bold {
+  font-weight: bold;
 }

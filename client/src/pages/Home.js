@@ -12,12 +12,6 @@ import {
   CCardHeader,
   CCol,
   CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilSettings } from "@coreui/icons";
@@ -33,10 +27,12 @@ import {
   isFirstLogin,
 } from "src/store/selectors/selectors";
 import { showToast, setFirstLogin } from "src/store";
-import { convertDateFormat, countOccurrences } from "src/hooks";
+import { countOccurrences } from "src/hooks";
 
 //widgets
 import WidgetsDropdown from "src/widgets/WidgetsDropdown";
+import CustomDataGrid from "src/components/CustomDataGrid";
+import { Column } from "devextreme-react/data-grid";
 
 const Home = () => {
   //#region constants
@@ -78,6 +74,7 @@ const Home = () => {
 
     if (professors) {
       professors.forEach((professor) => {
+        const professorId = professor.id;
         const professorName = `${professor.first_name} ${professor.last_name}`;
 
         const coursesCount = countOccurrences(
@@ -109,8 +106,8 @@ const Home = () => {
         const totalWeekHours = calculateTotalWeekHours(professor.id) || 0;
 
         const professorStat = {
+          id: professorId,
           professor: professorName,
-          createdAt: professor.createdAt,
           courses: coursesCount,
           papers: papersCount,
           books: booksCount,
@@ -253,65 +250,53 @@ const Home = () => {
         className="border-primary border-top-primary border-top-3 mb-4"
       >
         <CCardHeader>{t("ProfessorsStatistics")}</CCardHeader>
-        <CCardBody>
-          <CTable align="middle" className="mb-0 border" hover responsive>
-            <CTableHead color="light">
-              <CTableRow>
-                <CTableHeaderCell>{t("Professor")}</CTableHeaderCell>
-                <CTableHeaderCell className="text-center">
-                  {t("Courses")}
-                </CTableHeaderCell>
-                <CTableHeaderCell className="text-center">
-                  {t("WeekHours")}
-                </CTableHeaderCell>
-                <CTableHeaderCell className="text-center">
-                  {t("Papers")}
-                </CTableHeaderCell>
-                <CTableHeaderCell className="text-center">
-                  {t("Books")}
-                </CTableHeaderCell>
-                <CTableHeaderCell className="text-center">
-                  {t("Conferences")}
-                </CTableHeaderCell>
-                <CTableHeaderCell className="text-center">
-                  {t("CommunityServices")}
-                </CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
 
-            <CTableBody>
-              {professorStatistics.map((item, index) => {
-                return (
-                  <CTableRow v-for="item in professorStatistics" key={index}>
-                    <CTableDataCell>
-                      <div>{item.professor}</div>
-                      <div className="small text-medium-emphasis">
-                        {t("CreatedAt")}: {convertDateFormat(item.createdAt)}
-                      </div>
-                    </CTableDataCell>
-                    <CTableDataCell className="text-center">
-                      {item.courses}
-                    </CTableDataCell>
-                    <CTableDataCell className="text-center">
-                      {item.total_week_hours}
-                    </CTableDataCell>
-                    <CTableDataCell className="text-center">
-                      {item.papers}
-                    </CTableDataCell>
-                    <CTableDataCell className="text-center">
-                      {item.books}
-                    </CTableDataCell>
-                    <CTableDataCell className="text-center">
-                      {item.conferences}
-                    </CTableDataCell>
-                    <CTableDataCell className="text-center">
-                      {item.community_service}
-                    </CTableDataCell>
-                  </CTableRow>
-                );
-              })}
-            </CTableBody>
-          </CTable>
+        <CCardBody>
+          <CustomDataGrid dataSource={professorStatistics}>
+            <Column
+              cssClass="bold"
+              dataField="id"
+              caption="#"
+              dataType="number"
+              width={55}
+            />
+            <Column
+              dataField="professor"
+              caption={t("Professor")}
+              dataType="string"
+            />
+
+            <Column
+              dataField="courses"
+              caption={t("Courses")}
+              dataType="number"
+            />
+            <Column
+              dataField="total_week_hours"
+              caption={t("WeekHours")}
+              dataType="number"
+            />
+            <Column
+              dataField="papers"
+              caption={t("Papers")}
+              dataType="number"
+            />
+            <Column
+              dataField="books"
+              caption={t("Books")}
+              dataType="number"
+            />
+            <Column
+              dataField="conferences"
+              caption={t("Conferences")}
+              dataType="number"
+            />
+            <Column
+              dataField="community_service"
+              caption={t("CommunityServices")}
+              dataType="number"
+            />
+          </CustomDataGrid>
         </CCardBody>
       </CCard>
     </>

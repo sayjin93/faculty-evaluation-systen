@@ -14,6 +14,7 @@ function App() {
   //#endregion
 
   //#region selectors
+  // @ts-ignore
   const toast = useSelector((state) => state.toast);
   //#endregion
 
