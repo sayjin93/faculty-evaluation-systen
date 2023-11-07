@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { Column } from "devextreme-react/data-grid";
 
 //coreUI
 import {
@@ -17,20 +18,14 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHeaderCell,
-  CTableRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
 //hooks
 import api from "src/hooks/api";
-import TableHeader from "src/hooks/tableHeader";
 import useErrorHandler from "src/hooks/useErrorHandler";
-import { convertDateFormat, convertToKey } from "src/hooks";
+import { convertToKey } from "src/hooks";
 
 //store
 import { setModal, showToast } from "src/store";
@@ -43,6 +38,8 @@ import {
 
 //components
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
+import CustomDataGrid from "src/components/CustomDataGrid";
+
 
 const Conferences = () => {
   //#region constants
@@ -233,89 +230,42 @@ const Conferences = () => {
     setValidated(true);
   };
 
-  const RenderTableBody = () => {
-    if (filteredItems.length > 0) {
-      return (
-        <CTableBody>
-          {filteredItems.map((element, index) => {
-            const id = element.id;
+  //DataGrid
+  const cellRenderActions = ({ data }) => {
+    const { id } = data;
 
-            // Find the professor with the matching ID
-            const professor = professors.find(
-              (prof) => prof.id === element.professor_id
-            );
-            const professorFullName = professor
-              ? professor.first_name + " " + professor.last_name
-              : "";
-
-            let createdAt = element.createdAt
-              ? convertDateFormat(element.createdAt)
-              : null;
-            let updatedAt = element.updatedAt
-              ? convertDateFormat(element.updatedAt)
-              : null;
-
-            return (
-              <CTableRow key={id}>
-                <CTableHeaderCell scope="row" className="text-end">
-                  {index + 1}
-                </CTableHeaderCell>
-                <CTableDataCell>{element.name}</CTableDataCell>
-                <CTableDataCell>{element.location}</CTableDataCell>
-                <CTableDataCell>{element.present_title}</CTableDataCell>
-                <CTableDataCell>{element.authors}</CTableDataCell>
-                <CTableDataCell>{element.dates}</CTableDataCell>
-                <CTableDataCell>{professorFullName}</CTableDataCell>
-                <CTableDataCell>{createdAt}</CTableDataCell>
-                <CTableDataCell>{updatedAt}</CTableDataCell>
-                <CTableDataCell className="text-center">
-                  <CButtonGroup
-                    role="group"
-                    aria-label="Basic example"
-                    size="sm"
-                  >
-                    <CButton
-                      color="primary"
-                      variant="outline"
-                      onClick={() => {
-                        setModalOptions({
-                          ...modalOptions,
-                          editMode: true,
-                          selectedId: id,
-                        });
-                      }}
-                    >
-                      <CIcon icon={cilPen} />
-                    </CButton>
-                    <CButton
-                      color="danger"
-                      variant="outline"
-                      onClick={() => {
-                        setSelectedId(id);
-                        dispatch(setModal('deleteConference'));
-                      }}
-                    >
-                      <CIcon icon={cilTrash} />
-                    </CButton>
-                  </CButtonGroup>
-                </CTableDataCell>
-              </CTableRow>
-            );
-          })}
-        </CTableBody>
-      );
-    } else {
-      return (
-        <CTableBody>
-          <CTableRow>
-            <CTableHeaderCell colSpan={8}>
-              {t("NoDataToDisplay")}
-            </CTableHeaderCell>
-          </CTableRow>
-        </CTableBody>
-      );
-    }
-  };
+    return (
+      <CButtonGroup
+        role="group"
+        aria-label="Button Actions"
+        size="sm"
+      >
+        <CButton
+          color="primary"
+          variant="outline"
+          onClick={() => {
+            setModalOptions({
+              ...modalOptions,
+              editMode: true,
+              selectedId: id,
+            });
+          }}
+        >
+          <CIcon icon={cilPen} />
+        </CButton>
+        <CButton
+          color="danger"
+          variant="outline"
+          onClick={() => {
+            setSelectedId(id);
+            dispatch(setModal('deleteConference'));
+          }}
+        >
+          <CIcon icon={cilTrash} />
+        </CButton>
+      </CButtonGroup>
+    )
+  }
   //#endregion
 
   //#region useEffect
@@ -341,20 +291,69 @@ const Conferences = () => {
             {t("Add")}
           </CButton>
         </CCardHeader>
+
         <CCardBody>
           <SelectBoxProfessors className="mb-3" />
 
-          <CTable
-            align="middle"
-            className="mb-0 border"
-            hover
-            responsive
-            bordered
-          >
-            <TableHeader items={items} />
+          <CustomDataGrid dataSource={filteredItems}>
+            <Column
+              cssClass="bold"
+              dataField="id"
+              caption="#"
+              dataType="number"
+              width={55}
+            />
+            <Column
+              dataField="name"
+              caption={t("Name")}
+              dataType="string"
+            />
+            <Column
+              dataField="location"
+              caption={t("Location")}
+              dataType="string"
+            />
+            <Column
+              dataField="present_title"
+              caption={t("PresentTitle")}
+              dataType="string"
+            />
+            <Column
+              dataField="authors"
+              caption={t("Authors")}
+              dataType="string"
+            />
 
-            <RenderTableBody />
-          </CTable>
+            <Column
+              dataField="dates"
+              caption={t("Dates")}
+              dataType="string"
+            />
+            <Column
+              alignment="left"
+              dataField="professor_full_name"
+              caption={t("Professor")}
+              dataType="string"
+            />
+            <Column
+              dataField="createdAt"
+              caption={t("CreatedAt")}
+              dataType="datetime"
+              visible={false}
+            />
+            <Column
+              dataField="updatedAt"
+              caption={t("UpdatedAt")}
+              dataType="datetime"
+              visible={false}
+            />
+            <Column
+              alignment="center"
+              caption={t("Actions")}
+              width={120}
+              cellRender={cellRenderActions}
+            />
+          </CustomDataGrid>
         </CCardBody>
       </CCard>
 

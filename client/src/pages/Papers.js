@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { Column } from "devextreme-react/data-grid";
 
 //coreUI
 import {
@@ -17,20 +18,14 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHeaderCell,
-  CTableRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
 
 //hooks
+import { convertToKey } from "src/hooks";
 import api from "src/hooks/api";
-import TableHeader from "src/hooks/tableHeader";
 import useErrorHandler from "src/hooks/useErrorHandler";
-import { convertDateFormat, convertToKey } from "src/hooks";
 
 //store
 import { setModal, showToast } from "src/store";
@@ -41,12 +36,14 @@ import {
   getModal,
 } from "src/store/selectors/selectors";
 
-//components
-import SelectBoxProfessors from "src/components/SelectBoxProfessors";
-
 //flatpickr
 import "flatpickr/dist/themes/airbnb.css";
 import Flatpickr from "react-flatpickr";
+
+//components
+import SelectBoxProfessors from "src/components/SelectBoxProfessors";
+import CustomDataGrid from "src/components/CustomDataGrid";
+
 
 const Papers = () => {
   //#region constants
@@ -230,91 +227,42 @@ const Papers = () => {
     setValidated(true);
   };
 
-  const RenderTableBody = () => {
-    if (filteredItems.length > 0) {
-      return (
-        <CTableBody>
-          {filteredItems.map((element, index) => {
-            const id = element.id;
+  //DataGrid
+  const cellRenderActions = ({ data }) => {
+    const { id } = data;
 
-            const publication = element.publication
-              ? convertDateFormat(element.publication, false)
-              : null;
-
-            // Find the professor with the matching ID
-            const professor = professors.find(
-              (prof) => prof.id === element.professor_id
-            );
-            const professorFullName = professor
-              ? professor.first_name + " " + professor.last_name
-              : "";
-
-            const createdAt = element.createdAt
-              ? convertDateFormat(element.createdAt)
-              : null;
-            const updatedAt = element.updatedAt
-              ? convertDateFormat(element.updatedAt)
-              : null;
-
-            return (
-              <CTableRow key={id}>
-                <CTableHeaderCell scope="row" className="text-end">
-                  {index + 1}
-                </CTableHeaderCell>
-                <CTableDataCell>{element.title}</CTableDataCell>
-                <CTableDataCell>{element.journal}</CTableDataCell>
-                <CTableDataCell>{publication}</CTableDataCell>
-                <CTableDataCell>{professorFullName}</CTableDataCell>
-                <CTableDataCell>{createdAt}</CTableDataCell>
-                <CTableDataCell>{updatedAt}</CTableDataCell>
-                <CTableDataCell className="text-center">
-                  <CButtonGroup
-                    role="group"
-                    aria-label="Basic example"
-                    size="sm"
-                  >
-                    <CButton
-                      color="primary"
-                      variant="outline"
-                      onClick={() => {
-                        setModalOptions({
-                          ...modalOptions,
-                          editMode: true,
-                          selectedId: id,
-                        });
-                      }}
-                    >
-                      <CIcon icon={cilPen} />
-                    </CButton>
-                    <CButton
-                      color="danger"
-                      variant="outline"
-                      onClick={() => {
-                        setSelectedId(id);
-                        dispatch(setModal('deletePaper'));
-                      }}
-                    >
-                      <CIcon icon={cilTrash} />
-                    </CButton>
-                  </CButtonGroup>
-                </CTableDataCell>
-              </CTableRow>
-            );
-          })}
-        </CTableBody>
-      );
-    } else {
-      return (
-        <CTableBody>
-          <CTableRow>
-            <CTableHeaderCell colSpan={8}>
-              {t("NoDataToDisplay")}
-            </CTableHeaderCell>
-          </CTableRow>
-        </CTableBody>
-      );
-    }
-  };
+    return (
+      <CButtonGroup
+        role="group"
+        aria-label="Button Actions"
+        size="sm"
+      >
+        <CButton
+          color="primary"
+          variant="outline"
+          onClick={() => {
+            setModalOptions({
+              ...modalOptions,
+              editMode: true,
+              selectedId: id,
+            });
+          }}
+        >
+          <CIcon icon={cilPen} />
+        </CButton>
+        <CButton
+          color="danger"
+          variant="outline"
+          onClick={() => {
+            setSelectedId(id);
+            dispatch(setModal('deletePaper'));
+          }}
+        >
+          <CIcon icon={cilTrash} />
+        </CButton>
+      </CButtonGroup>
+    )
+  }
   //#endregion
 
   //#region useEffect
@@ -340,19 +288,60 @@ const Papers = () => {
             {t("Add")}
           </CButton>
         </CCardHeader>
+
         <CCardBody>
           <SelectBoxProfessors className="mb-3" />
-          <CTable
-            align="middle"
-            className="mb-0 border"
-            hover
-            responsive
-            bordered
-          >
-            <TableHeader items={items} />
 
-            <RenderTableBody />
-          </CTable>
+          <CustomDataGrid dataSource={filteredItems}>
+            <Column
+              cssClass="bold"
+              dataField="id"
+              caption="#"
+              dataType="number"
+              width={55}
+            />
+            <Column
+              dataField="title"
+              caption={t("Title")}
+              dataType="string"
+            />
+            <Column
+              dataField="journal"
+              caption={t("Journal")}
+              dataType="string"
+            />
+            <Column
+              alignment="center"
+              dataField="publication"
+              caption={t("Publication")}
+              dataType="date"
+              format="dd/MM/yyyy"
+            />
+            <Column
+              alignment="left"
+              dataField="professor_full_name"
+              caption={t("Professor")}
+              dataType="string"
+            />
+            <Column
+              dataField="createdAt"
+              caption={t("CreatedAt")}
+              dataType="datetime"
+              visible={false}
+            />
+            <Column
+              dataField="updatedAt"
+              caption={t("UpdatedAt")}
+              dataType="datetime"
+              visible={false}
+            />
+            <Column
+              alignment="center"
+              caption={t("Actions")}
+              width={120}
+              cellRender={cellRenderActions}
+            />
+          </CustomDataGrid>
         </CCardBody>
       </CCard>
 

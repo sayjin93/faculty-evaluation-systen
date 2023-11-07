@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { Column } from "devextreme-react/data-grid";
 
 //coreUI
 import {
@@ -18,20 +19,14 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHeaderCell,
-  CTableRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar, cilCheckAlt } from "@coreui/icons";
 
 //hooks
 import api from "src/hooks/api";
-import TableHeader from "src/hooks/tableHeader";
 import useErrorHandler from "src/hooks/useErrorHandler";
-import { convertDateFormat, convertToKey, formatDate2 } from "src/hooks";
+import { convertToKey } from "src/hooks";
 
 //store
 import { setModal, showToast } from "src/store";
@@ -42,12 +37,13 @@ import {
   getModal,
 } from "src/store/selectors/selectors";
 
-//component
-import SelectBoxProfessors from "src/components/SelectBoxProfessors";
-
 //flatpick
 import "flatpickr/dist/themes/airbnb.css";
 import Flatpickr from "react-flatpickr";
+
+//component
+import SelectBoxProfessors from "src/components/SelectBoxProfessors";
+import CustomDataGrid from "src/components/CustomDataGrid";
 
 const Communities = () => {
   //#region constants
@@ -242,95 +238,50 @@ const Communities = () => {
     setValidated(true);
   };
 
-  const RenderTableBody = () => {
-    if (filteredItems.length > 0) {
-      return (
-        <CTableBody>
-          {filteredItems.map((element, index) => {
-            const id = element.id;
-            const date = element.date ? formatDate2(element.date) : null;
-            const checked = element.external ? (
-              <CIcon icon={cilCheckAlt} size="sm" />
-            ) : (
-              ""
-            );
+  //DataGrid
+  const cellRenderExternal = ({ data }) => {
+    const checked = data.external ? (
+      <CIcon icon={cilCheckAlt} size="sm" />
+    ) : (
+      ""
+    );
+    return checked;
+  };
 
-            // Find the professor with the matching ID
-            const professor = professors.find(
-              (prof) => prof.id === element.professor_id
-            );
-            const professorFullName = professor
-              ? professor.first_name + " " + professor.last_name
-              : "";
+  const cellRenderActions = ({ data }) => {
+    const { id } = data;
 
-            const createdAt = element.createdAt
-              ? convertDateFormat(element.createdAt)
-              : null;
-            const updatedAt = element.updatedAt
-              ? convertDateFormat(element.updatedAt)
-              : null;
-
-            return (
-              <CTableRow key={id}>
-                <CTableHeaderCell scope="row" className="text-end">
-                  {index + 1}
-                </CTableHeaderCell>
-                <CTableDataCell>{element.event}</CTableDataCell>
-                <CTableDataCell>{date}</CTableDataCell>
-                <CTableDataCell>{element.description}</CTableDataCell>
-                <CTableDataCell className="text-center">
-                  {checked}
-                </CTableDataCell>
-                <CTableDataCell>{professorFullName}</CTableDataCell>
-                <CTableDataCell>{createdAt}</CTableDataCell>
-                <CTableDataCell>{updatedAt}</CTableDataCell>
-                <CTableDataCell className="text-center">
-                  <CButtonGroup
-                    role="group"
-                    aria-label="Basic example"
-                    size="sm"
-                  >
-                    <CButton
-                      color="primary"
-                      variant="outline"
-                      onClick={() => {
-                        setModalOptions({
-                          ...modalOptions,
-                          editMode: true,
-                          selectedId: id,
-                        });
-                      }}
-                    >
-                      <CIcon icon={cilPen} />
-                    </CButton>
-                    <CButton
-                      color="danger"
-                      variant="outline"
-                      onClick={() => {
-                        setSelectedId(id);
-                        dispatch(setModal('deleteCommunity'));
-                      }}
-                    >
-                      <CIcon icon={cilTrash} />
-                    </CButton>
-                  </CButtonGroup>
-                </CTableDataCell>
-              </CTableRow>
-            );
-          })}
-        </CTableBody>
-      );
-    } else {
-      return (
-        <CTableBody>
-          <CTableRow>
-            <CTableHeaderCell colSpan={9}>
-              {t("NoDataToDisplay")}
-            </CTableHeaderCell>
-          </CTableRow>
-        </CTableBody>
-      );
-    }
+    return (
+      <CButtonGroup
+        role="group"
+        aria-label="Button Actions"
+        size="sm"
+      >
+        <CButton
+          color="primary"
+          variant="outline"
+          onClick={() => {
+            setModalOptions({
+              ...modalOptions,
+              editMode: true,
+              selectedId: id,
+            });
+          }}
+        >
+          <CIcon icon={cilPen} />
+        </CButton>
+        <CButton
+          color="danger"
+          variant="outline"
+          onClick={() => {
+            setSelectedId(id);
+            dispatch(setModal('deleteCommunity'));
+          }}
+        >
+          <CIcon icon={cilTrash} />
+        </CButton>
+      </CButtonGroup>
+    )
   };
   //#endregion
 
@@ -357,20 +308,68 @@ const Communities = () => {
             {t("Add")}
           </CButton>
         </CCardHeader>
+
         <CCardBody>
           <SelectBoxProfessors className="mb-3" />
 
-          <CTable
-            align="middle"
-            className="mb-0 border"
-            hover
-            responsive
-            bordered
-          >
-            <TableHeader items={items} />
 
-            <RenderTableBody />
-          </CTable>
+          <CustomDataGrid dataSource={filteredItems}>
+            <Column
+              cssClass="bold"
+              dataField="id"
+              caption="#"
+              dataType="number"
+              width={55}
+            />
+            <Column
+              dataField="event"
+              caption={t("Event")}
+              dataType="string"
+            />
+            <Column
+              alignment="center"
+              dataField="date"
+              caption={t("Date")}
+              dataType="date"
+              format="dd/MM/yyyy"
+            />
+            <Column
+
+              dataField="description"
+              caption={t("Description")}
+              dataType="string"
+            />
+            <Column
+              alignment="center"
+              dataField="external"
+              caption={t("External")}
+              cellRender={cellRenderExternal}
+            />
+            <Column
+              alignment="left"
+              dataField="professor_full_name"
+              caption={t("Professor")}
+              dataType="string"
+            />
+            <Column
+              dataField="createdAt"
+              caption={t("CreatedAt")}
+              dataType="datetime"
+              visible={false}
+            />
+            <Column
+              dataField="updatedAt"
+              caption={t("UpdatedAt")}
+              dataType="datetime"
+              visible={false}
+            />
+            <Column
+              alignment="center"
+              caption={t("Actions")}
+              width={120}
+              cellRender={cellRenderActions}
+            />
+          </CustomDataGrid>
         </CCardBody>
       </CCard>
 

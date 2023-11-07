@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { Column } from "devextreme-react/data-grid";
 
 //coreUI
 import {
@@ -27,12 +28,12 @@ import { convertToKey } from "src/hooks";
 import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
-
 //store
 import { setModal, showToast } from "src/store";
 import { getModal } from "src/store/selectors/selectors";
+
+//components
 import CustomDataGrid from "src/components/CustomDataGrid";
-import { Column } from "devextreme-react/data-grid";
 
 const Professors = () => {
   //#region constants
@@ -201,7 +202,6 @@ const Professors = () => {
     setValidated(true);
   };
 
-
   //DataGrid
   const cellRenderGender = (data) => {
     let icon = data.value === "m" ? <BsGenderMale className="text-primary" /> : <BsGenderFemale className="text-danger" />
@@ -213,7 +213,7 @@ const Professors = () => {
         <span>{gender}</span>
       </div>)
   }
-  const cellRenderGenderActions = ({ data }) => {
+  const cellRenderActions = ({ data }) => {
     const { id } = data;
 
     return (
@@ -316,7 +316,7 @@ const Professors = () => {
               alignment="center"
               caption={t("Actions")}
               width={120}
-              cellRender={cellRenderGenderActions}
+              cellRender={cellRenderActions}
             />
           </CustomDataGrid>
         </CCardBody>

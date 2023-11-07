@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 
+const Professor = require('../models/professor');
 const Paper = require('../models/paper');
 
 const router = express.Router();
@@ -58,9 +59,29 @@ router.get('/', auth, async (req, res) => {
 router.get('/academic_year/:academic_year_id', auth, async (req, res) => {
   const { academic_year_id } = req.params;
 
-  Paper.findAll({ where: { academic_year_id } })
+  Paper.findAll({
+    where: { academic_year_id },
+    include: [
+      {
+        model: Professor,
+        attributes: ['first_name', 'last_name'], // Specify the attributes you want to retrieve
+      },
+    ],
+  })
     .then((data) => {
-      res.send(data);
+      const modifiedData = data.map((paper) => ({
+        id: paper.id,
+        title: paper.title,
+        journal: paper.journal,
+        publication: paper.publication,
+        academic_year_id: paper.academic_year_id,
+        professor_id: paper.professor_id,
+        createdAt: paper.createdAt,
+        updatedAt: paper.updatedAt,
+        professor_full_name: `${paper.Professor.first_name} ${paper.Professor.last_name}`,
+      }));
+
+      res.send(modifiedData);
     })
     .catch((err) => {
       res.status(500).send({

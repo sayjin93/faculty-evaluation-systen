@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 
+const Professor = require('../models/professor');
 const Community = require('../models/community');
 
 const router = express.Router();
@@ -60,9 +61,30 @@ router.get('/', auth, async (req, res) => {
 router.get('/academic_year/:academic_year_id', auth, async (req, res) => {
   const { academic_year_id } = req.params;
 
-  Community.findAll({ where: { academic_year_id } })
+  Community.findAll({
+    where: { academic_year_id },
+    include: [
+      {
+        model: Professor,
+        attributes: ['first_name', 'last_name'], // Specify the attributes you want to retrieve
+      },
+    ],
+  })
     .then((data) => {
-      res.send(data);
+      const modifiedData = data.map((community) => ({
+        id: community.id,
+        date: community.date,
+        event: community.event,
+        description: community.description,
+        external: community.external,
+        academic_year_id: community.academic_year_id,
+        professor_id: community.professor_id,
+        createdAt: community.createdAt,
+        updatedAt: community.updatedAt,
+        professor_full_name: `${community.Professor.first_name} ${community.Professor.last_name}`,
+      }));
+
+      res.send(modifiedData);
     })
     .catch((err) => {
       res.status(500).send({

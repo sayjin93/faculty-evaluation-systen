@@ -17,6 +17,7 @@ const CustomDataGrid = ({ dataSource, children }) => {
                 showBorders={true}
                 columnHidingEnabled={true}
                 noDataText={t("NoDataToDisplay")}
+                repaintChangesOnly={true}
             >
                 <SearchPanel visible={true}
                     width={240}
@@ -30,7 +31,6 @@ const CustomDataGrid = ({ dataSource, children }) => {
                 </ColumnChooser>
 
                 <Sorting mode="multiple" ascendingText={t("SortAscending")} descendingText={t("SortDescending")} clearText={t("ClearSorting")} />
-
 
                 <Scrolling rowRenderingMode='virtual'></Scrolling>
 
