@@ -135,9 +135,10 @@ const Settings = () => {
     await api
       .get("/settings")
       .then((response) => {
+        debugger;
         //smtp configurations
         const emailSettings = response.data.find(item => item.name === "Email");
-        if (emailSettings) setSmtpConfig(emailSettings.settings);
+        if (emailSettings) setSmtpConfig(JSON.parse(emailSettings.settings));
       })
       .catch((error) => {
         handleError(error);
