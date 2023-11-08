@@ -135,10 +135,9 @@ const Settings = () => {
     await api
       .get("/settings")
       .then((response) => {
-        debugger;
         //smtp configurations
-        const emailSettings = response.data.find(item => item.name === "Email");
-        if (emailSettings) setSmtpConfig(JSON.parse(emailSettings.settings));
+        const emailSettings = response.data.find(item => item.name === "Email")
+        if (emailSettings) setSmtpConfig(emailSettings.settings);
       })
       .catch((error) => {
         handleError(error);
@@ -165,6 +164,7 @@ const Settings = () => {
     await api
       .put("/settings/email", updatedSTMP)
       .then((response) => {
+
         dispatch(
           showToast({
             type: "success",
@@ -173,6 +173,7 @@ const Settings = () => {
         );
       })
       .catch((error) => {
+        debugger;
         dispatch(
           showToast({
             type: "danger",
