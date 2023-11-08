@@ -115,17 +115,19 @@ router.post('/reset', async (req, res) => {
   }
 
   try {
-    const emailSettings = await Settings.findOne({ where: { name: 'Email' } });
+    const response = await Settings.findOne({ where: { name: 'Email' } });
 
-    if (!emailSettings) {
+    if (!response) {
       return res.status(500).json({
         message: 'SMTP settings not found',
       });
     }
 
+    const emailSettings = JSON.parse(response.settings);
+
     const {
       sender_name, smtp_host, smtp_port, smtp_secure, smtp_user, smtp_pass,
-    } = emailSettings.settings;
+    } = emailSettings;
 
     const transporter = nodemailer.createTransport({
       host: smtp_host,
