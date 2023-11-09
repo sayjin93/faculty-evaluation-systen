@@ -38,7 +38,7 @@ const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
     await api
       .get("/professor")
       .then((response) => {
-        const { data } = response.data;
+        const { data } = response;
 
         //Set list of professors on redux state
         dispatch(setProfessors(data));
@@ -78,7 +78,7 @@ const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
       >
         {hasAll && <option value={0}>{t("All")}</option>}
 
-        {professors.map((professor) => {
+        {professors?.map((professor) => {
           const fullName = professor.first_name + " " + professor.last_name;
           return (
             <option key={professor.id} value={professor.id}>

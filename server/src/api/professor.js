@@ -10,7 +10,7 @@ const auth = passport.authenticate('jwt', { session: false });
 // Create a new Professor
 router.post('/', auth, async (req, res) => {
   // Validate request
-  if (!req.body.firstname) {
+  if (!req.body.first_name) {
     res.status(400).send({
       message: 'Content can not be empty',
     });
@@ -18,9 +18,10 @@ router.post('/', auth, async (req, res) => {
   }
 
   const professorData = {
-    first_name: req.body.firstname,
-    last_name: req.body.lastname,
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
     gender: req.body.gender,
+    is_deleted: req.body.is_deleted,
   };
 
   // Save Professor in the database
@@ -47,12 +48,23 @@ router.get('/', auth, async (req, res) => {
     });
   }
 
-  res.json({ data: result });
+  // Modify gender property in the result array
+  const modifiedResult = result.map((professor) => ({
+    id: professor.id,
+    first_name: professor.first_name,
+    last_name: professor.last_name,
+    gender: professor.gender === 'm' ? 'Male' : 'Female',
+    is_deleted: professor.is_deleted,
+    createdAt: professor.createdAt,
+    updatedAt: professor.updatedAt,
+  }));
+
+  res.send(modifiedResult);
 });
 
-// Retrieve all published Professors
-router.get('/published', auth, async (req, res) => {
-  Professor.findAll({ where: { published: true } })
+// Retrieve all active Professors
+router.get('/active', auth, async (req, res) => {
+  Professor.findAll({ where: { is_deleted: false } })
     .then((data) => {
       res.send(data);
     })
@@ -89,9 +101,10 @@ router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
   const professorData = {
-    first_name: req.body.firstname,
-    last_name: req.body.lastname,
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
     gender: req.body.gender,
+    is_deleted: req.body.is_deleted,
   };
 
   Professor.update(professorData, {

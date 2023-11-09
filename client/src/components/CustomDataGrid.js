@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next';
-import DataGrid, { Selection, Pager, Paging, Scrolling, SearchPanel, ColumnChooser, ColumnChooserSelection, Sorting } from "devextreme-react/data-grid";
+import DataGrid, { Selection, Pager, Paging, Scrolling, SearchPanel, ColumnChooser, ColumnChooserSelection, Sorting, HeaderFilter, Search } from "devextreme-react/data-grid";
 
 
 const CustomDataGrid = ({ dataSource, children }) => {
@@ -30,6 +30,22 @@ const CustomDataGrid = ({ dataSource, children }) => {
                     />
                 </ColumnChooser>
 
+                <HeaderFilter visible={true} texts={{
+                    cancel: t("Cancel"),
+                    emptyValue: t("Blanks"),
+                    ok: t("Ok"),
+                }}>
+                    <Search
+                        editorOptions={{
+                            placeholder: t('Search') + "...",
+                            mode: 'text'
+                        }}
+                        enabled={true}
+                        timeout={500}
+                        mode="contains"
+                    />
+
+                </HeaderFilter>
                 <Sorting mode="multiple" ascendingText={t("SortAscending")} descendingText={t("SortDescending")} clearText={t("ClearSorting")} />
 
                 <Scrolling rowRenderingMode='virtual'></Scrolling>

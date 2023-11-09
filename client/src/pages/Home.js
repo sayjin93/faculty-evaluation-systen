@@ -56,7 +56,7 @@ const Home = () => {
   //#endregion
 
   //#region functions
-  function calculateTotalWeekHours(professorId) {
+  const calculateTotalWeekHours = (professorId) => {
     // Function to calculate total week hours for a professor
     const professorCourses = filteredAcademicYear.courses.filter(
       (course) => course.professor_id === professorId
@@ -67,7 +67,7 @@ const Home = () => {
     );
   }
 
-  function getProfessorStatistics() {
+  const getProfessorStatistics = () => {
     // Function to get statistics for all professors
     const professors = items?.professors;
     const statistics = [];

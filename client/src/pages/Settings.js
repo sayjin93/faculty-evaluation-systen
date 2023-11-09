@@ -173,7 +173,6 @@ const Settings = () => {
         );
       })
       .catch((error) => {
-        debugger;
         dispatch(
           showToast({
             type: "danger",

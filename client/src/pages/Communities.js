@@ -444,7 +444,6 @@ const Communities = () => {
 
             <div className="mb-3">
               <CFormCheck
-                id="flexCheckDefault"
                 type="checkbox"
                 label={t("External")}
                 onChange={(event) => handleCheckChange(event, "external")}

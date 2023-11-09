@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Column } from "devextreme-react/data-grid";
+import { Column, HeaderFilter } from "devextreme-react/data-grid";
 
 //coreUI
 import {
@@ -11,6 +11,7 @@ import {
   CCardBody,
   CCardHeader,
   CForm,
+  CFormCheck,
   CFormInput,
   CFormSelect,
   CModal,
@@ -22,6 +23,7 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 import { BsGenderMale, BsGenderFemale } from "react-icons/bs"
+import { ImCross } from "react-icons/im"
 
 //hooks
 import { convertToKey } from "src/hooks";
@@ -43,7 +45,7 @@ const Professors = () => {
 
   const modal = useSelector(getModal);
 
-  const defaultFormData = { firstname: "", lastname: "", gender: "m" };
+  const defaultFormData = { first_name: "", last_name: "", gender: "m", is_deleted: false };
   //#endregion
 
   //#region states
@@ -58,12 +60,14 @@ const Professors = () => {
   const [selectedId, setSelectedId] = useState(null);
   //#endregion
 
+  console.log(formData);
+
   //#region functions
   const fetchProfessors = async () => {
     await api
       .get("/professor")
       .then((response) => {
-        setItems(response.data.data);
+        setItems(response.data);
       })
       .catch((error) => {
         handleError(error);
@@ -75,9 +79,10 @@ const Professors = () => {
       .then((response) => {
         setFormData({
           ...formData,
-          firstname: response.data.first_name,
-          lastname: response.data.last_name,
+          first_name: response.data.first_name,
+          last_name: response.data.last_name,
           gender: response.data.gender,
+          is_deleted: response.data.is_deleted,
         });
         dispatch(setModal("editProfessor"));
       })
@@ -93,9 +98,10 @@ const Professors = () => {
   const addProfessor = async () => {
     await api
       .post("/professor", {
-        firstname: formData.firstname,
-        lastname: formData.lastname,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
         gender: formData.gender,
+        is_deleted: formData.is_deleted,
       })
       .then((response) => {
         const firstName = response.data.first_name;
@@ -124,9 +130,10 @@ const Professors = () => {
   const editProfessor = async (id) => {
     await api
       .put("/professor/" + id, {
-        firstname: formData.firstname,
-        lastname: formData.lastname,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
         gender: formData.gender,
+        is_deleted: formData.is_deleted,
       })
       .then((response) => {
         setStatus(response);
@@ -183,9 +190,12 @@ const Professors = () => {
   };
 
   const handleInputChange = (event, fieldName) => {
+    const checkboxVal = event.target.checked;
+    const textboxVal = event.target.value
+
     setFormData({
       ...formData,
-      [fieldName]: event.target.value,
+      [fieldName]: fieldName === "is_deleted" ? checkboxVal : textboxVal,
     });
   };
   const handleSubmit = (event) => {
@@ -204,8 +214,8 @@ const Professors = () => {
 
   //DataGrid
   const cellRenderGender = (data) => {
-    let icon = data.value === "m" ? <BsGenderMale className="text-primary" /> : <BsGenderFemale className="text-danger" />
-    let gender = data.value === "m" ? t("Male") : t("Female");
+    let icon = data.value === "Male" ? <BsGenderMale className="text-primary" /> : <BsGenderFemale className="text-danger" />
+    let gender = t(data.value);
 
     return (
       <div className="flex flex-gap-10">
@@ -213,6 +223,14 @@ const Professors = () => {
         <span>{gender}</span>
       </div>)
   }
+  const cellRenderDeleted = ({ data }) => {
+    const checked = data.is_deleted ? (
+      <ImCross className="text-danger" />
+    ) : (
+      ""
+    );
+    return checked;
+  };
   const cellRenderActions = ({ data }) => {
     const { id } = data;
 
@@ -278,6 +296,7 @@ const Professors = () => {
         <CCardBody>
           <CustomDataGrid dataSource={items}>
             <Column
+              allowHeaderFiltering={false}
               cssClass="bold"
               dataField="id"
               caption="#"
@@ -300,6 +319,22 @@ const Professors = () => {
               dataType="string"
               cellRender={cellRenderGender}
             />
+            <Column
+              width={140}
+              alignment="center"
+              dataField="is_deleted"
+              caption={t("Deleted")}
+              dataType="string"
+              cellRender={cellRenderDeleted}
+            >
+              <HeaderFilter dataSource={[{
+                text: 'deleted',
+                value: ['is_deleted', '=', true],
+              }, {
+                text: 'not deleted',
+                value: ['is_deleted', '=', false],
+              }]} />
+            </Column>
             <Column
               dataField="createdAt"
               caption={t("CreatedAt")}
@@ -353,18 +388,19 @@ const Professors = () => {
               floatingClassName="mb-3"
               floatingLabel={t("FirstName")}
               placeholder={t("FirstName")}
-              value={formData.firstname}
-              onChange={(event) => handleInputChange(event, "firstname")}
+              value={formData.first_name}
+              onChange={(event) => handleInputChange(event, "first_name")}
             />
             <CFormInput
               type="text"
               floatingClassName="mb-3"
               floatingLabel={t("LastName")}
               placeholder={t("LastName")}
-              value={formData.lastname}
-              onChange={(event) => handleInputChange(event, "lastname")}
+              value={formData.last_name}
+              onChange={(event) => handleInputChange(event, "last_name")}
             />
             <CFormSelect
+              floatingClassName="mb-3"
               floatingLabel={t("Gender")}
               onChange={(event) => handleInputChange(event, "gender")}
               value={formData.gender}
@@ -372,6 +408,12 @@ const Professors = () => {
               <option value="m">{t("Male")}</option>
               <option value="f">{t("Female")}</option>
             </CFormSelect>
+            <CFormCheck
+              type="checkbox"
+              label={t("Deleted")}
+              onChange={(event) => handleInputChange(event, "is_deleted")}
+              defaultChecked={formData.is_deleted}
+            />
           </CModalBody>
 
           <CModalFooter>
@@ -399,7 +441,6 @@ const Professors = () => {
           dispatch(setModal());
         }}
       >
-
         <CModalHeader>
           <CModalTitle>
             {t("Confirmation")}
