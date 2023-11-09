@@ -1,78 +1,77 @@
 const Book = require('../../models/book');
 
 async function seed() {
-  const booksData = [
-    {
-      title: 'Book 1',
-      publication_house: 'SHBLSH',
-      publication_year: new Date('2022-01-21'),
-      academic_year_id: 1,
-      professor_id: 1,
-    },
-    {
-      title: 'Book 2',
-      publication_house: 'SHBLSH',
-      publication_year: new Date('2023-01-21'),
-      academic_year_id: 2,
-      professor_id: 1,
-    },
-    {
-      title: 'Book 3',
-      publication_house: 'Toena',
-      publication_year: new Date('2023-01-23'),
-      academic_year_id: 2,
-      professor_id: 2,
-    },
-    {
-      title: 'Book 4',
-      publication_house: 'Random House',
-      publication_year: new Date('2022-03-15'),
-      academic_year_id: 1,
-      professor_id: 3,
-    },
-    {
-      title: 'Book 5',
-      publication_house: 'Penguin Books',
-      publication_year: new Date('2022-06-10'),
-      academic_year_id: 1,
-      professor_id: 4,
-    },
-    {
-      title: 'Book 6',
-      publication_house: 'Oxford University Press',
-      publication_year: new Date('2022-07-20'),
-      academic_year_id: 2,
-      professor_id: 5,
-    },
-    {
-      title: 'Book 7',
-      publication_house: 'HarperCollins',
-      publication_year: new Date('2022-08-17'),
-      academic_year_id: 2,
-      professor_id: 6,
-    },
-    {
-      title: 'Book 8',
-      publication_house: 'SHBLSH',
-      publication_year: new Date('2022-11-12'),
-      academic_year_id: 1,
-      professor_id: 7,
-    },
-    {
-      title: 'Book 9',
-      publication_house: 'Random House',
-      publication_year: new Date('2022-12-05'),
-      academic_year_id: 1,
-      professor_id: 8,
-    },
-    {
-      title: 'Book 10',
-      publication_house: 'Penguin Books',
-      publication_year: new Date('2023-03-25'),
-      academic_year_id: 2,
-      professor_id: 10,
-    },
+  const professorsCount = 10;
+  const academicYearsCount = 10;
+
+  const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+  const dummyBookTitles = [
+    'Introduction to Computer Science',
+    'History of Art',
+    'Mathematics for Engineers',
+    'Literary Analysis',
+    'Chemical Reactions and Equations',
+    'Psychology and Behavior',
+    'Introduction to Philosophy',
+    'Economics for Beginners',
+    'Sociology: The Study of Society',
+    'The Physics of Motion',
+    'Environmental Science and Sustainability',
+    'Creative Writing Workshop',
+    'Statistics and Probability',
+    'Human Anatomy and Physiology',
+    'Digital Marketing Strategies',
+    'Political Science: Understanding Governance',
+    'Introduction to Astronomy',
+    'Principles of Marketing',
+    'Microbiology: The World of Microbes',
+    'Artificial Intelligence and Machine Learning',
+    'Fundamentals of Finance',
+    'Media and Communication Studies',
+    'Introduction to Psychology',
+    'Introduction to Philosophy',
+    'Applied Ethics',
+    'Introduction to Economics',
   ];
+
+  const dummyPublicationHouses = [
+    'Arbëria',
+    'Camaj-Pipa',
+    'Sh.B. e Librit Universitar',
+    'Logoreci',
+    'OMBRA GVG',
+    'Onufri',
+    'Apollonia',
+    'Alb Paper',
+    'Aferdita',
+    'Albas',
+    'Albin',
+    'Çabej',
+    'Dita 2000 sh.p.k',
+    'Dita Group sh.a',
+    'Dituria',
+    'Dudaj',
+    'Sh.B. e Librit Shkollor',
+    'Erik',
+    'Globus',
+    'Grafon sh.p.k',
+    'Ideart sh.p.k',
+    'Omsca I',
+    'Toena sh.p.k',
+    'Uegen',
+    'UET Press',
+  ];
+
+  const generateRandomBook = () => ({
+    title: dummyBookTitles[randomInt(0, dummyBookTitles.length - 1)],
+    publication_house: dummyPublicationHouses[randomInt(0, dummyPublicationHouses.length - 1)],
+    publication_year: new Date(`${randomInt(2014, 2023)}-01-01`),
+    academic_year_id: randomInt(1, academicYearsCount),
+    professor_id: randomInt(1, professorsCount),
+  });
+
+  const booksData = Array.from({ length: 100 }, generateRandomBook);
 
   const promises = booksData.map(async (book) => {
     const defaultBooksData = {

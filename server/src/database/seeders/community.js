@@ -1,88 +1,41 @@
 const Community = require('../../models/community');
 
 async function seed() {
-  const communitiesData = [
-    {
-      event: 'Community Service 1',
-      date: new Date('2022-01-21'),
-      description: 'Description for Community service 1',
-      external: 1,
-      academic_year_id: 1,
-      professor_id: 1,
-    },
-    {
-      event: 'Community Service 2',
-      date: new Date('2022-03-15'),
-      description: 'Description for Community service 2',
-      external: 0,
-      academic_year_id: 1,
-      professor_id: 2,
-    },
-    {
-      event: 'Community Service 3',
-      date: new Date('2023-05-10'),
-      description: 'Description for Community service 3',
-      external: 1,
-      academic_year_id: 2,
-      professor_id: 3,
-    },
-    {
-      event: 'Community Service 4',
-      date: new Date('2023-07-02'),
-      description: 'Description for Community service 4',
-      external: 1,
-      academic_year_id: 2,
-      professor_id: 4,
-    },
-    {
-      event: 'Community Service 5',
-      date: new Date('2022-09-30'),
-      description: 'Description for Community service 5',
-      external: 0,
-      academic_year_id: 1,
-      professor_id: 5,
-    },
-    {
-      event: 'Community Service 6',
-      date: new Date('2023-01-15'),
-      description: 'Description for Community service 6',
-      external: 1,
-      academic_year_id: 2,
-      professor_id: 6,
-    },
-    {
-      event: 'Community Service 7',
-      date: new Date('2022-11-20'),
-      description: 'Description for Community service 7',
-      external: 0,
-      academic_year_id: 1,
-      professor_id: 7,
-    },
-    {
-      event: 'Community Service 8',
-      date: new Date('2023-03-08'),
-      description: 'Description for Community service 8',
-      external: 1,
-      academic_year_id: 2,
-      professor_id: 8,
-    },
-    {
-      event: 'Community Service 9',
-      date: new Date('2022-05-12'),
-      description: 'Description for Community service 9',
-      external: 0,
-      academic_year_id: 1,
-      professor_id: 9,
-    },
-    {
-      event: 'Community Service 10',
-      date: new Date('2023-09-18'),
-      description: 'Description for Community service 10',
-      external: 1,
-      academic_year_id: 2,
-      professor_id: 10,
-    },
+  const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+  const dummyEventNames = [
+    'Volunteer Day',
+    'Clean-Up Campaign',
+    'Food Drive',
+    'Blood Donation Event',
+    'Education Outreach',
+    'Health Fair',
+    'Environmental Workshop',
+    'Community Health Checkup',
+    'Art and Craft Workshop',
+    'Tree Planting Initiative',
+    'Cultural Festival',
+    'Charity Auction',
+    'Sports Day for Youth',
+    'Literacy Program',
+    'Senior Citizen Support',
+    'Youth Mentorship Program',
+    'Homeless Shelter Assistance',
+    'Animal Welfare Campaign',
+    'Digital Literacy Workshop',
+    'Job Fair and Skill Building',
   ];
+
+  const generateRandomCommunity = () => ({
+    event: dummyEventNames[randomInt(0, dummyEventNames.length - 1)],
+    date: new Date(`${randomInt(2014, 2023)}-${randomInt(1, 12)}-${randomInt(1, 28)}`), // Random date between 2014 and 2023
+    description: `Description for ${dummyEventNames[randomInt(0, dummyEventNames.length - 1)]}`,
+    external: randomInt(0, 1), // Randomly choose between 0 and 1 for external value
+    academic_year_id: randomInt(1, 10), // Random academic year ID between 1 and 10
+    professor_id: randomInt(1, 10), // Random professor ID between 1 and 10
+  });
+
+  const communitiesData = Array.from({ length: 100 }, generateRandomCommunity);
 
   const promises = communitiesData.map(async (community) => {
     const defaultCommunitiesData = {

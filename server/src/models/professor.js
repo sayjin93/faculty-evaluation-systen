@@ -11,6 +11,9 @@ const Professors = sequelize.define('Professors', {
   gender: {
     type: DataTypes.ENUM('m', 'f'),
   },
+  is_deleted: {
+    type: DataTypes.BOOLEAN,
+  },
 });
 
 module.exports = Professors;

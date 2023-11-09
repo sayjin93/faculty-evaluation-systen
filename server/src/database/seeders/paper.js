@@ -1,78 +1,53 @@
 const Paper = require('../../models/paper');
 
 async function seed() {
-  const papersData = [
-    {
-      title: 'Paper 1',
-      journal: 'Buletini Shkencor',
-      publication: new Date('2022-01-21'),
-      academic_year_id: 1,
-      professor_id: 1,
-    },
-    {
-      title: 'Paper 2',
-      journal: 'Buletini Shkencor',
-      publication: new Date('2023-01-21'),
-      academic_year_id: 2,
-      professor_id: 1,
-    },
-    {
-      title: 'Paper 3',
-      journal: 'Buletini Shkencor',
-      publication: new Date('2023-02-08'),
-      academic_year_id: 2,
-      professor_id: 2,
-    },
-    {
-      title: 'Paper 4',
-      journal: 'Some Journal',
-      publication: new Date('2022-03-15'),
-      academic_year_id: 1,
-      professor_id: 3,
-    },
-    {
-      title: 'Paper 5',
-      journal: 'Another Journal',
-      publication: new Date('2022-06-10'),
-      academic_year_id: 1,
-      professor_id: 4,
-    },
-    {
-      title: 'Paper 6',
-      journal: 'Science Journal',
-      publication: new Date('2022-07-20'),
-      academic_year_id: 2,
-      professor_id: 5,
-    },
-    {
-      title: 'Paper 7',
-      journal: 'Nature',
-      publication: new Date('2022-08-17'),
-      academic_year_id: 2,
-      professor_id: 6,
-    },
-    {
-      title: 'Paper 8',
-      journal: 'Buletini Shkencor',
-      publication: new Date('2022-11-12'),
-      academic_year_id: 1,
-      professor_id: 7,
-    },
-    {
-      title: 'Paper 9',
-      journal: 'Some Journal',
-      publication: new Date('2022-12-05'),
-      academic_year_id: 1,
-      professor_id: 8,
-    },
-    {
-      title: 'Paper 10',
-      journal: 'Another Journal',
-      publication: new Date('2023-03-25'),
-      academic_year_id: 2,
-      professor_id: 9,
-    },
+  const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+  const dummyTitles = [
+    'Advancements in Artificial Intelligence',
+    'Ethical Considerations in Machine Learning',
+    'Future of Quantum Computing',
+    'Data Privacy and Security Measures',
+    'Robotics and Automation Innovations',
+    'Emerging Trends in Data Science',
+    'HealthTech Breakthroughs',
+    'Cybersecurity in a Digital Age',
+    'Innovations in Natural Language Processing',
+    'Big Data Analytics: Trends and Insights',
+    'AI Implementation in Healthcare',
+    'Impacts of Climate Change: A Scientific Review',
+    'Societal Implications of AI in Education',
+    'Future of Work: Automation and Job Market',
+    'Global Health Challenges and Solutions',
+    'Innovations in Renewable Energy Technologies',
+    'Economic Impact of Digital Transformation',
+    'Cultural Influences on Technological Adoption',
+    'Advances in Medical Imaging Techniques',
+    'The Future of Transportation: Smart Mobility',
   ];
+
+  const dummyJournals = [
+    'Buletini Shkencor',
+    'Some Journal',
+    'Another Journal',
+    'Science Journal',
+    'Nature',
+    'International Journal of Computer Science',
+    'Journal of Artificial Intelligence Research',
+    'Environmental Science and Technology',
+    'Journal of Medical Ethics',
+    'Journal of Business Ethics',
+  ];
+
+  const generateRandomPaper = () => ({
+    title: dummyTitles[randomInt(0, dummyTitles.length - 1)],
+    journal: dummyJournals[randomInt(0, dummyJournals.length - 1)],
+    publication: new Date(`${randomInt(2018, 2023)}-${randomInt(1, 12)}-${randomInt(1, 28)}`), // Random date between 2018 and 2023
+    academic_year_id: randomInt(1, 10), // Random academic year ID between 1 and 10
+    professor_id: randomInt(1, 10), // Random professor ID between 1 and 10
+  });
+
+  const papersData = Array.from({ length: 100 }, generateRandomPaper);
 
   const promises = papersData.map(async (paper) => {
     const defaultPapersData = {

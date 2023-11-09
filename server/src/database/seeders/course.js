@@ -1,98 +1,77 @@
 const Course = require('../../models/course');
 
 async function seed() {
-  const coursesData = [
-    {
-      name: 'Course 1',
-      number: 'C1',
-      semester: 1,
-      week_hours: 3,
-      program: 'Bachelor',
-      academic_year_id: 1,
-      professor_id: 1,
-    },
-    {
-      name: 'Course 2',
-      number: 'C2',
-      semester: 1,
-      week_hours: 3,
-      program: 'Master',
-      academic_year_id: 2,
-      professor_id: 1,
-    },
-    {
-      name: 'Course 3',
-      number: 'C3',
-      semester: 2,
-      week_hours: 3,
-      program: 'Bachelor',
-      academic_year_id: 2,
-      professor_id: 2,
-    },
-    {
-      name: 'Course 4',
-      number: 'C4',
-      semester: 2,
-      week_hours: 4,
-      program: 'Master',
-      academic_year_id: 1,
-      professor_id: 3,
-    },
-    {
-      name: 'Course 5',
-      number: 'C5',
-      semester: 1,
-      week_hours: 3,
-      program: 'Bachelor',
-      academic_year_id: 2,
-      professor_id: 5,
-    },
-    {
-      name: 'Course 6',
-      number: 'C6',
-      semester: 1,
-      week_hours: 4,
-      program: 'Master',
-      academic_year_id: 1,
-      professor_id: 6,
-    },
-    {
-      name: 'Course 7',
-      number: 'C7',
-      semester: 2,
-      week_hours: 3,
-      program: 'Bachelor',
-      academic_year_id: 2,
-      professor_id: 7,
-    },
-    {
-      name: 'Course 8',
-      number: 'C8',
-      semester: 1,
-      week_hours: 4,
-      program: 'Bachelor',
-      academic_year_id: 1,
-      professor_id: 1,
-    },
-    {
-      name: 'Course 9',
-      number: 'C9',
-      semester: 2,
-      week_hours: 4,
-      program: 'Master',
-      academic_year_id: 1,
-      professor_id: 8,
-    },
-    {
-      name: 'Course 10',
-      number: 'C10',
-      semester: 2,
-      week_hours: 3,
-      program: 'Bachelor',
-      academic_year_id: 2,
-      professor_id: 10,
-    },
+  const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+  const dummyCourseNames = [
+    'Introduction to Computer Science',
+    'History of Art',
+    'Mathematics for Engineers',
+    'Literary Analysis',
+    'Chemical Reactions and Equations',
+    'Psychology and Behavior',
+    'Introduction to Philosophy',
+    'Economics for Beginners',
+    'Sociology: The Study of Society',
+    'The Physics of Motion',
+    'Environmental Science and Sustainability',
+    'Creative Writing Workshop',
+    'Statistics and Probability',
+    'Human Anatomy and Physiology',
+    'Digital Marketing Strategies',
+    'Political Science: Understanding Governance',
+    'Introduction to Astronomy',
+    'Principles of Marketing',
+    'Microbiology: The World of Microbes',
+    'Artificial Intelligence and Machine Learning',
+    'Fundamentals of Finance',
+    'Media and Communication Studies',
+    'Introduction to Psychology',
+    'Introduction to Philosophy',
+    'Applied Ethics',
+    'Introduction to Economics',
   ];
+
+  const dummyCourseNumbers = [
+    'C1',
+    'C2',
+    'C3',
+    'C4',
+    'C5',
+    'C6',
+    'C7',
+    'C8',
+    'C9',
+    'C10',
+    'C11',
+    'C12',
+    'C13',
+    'C14',
+    'C15',
+    'C16',
+    'C17',
+    'C18',
+    'C19',
+    'C20',
+    'C21',
+    'C22',
+    'C23',
+    'C24',
+  ];
+
+  const dummyPrograms = ['Bachelor', 'Master'];
+
+  const generateRandomCourse = () => ({
+    name: dummyCourseNames[randomInt(0, dummyCourseNames.length - 1)],
+    number: dummyCourseNumbers[randomInt(0, dummyCourseNumbers.length - 1)],
+    semester: randomInt(1, 2), // Randomly choose between 1 and 2 for semester
+    week_hours: randomInt(3, 4), // Randomly choose between 3 and 4 for week_hours
+    program: dummyPrograms[randomInt(0, 1)], // Randomly choose between 'Bachelor' and 'Master' for program
+    academic_year_id: randomInt(1, 10), // Random academic year ID between 1 and 10
+    professor_id: randomInt(1, 10), // Random professor ID between 1 and 10
+  });
+
+  const coursesData = Array.from({ length: 100 }, generateRandomCourse);
 
   const promises = coursesData.map(async (course) => {
     const defaultCourseData = {
