@@ -1,6 +1,4 @@
 RewriteEngine On
 
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-
 RewriteRule ^(.*)$ http://localhost:5000/$1 [P,L]
+DirectoryIndex disabled

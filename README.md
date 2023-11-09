@@ -160,4 +160,5 @@ pm2 delete ecosystem.config.js
 pm2 startup
 
 [PM2] You have to run this command as root. Execute the following command:
-      sudo su -c "env PATH=$PATH:/home/unitech/.nvm/versions/node/v14.3/bin pm2 startup <distribution> -u <user> --hp <home-path>
+
+sudo env PATH=$PATH:/usr/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u jkruja --hp /home/jkruja
