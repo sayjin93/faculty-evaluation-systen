@@ -22,6 +22,9 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
 
+//react-icons
+import { PiArticleMediumLight } from "react-icons/pi"
+
 //hooks
 import { convertToKey } from "src/hooks";
 import api from "src/hooks/api";
@@ -43,7 +46,6 @@ import Flatpickr from "react-flatpickr";
 //components
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import CustomDataGrid from "src/components/CustomDataGrid";
-
 
 const Papers = () => {
   //#region constants
@@ -279,7 +281,10 @@ const Papers = () => {
     <>
       <CCard>
         <CCardHeader className="flex justify-content-between align-items-center">
-          <h6 className="m-0">{t("Papers")}</h6>
+          <h6 className="card-title">
+            <PiArticleMediumLight />
+            <span className="title">{t("Papers")}</span>
+          </h6>
           <CButton
             color="primary"
             className="float-right"
@@ -293,13 +298,6 @@ const Papers = () => {
           <SelectBoxProfessors className="mb-3" />
 
           <CustomDataGrid dataSource={filteredItems}>
-            <Column
-              cssClass="bold"
-              dataField="id"
-              caption="#"
-              dataType="number"
-              width={55}
-            />
             <Column
               dataField="title"
               caption={t("Title")}
@@ -452,7 +450,7 @@ const Papers = () => {
               {t("Close")}
             </CButton>
             <CButton type="submit">
-              {modalOptions.editMode ? t("Edit") : t("Add")}
+              {modalOptions.editMode ? t("Update") : t("Add")}
             </CButton>
           </CModalFooter>
         </CForm>

@@ -23,6 +23,9 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar, cilCheckAlt } from "@coreui/icons";
 
+//react-icons
+import { RiCommunityLine } from "react-icons/ri";
+
 //hooks
 import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
@@ -299,7 +302,10 @@ const Communities = () => {
     <>
       <CCard>
         <CCardHeader className="flex justify-content-between align-items-center">
-          <h6 className="m-0">{t("CommunityServices")}</h6>
+          <h6 className="card-title">
+            <RiCommunityLine />
+            <span className="title">{t("CommunityServices")}</span>
+          </h6>
           <CButton
             color="primary"
             className="float-right"
@@ -312,15 +318,7 @@ const Communities = () => {
         <CCardBody>
           <SelectBoxProfessors className="mb-3" />
 
-
           <CustomDataGrid dataSource={filteredItems}>
-            <Column
-              cssClass="bold"
-              dataField="id"
-              caption="#"
-              dataType="number"
-              width={55}
-            />
             <Column
               dataField="event"
               caption={t("Event")}
@@ -486,7 +484,7 @@ const Communities = () => {
               {t("Close")}
             </CButton>
             <CButton type="submit">
-              {modalOptions.editMode ? t("Edit") : t("Add")}
+              {modalOptions.editMode ? t("Update") : t("Add")}
             </CButton>
           </CModalFooter>
         </CForm>

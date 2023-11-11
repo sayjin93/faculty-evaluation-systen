@@ -20,7 +20,7 @@ import {
   CModalTitle,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash } from "@coreui/icons";
+import { cilPen, cilTrash, cibCodecademy } from "@coreui/icons";
 
 //hooks
 import { convertToKey } from "src/hooks";
@@ -288,7 +288,11 @@ const Courses = () => {
     <>
       <CCard>
         <CCardHeader className="flex justify-content-between align-items-center">
-          <h6 className="m-0">{t("Courses")}</h6>
+          <h6 className="card-title">
+            <CIcon icon={cibCodecademy} />
+            <span className="title">{t("Courses")}</span>
+          </h6>
+
           <CButton
             color="primary"
             className="float-right"
@@ -303,13 +307,6 @@ const Courses = () => {
 
           {professors.length > 0 && (
             <CustomDataGrid dataSource={filteredItems}>
-              <Column
-                cssClass="bold"
-                dataField="id"
-                caption="#"
-                dataType="number"
-                width={55}
-              />
               <Column
                 dataField="name"
                 caption={t("Name")}
@@ -489,7 +486,7 @@ const Courses = () => {
               {t("Close")}
             </CButton>
             <CButton type="submit">
-              {modalOptions.editMode ? t("Edit") : t("Add")}
+              {modalOptions.editMode ? t("Update") : t("Add")}
             </CButton>
           </CModalFooter>
         </CForm>

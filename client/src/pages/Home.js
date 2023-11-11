@@ -254,18 +254,10 @@ const Home = () => {
         <CCardBody>
           <CustomDataGrid dataSource={professorStatistics}>
             <Column
-              cssClass="bold"
-              dataField="id"
-              caption="#"
-              dataType="number"
-              width={55}
-            />
-            <Column
               dataField="professor"
               caption={t("Professor")}
               dataType="string"
             />
-
             <Column
               dataField="courses"
               caption={t("Courses")}

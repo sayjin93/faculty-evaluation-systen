@@ -22,6 +22,9 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
+//react-icons
+import { GiVideoConference } from "react-icons/gi"
+
 //hooks
 import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
@@ -39,7 +42,6 @@ import {
 //components
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import CustomDataGrid from "src/components/CustomDataGrid";
-
 
 const Conferences = () => {
   //#region constants
@@ -282,7 +284,10 @@ const Conferences = () => {
     <>
       <CCard>
         <CCardHeader className="flex justify-content-between align-items-center">
-          <h6 className="m-0">{t("Conferences")}</h6>
+          <h6 className="card-title">
+            <GiVideoConference />
+            <span className="title">{t("Conferences")}</span>
+          </h6>
           <CButton
             color="primary"
             className="float-right"
@@ -296,13 +301,6 @@ const Conferences = () => {
           <SelectBoxProfessors className="mb-3" />
 
           <CustomDataGrid dataSource={filteredItems}>
-            <Column
-              cssClass="bold"
-              dataField="id"
-              caption="#"
-              dataType="number"
-              width={55}
-            />
             <Column
               dataField="name"
               caption={t("Name")}
@@ -471,7 +469,7 @@ const Conferences = () => {
               {t("Close")}
             </CButton>
             <CButton type="submit">
-              {modalOptions.editMode ? t("Edit") : t("Add")}
+              {modalOptions.editMode ? t("Update") : t("Add")}
             </CButton>
           </CModalFooter>
         </CForm>

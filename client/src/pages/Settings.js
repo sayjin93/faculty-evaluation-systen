@@ -2,17 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
-import { convertToKey, setCookie } from "src/hooks";
-import useErrorHandler from "src/hooks/useErrorHandler";
-import api from "src/hooks/api";
-
-import { getActiveAcademicYear, getModal } from "../store/selectors/selectors";
-import { setModal, showToast, changeAcademicYear } from "src/store";
-
+//coreUI
 import {
-  CContainer,
-  CHeader,
-  CHeaderBrand,
   CCard,
   CCardBody,
   CCardHeader,
@@ -33,7 +24,21 @@ import {
   CFormSelect,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cifAl, cifGb, cibHtmlacademy } from "@coreui/icons";
+import { cifAl, cifGb } from "@coreui/icons";
+
+//react-icons
+import { LuSettings2, LuLanguages } from "react-icons/lu";
+import { HiAcademicCap } from "react-icons/hi"
+import { MdOutlineMarkEmailUnread } from "react-icons/md";
+
+//hooks
+import { convertToKey, setCookie } from "src/hooks";
+import api from "src/hooks/api";
+import useErrorHandler from "src/hooks/useErrorHandler";
+
+//store
+import { setModal, showToast, changeAcademicYear } from "src/store";
+import { getActiveAcademicYear, getModal } from "src/store/selectors/selectors";
 
 const defaultSmtpConfigs = {
   sender_name: "UET Support",
@@ -192,168 +197,185 @@ const Settings = () => {
 
   return (
     <>
-      <CHeader className="mb-3">
-        <CContainer fluid>
-          <CHeaderBrand>{t("Settings")}</CHeaderBrand>
-        </CContainer>
-      </CHeader>
+      <CCardHeader className="mb-3">
+        <h6 className="card-title">
+          <LuSettings2 />
+          <span className="title">{t("Settings")}</span>
+        </h6>
+      </CCardHeader>
 
-      <CRow className="align-items-start">
-        {/* Language */}
-        <CCol>
-          <CCard color="white" className="mb-3">
-            <CCardHeader>{t("Language")}</CCardHeader>
-            <CCardBody>
-              <CDropdown>
-                <CDropdownToggle color="light">
-                  {i18n.language === "sq" ? (
-                    <>
-                      <CIcon icon={cifAl} />
-                      <span className="ms-2">Shqip</span>
-                    </>
-                  ) : (
-                    <>
-                      <CIcon icon={cifGb} />
-                      <span className="ms-2">English</span>
-                    </>
-                  )}
-                </CDropdownToggle>
-                <CDropdownMenu>
-                  <CDropdownItem
-                    className="cursor"
-                    onClick={() => handleLanguageChange("sq")}
-                  >
-                    <CIcon icon={cifAl} />
-                    <span className="ms-2">Shqip</span>
-                  </CDropdownItem>
-                  <CDropdownItem
-                    className="cursor"
-                    onClick={() => handleLanguageChange("en")}
-                  >
-                    <CIcon icon={cifGb} />
-                    <span className="ms-2">English</span>
-                  </CDropdownItem>
-                </CDropdownMenu>
-              </CDropdown>
-            </CCardBody>
-          </CCard>
-        </CCol>
-
-        {/* Acaemi Year */}
-        <CCol>
-          <CCard color="dark" textColor="white" className="mb-3">
-            <CCardHeader>{t("AcademicYear")}</CCardHeader>
-            <CCardBody>
-              <div className="flex flex-justify-between flex-gap-10">
+      <CCardBody>
+        <CRow className="align-items-start">
+          {/* Language */}
+          <CCol>
+            <CCard color="white" className="mb-3">
+              <CCardHeader>
+                <h6 className="card-title">
+                  <LuLanguages />
+                  <span className="title">{t("Language")}</span>
+                </h6>
+              </CCardHeader>
+              <CCardBody>
                 <CDropdown>
                   <CDropdownToggle color="light">
-                    <CIcon icon={cibHtmlacademy} />
-                    <span className="ms-2">{activeAcademicYear}</span>
+                    {i18n.language === "sq" ? (
+                      <>
+                        <CIcon icon={cifAl} />
+                        <span className="ms-2">Shqip</span>
+                      </>
+                    ) : (
+                      <>
+                        <CIcon icon={cifGb} />
+                        <span className="ms-2">English</span>
+                      </>
+                    )}
                   </CDropdownToggle>
                   <CDropdownMenu>
-                    {academicYear.map((element) => {
-                      return (
-                        <CDropdownItem
-                          className="cursor"
-                          key={element.id}
-                          onClick={() => {
-                            dispatch(changeAcademicYear(element));
-                            updateActiveStatus(element);
-                          }}
-                        >
-                          <span className="ms-2">{element.year}</span>
-                        </CDropdownItem>
-                      );
-                    })}
+                    <CDropdownItem
+                      className="cursor"
+                      onClick={() => handleLanguageChange("sq")}
+                    >
+                      <CIcon icon={cifAl} />
+                      <span className="ms-2">Shqip</span>
+                    </CDropdownItem>
+                    <CDropdownItem
+                      className="cursor"
+                      onClick={() => handleLanguageChange("en")}
+                    >
+                      <CIcon icon={cifGb} />
+                      <span className="ms-2">English</span>
+                    </CDropdownItem>
                   </CDropdownMenu>
                 </CDropdown>
+              </CCardBody>
+            </CCard>
+          </CCol>
 
-                <CButton color="light" onClick={() => dispatch(setModal("addAcdemicYear"))}>
-                  {t("Add")}
-                </CButton>
-              </div>
-            </CCardBody>
-          </CCard>
-        </CCol>
+          {/* Acaemi Year */}
+          <CCol>
+            <CCard color="dark" textColor="white" className="mb-3">
+              <CCardHeader>
+                <h6 className="card-title">
+                  <HiAcademicCap />
+                  <span className="title">{t("AcademicYear")}</span>
+                </h6>
+              </CCardHeader>
+              <CCardBody>
+                <div className="flex flex-justify-between flex-gap-10">
+                  <CDropdown>
+                    <CDropdownToggle color="light">
+                      {activeAcademicYear}
+                    </CDropdownToggle>
+                    <CDropdownMenu>
+                      {academicYear.map((element) => {
+                        return (
+                          <CDropdownItem
+                            className="cursor"
+                            key={element.id}
+                            onClick={() => {
+                              dispatch(changeAcademicYear(element));
+                              updateActiveStatus(element);
+                            }}
+                          >
+                            {element.year}
+                          </CDropdownItem>
+                        );
+                      })}
+                    </CDropdownMenu>
+                  </CDropdown>
 
-        {/* SMTP Configs */}
-        <CCol>
-          <CCard color="white" className="mb-3">
-            <CCardHeader>{t("SmtpConfiguration")}</CCardHeader>
-            <CCardBody>
-              <CForm
-                onSubmit={handleSubmitSMTP}
-              >
-                <CFormInput
-                  size="sm"
-                  type="text"
-                  floatingClassName="mb-3"
-                  floatingLabel={t("SenderName")}
-                  placeholder={t("SenderName")}
-                  value={smtpConfig.sender_name}
-                  onChange={(event) => handleSmtpChange(event.target.value, "sender_name")}
-                />
-                <CFormInput
-                  size="sm"
-                  type="text"
-                  floatingClassName="mb-3"
-                  floatingLabel={t("Host")}
-                  placeholder={t("Host")}
-                  value={smtpConfig.smtp_host}
-                  onChange={(event) => handleSmtpChange(event.target.value, "smtp_host")}
-                />
-                <CFormInput
-                  size="sm"
-                  type="number"
-                  floatingClassName="mb-3"
-                  floatingLabel={t("Port")}
-                  placeholder={t("Port")}
-                  value={smtpConfig.smtp_port}
-                  onChange={(event) => handleSmtpChange(Number(event.target.value), "smtp_port")}
-                />
+                  <CButton color="light" onClick={() => dispatch(setModal("addAcdemicYear"))}>
+                    {t("Add")}
+                  </CButton>
+                </div>
+              </CCardBody>
+            </CCard>
+          </CCol>
 
-                <CFormSelect
-                  size="sm"
-                  className="cursor"
-                  floatingClassName="mb-3"
-                  floatingLabel={t("Secure")}
-                  value={smtpConfig.smtp_secure}
-                  onChange={(event) => handleSmtpChange(Number(event.target.value), "smtp_secure")}
+          {/* SMTP Configs */}
+          <CCol>
+            <CCard color="white" className="mb-3">
+              <CCardHeader>
+                <h6 className="card-title">
+                  <MdOutlineMarkEmailUnread />
+                  <span className="title">{t("SmtpConfiguration")}</span>
+                </h6>
+              </CCardHeader>
+              <CCardBody>
+                <CForm
+                  onSubmit={handleSubmitSMTP}
                 >
-                  <option value={1}>
-                    {t("True")}</option>
-                  <option value={0}>
-                    {t("False")}</option>
-                </CFormSelect>
+                  <CFormInput
+                    size="sm"
+                    type="text"
+                    floatingClassName="mb-3"
+                    floatingLabel={t("SenderName")}
+                    placeholder={t("SenderName")}
+                    value={smtpConfig.sender_name}
+                    onChange={(event) => handleSmtpChange(event.target.value, "sender_name")}
+                  />
+                  <CFormInput
+                    size="sm"
+                    type="text"
+                    floatingClassName="mb-3"
+                    floatingLabel={t("Host")}
+                    placeholder={t("Host")}
+                    value={smtpConfig.smtp_host}
+                    onChange={(event) => handleSmtpChange(event.target.value, "smtp_host")}
+                  />
+                  <CFormInput
+                    size="sm"
+                    type="number"
+                    floatingClassName="mb-3"
+                    floatingLabel={t("Port")}
+                    placeholder={t("Port")}
+                    value={smtpConfig.smtp_port}
+                    onChange={(event) => handleSmtpChange(Number(event.target.value), "smtp_port")}
+                  />
 
-                <CFormInput
-                  size="sm"
-                  type="text"
-                  floatingClassName="mb-3"
-                  floatingLabel={t("User")}
-                  placeholder={t("User")}
-                  value={smtpConfig.smtp_user}
-                  onChange={(event) => handleSmtpChange(event.target.value, "smtp_user")}
-                />
+                  <CFormSelect
+                    size="sm"
+                    className="cursor"
+                    floatingClassName="mb-3"
+                    floatingLabel={t("Secure")}
+                    value={smtpConfig.smtp_secure}
+                    onChange={(event) => handleSmtpChange(Number(event.target.value), "smtp_secure")}
+                  >
+                    <option value={1}>
+                      {t("True")}</option>
+                    <option value={0}>
+                      {t("False")}</option>
+                  </CFormSelect>
 
-                <CFormInput
-                  size="sm"
-                  type="text"
-                  floatingClassName="mb-3"
-                  floatingLabel={t("Password")}
-                  placeholder={t("Password")}
-                  value={smtpConfig.smtp_pass}
-                  onChange={(event) => handleSmtpChange(event.target.value, "smtp_pass")}
-                />
+                  <CFormInput
+                    size="sm"
+                    type="text"
+                    floatingClassName="mb-3"
+                    floatingLabel={t("User")}
+                    placeholder={t("User")}
+                    value={smtpConfig.smtp_user}
+                    onChange={(event) => handleSmtpChange(event.target.value, "smtp_user")}
+                  />
 
-                <CButton type="submit">
-                  {t("Save")}
-                </CButton>
-              </CForm>
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
+                  <CFormInput
+                    size="sm"
+                    type="text"
+                    floatingClassName="mb-3"
+                    floatingLabel={t("Password")}
+                    placeholder={t("Password")}
+                    value={smtpConfig.smtp_pass}
+                    onChange={(event) => handleSmtpChange(event.target.value, "smtp_pass")}
+                  />
+
+                  <CButton type="submit">
+                    {t("Save")}
+                  </CButton>
+                </CForm>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
+      </CCardBody>
 
       <CModal
         id="addAcdemicYear"

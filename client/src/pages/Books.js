@@ -22,6 +22,9 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
 
+//react-icons
+import { PiBooksDuotone } from "react-icons/pi"
+
 //hooks
 import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
@@ -277,7 +280,10 @@ const Books = () => {
     <>
       <CCard>
         <CCardHeader className="flex justify-content-between align-items-center">
-          <h6 className="m-0">{t("Books")}</h6>
+          <h6 className="card-title">
+            <PiBooksDuotone />
+            <span className="title">{t("Books")}</span>
+          </h6>
           <CButton
             color="primary"
             className="float-right"
@@ -291,13 +297,6 @@ const Books = () => {
           <SelectBoxProfessors className="mb-3" />
 
           <CustomDataGrid dataSource={filteredItems}>
-            <Column
-              cssClass="bold"
-              dataField="id"
-              caption="#"
-              dataType="number"
-              width={55}
-            />
             <Column
               dataField="title"
               caption={t("Title")}
@@ -450,7 +449,7 @@ const Books = () => {
               {t("Close")}
             </CButton>
             <CButton type="submit">
-              {modalOptions.editMode ? t("Edit") : t("Add")}
+              {modalOptions.editMode ? t("Update") : t("Add")}
             </CButton>
           </CModalFooter>
         </CForm>

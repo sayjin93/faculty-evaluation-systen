@@ -25,6 +25,9 @@ import { cilPen, cilTrash } from "@coreui/icons";
 import { BsGenderMale, BsGenderFemale } from "react-icons/bs"
 import { ImCross } from "react-icons/im"
 
+//react-icons
+import { FaChalkboardTeacher } from "react-icons/fa"
+
 //hooks
 import { convertToKey } from "src/hooks";
 import api from "src/hooks/api";
@@ -36,6 +39,7 @@ import { getModal } from "src/store/selectors/selectors";
 
 //components
 import CustomDataGrid from "src/components/CustomDataGrid";
+
 
 const Professors = () => {
   //#region constants
@@ -225,7 +229,7 @@ const Professors = () => {
   }
   const cellRenderDeleted = ({ data }) => {
     const checked = data.is_deleted ? (
-      <ImCross className="text-danger" />
+      <ImCross title={t("Deleted")} className="text-danger" />
     ) : (
       ""
     );
@@ -283,7 +287,10 @@ const Professors = () => {
     <>
       <CCard>
         <CCardHeader className="flex justify-content-between align-items-center">
-          <h6 className="m-0">{t("Professors")}</h6>
+          <h6 className="card-title">
+            <FaChalkboardTeacher />
+            <span className="title">{t("Professors")}</span>
+          </h6>
           <CButton
             color="primary"
             className="float-right"
@@ -295,14 +302,6 @@ const Professors = () => {
 
         <CCardBody>
           <CustomDataGrid dataSource={items}>
-            <Column
-              allowHeaderFiltering={false}
-              cssClass="bold"
-              dataField="id"
-              caption="#"
-              dataType="number"
-              width={55}
-            />
             <Column
               dataField="first_name"
               caption={t("FirstName")}
@@ -328,10 +327,10 @@ const Professors = () => {
               cellRender={cellRenderDeleted}
             >
               <HeaderFilter dataSource={[{
-                text: 'deleted',
+                text: t('Deleted'),
                 value: ['is_deleted', '=', true],
               }, {
-                text: 'not deleted',
+                text: t('Active'),
                 value: ['is_deleted', '=', false],
               }]} />
             </Column>
@@ -427,7 +426,7 @@ const Professors = () => {
               {t("Close")}
             </CButton>
             <CButton type="submit">
-              {modalOptions.editMode ? t("Edit") : t("Add")}
+              {modalOptions.editMode ? t("Update") : t("Add")}
             </CButton>
           </CModalFooter>
         </CForm>

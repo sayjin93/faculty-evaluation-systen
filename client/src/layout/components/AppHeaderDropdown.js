@@ -13,8 +13,11 @@ import {
   CDropdownMenu,
   CDropdownToggle,
 } from "@coreui/react";
-import { cilAccountLogout, cilSettings, cilUser } from "@coreui/icons";
-import CIcon from "@coreui/icons-react";
+
+//react-icons
+import { CgProfile, CgLogOut } from "react-icons/cg";
+import { LuSettings2 } from "react-icons/lu";
+import { AiOutlineUser } from "react-icons/ai";
 
 //store
 import { setFirstLogin, showToast } from "src/store";
@@ -62,7 +65,7 @@ const AppHeaderDropdown = () => {
     <CDropdown variant="nav-item">
       <CDropdownToggle className="py-0" caret={false}>
         <CAvatar color="primary" textColor="white" status="success" size="md">
-          {initials ? initials : <CIcon icon={cilUser} />}
+          {initials ? initials : <AiOutlineUser />}
         </CAvatar>
       </CDropdownToggle>
       <CDropdownMenu className="pt-0"
@@ -71,17 +74,21 @@ const AppHeaderDropdown = () => {
         <CDropdownHeader className="bg-light fw-semibold py-2">
           {t("UserMenu")}
         </CDropdownHeader>
+
         <CDropdownItem className="cursor" onClick={() => navigate("/profile")}>
-          <CIcon icon={cilUser} className="me-2" />
+          <CgProfile className="me-2" />
           {t("Profile")}
         </CDropdownItem>
+
         <CDropdownItem className="cursor" onClick={() => navigate("/settings")}>
-          <CIcon icon={cilSettings} className="me-2" />
+          <LuSettings2 className="me-2" />
           {t("Settings")}
         </CDropdownItem>
+
         <CDropdownDivider />
+
         <CDropdownItem className="cursor" onClick={logout}>
-          <CIcon icon={cilAccountLogout} className="me-2" />
+          <CgLogOut className="me-2" />
           {t("Logout")}
         </CDropdownItem>
       </CDropdownMenu>

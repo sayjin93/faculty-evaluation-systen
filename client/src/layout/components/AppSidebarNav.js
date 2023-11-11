@@ -1,33 +1,31 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 //coreUI
 import { CBadge, CNavItem, CNavTitle } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import {
-  cilSpeedometer,
-  cilUser,
-  cibCodecademy,
-  cilPen,
-  cilBook,
-  cilBullhorn,
-  cilChart,
-  cilGlobeAlt,
-  cilSettings,
-} from "@coreui/icons";
+import { cibCodecademy } from "@coreui/icons";
+
+//react-icons
+import { LuLayoutDashboard, LuSettings2 } from "react-icons/lu";
+import { FaChalkboardTeacher } from "react-icons/fa";
+import { GiVideoConference } from "react-icons/gi";
+import { RiCommunityLine } from "react-icons/ri";
+import { PiBooksDuotone, PiArticleMediumLight } from "react-icons/pi";
+import { TbReportSearch } from "react-icons/tb";
 
 export const AppSidebarNav = () => {
   //#region constants
   const { t } = useTranslation();
   const location = useLocation();
 
-  const items = [
+  const items = useMemo(() => [
     {
       component: CNavItem,
       name: t("Dashboard"),
       to: "/",
-      icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+      icon: <LuLayoutDashboard className="nav-icon" />,
       badge: {
         color: "info",
         text: t("Working").toUpperCase(),
@@ -41,7 +39,7 @@ export const AppSidebarNav = () => {
       component: CNavItem,
       name: t("Professors"),
       to: "/professors",
-      icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+      icon: <FaChalkboardTeacher className="nav-icon" style={{ height: "18px" }} />,
     },
     {
       component: CNavItem,
@@ -53,31 +51,31 @@ export const AppSidebarNav = () => {
       component: CNavItem,
       name: t("Papers"),
       to: "/papers",
-      icon: <CIcon icon={cilPen} customClassName="nav-icon" />,
+      icon: <PiArticleMediumLight className="nav-icon" />,
     },
     {
       component: CNavItem,
       name: t("Books"),
       to: "/books",
-      icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+      icon: <PiBooksDuotone className="nav-icon" />,
     },
     {
       component: CNavItem,
       name: t("Conferences"),
       to: "/conferences",
-      icon: <CIcon icon={cilBullhorn} customClassName="nav-icon" />,
+      icon: <GiVideoConference className="nav-icon" />,
     },
     {
       component: CNavItem,
       name: t("CommunityServices"),
       to: "/community-services",
-      icon: <CIcon icon={cilGlobeAlt} customClassName="nav-icon" />,
+      icon: <RiCommunityLine className="nav-icon" />,
     },
     {
       component: CNavItem,
       name: t("Reports"),
       to: "/reports",
-      icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
+      icon: <TbReportSearch className="nav-icon" />,
     },
     {
       component: CNavTitle,
@@ -87,9 +85,9 @@ export const AppSidebarNav = () => {
       component: CNavItem,
       name: t("Settings"),
       to: "/settings",
-      icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
+      icon: <LuSettings2 className="nav-icon" />,
     },
-  ];
+  ], []);
   //#endregion
 
   //#region functions

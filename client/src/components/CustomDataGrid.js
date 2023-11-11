@@ -1,10 +1,19 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next';
-import DataGrid, { Selection, Pager, Paging, Scrolling, SearchPanel, ColumnChooser, ColumnChooserSelection, Sorting, HeaderFilter, Search } from "devextreme-react/data-grid";
 
+//devextreme
+import DataGrid, { Selection, Pager, Paging, Scrolling, SearchPanel, ColumnChooser, Sorting, HeaderFilter, Search, Column, Position } from "devextreme-react/data-grid";
 
 const CustomDataGrid = ({ dataSource, children }) => {
+    //#region constants
     const { t } = useTranslation();
+    //#endregion
+
+    //#region functions
+    const cellRenderIndex = ({ rowIndex }) => {
+        return rowIndex + 1
+    }
+    //#endregion
 
     return (
         <div className='dx-viewport'>
@@ -24,9 +33,10 @@ const CustomDataGrid = ({ dataSource, children }) => {
                     placeholder={t("Search") + "..."} />
 
                 <ColumnChooser enabled={true} mode="select" title={t("ColumnChooser")}>
-                    <ColumnChooserSelection
-                        allowSelectAll={false}
-                        selectByClick={true}
+                    <Position
+                        my="right top"
+                        at="right bottom"
+                        of=".dx-datagrid-column-chooser-button"
                     />
                 </ColumnChooser>
 
@@ -60,6 +70,13 @@ const CustomDataGrid = ({ dataSource, children }) => {
                     showPageSizeSelector={true}
                     showInfo={true}
                     showNavigationButtons={true}
+                />
+                <Column
+                    alignment="right"
+                    cssClass="bold"
+                    caption="#"
+                    width={55}
+                    cellRender={cellRenderIndex}
                 />
                 {children}
             </DataGrid>

@@ -10,10 +10,10 @@ import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
+import { showToast, changeAcademicYear } from "src/store";
 import {
   getAcademicYearId
-} from "../store/selectors/selectors";
-import { showToast, changeAcademicYear } from "src/store";
+} from "src/store/selectors/selectors";
 
 const SelectBoxAcademicYear = ({ className = "" }) => {
   //#region constants

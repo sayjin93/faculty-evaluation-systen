@@ -20,6 +20,9 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilCheckAlt } from "@coreui/icons";
 
+//react-icons
+import { TbReportSearch } from "react-icons/tb"
+
 //hooks
 import api from "src/hooks/api";
 import TableHeader from "src/hooks/tableHeader";
@@ -270,7 +273,10 @@ const Reports = () => {
     <>
       <CCard className="mb-4">
         <CCardHeader className="flex justify-content-between align-items-center">
-          <h6 className="m-0">{t("Reports")}</h6>
+          <h6 className="card-title">
+            <TbReportSearch />
+            <span className="title">{t("Reports")}</span>
+          </h6>
           <CButton color="primary" className="float-right" onClick={exportPDF}>
             {t("GeneratePdf")}
           </CButton>

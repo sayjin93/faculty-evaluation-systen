@@ -16,10 +16,10 @@ import {
   CCol,
 } from "@coreui/react";
 
-//icons
+//react-icons
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import { AiOutlineUser, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 //hooks
 import { convertToKey } from "src/hooks"
@@ -136,7 +136,10 @@ const Settings = () => {
     <>
       <CCard>
         <CCardHeader>
-          <h6 className="m-0">{t("Profile")}</h6>
+          <h6 className="card-title">
+            <AiOutlineUser />
+            <span className="title">{t("Profile")}</span>
+          </h6>
         </CCardHeader>
 
         <CCardBody>
@@ -261,7 +264,7 @@ const Settings = () => {
             <CRow>
               <CCol className="text-end">
                 <CButton color="primary" type="submit">
-                  {t("UpdateProfile")}
+                  {t("Update")}
                 </CButton>
               </CCol>
             </CRow>
