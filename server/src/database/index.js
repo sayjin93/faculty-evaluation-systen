@@ -20,7 +20,7 @@ const sequelize = new Sequelize(
     // Synchronize the models with the database (alter: true means it will alter tables if they already exist)
     await sequelize.sync({
       alter: true,
-      force: true, // process.env.NODE_ENV === 'development',
+      force: process.env.NODE_ENV === 'development',
       logging: false,
     });
     console.log('Models synchronized'.bgGreen);
@@ -28,6 +28,8 @@ const sequelize = new Sequelize(
     if (process.env.DEFAULT_DATA === 'true') {
       // Define an array of seed functions (ordered list)
       const seeds = [
+        require('./seeders/faculty'),
+        require('./seeders/department'),
         require('./seeders/user'),
         require('./seeders/academicYear'),
         require('./seeders/professor'),

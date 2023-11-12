@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Column } from "devextreme-react/data-grid";
+import { Column, HeaderFilter } from "devextreme-react/data-grid";
 
 //coreUI
 import {
@@ -11,8 +11,8 @@ import {
   CCardBody,
   CCardHeader,
   CForm,
+  CFormCheck,
   CFormInput,
-  CFormSelect,
   CModal,
   CModalBody,
   CModalFooter,
@@ -20,10 +20,11 @@ import {
   CModalTitle,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash, cilCalendar } from "@coreui/icons";
+import { cilPen, cilTrash } from "@coreui/icons";
+import { ImCross } from "react-icons/im"
 
 //react-icons
-import { PiArticleMediumLight } from "react-icons/pi"
+import { PiBuildingsBold } from "react-icons/pi"
 
 //hooks
 import { convertToKey } from "src/hooks";
@@ -32,38 +33,20 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
 import { setModal, showToast } from "src/store";
-import {
-  getAcademicYearId,
-  getProfessors,
-  getSelectedProfessor,
-  getModal,
-} from "src/store/selectors/selectors";
-
-//flatpickr
-import "flatpickr/dist/themes/airbnb.css";
-import Flatpickr from "react-flatpickr";
+import { getModal } from "src/store/selectors/selectors";
 
 //components
-import SelectBoxProfessors from "src/components/SelectBoxProfessors";
 import CustomDataGrid from "src/components/CustomDataGrid";
 
-const Papers = () => {
+const defaultFormData = { name: "", is_deleted: false };
+
+const Faculties = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
 
-  const professors = useSelector(getProfessors);
-  const selectedProfessor = useSelector(getSelectedProfessor);
   const modal = useSelector(getModal);
-  const academicYearId = useSelector(getAcademicYearId);
-
-  const defaultFormData = {
-    title: "",
-    journal: "",
-    publication: new Date(),
-    professor: "",
-  };
   //#endregion
 
   //#region states
@@ -75,18 +58,12 @@ const Papers = () => {
     editMode: false,
     selectedId: -1,
   });
-
-  const filteredItems =
-    Number(selectedProfessor) !== 0
-      ? items.filter((item) => item.professor_id === Number(selectedProfessor))
-      : items;
-
   //#endregion
 
   //#region functions
-  const fetchPapers = async () => {
+  const fetchFaculties = async () => {
     await api
-      .get(`/paper/academic_year/${academicYearId}`)
+      .get("/faculty")
       .then((response) => {
         setItems(response.data);
       })
@@ -94,18 +71,16 @@ const Papers = () => {
         handleError(error);
       });
   };
-  const fetchOnePaper = async (id) => {
+  const fetchOneFaculty = async (id) => {
     await api
-      .get("/paper/" + id)
+      .get("/faculty/" + id)
       .then((response) => {
         setFormData({
           ...formData,
-          title: response.data.title,
-          journal: response.data.journal,
-          publication: response.data.publication,
-          professor: response.data.professor_id,
+          name: response.data.key,
+          is_deleted: response.data.is_deleted
         });
-        dispatch(setModal("editPaper"));
+        dispatch(setModal("editFaculty"));
       })
       .catch((error) => {
         dispatch(
@@ -116,24 +91,21 @@ const Papers = () => {
         );
       });
   };
-  const addPaper = async () => {
+  const addFaculty = async () => {
     await api
-      .post("/paper", {
-        title: formData.title,
-        journal: formData.journal,
-        publication: formData.publication,
-        academic_year_id: academicYearId,
-        professor_id: formData.professor,
+      .post("/faculty", {
+        key: convertToKey(formData.name),
+        is_deleted: formData.is_deleted
       })
       .then((response) => {
         setStatus(response);
         setValidated(false);
 
-        const paperName = response.data.title;
         dispatch(
           showToast({
             type: "success",
-            content: t("Paper") + " " + paperName + " " + t("WasAddedSuccessfully"),
+            content:
+              t("Faculty") + t("WasAddedSuccessfully"),
           })
         );
       })
@@ -146,16 +118,15 @@ const Papers = () => {
         );
       });
   };
-  const editPaper = async (id) => {
+  const editFaculty = async (id) => {
     await api
-      .put("/paper/" + id, {
-        title: formData.title,
-        journal: formData.journal,
-        publication: formData.publication,
-        professor_id: formData.professor,
+      .put("/faculty/" + id, {
+        key: convertToKey(formData.name),
+        is_deleted: formData.is_deleted
       })
       .then((response) => {
         setStatus(response);
+        setValidated(false);
 
         dispatch(
           showToast({
@@ -173,16 +144,15 @@ const Papers = () => {
         );
       });
   };
-  const deletePaper = async (id) => {
+  const deleteFaculty = async (id) => {
     await api
-      .delete("/paper/" + id)
+      .delete("/faculty/" + id)
       .then((response) => {
         setStatus(response);
-
         dispatch(
           showToast({
             type: "success",
-            content: t("PaperWithId") + " " + id + " " + t("DeletedSuccessfully"),
+            content: t("FacultyWithId") + " " + id + " " + t("DeletedSuccessfully"),
           })
         );
       })
@@ -199,7 +169,7 @@ const Papers = () => {
           dispatch(
             showToast({
               type: "danger",
-              content: error,
+              content: error.message,
             })
           );
         }
@@ -209,9 +179,12 @@ const Papers = () => {
   };
 
   const handleInputChange = (event, fieldName) => {
+    const checkboxVal = event.target.checked;
+    const textboxVal = event.target.value
+
     setFormData({
       ...formData,
-      [fieldName]: event.target.value,
+      [fieldName]: fieldName === "is_deleted" ? checkboxVal : textboxVal,
     });
   };
   const handleSubmit = (event) => {
@@ -221,14 +194,25 @@ const Papers = () => {
     if (form.checkValidity() === false) {
       event.stopPropagation();
     } else {
-      if (modalOptions.editMode) editPaper(modalOptions.selectedId);
-      else addPaper();
+      if (modalOptions.editMode) editFaculty(modalOptions.selectedId);
+      else addFaculty();
       dispatch(setModal());
     }
     setValidated(true);
   };
 
   //DataGrid
+  const cellRenderFaculty = ({ data }) => {
+    return t(data.key)
+  }
+  const cellRenderDeleted = ({ data }) => {
+    const checked = data.is_deleted ? (
+      <ImCross title={t("Deleted")} className="text-danger" />
+    ) : (
+      ""
+    );
+    return checked;
+  };
   const cellRenderActions = ({ data }) => {
     const { id } = data;
 
@@ -251,6 +235,7 @@ const Papers = () => {
         >
           <CIcon icon={cilPen} />
         </CButton>
+
         <CButton
           color="danger"
           variant="outline"
@@ -259,7 +244,7 @@ const Papers = () => {
               ...modalOptions,
               selectedId: id,
             });
-            dispatch(setModal('deletePaper'));
+            dispatch(setModal('deleteFaculty'));
           }}
         >
           <CIcon icon={cilTrash} />
@@ -271,11 +256,11 @@ const Papers = () => {
 
   //#region useEffect
   useEffect(() => {
-    fetchPapers();
+    fetchFaculties();
   }, [status]);
 
   useEffect(() => {
-    if (modalOptions.editMode) fetchOnePaper(modalOptions.selectedId);
+    if (modalOptions.editMode) fetchOneFaculty(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion
 
@@ -284,45 +269,42 @@ const Papers = () => {
       <CCard>
         <CCardHeader className="flex justify-content-between align-items-center">
           <h6 className="card-title">
-            <PiArticleMediumLight />
-            <span className="title">{t("Papers")}</span>
+            <PiBuildingsBold />
+            <span className="title">{t("Faculties")}</span>
           </h6>
           <CButton
             color="primary"
             className="float-right"
-            onClick={() => dispatch(setModal("editPaper"))}
+            onClick={() => dispatch(setModal("editFaculty"))}
           >
             {t("Add")}
           </CButton>
         </CCardHeader>
 
         <CCardBody>
-          <SelectBoxProfessors className="mb-3" />
-
-          <CustomDataGrid dataSource={filteredItems}>
+          <CustomDataGrid dataSource={items}>
             <Column
-              dataField="title"
-              caption={t("Title")}
+              dataField="key"
+              caption={t("Name")}
               dataType="string"
+              cellRender={cellRenderFaculty}
             />
             <Column
-              dataField="journal"
-              caption={t("Journal")}
-              dataType="string"
-            />
-            <Column
+              width={140}
               alignment="center"
-              dataField="publication"
-              caption={t("Publication")}
-              dataType="date"
-              format="dd/MM/yyyy"
-            />
-            <Column
-              alignment="left"
-              dataField="professor_full_name"
-              caption={t("Professor")}
+              dataField="is_deleted"
+              caption={t("Deleted")}
               dataType="string"
-            />
+              cellRender={cellRenderDeleted}
+            >
+              <HeaderFilter dataSource={[{
+                text: t('Deleted'),
+                value: ['is_deleted', '=', true],
+              }, {
+                text: t('Active'),
+                value: ['is_deleted', '=', false],
+              }]} />
+            </Column>
             <Column
               dataField="createdAt"
               caption={t("CreatedAt")}
@@ -346,9 +328,9 @@ const Papers = () => {
       </CCard>
 
       <CModal
-        id="editPaper"
+        id="editFaculty"
         backdrop="static"
-        visible={modal.isOpen && modal.id === "editPaper"}
+        visible={modal.isOpen && modal.id === "editFaculty"}
         onClose={() => {
           dispatch(setModal());
           setFormData(defaultFormData);
@@ -372,73 +354,19 @@ const Papers = () => {
 
           <CModalBody>
             <CFormInput
-              required
-              feedbackInvalid={t("PleaseProvidePaperTitle")}
               type="text"
               floatingClassName="mb-3"
-              floatingLabel={t("PaperTitle")}
-              placeholder={t("PaperTitle")}
-              value={formData.title}
-              onChange={(event) => handleInputChange(event, "title")}
+              floatingLabel={t("FacultyName")}
+              placeholder={t("FacultyName")}
+              value={formData.name}
+              onChange={(event) => handleInputChange(event, "name")}
             />
-            <CFormInput
-              required
-              feedbackInvalid={t("PleaseProvidePaperJournal")}
-              type="text"
-              floatingClassName="mb-3"
-              floatingLabel={t("Journal")}
-              placeholder={t("Journal")}
-              value={formData.journal}
-              onChange={(event) => handleInputChange(event, "journal")}
+            <CFormCheck
+              type="checkbox"
+              label={t("Deleted")}
+              onChange={(event) => handleInputChange(event, "is_deleted")}
+              defaultChecked={formData.is_deleted}
             />
-
-            <div className="mb-3">
-              <label className="form-label">{t("Publication")}</label>
-              <div className="input-group flex-nowrap">
-                <span className="input-group-text" id="basic-addon1">
-                  <CIcon icon={cilCalendar} />
-                </span>
-                <Flatpickr
-                  required
-                  aria-describedby="basic-addon1"
-                  className="form-control"
-                  value={formData.publication}
-                  options={{
-                    dateFormat: "d-m-Y",
-                  }}
-                  onChange={(dateObj) => {
-                    const date = dateObj[0];
-                    handleInputChange(
-                      { target: { value: date } },
-                      "publication"
-                    );
-                  }}
-                />
-              </div>
-            </div>
-
-            <CFormSelect
-              required
-              feedbackInvalid={t("PleaseSelectAProfessor")}
-              className="cursor"
-              floatingClassName="mb-3"
-              floatingLabel={t("Professor")}
-              value={formData.professor}
-              onChange={(event) => handleInputChange(event, "professor")}
-            >
-              <option value="" disabled>
-                {t("Choose") + "..."}
-              </option>
-              {professors.map((professor) => {
-                const fullName =
-                  professor.first_name + " " + professor.last_name;
-                return (
-                  <option key={professor.id} value={professor.id}>
-                    {fullName}
-                  </option>
-                );
-              })}
-            </CFormSelect>
           </CModalBody>
 
           <CModalFooter>
@@ -459,14 +387,13 @@ const Papers = () => {
       </CModal>
 
       <CModal
-        id="deletePaper"
+        id="deleteFaculty"
         backdrop="static"
-        visible={modal.isOpen && modal.id === "deletePaper"}
+        visible={modal.isOpen && modal.id === "deleteFaculty"}
         onClose={() => {
           dispatch(setModal());
         }}
       >
-
         <CModalHeader>
           <CModalTitle>
             {t("Confirmation")}
@@ -486,7 +413,7 @@ const Papers = () => {
           >
             {t("Cancel")}
           </CButton>
-          <CButton onClick={() => deletePaper(modalOptions.selectedId)} color="danger">
+          <CButton onClick={() => deleteFaculty(modalOptions.selectedId)} color="danger">
             {t("Delete")}
           </CButton>
         </CModalFooter>
@@ -496,4 +423,4 @@ const Papers = () => {
   );
 };
 
-export default Papers;
+export default Faculties;

@@ -53,7 +53,7 @@ router.get('/', auth, async (req, res) => {
     });
   }
 
-  res.json({ data: result });
+  res.json(result);
 });
 
 // Retrieve all Books with a specific academic_year_id

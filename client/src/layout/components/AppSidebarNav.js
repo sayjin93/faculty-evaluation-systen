@@ -1,19 +1,22 @@
 import React, { useMemo } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { SidebarRoutes } from "src/hooks";
 
 //coreUI
-import { CBadge, CNavItem, CNavTitle } from "@coreui/react";
+import { CBadge, CNavGroup, CNavItem, CNavTitle } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cibCodecademy } from "@coreui/icons";
 
 //react-icons
 import { LuLayoutDashboard, LuSettings2 } from "react-icons/lu";
 import { FaChalkboardTeacher } from "react-icons/fa";
+import { PiBuildingsBold, PiBooksDuotone, PiArticleMediumLight } from "react-icons/pi";
+import { VscSymbolClass } from "react-icons/vsc";
 import { GiVideoConference } from "react-icons/gi";
 import { RiCommunityLine } from "react-icons/ri";
-import { PiBooksDuotone, PiArticleMediumLight } from "react-icons/pi";
 import { TbReportSearch } from "react-icons/tb";
+
 
 export const AppSidebarNav = () => {
   //#region constants
@@ -33,50 +36,80 @@ export const AppSidebarNav = () => {
     },
     {
       component: CNavTitle,
+      name: t('University'),
+    },
+    {
+      component: CNavItem,
+      name: t('Faculties'),
+      to: SidebarRoutes.Faculties,
+      icon: <PiBuildingsBold className="nav-icon" />,
+    },
+    {
+      component: CNavItem,
+      name: t('Departments'),
+      to: SidebarRoutes.Departments,
+      icon: <VscSymbolClass className="nav-icon" />,
+    },
+    {
+      component: CNavTitle,
       name: t("Components"),
     },
     {
       component: CNavItem,
       name: t("Professors"),
-      to: "/professors",
+      to: SidebarRoutes.Professors,
       icon: <FaChalkboardTeacher className="nav-icon" style={{ height: "18px" }} />,
     },
     {
       component: CNavItem,
       name: t("Courses"),
-      to: "/courses",
+      to: SidebarRoutes.Courses,
       icon: <CIcon icon={cibCodecademy} customClassName="nav-icon" />,
     },
     {
       component: CNavItem,
       name: t("Papers"),
-      to: "/papers",
+      to: SidebarRoutes.Papers,
       icon: <PiArticleMediumLight className="nav-icon" />,
     },
     {
       component: CNavItem,
       name: t("Books"),
-      to: "/books",
+      to: SidebarRoutes.Books,
       icon: <PiBooksDuotone className="nav-icon" />,
     },
     {
       component: CNavItem,
       name: t("Conferences"),
-      to: "/conferences",
+      to: SidebarRoutes.Conferences,
       icon: <GiVideoConference className="nav-icon" />,
     },
     {
       component: CNavItem,
       name: t("CommunityServices"),
-      to: "/community-services",
+      to: SidebarRoutes.Communities,
       icon: <RiCommunityLine className="nav-icon" />,
     },
+
     {
-      component: CNavItem,
+      component: CNavGroup,
       name: t("Reports"),
-      to: "/reports",
+      // to: '/reports',
       icon: <TbReportSearch className="nav-icon" />,
+      items: [
+        {
+          component: CNavItem,
+          name: 'Professor',
+          to: SidebarRoutes.Reports,
+        },
+      ],
     },
+    // {
+    //   component: CNavItem,
+    //   name: t("Reports"),
+    //   to: SidebarRoutes.Reports,
+    //   icon: <TbReportSearch className="nav-icon" />,
+    // },
     {
       component: CNavTitle,
       name: t("Extras"),
@@ -84,7 +117,7 @@ export const AppSidebarNav = () => {
     {
       component: CNavItem,
       name: t("Settings"),
-      to: "/settings",
+      to: SidebarRoutes.Settings,
       icon: <LuSettings2 className="nav-icon" />,
     },
   ], []);

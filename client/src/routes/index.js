@@ -8,6 +8,7 @@ import Private from "./private";
 //default layout for private pages
 import DefaultLayout from "../layout/DefaultLayout";
 import Page404 from "../pages/Page404";
+import { SidebarRoutes } from "src/hooks";
 
 //public pages
 const Login = lazy(() => import("../pages/auth/Login"));
@@ -17,6 +18,8 @@ const ResetToken = lazy(() => import("../pages/auth/ResetToken"));
 
 //private pages
 const Home = lazy(() => import("../pages/Home"));
+const Faculties = lazy(() => import("../pages/uni/Faculties"));
+const Departments = lazy(() => import("../pages/uni/Departments"));
 const Professors = lazy(() => import("../pages/Professors"));
 const Courses = lazy(() => import("../pages/Courses"));
 const Papers = lazy(() => import("../pages/Papers"));
@@ -37,39 +40,47 @@ const privateRoutes = [
         element: <Home />,
       },
       {
-        path: "/courses",
+        path: SidebarRoutes.Faculties,
+        element: <Faculties />,
+      },
+      {
+        path: SidebarRoutes.Departments,
+        element: <Departments />,
+      },
+      {
+        path: SidebarRoutes.Courses,
         element: <Courses />,
       },
       {
-        path: "/professors",
+        path: SidebarRoutes.Professors,
         element: <Professors />,
       },
       {
-        path: "/papers",
+        path: SidebarRoutes.Papers,
         element: <Papers />,
       },
       {
-        path: "/books",
+        path: SidebarRoutes.Books,
         element: <Books />,
       },
       {
-        path: "/conferences",
+        path: SidebarRoutes.Conferences,
         element: <Conferences />,
       },
       {
-        path: "/community-services",
+        path: SidebarRoutes.Communities,
         element: <Communities />,
       },
       {
-        path: "/reports",
+        path: SidebarRoutes.Reports,
         element: <Reports />,
       },
       {
-        path: "/settings",
+        path: SidebarRoutes.Settings,
         element: <Settings />,
       },
       {
-        path: "/profile",
+        path: SidebarRoutes.Profile,
         element: <Profile />,
       },
     ],

@@ -73,7 +73,6 @@ const Conferences = () => {
     editMode: false,
     selectedId: -1,
   });
-  const [selectedId, setSelectedId] = useState(null);
 
   const filteredItems =
     Number(selectedProfessor) !== 0
@@ -92,7 +91,7 @@ const Conferences = () => {
         handleError(error);
       });
   };
-  const fefetchOneConference = async (id) => {
+  const fetchOneConference = async (id) => {
     await api
       .get("/conference/" + id)
       .then((response) => {
@@ -259,7 +258,10 @@ const Conferences = () => {
           color="danger"
           variant="outline"
           onClick={() => {
-            setSelectedId(id);
+            setModalOptions({
+              ...modalOptions,
+              selectedId: id,
+            });
             dispatch(setModal('deleteConference'));
           }}
         >
@@ -276,7 +278,7 @@ const Conferences = () => {
   }, [status]);
 
   useEffect(() => {
-    if (modalOptions.editMode) fefetchOneConference(modalOptions.selectedId);
+    if (modalOptions.editMode) fetchOneConference(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion
 
@@ -503,7 +505,7 @@ const Conferences = () => {
           >
             {t("Cancel")}
           </CButton>
-          <CButton onClick={() => deleteConference(selectedId)} color="danger">
+          <CButton onClick={() => deleteConference(modalOptions.selectedId)} color="danger">
             {t("Delete")}
           </CButton>
         </CModalFooter>

@@ -10,7 +10,7 @@ const auth = passport.authenticate('jwt', { session: false });
 // Create a new Professor
 router.post('/', auth, async (req, res) => {
   // Validate request
-  if (!req.body.first_name) {
+  if (!req.body.first_name || !req.body.last_name || !req.body.gender) {
     res.status(400).send({
       message: 'Content can not be empty',
     });

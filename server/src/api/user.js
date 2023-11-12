@@ -21,7 +21,7 @@ router.get('/', auth, async (req, res) => {
     });
   }
 
-  res.json({ data: result });
+  res.json(result);
 });
 
 // Retrieve User with a specific username

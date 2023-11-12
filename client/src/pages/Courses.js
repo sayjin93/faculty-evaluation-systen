@@ -70,7 +70,6 @@ const Courses = () => {
     editMode: false,
     selectedId: -1,
   });
-  const [selectedId, setSelectedId] = useState(null);
 
   const filteredItems =
     Number(selectedProfessor) !== 0
@@ -263,7 +262,10 @@ const Courses = () => {
           color="danger"
           variant="outline"
           onClick={() => {
-            setSelectedId(id);
+            setModalOptions({
+              ...modalOptions,
+              selectedId: id,
+            });
             dispatch(setModal('deleteCourse'));
           }}
         >
@@ -520,7 +522,7 @@ const Courses = () => {
           >
             {t("Cancel")}
           </CButton>
-          <CButton onClick={() => deleteCourse(selectedId)} color="danger">
+          <CButton onClick={() => deleteCourse(modalOptions.selectedId)} color="danger">
             {t("Delete")}
           </CButton>
         </CModalFooter>

@@ -81,3 +81,19 @@ export function capitalizeWords(str) {
   return str.replace(/\b\w/g, function (l) { return l.toUpperCase() });
 }
 //#endregion
+
+//#region constants
+export const SidebarRoutes = {
+  Books: '/books',
+  Communities: '/community-services',
+  Conferences: '/conferences',
+  Courses: '/courses',
+  Departments: '/departments',
+  Faculties: '/faculties',
+  Papers: '/papers',
+  Professors: '/professors',
+  Profile: '/profile',
+  Reports: '/reports',
+  Settings: '/settings',
+};
+//#endregion

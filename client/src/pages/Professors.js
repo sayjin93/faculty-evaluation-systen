@@ -61,10 +61,7 @@ const Professors = () => {
     editMode: false,
     selectedId: -1,
   });
-  const [selectedId, setSelectedId] = useState(null);
   //#endregion
-
-  console.log(formData);
 
   //#region functions
   const fetchProfessors = async () => {
@@ -262,7 +259,10 @@ const Professors = () => {
           color="danger"
           variant="outline"
           onClick={() => {
-            setSelectedId(id);
+            setModalOptions({
+              ...modalOptions,
+              selectedId: id,
+            });
             dispatch(setModal('deleteProfessor'));
           }}
         >
@@ -459,7 +459,7 @@ const Professors = () => {
           >
             {t("Cancel")}
           </CButton>
-          <CButton onClick={() => deleteProfessor(selectedId)} color="danger">
+          <CButton onClick={() => deleteProfessor(modalOptions.selectedId)} color="danger">
             {t("Delete")}
           </CButton>
         </CModalFooter>
