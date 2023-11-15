@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 
 //coreUI
 import {
-  CAlert,
   CButton,
   CCard,
   CCardBody,
@@ -21,7 +20,6 @@ import {
   CInputGroupText,
   CRow,
 } from "@coreui/react";
-
 
 //icons
 import CIcon from "@coreui/icons-react";
@@ -45,7 +43,6 @@ const ResetToken = () => {
 
   //#region states
   const [state, setState] = useState({
-    view: 1,
     newPassword: "",
     retypePassword: ""
   });
@@ -91,12 +88,17 @@ const ResetToken = () => {
       })
       .catch((error) => {
         const { data, status } = error.response;
+
+        // Dispatches a Redux action to show a warning toast with the error message.
         dispatch(
           showToast({
-            type: "danger",
+            type: "warning",
             content: status !== 500 ? t(convertToKey(data.message)) : error.message,
           })
         );
+
+        // Redirect the user to the login page
+        navigate("/login", { replace: true });
       })
   }
 
@@ -141,6 +143,8 @@ const ResetToken = () => {
       })
       .catch((error) => {
         const { data, status } = error.response;
+
+        // Show toast with the error message.
         dispatch(
           showToast({
             type: "danger",
@@ -163,115 +167,14 @@ const ResetToken = () => {
         el.click();
       }
     };
-    if (state.view === 2) {
-      document.addEventListener("keyup", keyUpHandler);
-    }
+
+    document.addEventListener("keyup", keyUpHandler);
 
     return () => {
       document.removeEventListener("keyup", keyUpHandler);
     };
   }, []);
   //#endregion
-
-  if (state.view === 2) {
-    return (
-      <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
-        <CContainer>
-          <CRow className="justify-content-center">
-            <CCol md={9} lg={7} xl={6}>
-              <CCard className="p-4">
-                <CCardBody className="p-4">
-                  <h1>{t("ResetPassword")}</h1>
-                  <p className="text-medium-emphasis">
-                    {t("EnterYourNewPasswordBelow")}
-                  </p>
-
-                  <CForm onSubmit={handleSubmit}>
-                    <CInputGroup className="mb-3">
-                      <CInputGroupText>
-                        <CIcon icon={cilLockLocked} />
-                      </CInputGroupText>
-                      <CFormInput
-                        required
-                        type="password"
-                        placeholder={t("NewPassword")}
-                        value={state.newPassword}
-                        onChange={(event) => handleInputChange(event, "newPassword")}
-                      />
-                      <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("new", viewPass.new)}>{viewPass.new ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
-                    </CInputGroup>
-
-                    <CInputGroup className="mb-3">
-                      <CInputGroupText>
-                        <CIcon icon={cilLockLocked} className="text-primary" />
-                      </CInputGroupText>
-                      <CFormInput
-                        required
-                        type="password"
-                        placeholder={t("RetypePassword")}
-                        value={state.retypePassword}
-                        onChange={(event) => handleInputChange(event, "retypePassword")}
-                      />
-                      <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("retype", viewPass.retype)}>{viewPass.retype ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
-                    </CInputGroup>
-
-                    <CRow>
-                      <CCol xs={6}>
-                        <CButton
-                          type="submit"
-                          id="BtnReset"
-                          color="primary"
-                          className="px-4"
-                        >
-                          {t("Reset")}
-                        </CButton>
-                      </CCol>
-                      <CCol xs={6} className="text-end">
-                        <CDropdown>
-                          <CDropdownToggle color="light">
-                            {i18n.language === "sq" ? (
-                              <>
-                                <CIcon icon={cifAl} />
-                                <span className="ms-2">Shqip</span>
-                              </>
-                            ) : (
-                              <>
-                                <CIcon icon={cifGb} />
-                                <span className="ms-2">English</span>
-                              </>
-                            )}
-                          </CDropdownToggle>
-                          <CDropdownMenu>
-                            <CDropdownItem
-                              onClick={() => handleLanguageChange("sq")}
-                            >
-                              <CIcon icon={cifAl} />
-                              <span className="ms-2">Shqip</span>
-                            </CDropdownItem>
-                            <CDropdownItem
-                              onClick={() => handleLanguageChange("en")}
-                            >
-                              <CIcon icon={cifGb} />
-                              <span className="ms-2">English</span>
-                            </CDropdownItem>
-                          </CDropdownMenu>
-                        </CDropdown>
-                      </CCol>
-                    </CRow>
-                  </CForm>
-                  <Link to="/login">
-                    <CButton color="link" className="mt-4 d-block mx-auto">
-                      {t("BackToLogin") + "?"}
-                    </CButton>
-                  </Link>
-                </CCardBody>
-              </CCard>
-            </CCol>
-          </CRow>
-        </CContainer>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -280,52 +183,89 @@ const ResetToken = () => {
           <CCol md={9} lg={7} xl={6}>
             <CCard className="p-4">
               <CCardBody className="p-4">
-                <h1 className="text-center mb-3">{t("AnErrorOccured")}!</h1>
+                <h1>{t("ResetPassword")}</h1>
+                <p className="text-medium-emphasis">
+                  {t("EnterYourNewPasswordBelow")}
+                </p>
 
-                <CAlert color="danger" className="text-center mb-3">
-                  {t("InvalidOrExpiredToken")}
-                </CAlert>
+                <CForm onSubmit={handleSubmit}>
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilLockLocked} />
+                    </CInputGroupText>
+                    <CFormInput
+                      required
+                      type="password"
+                      placeholder={t("NewPassword")}
+                      value={state.newPassword}
+                      onChange={(event) => handleInputChange(event, "newPassword")}
+                    />
+                    <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("new", viewPass.new)}>{viewPass.new ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
+                  </CInputGroup>
 
-                <CRow>
-                  <CCol xs={6}>
-                    <Link to="/login">
-                      <CButton color="link">
-                        {t("BackToLogin") + "?"}
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilLockLocked} className="text-primary" />
+                    </CInputGroupText>
+                    <CFormInput
+                      required
+                      type="password"
+                      placeholder={t("RetypePassword")}
+                      value={state.retypePassword}
+                      onChange={(event) => handleInputChange(event, "retypePassword")}
+                    />
+                    <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("retype", viewPass.retype)}>{viewPass.retype ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
+                  </CInputGroup>
+
+                  <CRow>
+                    <CCol xs={6}>
+                      <CButton
+                        type="submit"
+                        id="BtnReset"
+                        color="primary"
+                        className="px-4"
+                      >
+                        {t("Reset")}
                       </CButton>
-                    </Link>
-                  </CCol>
-                  <CCol xs={6} className="text-end">
-                    <CDropdown>
-                      <CDropdownToggle color="light">
-                        {i18n.language === "sq" ? (
-                          <>
+                    </CCol>
+                    <CCol xs={6} className="text-end">
+                      <CDropdown>
+                        <CDropdownToggle color="light">
+                          {i18n.language === "sq" ? (
+                            <>
+                              <CIcon icon={cifAl} />
+                              <span className="ms-2">Shqip</span>
+                            </>
+                          ) : (
+                            <>
+                              <CIcon icon={cifGb} />
+                              <span className="ms-2">English</span>
+                            </>
+                          )}
+                        </CDropdownToggle>
+                        <CDropdownMenu>
+                          <CDropdownItem
+                            onClick={() => handleLanguageChange("sq")}
+                          >
                             <CIcon icon={cifAl} />
                             <span className="ms-2">Shqip</span>
-                          </>
-                        ) : (
-                          <>
+                          </CDropdownItem>
+                          <CDropdownItem
+                            onClick={() => handleLanguageChange("en")}
+                          >
                             <CIcon icon={cifGb} />
                             <span className="ms-2">English</span>
-                          </>
-                        )}
-                      </CDropdownToggle>
-                      <CDropdownMenu>
-                        <CDropdownItem
-                          onClick={() => handleLanguageChange("sq")}
-                        >
-                          <CIcon icon={cifAl} />
-                          <span className="ms-2">Shqip</span>
-                        </CDropdownItem>
-                        <CDropdownItem
-                          onClick={() => handleLanguageChange("en")}
-                        >
-                          <CIcon icon={cifGb} />
-                          <span className="ms-2">English</span>
-                        </CDropdownItem>
-                      </CDropdownMenu>
-                    </CDropdown>
-                  </CCol>
-                </CRow>
+                          </CDropdownItem>
+                        </CDropdownMenu>
+                      </CDropdown>
+                    </CCol>
+                  </CRow>
+                </CForm>
+                <Link to="/login">
+                  <CButton color="link" className="mt-4 d-block mx-auto">
+                    {t("BackToLogin") + "?"}
+                  </CButton>
+                </Link>
               </CCardBody>
             </CCard>
           </CCol>
