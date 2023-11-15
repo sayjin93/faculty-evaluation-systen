@@ -11,10 +11,6 @@ import {
   CCardGroup,
   CCol,
   CContainer,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
   CForm,
   CFormInput,
   CInputGroup,
@@ -25,19 +21,22 @@ import {
 
 //icons
 import CIcon from "@coreui/icons-react";
-import { cilLockLocked, cilUser, cifAl, cifGb } from "@coreui/icons";
+import { cilLockLocked, cilUser } from "@coreui/icons";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 //hooks
-import { convertToKey, setCookie } from "src/hooks";
+import { convertToKey } from "src/hooks";
 import api from "src/hooks/api";
 
 //store
 import { setUser, showToast } from "src/store";
 
+//components
+import LanguagesDropdown from "src/components/LanguagesDropdown";
+
 const Login = () => {
   //#region constants
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //#endregion
@@ -52,15 +51,6 @@ const Login = () => {
   //#endregion
 
   //#region functions
-  const handleLanguageChange = (language) => {
-    i18n.changeLanguage(language);
-    setCookie({
-      name: "language",
-      value: language,
-      options: { path: "/", sameSite: "strict" },
-    });
-  };
-
   const handeViewPassStateChange = () => {
     setViewPass(!viewPass)
   }
@@ -202,35 +192,7 @@ const Login = () => {
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-end">
-                        <CDropdown>
-                          <CDropdownToggle color="light">
-                            {i18n.language === "sq" ? (
-                              <>
-                                <CIcon icon={cifAl} />
-                                <span className="ms-2">Shqip</span>
-                              </>
-                            ) : (
-                              <>
-                                <CIcon icon={cifGb} />
-                                <span className="ms-2">English</span>
-                              </>
-                            )}
-                          </CDropdownToggle>
-                          <CDropdownMenu>
-                            <CDropdownItem
-                              onClick={() => handleLanguageChange("sq")}
-                            >
-                              <CIcon icon={cifAl} />
-                              <span className="ms-2">Shqip</span>
-                            </CDropdownItem>
-                            <CDropdownItem
-                              onClick={() => handleLanguageChange("en")}
-                            >
-                              <CIcon icon={cifGb} />
-                              <span className="ms-2">English</span>
-                            </CDropdownItem>
-                          </CDropdownMenu>
-                        </CDropdown>
+                        <LanguagesDropdown />
                       </CCol>
                       <CCol xs={12} className="text-center">
                         <CButton color="link" className="pt-4" onClick={() => navigate("/reset")}>

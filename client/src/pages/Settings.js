@@ -23,8 +23,6 @@ import {
   CForm,
   CFormSelect,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import { cifAl, cifGb } from "@coreui/icons";
 
 //react-icons
 import { LuSettings2, LuLanguages } from "react-icons/lu";
@@ -32,13 +30,16 @@ import { HiAcademicCap } from "react-icons/hi"
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
 
 //hooks
-import { convertToKey, setCookie } from "src/hooks";
+import { convertToKey } from "src/hooks";
 import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
 import { setModal, showToast, changeAcademicYear } from "src/store";
 import { getActiveAcademicYear, getModal } from "src/store/selectors/selectors";
+
+//components
+import LanguagesDropdown from "src/components/LanguagesDropdown";
 
 const defaultSmtpConfigs = {
   smtp_sender: "UET Support",
@@ -51,7 +52,7 @@ const defaultSmtpConfigs = {
 
 const Settings = () => {
   //#region constants
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
 
@@ -66,14 +67,6 @@ const Settings = () => {
   //#endregion
 
   //#region functions
-  const handleLanguageChange = (language) => {
-    i18n.changeLanguage(language);
-    setCookie({
-      name: "language",
-      value: language,
-      options: { path: "/", sameSite: "strict" },
-    });
-  };
 
   //academic year
   const fetchAcademicYears = async () => {
@@ -216,37 +209,7 @@ const Settings = () => {
                 </h6>
               </CCardHeader>
               <CCardBody>
-                <CDropdown>
-                  <CDropdownToggle color="light">
-                    {i18n.language === "sq" ? (
-                      <>
-                        <CIcon icon={cifAl} />
-                        <span className="ms-2">Shqip</span>
-                      </>
-                    ) : (
-                      <>
-                        <CIcon icon={cifGb} />
-                        <span className="ms-2">English</span>
-                      </>
-                    )}
-                  </CDropdownToggle>
-                  <CDropdownMenu>
-                    <CDropdownItem
-                      className="cursor"
-                      onClick={() => handleLanguageChange("sq")}
-                    >
-                      <CIcon icon={cifAl} />
-                      <span className="ms-2">Shqip</span>
-                    </CDropdownItem>
-                    <CDropdownItem
-                      className="cursor"
-                      onClick={() => handleLanguageChange("en")}
-                    >
-                      <CIcon icon={cifGb} />
-                      <span className="ms-2">English</span>
-                    </CDropdownItem>
-                  </CDropdownMenu>
-                </CDropdown>
+                <LanguagesDropdown />
               </CCardBody>
             </CCard>
           </CCol>

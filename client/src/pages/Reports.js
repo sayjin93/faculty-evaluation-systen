@@ -600,7 +600,7 @@ const Reports = () => {
         </CRow>
       ) : (
         <CCallout color="danger" className="bg-white">
-          {t("NoDatatoDisplay")}
+          {t("NoDataToDisplay")}
         </CCallout>
       )
       }

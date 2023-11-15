@@ -358,7 +358,7 @@ const Faculties = () => {
               floatingClassName="mb-3"
               floatingLabel={t("FacultyName")}
               placeholder={t("FacultyName")}
-              value={formData.name}
+              value={t(formData.name)}
               onChange={(event) => handleInputChange(event, "name")}
             />
             <CFormCheck
