@@ -85,12 +85,22 @@ const Reset = () => {
         setUser("");
       })
       .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: t(convertToKey(error.response.data.message)),
-          })
-        );
+        if (error.response.data) {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: t(convertToKey(error.response.data.message)),
+            })
+          );
+        }
+        else {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error.message,
+            })
+          );
+        }
       })
 
     setIsLoading(false);

@@ -123,10 +123,12 @@ router.post('/reset', async (req, res) => {
       });
     }
 
-    const emailSettings = JSON.parse(response.settings);
+    const emailSettings = typeof response.settings === 'string'
+      ? JSON.parse(response.settings)
+      : response.settings;
 
     const {
-      sender_name, smtp_host, smtp_port, smtp_secure, smtp_user, smtp_pass,
+      smtp_sender, smtp_host, smtp_port, smtp_secure, smtp_user, smtp_pass,
     } = emailSettings;
 
     const transporter = nodemailer.createTransport({
@@ -179,7 +181,7 @@ router.post('/reset', async (req, res) => {
 
           const mailOptions = {
             from: {
-              name: sender_name, // Your Sender name
+              name: smtp_sender, // Your Sender name
               address: smtp_user, // Your email address
             },
             to: user.email, // User's email address

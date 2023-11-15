@@ -41,7 +41,7 @@ import { setModal, showToast, changeAcademicYear } from "src/store";
 import { getActiveAcademicYear, getModal } from "src/store/selectors/selectors";
 
 const defaultSmtpConfigs = {
-  sender_name: "UET Support",
+  smtp_sender: "UET Support",
   smtp_host: "",
   smtp_port: 465,
   smtp_secure: 1,
@@ -158,7 +158,7 @@ const Settings = () => {
     event.preventDefault();
 
     const updatedSTMP = {
-      sender_name: smtpConfig.sender_name,
+      smtp_sender: smtpConfig.smtp_sender,
       smtp_host: smtpConfig.smtp_host,
       smtp_port: smtpConfig.smtp_port,
       smtp_secure: smtpConfig.smtp_secure,
@@ -311,8 +311,8 @@ const Settings = () => {
                     floatingClassName="mb-3"
                     floatingLabel={t("SenderName")}
                     placeholder={t("SenderName")}
-                    value={smtpConfig.sender_name}
-                    onChange={(event) => handleSmtpChange(event.target.value, "sender_name")}
+                    value={smtpConfig.smtp_sender}
+                    onChange={(event) => handleSmtpChange(event.target.value, "smtp_sender")}
                   />
                   <CFormInput
                     size="sm"

@@ -72,6 +72,11 @@ export function countOccurrences(array, key, value) {
   return array.filter((item) => item[key] === value).length;
 }
 export function convertToKey(text) {
+  if (!text) {
+    // Handle the case where 'text' is undefined or null
+    return '';
+  }
+
   return text
     .split(' ')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
