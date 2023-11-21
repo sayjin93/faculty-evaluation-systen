@@ -133,9 +133,16 @@ const Settings = () => {
     await api
       .get("/settings")
       .then((response) => {
-        //smtp configurations
         const emailSettings = response.data.find(item => item.name === "Email")
-        if (emailSettings) setSmtpConfig(emailSettings.settings);
+        if (emailSettings) {
+          const settingsData = emailSettings.settings;
+
+          // Check if settingsData is a string before parsing
+          const settingsObject = typeof settingsData === 'string' ? JSON.parse(settingsData) : settingsData;
+
+          // Update the state
+          setSmtpConfig(settingsObject);
+        }
       })
       .catch((error) => {
         handleError(error);

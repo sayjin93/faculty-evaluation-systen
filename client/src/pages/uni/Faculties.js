@@ -42,7 +42,7 @@ const defaultFormData = { name: "", is_deleted: false };
 
 const Faculties = () => {
   //#region constants
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
 
