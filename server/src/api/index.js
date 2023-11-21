@@ -1,6 +1,8 @@
 const express = require('express');
 
 const authApi = require('./auth');
+const localseApi = require('./locales');
+
 const facultyApi = require('./faculty');
 const deparmentApi = require('./department');
 const academicYearApi = require('./academicYear');
@@ -23,6 +25,7 @@ router.get('/', (req, res) => {
 });
 
 router.use(authApi);
+router.use(localseApi);
 router.use('/faculty', facultyApi);
 router.use('/department', deparmentApi);
 router.use('/academic-year', academicYearApi);

@@ -1,10 +1,13 @@
 {
   "compilerOptions": {
+    "module": "esnext",
+    "target": "ES2020",
+    "moduleResolution": "node",
     "jsx": "react",
     "baseUrl": ".",
-    "checkJs": true,
-    "resolveJsonModule": true
+    "checkJs": true
   },
-  "exclude": ["node_modules"],
-  "include": ["src"]
+
+  "include": ["src/**/*.js"],
+  "exclude": ["node_modules"]
 }

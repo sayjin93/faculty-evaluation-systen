@@ -42,7 +42,7 @@ const defaultFormData = { name: "", is_deleted: false };
 
 const Faculties = () => {
   //#region constants
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
 
@@ -358,7 +358,7 @@ const Faculties = () => {
               floatingClassName="mb-3"
               floatingLabel={t("FacultyName")}
               placeholder={t("FacultyName")}
-              value={t(formData.name)}
+              value={formData.name !== "" && t(formData.name)}
               onChange={(event) => handleInputChange(event, "name")}
             />
             <CFormCheck

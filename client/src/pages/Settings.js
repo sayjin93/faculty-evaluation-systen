@@ -185,7 +185,7 @@ const Settings = () => {
   useEffect(() => {
     fetchAcademicYears();
     fetchSettings();
-  }, [dispatch]);
+  }, []);
   //#endregion
 
   return (
@@ -269,6 +269,7 @@ const Settings = () => {
                   onSubmit={handleSubmitSMTP}
                 >
                   <CFormInput
+                    name="smtp_sender"
                     size="sm"
                     type="text"
                     floatingClassName="mb-3"
@@ -278,6 +279,7 @@ const Settings = () => {
                     onChange={(event) => handleSmtpChange(event.target.value, "smtp_sender")}
                   />
                   <CFormInput
+                    name="smtp_host"
                     size="sm"
                     type="text"
                     floatingClassName="mb-3"
@@ -287,6 +289,7 @@ const Settings = () => {
                     onChange={(event) => handleSmtpChange(event.target.value, "smtp_host")}
                   />
                   <CFormInput
+                    name="smtp_port"
                     size="sm"
                     type="number"
                     floatingClassName="mb-3"
@@ -297,6 +300,7 @@ const Settings = () => {
                   />
 
                   <CFormSelect
+                    name="smtp_secure"
                     size="sm"
                     className="cursor"
                     floatingClassName="mb-3"
@@ -311,6 +315,7 @@ const Settings = () => {
                   </CFormSelect>
 
                   <CFormInput
+                    name="smtp_user"
                     size="sm"
                     type="text"
                     floatingClassName="mb-3"
@@ -321,6 +326,7 @@ const Settings = () => {
                   />
 
                   <CFormInput
+                    name="smtp_pass"
                     size="sm"
                     type="text"
                     floatingClassName="mb-3"

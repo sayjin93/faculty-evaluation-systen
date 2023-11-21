@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { SidebarRoutes } from "src/hooks";
@@ -17,13 +17,12 @@ import { GiVideoConference } from "react-icons/gi";
 import { RiCommunityLine } from "react-icons/ri";
 import { TbReportSearch } from "react-icons/tb";
 
-
 export const AppSidebarNav = () => {
   //#region constants
   const { t } = useTranslation();
   const location = useLocation();
 
-  const items = useMemo(() => [
+  const items = [
     {
       component: CNavItem,
       name: t("Dashboard"),
@@ -90,7 +89,6 @@ export const AppSidebarNav = () => {
       to: SidebarRoutes.Communities,
       icon: <RiCommunityLine className="nav-icon" />,
     },
-
     {
       component: CNavGroup,
       name: t("Reports"),
@@ -120,7 +118,7 @@ export const AppSidebarNav = () => {
       to: SidebarRoutes.Settings,
       icon: <LuSettings2 className="nav-icon" />,
     },
-  ], []);
+  ];
   //#endregion
 
   //#region functions

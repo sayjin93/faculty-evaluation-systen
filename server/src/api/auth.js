@@ -235,8 +235,6 @@ router.get('/reset/:token', (req, res) => {
       res.json({
         token: resetToken,
       });
-      // // Here you can render a form for the user to reset their password
-      // res.render('resetPasswordForm', { resetToken });
     })
     .catch((err) => {
       res.status(500).json({
