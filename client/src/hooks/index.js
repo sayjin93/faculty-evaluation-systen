@@ -100,5 +100,6 @@ export const SidebarRoutes = {
   Profile: '/profile',
   Reports: '/reports',
   Settings: '/settings',
+  Translations: '/translations',
 };
 //#endregion

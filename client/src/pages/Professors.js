@@ -35,7 +35,7 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
 import { setModal, showToast } from "src/store";
-import { getModal } from "src/store/selectors/selectors";
+import { getModal } from "src/store/selectors";
 
 //components
 import CustomDataGrid from "src/components/CustomDataGrid";

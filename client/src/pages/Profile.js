@@ -27,7 +27,7 @@ import api from "src/hooks/api";
 
 //store
 import { showToast, setUser } from "src/store";
-import { getLoggedUser } from "src/store/selectors/selectors";
+import { getLoggedUser } from "src/store/selectors";
 
 const Settings = () => {
   //#region constants

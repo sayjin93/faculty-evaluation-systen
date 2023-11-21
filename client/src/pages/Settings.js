@@ -36,7 +36,7 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
 import { setModal, showToast, changeAcademicYear } from "src/store";
-import { getActiveAcademicYear, getModal } from "src/store/selectors/selectors";
+import { getActiveAcademicYear, getModal } from "src/store/selectors";
 
 //components
 import LanguagesDropdown from "src/components/LanguagesDropdown";

@@ -25,7 +25,7 @@ import {
   getAcademicYear,
   getLoggedUser,
   isFirstLogin,
-} from "src/store/selectors/selectors";
+} from "src/store/selectors";
 import { showToast, setFirstLogin } from "src/store";
 import { countOccurrences } from "src/hooks";
 

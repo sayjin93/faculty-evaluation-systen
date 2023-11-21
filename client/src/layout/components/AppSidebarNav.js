@@ -16,6 +16,8 @@ import { VscSymbolClass } from "react-icons/vsc";
 import { GiVideoConference } from "react-icons/gi";
 import { RiCommunityLine } from "react-icons/ri";
 import { TbReportSearch } from "react-icons/tb";
+import { HiLanguage } from "react-icons/hi2";
+
 
 export const AppSidebarNav = () => {
   //#region constants
@@ -102,12 +104,6 @@ export const AppSidebarNav = () => {
         },
       ],
     },
-    // {
-    //   component: CNavItem,
-    //   name: t("Reports"),
-    //   to: SidebarRoutes.Reports,
-    //   icon: <TbReportSearch className="nav-icon" />,
-    // },
     {
       component: CNavTitle,
       name: t("Extras"),
@@ -117,6 +113,12 @@ export const AppSidebarNav = () => {
       name: t("Settings"),
       to: SidebarRoutes.Settings,
       icon: <LuSettings2 className="nav-icon" />,
+    },
+    {
+      component: CNavItem,
+      name: t("Translations"),
+      to: SidebarRoutes.Translations,
+      icon: <HiLanguage className="nav-icon" />,
     },
   ];
   //#endregion

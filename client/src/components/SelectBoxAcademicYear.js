@@ -13,7 +13,7 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 import { showToast, changeAcademicYear } from "src/store";
 import {
   getAcademicYearId
-} from "src/store/selectors/selectors";
+} from "src/store/selectors";
 
 const SelectBoxAcademicYear = ({ className = "" }) => {
   //#region constants

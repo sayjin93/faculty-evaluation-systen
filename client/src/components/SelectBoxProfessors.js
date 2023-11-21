@@ -16,7 +16,7 @@ import { setProfessors, setSelectedProfessor } from "src/store";
 import {
   getProfessors,
   getSelectedProfessor,
-} from "src/store/selectors/selectors";
+} from "src/store/selectors";
 
 const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
   //#region constants

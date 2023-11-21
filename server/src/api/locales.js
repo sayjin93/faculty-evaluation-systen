@@ -4,27 +4,12 @@ const path = require('path');
 
 const router = express.Router();
 
-// GET route to retrieve available languages
-router.get('/', (req, res) => {
+// GET route to retrieve all keys for all languages
+router.get('/keys', (req, res) => {
   const localesPath = path.join(__dirname, '../../../client/public/locales');
+  console.log(localesPath);
 
-  try {
-    if (fs.existsSync(localesPath)) {
-      const allItems = fs.readdirSync(localesPath);
-
-      const languageFolders = allItems.filter((item) => {
-        const itemPath = path.join(localesPath, item);
-        return fs.statSync(itemPath).isDirectory();
-      });
-
-      res.status(200).json(languageFolders);
-    } else {
-      res.status(404).send('Directory not found');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Internal Server Error');
-  }
+  res.status(500).json({ success: false, error: 'Internal Server Error' });
 });
 
 router.post('/add/key', (req, res) => {

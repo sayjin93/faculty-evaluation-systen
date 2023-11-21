@@ -28,6 +28,7 @@ const Conferences = lazy(() => import("../pages/Conferences"));
 const Communities = lazy(() => import("../pages/Communities"));
 const Reports = lazy(() => import("../pages/Reports"));
 const Settings = lazy(() => import("../pages/Settings"));
+const Translations = lazy(() => import("../pages/Translations"));
 const Profile = lazy(() => import("../pages/Profile"));
 
 const privateRoutes = [
@@ -80,9 +81,14 @@ const privateRoutes = [
         element: <Settings />,
       },
       {
+        path: SidebarRoutes.Translations,
+        element: <Translations />,
+      },
+      {
         path: SidebarRoutes.Profile,
         element: <Profile />,
       },
+
     ],
   },
 ];

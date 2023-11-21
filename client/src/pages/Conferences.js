@@ -37,7 +37,7 @@ import {
   getProfessors,
   getSelectedProfessor,
   getModal,
-} from "src/store/selectors/selectors";
+} from "src/store/selectors";
 
 //components
 import SelectBoxProfessors from "src/components/SelectBoxProfessors";

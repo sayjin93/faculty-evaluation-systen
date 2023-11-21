@@ -33,7 +33,7 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
 import { setModal, showToast } from "src/store";
-import { getModal } from "src/store/selectors/selectors";
+import { getModal } from "src/store/selectors";
 
 //components
 import CustomDataGrid from "src/components/CustomDataGrid";
@@ -358,7 +358,7 @@ const Faculties = () => {
               floatingClassName="mb-3"
               floatingLabel={t("FacultyName")}
               placeholder={t("FacultyName")}
-              value={formData.name !== "" && t(formData.name)}
+              value={formData.name !== "" ? t(formData.name) : ""}
               onChange={(event) => handleInputChange(event, "name")}
             />
             <CFormCheck

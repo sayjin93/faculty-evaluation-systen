@@ -38,7 +38,7 @@ import {
   getProfessors,
   getSelectedProfessor,
   getModal,
-} from "src/store/selectors/selectors";
+} from "src/store/selectors";
 
 //flatpick
 import "flatpickr/dist/themes/airbnb.css";
