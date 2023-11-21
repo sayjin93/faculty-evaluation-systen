@@ -1,22 +1,17 @@
 const express = require('express');
-
 const fs = require('fs');
 const path = require('path');
 
 const router = express.Router();
 
 // GET route to retrieve available languages
-router.get('/locales', (req, res) => {
-  // Construct the file path for the translations file
+router.get('/', (req, res) => {
   const localesPath = path.join(__dirname, '../../../client/public/locales');
 
   try {
-    // Check if the directory exists
     if (fs.existsSync(localesPath)) {
-      // Read the existing items in the locales folder
       const allItems = fs.readdirSync(localesPath);
 
-      // Filter out only directories
       const languageFolders = allItems.filter((item) => {
         const itemPath = path.join(localesPath, item);
         return fs.statSync(itemPath).isDirectory();
@@ -32,38 +27,39 @@ router.get('/locales', (req, res) => {
   }
 });
 
-router.post('/locales/add/:lng/:ns', (req, res) => {
+router.post('/add/key', (req, res) => {
   try {
-    // Extract language (lng) and namespace (ns) from the request parameters
-    const { lng, ns } = req.params;
     const translations = req.body;
 
-    // Construct the file path for the translations file
-    const filePath = path.join(__dirname, '../../../client/public/locales', lng, `${ns}.json`);
+    // Construct the file path for each language file
+    const localesPath = path.join(__dirname, '../../../client/public/locales');
+    const languageFiles = fs.readdirSync(localesPath);
 
-    // Load existing translations or create an empty object if the file doesn't exist
-    const existingTranslations = fs.existsSync(filePath)
-      ? JSON.parse(fs.readFileSync(filePath, 'utf-8'))
-      : {};
+    languageFiles.forEach((file) => {
+      const filePath = path.join(localesPath, file);
 
-    // Merge existing translations with the new ones
-    const updatedTranslations = { ...existingTranslations, ...translations };
+      // Load existing translations or create an empty object if the file doesn't exist
+      const existingTranslations = fs.existsSync(filePath)
+        ? JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+        : {};
 
-    // Sort translations alphabetically by key
-    const sortedTranslations = {};
-    Object.keys(updatedTranslations)
-      .sort()
-      .forEach((key) => {
-        sortedTranslations[key] = updatedTranslations[key];
-      });
+      // Merge existing translations with the new ones
+      const updatedTranslations = { ...existingTranslations, ...translations };
 
-    // Save the sorted translations back to the file
-    fs.writeFileSync(filePath, JSON.stringify(sortedTranslations, null, 2));
+      // Sort translations alphabetically by key
+      const sortedTranslations = {};
+      Object.keys(updatedTranslations)
+        .sort()
+        .forEach((key) => {
+          sortedTranslations[key] = translations[key] ? `${updatedTranslations[key]} (${file.split('.')[0].toUpperCase()})` : updatedTranslations[key];
+        });
 
-    // Respond with a success status
+      // Save the sorted translations back to the file
+      fs.writeFileSync(filePath, JSON.stringify(sortedTranslations, null, 2));
+    });
+
     res.status(200).json({ success: true });
   } catch (error) {
-    // Handle errors and respond with an appropriate status
     console.error(error);
     res.status(500).json({ success: false, error: 'Internal Server Error' });
   }

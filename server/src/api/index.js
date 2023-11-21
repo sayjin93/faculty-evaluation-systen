@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
 });
 
 router.use(authApi);
-router.use(localseApi);
+router.use('/locales', localseApi);
 router.use('/faculty', facultyApi);
 router.use('/department', deparmentApi);
 router.use('/academic-year', academicYearApi);
