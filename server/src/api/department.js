@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 
+const Faculty = require('../models/faculty');
 const Department = require('../models/department');
 
 const router = express.Router();
@@ -36,19 +37,39 @@ router.post('/', auth, async (req, res) => {
     });
 });
 
-// Retrieve all Departments
+// Retrieve all Departments with associated Faculty information
 router.get('/', auth, async (req, res) => {
-  const result = await Department.findAll().catch((err) => {
-    console.log('Error: ', err);
-  });
+  try {
+    const results = await Department.findAll({
+      include: [{
+        model: Faculty,
+        attributes: ['key'],
+      }],
+    });
 
-  if (!result) {
-    return res.json({
-      message: 'Does not exist any Department',
+    if (!results || results.length === 0) {
+      return res.json({
+        message: 'No Departments found',
+      });
+    }
+
+    // Map the results to the desired format
+    const modifiedResult = results.map((result) => ({
+      id: result.id,
+      key: result.key,
+      faculty_id: result.faculty_id,
+      faculty_key: result.Faculty ? result.Faculty.key : '',
+      createdAt: result.createdAt,
+      updatedAt: result.updatedAt,
+    }));
+
+    res.send(modifiedResult);
+  } catch (err) {
+    console.log('Error: ', err);
+    res.status(500).json({
+      message: 'Internal Server Error',
     });
   }
-
-  res.json(result);
 });
 
 // Retrieve all Departments of a Faculty

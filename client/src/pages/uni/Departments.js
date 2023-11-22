@@ -51,7 +51,7 @@ const Departments = () => {
   //#region functions
   const fetchDepartments = async () => {
     await api
-      .get("/departments")
+      .get("/department")
       .then((response) => {
         setItems(response.data);
       })
@@ -61,8 +61,9 @@ const Departments = () => {
   };
   const fetchOneDepartment = async (id) => {
     await api
-      .get("/faculty/" + id)
+      .get("/department/" + id)
       .then((response) => {
+        debugger;
         setFormData({
           ...formData,
           name: response.data.key,
@@ -193,6 +194,9 @@ const Departments = () => {
   const cellRenderDepartment = ({ data }) => {
     return t(data.key)
   }
+  const cellRenderFaculty = ({ data }) => {
+    return t(data.faculty_key)
+  }
   const cellRenderDeleted = ({ data }) => {
     const checked = data.is_deleted ? (
       <ImCross title={t("Deleted")} className="text-danger" />
@@ -243,13 +247,13 @@ const Departments = () => {
   //#endregion
 
   //#region useEffect
-  // useEffect(() => {
-  //   fetchDepartments();
-  // }, [status]);
+  useEffect(() => {
+    fetchDepartments();
+  }, [status]);
 
-  // useEffect(() => {
-  //   if (modalOptions.editMode) fetchOneDepartment(modalOptions.selectedId);
-  // }, [modalOptions.editMode]);
+  useEffect(() => {
+    if (modalOptions.editMode) fetchOneDepartment(modalOptions.selectedId);
+  }, [modalOptions.editMode]);
   //#endregion
 
 
@@ -277,6 +281,12 @@ const Departments = () => {
               caption={t("Name")}
               dataType="string"
               cellRender={cellRenderDepartment}
+            />
+            <Column
+              dataField="faculty_key"
+              caption={t("Faculty")}
+              dataType="string"
+              cellRender={cellRenderFaculty}
             />
             <Column
               width={140}

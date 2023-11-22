@@ -301,7 +301,7 @@ const Reports = () => {
       {professor && academicYear ? (
         <CRow
           xs={{ cols: 1, gutter: 4 }}
-          lg={{ cols: 2 }}
+          // xxl={{ cols: 2 }}
           className="align-items-start g-4"
         >
           <CCol>

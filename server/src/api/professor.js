@@ -44,7 +44,7 @@ router.get('/', auth, async (req, res) => {
 
   if (!result) {
     return res.json({
-      message: 'Does not exist any Professor',
+      message: 'No Professors found',
     });
   }
 
