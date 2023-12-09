@@ -8,24 +8,29 @@ import {
   CButton,
   CCard,
   CCardBody,
+  CCardGroup,
   CCol,
   CContainer,
   CForm,
   CFormInput,
   CInputGroup,
   CInputGroupText,
+  CListGroup,
+  CListGroupItem,
   CRow,
   CSpinner,
 } from "@coreui/react";
 
 //icons
 import CIcon from "@coreui/icons-react";
+
 import { cilLockLocked, cilUser } from "@coreui/icons";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 //hooks
 import api from "src/hooks/api";
-import { capitalizeWords } from "src/hooks"
+import { capitalizeWords } from "src/hooks";
+import CheckCriteria from "src/hooks/checkCriteria";
 
 //store
 import { showToast } from "src/store";
@@ -51,30 +56,64 @@ const Register = () => {
     new: false,
     retype: false,
   });
+  const [passwordCriteria, setPasswordCriteria] = useState({
+    lowercase: false,
+    uppercase: false,
+    number: false,
+    specialChar: false,
+    minLength: false,
+  });
   //#endregion
 
   //#region functions
-  const handleInputChange = (event, fieldName) => {
-    setUser({
-      ...user,
-      [fieldName]: event.target.value,
+  const checkPasswordCriteria = (password) => {
+    setPasswordCriteria({
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      number: /\d/.test(password),
+      specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+      minLength: password.length >= 8,
     });
   };
 
+  const handleInputChange = (event, fieldName) => {
+    const inputValue = event.target.value;
+
+    setUser({
+      ...user,
+      [fieldName]: inputValue,
+    });
+
+    if (fieldName === "password") checkPasswordCriteria(inputValue);
+  };
+
   const handeViewPassStateChange = (key, value) => {
-    setViewPass(prevState => {
+    setViewPass((prevState) => {
       return {
         ...prevState,
         [key]: !value,
       };
-    })
-  }
+    });
+  };
 
   const handleRegister = async (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (user.password !== user.repeatPassword) {
+    if (
+      !passwordCriteria.lowercase ||
+      !passwordCriteria.uppercase ||
+      !passwordCriteria.number ||
+      !passwordCriteria.specialChar ||
+      !passwordCriteria.minLength
+    ) {
+      dispatch(
+        showToast({
+          type: "danger",
+          content: t("PasswordCriteriaNotMet"),
+        })
+      );
+    } else if (user.password !== user.repeatPassword) {
       dispatch(
         showToast({
           type: "danger",
@@ -131,34 +170,30 @@ const Register = () => {
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md={10} lg={8} xl={7}>
-            <CCard className="mx-4">
-              <CCardBody className="p-4">
-                <h1>{t("Register")}</h1>
-                <p className="text-medium-emphasis">{t("CreateYourAccount")}</p>
+          <CCol md={10}>
+            <CCardGroup>
+              <CCard className="p-4">
+                <CCardBody>
+                  <h3>{t("Register")}</h3>
 
-                <CForm onSubmit={handleRegister}>
+                  <p className="text-medium-emphasis">
+                    {t("CreateYourAccountByFillingTheFormBelow")}
+                  </p>
 
-                  <CRow>
-                    <CCol md={6} className="mb-3">
-                      <CInputGroup>
-                        <CInputGroupText>
-                          <CIcon icon={cilLockLocked} />
-                        </CInputGroupText>
+                  <CForm onSubmit={handleRegister}>
+                    <CRow>
+                      <CCol sm={6} className="mb-3">
                         <CFormInput
                           type="text"
                           autoComplete="first-name"
                           placeholder={t("FirstName")}
                           value={user.firstName}
-                          onChange={(event) => handleInputChange(event, "firstName")}
+                          onChange={(event) =>
+                            handleInputChange(event, "firstName")
+                          }
                         />
-                      </CInputGroup>
-                    </CCol>
-                    <CCol md={6} className="mb-3">
-                      <CInputGroup>
-                        <CInputGroupText>
-                          <CIcon icon={cilLockLocked} />
-                        </CInputGroupText>
+                      </CCol>
+                      <CCol sm={6} className="mb-3">
                         <CFormInput
                           type="text"
                           autoComplete="last-name"
@@ -168,90 +203,183 @@ const Register = () => {
                             handleInputChange(event, "lastName")
                           }
                         />
-                      </CInputGroup>
-                    </CCol>
-                  </CRow>
+                      </CCol>
+                    </CRow>
 
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon icon={cilUser} />
-                    </CInputGroupText>
-                    <CFormInput
-                      required
-                      type="text"
-                      placeholder={t("Username") + "*"}
-                      value={user.username}
-                      onChange={(event) => handleInputChange(event, "username")}
-                    />
-                  </CInputGroup>
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>@</CInputGroupText>
-                    <CFormInput
-                      required
-                      type="email"
-                      autoComplete="email"
-                      placeholder={t("Email") + "*"}
-                      value={user.email}
-                      size="sm"
-                      onChange={(event) => handleInputChange(event, "email")}
-                    />
-                  </CInputGroup>
+                    <CRow>
+                      <CCol md={6} lg={12} xxl={6} className="mb-3">
+                        <CInputGroup>
+                          <CInputGroupText>
+                            <CIcon icon={cilUser} />
+                          </CInputGroupText>
+                          <CFormInput
+                            required
+                            type="text"
+                            placeholder={t("Username") + "*"}
+                            value={user.username}
+                            onChange={(event) =>
+                              handleInputChange(event, "username")
+                            }
+                          />
+                        </CInputGroup>
+                      </CCol>
+                      <CCol md={6} lg={12} xxl={6} className="mb-3">
+                        <CInputGroup>
+                          <CInputGroupText>@</CInputGroupText>
+                          <CFormInput
+                            required
+                            type="email"
+                            autoComplete="email"
+                            placeholder={t("Email") + "*"}
+                            value={user.email}
+                            size="sm"
+                            onChange={(event) =>
+                              handleInputChange(event, "email")
+                            }
+                          />
+                        </CInputGroup>
+                      </CCol>
+                    </CRow>
 
-                  <CRow>
-                    <CCol md={6} className="mb-3">
-                      <CInputGroup>
-                        <CInputGroupText>
-                          <CIcon icon={cilLockLocked} />
-                        </CInputGroupText>
-                        <CFormInput
-                          required
-                          type={viewPass.new ? "text" : "password"}
-                          autoComplete="new-password"
-                          placeholder={t("Password") + "*"}
-                          value={user.password}
-                          onChange={(event) => handleInputChange(event, "password")}
-                        />
-                        <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("new", viewPass.new)}>{viewPass.new ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
-                      </CInputGroup>
-                    </CCol>
-                    <CCol md={6} className="mb-3">
-                      <CInputGroup>
-                        <CInputGroupText>
-                          <CIcon icon={cilLockLocked} />
-                        </CInputGroupText>
-                        <CFormInput
-                          required
-                          type={viewPass.retype ? "text" : "password"}
-                          autoComplete="new-password"
-                          placeholder={t("RepeatPassword") + "*"}
-                          value={user.repeatPassword}
-                          onChange={(event) =>
-                            handleInputChange(event, "repeatPassword")
-                          }
-                        />
-                        <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("retype", viewPass.retype)}>{viewPass.retype ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
+                    <CRow>
+                      <CCol md={6} lg={12} xxl={6} className="mb-3">
+                        <CInputGroup>
+                          <CInputGroupText>
+                            <CIcon icon={cilLockLocked} />
+                          </CInputGroupText>
+                          <CFormInput
+                            required
+                            type={viewPass.new ? "text" : "password"}
+                            autoComplete="new-password"
+                            placeholder={t("Password") + "*"}
+                            value={user.password}
+                            onChange={(event) =>
+                              handleInputChange(event, "password")
+                            }
+                          />
+                          <CButton
+                            type="button"
+                            color="secondary"
+                            variant="outline"
+                            onClick={() =>
+                              handeViewPassStateChange("new", viewPass.new)
+                            }
+                          >
+                            {viewPass.new ? (
+                              <AiOutlineEyeInvisible />
+                            ) : (
+                              <AiOutlineEye />
+                            )}
+                          </CButton>
+                        </CInputGroup>
+                      </CCol>
+                      <CCol md={6} lg={12} xxl={6} className="mb-3">
+                        <CInputGroup>
+                          <CInputGroupText>
+                            <CIcon icon={cilLockLocked} />
+                          </CInputGroupText>
+                          <CFormInput
+                            required
+                            type={viewPass.retype ? "text" : "password"}
+                            autoComplete="new-password"
+                            placeholder={t("RepeatPassword") + "*"}
+                            value={user.repeatPassword}
+                            onChange={(event) =>
+                              handleInputChange(event, "repeatPassword")
+                            }
+                          />
+                          <CButton
+                            type="button"
+                            color="secondary"
+                            variant="outline"
+                            onClick={() =>
+                              handeViewPassStateChange(
+                                "retype",
+                                viewPass.retype
+                              )
+                            }
+                          >
+                            {viewPass.retype ? (
+                              <AiOutlineEyeInvisible />
+                            ) : (
+                              <AiOutlineEye />
+                            )}
+                          </CButton>
+                        </CInputGroup>
+                      </CCol>
+                    </CRow>
 
-                      </CInputGroup>
-                    </CCol>
-                  </CRow>
+                    <CInputGroup className="mb-3">
+                      <CButton
+                        disabled={isLoading}
+                        color="success"
+                        type="submit"
+                        className="w-100"
+                      >
+                        {isLoading ? (
+                          <CSpinner color="light" size="sm" />
+                        ) : (
+                          t("CreateAccount")
+                        )}
+                      </CButton>
+                    </CInputGroup>
+                  </CForm>
 
-                  <CInputGroup className="mb-3">
-                    <CButton disabled={isLoading} color="success" type="submit" className="w-100">
-                      {isLoading ? <CSpinner color="light" size="sm" /> : t("CreateAccount")}
+                  <Link to="/login">
+                    <CButton color="link" className="d-block mx-auto">
+                      {t("BackToLogin") + "?"}
                     </CButton>
-                  </CInputGroup>
-                </CForm>
-                <Link to="/login">
-                  <CButton color="link" className="d-block mx-auto">
-                    {t("BackToLogin") + "?"}
-                  </CButton>
-                </Link>
-              </CCardBody>
-            </CCard>
+                  </Link>
+                </CCardBody>
+              </CCard>
+
+              <CCard className="p-4 text-white bg-primary">
+                <CCardBody className="text-center">
+                  <div>
+                    <h3>{t("SecurePasswordRequirements")}</h3>
+
+                    <p className="pt-4">
+                      {t("StrengthenYourShield") +
+                        ": " +
+                        t("FollowThePasswordCriteriaBelow") +
+                        "."}
+                    </p>
+
+                    <CListGroup className="list-group-noBorder">
+                      <CListGroupItem>
+                        <CheckCriteria valid={passwordCriteria.lowercase}>
+                          {t("OneLowercaseCharacter")}
+                        </CheckCriteria>
+                      </CListGroupItem>
+                      <CListGroupItem>
+                        <CheckCriteria valid={passwordCriteria.uppercase}>
+                          {t("OneUppercaseCharacter")}
+                        </CheckCriteria>
+                      </CListGroupItem>
+                      <CListGroupItem>
+                        <CheckCriteria valid={passwordCriteria.number}>
+                          {t("OneNumber")}
+                        </CheckCriteria>
+                      </CListGroupItem>
+                      <CListGroupItem>
+                        <CheckCriteria valid={passwordCriteria.specialChar}>
+                          {t("OneSpecialCharacter")}
+                        </CheckCriteria>
+                      </CListGroupItem>
+                      <CListGroupItem>
+                        <CheckCriteria valid={passwordCriteria.minLength}>
+                          {t("EightCharactersMinimum")}
+                        </CheckCriteria>
+                      </CListGroupItem>
+                    </CListGroup>
+                  </div>
+                </CCardBody>
+              </CCard>
+            </CCardGroup>
           </CCol>
         </CRow>
       </CContainer>
-    </div >
+    </div>
   );
 };
 
