@@ -26,7 +26,7 @@ import {
 
 //react-icons
 import { LuSettings2, LuLanguages } from "react-icons/lu";
-import { HiAcademicCap } from "react-icons/hi"
+import { HiAcademicCap } from "react-icons/hi";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
 
 //hooks
@@ -47,8 +47,8 @@ const defaultSmtpConfigs = {
   smtp_port: 465,
   smtp_secure: 1,
   smtp_user: "",
-  smtp_pass: ""
-}
+  smtp_pass: "",
+};
 
 const Settings = () => {
   //#region constants
@@ -133,12 +133,17 @@ const Settings = () => {
     await api
       .get("/settings")
       .then((response) => {
-        const emailSettings = response.data.find(item => item.name === "Email")
+        const emailSettings = response.data.find(
+          (item) => item.name === "Email"
+        );
         if (emailSettings) {
           const settingsData = emailSettings.settings;
 
           // Check if settingsData is a string before parsing
-          const settingsObject = typeof settingsData === 'string' ? JSON.parse(settingsData) : settingsData;
+          const settingsObject =
+            typeof settingsData === "string"
+              ? JSON.parse(settingsData)
+              : settingsData;
 
           // Update the state
           setSmtpConfig(settingsObject);
@@ -149,9 +154,9 @@ const Settings = () => {
       });
   };
   const handleSmtpChange = (value, fieldName) => {
-    setSmtpConfig(prevConfig => ({
+    setSmtpConfig((prevConfig) => ({
       ...prevConfig,
-      [fieldName]: value
+      [fieldName]: value,
     }));
   };
   const handleSubmitSMTP = async (event) => {
@@ -169,7 +174,6 @@ const Settings = () => {
     await api
       .put("/settings/email", updatedSTMP)
       .then((response) => {
-
         dispatch(
           showToast({
             type: "success",
@@ -185,7 +189,7 @@ const Settings = () => {
           })
         );
       });
-  }
+  };
   //#endregion
 
   //#region useEffect
@@ -207,7 +211,7 @@ const Settings = () => {
       <CCardBody>
         <CRow className="align-items-start">
           {/* Language */}
-          <CCol>
+          <CCol sm={6} lg={4}>
             <CCard color="white" className="mb-3">
               <CCardHeader>
                 <h6 className="card-title">
@@ -222,7 +226,7 @@ const Settings = () => {
           </CCol>
 
           {/* Acaemi Year */}
-          <CCol>
+          <CCol sm={6} lg={4}>
             <CCard color="dark" textColor="white" className="mb-3">
               <CCardHeader>
                 <h6 className="card-title">
@@ -254,7 +258,10 @@ const Settings = () => {
                     </CDropdownMenu>
                   </CDropdown>
 
-                  <CButton color="light" onClick={() => dispatch(setModal("addAcdemicYear"))}>
+                  <CButton
+                    color="light"
+                    onClick={() => dispatch(setModal("addAcdemicYear"))}
+                  >
                     {t("Add")}
                   </CButton>
                 </div>
@@ -263,7 +270,7 @@ const Settings = () => {
           </CCol>
 
           {/* SMTP Configs */}
-          <CCol>
+          <CCol lg={4}>
             <CCard color="white" className="mb-3">
               <CCardHeader>
                 <h6 className="card-title">
@@ -272,80 +279,110 @@ const Settings = () => {
                 </h6>
               </CCardHeader>
               <CCardBody>
-                <CForm
-                  onSubmit={handleSubmitSMTP}
-                >
-                  <CFormInput
-                    name="smtp_sender"
-                    size="sm"
-                    type="text"
-                    floatingClassName="mb-3"
-                    floatingLabel={t("SenderName")}
-                    placeholder={t("SenderName")}
-                    value={smtpConfig.smtp_sender}
-                    onChange={(event) => handleSmtpChange(event.target.value, "smtp_sender")}
-                  />
-                  <CFormInput
-                    name="smtp_host"
-                    size="sm"
-                    type="text"
-                    floatingClassName="mb-3"
-                    floatingLabel={t("Host")}
-                    placeholder={t("Host")}
-                    value={smtpConfig.smtp_host}
-                    onChange={(event) => handleSmtpChange(event.target.value, "smtp_host")}
-                  />
-                  <CFormInput
-                    name="smtp_port"
-                    size="sm"
-                    type="number"
-                    floatingClassName="mb-3"
-                    floatingLabel={t("Port")}
-                    placeholder={t("Port")}
-                    value={smtpConfig.smtp_port}
-                    onChange={(event) => handleSmtpChange(Number(event.target.value), "smtp_port")}
-                  />
+                <CForm onSubmit={handleSubmitSMTP}>
+                  <CRow>
+                    <CCol sm={6} lg={12}>
+                      <CFormInput
+                        name="smtp_sender"
+                        size="sm"
+                        type="text"
+                        floatingClassName="mb-3"
+                        floatingLabel={t("SenderName")}
+                        placeholder={t("SenderName")}
+                        value={smtpConfig.smtp_sender}
+                        onChange={(event) =>
+                          handleSmtpChange(event.target.value, "smtp_sender")
+                        }
+                      />
+                    </CCol>
+                    <CCol sm={6} lg={12}>
+                      <CFormInput
+                        name="smtp_host"
+                        size="sm"
+                        type="text"
+                        floatingClassName="mb-3"
+                        floatingLabel={t("Host")}
+                        placeholder={t("Host")}
+                        value={smtpConfig.smtp_host}
+                        onChange={(event) =>
+                          handleSmtpChange(event.target.value, "smtp_host")
+                        }
+                      />
+                    </CCol>
+                  </CRow>
 
-                  <CFormSelect
-                    name="smtp_secure"
-                    size="sm"
-                    className="cursor"
-                    floatingClassName="mb-3"
-                    floatingLabel={t("Secure")}
-                    value={smtpConfig.smtp_secure}
-                    onChange={(event) => handleSmtpChange(Number(event.target.value), "smtp_secure")}
-                  >
-                    <option value={1}>
-                      {t("True")}</option>
-                    <option value={0}>
-                      {t("False")}</option>
-                  </CFormSelect>
+                  <CRow>
+                    <CCol sm={6}>
+                      <CFormInput
+                        name="smtp_port"
+                        size="sm"
+                        type="number"
+                        floatingClassName="mb-3"
+                        floatingLabel={t("Port")}
+                        placeholder={t("Port")}
+                        value={smtpConfig.smtp_port}
+                        onChange={(event) =>
+                          handleSmtpChange(
+                            Number(event.target.value),
+                            "smtp_port"
+                          )
+                        }
+                      />
+                    </CCol>
+                    <CCol sm={6}>
+                      <CFormSelect
+                        name="smtp_secure"
+                        size="sm"
+                        className="cursor"
+                        floatingClassName="mb-3"
+                        floatingLabel={t("Secure")}
+                        value={smtpConfig.smtp_secure}
+                        onChange={(event) =>
+                          handleSmtpChange(
+                            Number(event.target.value),
+                            "smtp_secure"
+                          )
+                        }
+                      >
+                        <option value={1}>{t("True")}</option>
+                        <option value={0}>{t("False")}</option>
+                      </CFormSelect>
+                    </CCol>
+                  </CRow>
 
-                  <CFormInput
-                    name="smtp_user"
-                    size="sm"
-                    type="text"
-                    floatingClassName="mb-3"
-                    floatingLabel={t("User")}
-                    placeholder={t("User")}
-                    value={smtpConfig.smtp_user}
-                    onChange={(event) => handleSmtpChange(event.target.value, "smtp_user")}
-                  />
+                  <CRow>
+                    <CCol sm={6} lg={12}>
+                      <CFormInput
+                        name="smtp_user"
+                        size="sm"
+                        type="text"
+                        floatingClassName="mb-3"
+                        floatingLabel={t("User")}
+                        placeholder={t("User")}
+                        value={smtpConfig.smtp_user}
+                        onChange={(event) =>
+                          handleSmtpChange(event.target.value, "smtp_user")
+                        }
+                      />
+                    </CCol>
+                    <CCol sm={6} lg={12}>
+                      <CFormInput
+                        name="smtp_pass"
+                        size="sm"
+                        type="text"
+                        floatingClassName="mb-3"
+                        floatingLabel={t("Password")}
+                        placeholder={t("Password")}
+                        value={smtpConfig.smtp_pass}
+                        onChange={(event) =>
+                          handleSmtpChange(event.target.value, "smtp_pass")
+                        }
+                      />
+                    </CCol>
+                  </CRow>
 
-                  <CFormInput
-                    name="smtp_pass"
-                    size="sm"
-                    type="text"
-                    floatingClassName="mb-3"
-                    floatingLabel={t("Password")}
-                    placeholder={t("Password")}
-                    value={smtpConfig.smtp_pass}
-                    onChange={(event) => handleSmtpChange(event.target.value, "smtp_pass")}
-                  />
-
-                  <CButton type="submit">
-                    {t("Save")}
-                  </CButton>
+                  <CButton type="submit">{t("Save")}</CButton>
+                  
                 </CForm>
               </CCardBody>
             </CCard>
