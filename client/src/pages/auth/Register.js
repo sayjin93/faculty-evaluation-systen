@@ -113,6 +113,12 @@ const Register = () => {
           content: t("PasswordCriteriaNotMet"),
         })
       );
+
+      //scroll to criteria list
+      const element = document.getElementById("passwordCriteria");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
     } else if (user.password !== user.repeatPassword) {
       dispatch(
         showToast({
@@ -182,7 +188,7 @@ const Register = () => {
 
                   <CForm onSubmit={handleRegister}>
                     <CRow>
-                      <CCol sm={6} className="mb-3">
+                      <CCol xs={6} className="mb-3">
                         <CFormInput
                           type="text"
                           autoComplete="first-name"
@@ -193,7 +199,7 @@ const Register = () => {
                           }
                         />
                       </CCol>
-                      <CCol sm={6} className="mb-3">
+                      <CCol xs={6} className="mb-3">
                         <CFormInput
                           type="text"
                           autoComplete="last-name"
@@ -345,33 +351,35 @@ const Register = () => {
                         "."}
                     </p>
 
-                    <CListGroup className="list-group-noBorder">
-                      <CListGroupItem>
-                        <CheckCriteria valid={passwordCriteria.lowercase}>
-                          {t("OneLowercaseCharacter")}
-                        </CheckCriteria>
-                      </CListGroupItem>
-                      <CListGroupItem>
-                        <CheckCriteria valid={passwordCriteria.uppercase}>
-                          {t("OneUppercaseCharacter")}
-                        </CheckCriteria>
-                      </CListGroupItem>
-                      <CListGroupItem>
-                        <CheckCriteria valid={passwordCriteria.number}>
-                          {t("OneNumber")}
-                        </CheckCriteria>
-                      </CListGroupItem>
-                      <CListGroupItem>
-                        <CheckCriteria valid={passwordCriteria.specialChar}>
-                          {t("OneSpecialCharacter")}
-                        </CheckCriteria>
-                      </CListGroupItem>
-                      <CListGroupItem>
-                        <CheckCriteria valid={passwordCriteria.minLength}>
-                          {t("EightCharactersMinimum")}
-                        </CheckCriteria>
-                      </CListGroupItem>
-                    </CListGroup>
+                    <div id="passwordCriteria">
+                      <CListGroup className="list-group-noBorder">
+                        <CListGroupItem>
+                          <CheckCriteria valid={passwordCriteria.lowercase}>
+                            {t("OneLowercaseCharacter")}
+                          </CheckCriteria>
+                        </CListGroupItem>
+                        <CListGroupItem>
+                          <CheckCriteria valid={passwordCriteria.uppercase}>
+                            {t("OneUppercaseCharacter")}
+                          </CheckCriteria>
+                        </CListGroupItem>
+                        <CListGroupItem>
+                          <CheckCriteria valid={passwordCriteria.number}>
+                            {t("OneNumber")}
+                          </CheckCriteria>
+                        </CListGroupItem>
+                        <CListGroupItem>
+                          <CheckCriteria valid={passwordCriteria.specialChar}>
+                            {t("OneSpecialCharacter")}
+                          </CheckCriteria>
+                        </CListGroupItem>
+                        <CListGroupItem>
+                          <CheckCriteria valid={passwordCriteria.minLength}>
+                            {t("EightCharactersMinimum")}
+                          </CheckCriteria>
+                        </CListGroupItem>
+                      </CListGroup>
+                    </div>
                   </div>
                 </CCardBody>
               </CCard>
