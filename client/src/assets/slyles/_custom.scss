@@ -104,6 +104,12 @@ body {
 }
 
 .card {
+  &-group {
+    > .card:first-of-type {
+      margin-top: var(--cui-card-group-margin);
+    }
+  }
+
   &-title {
     display: flex;
     align-items: center;
