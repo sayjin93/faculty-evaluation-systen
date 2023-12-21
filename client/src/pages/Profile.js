@@ -99,7 +99,7 @@ const Settings = () => {
     })
   }
 
-  const handleUserUpdate = (event) => {
+  const handleUserUpdate = async (event) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -134,7 +134,7 @@ const Settings = () => {
     else {
       setIsLoading(true);
 
-      api
+      await api
         .put("user/" + currentUser.id, {
           first_name: userData.firstName,
           last_name: userData.lastName,

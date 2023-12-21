@@ -82,6 +82,7 @@ const Reset = () => {
             content: t(convertToKey(response.data.message))
           })
         );
+
         setUser("");
       })
       .catch((error) => {
