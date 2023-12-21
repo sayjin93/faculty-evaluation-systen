@@ -70,7 +70,7 @@ const Login = () => {
 
     await api
       .post("/login", {
-        username: formData.username,
+        username: formData.username.toLowerCase(),
         password: formData.password,
       })
       .then((response) => {

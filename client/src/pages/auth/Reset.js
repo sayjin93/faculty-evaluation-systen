@@ -72,7 +72,7 @@ const Reset = () => {
 
     await api
       .post("/reset", {
-        username: user,
+        username: user.toLowerCase(),
         language: languageCookie
       })
       .then((response) => {

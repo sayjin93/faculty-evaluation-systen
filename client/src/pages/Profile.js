@@ -14,8 +14,6 @@ import {
   CButton,
   CRow,
   CCol,
-  CListGroup,
-  CListGroupItem,
   CSpinner,
 } from "@coreui/react";
 
@@ -33,7 +31,7 @@ import { showToast, setUser } from "src/store";
 import { getLoggedUser } from "src/store/selectors";
 
 //components
-import CheckCriteria from "src/hooks/checkCriteria";
+import PasswordCriteria, { checkPasswordCriteria } from "src/components/PasswordCriteria";
 
 const Settings = () => {
   //#region constants
@@ -59,25 +57,9 @@ const Settings = () => {
     retype: false,
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [passwordCriteria, setPasswordCriteria] = useState({
-    lowercase: false,
-    uppercase: false,
-    number: false,
-    specialChar: false,
-    minLength: false,
-  });
   //#endregion
 
   //#region functions
-  const checkPasswordCriteria = (password) => {
-    setPasswordCriteria({
-      lowercase: /[a-z]/.test(password),
-      uppercase: /[A-Z]/.test(password),
-      number: /\d/.test(password),
-      specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
-      minLength: password.length >= 8,
-    });
-  };
 
   const handleInputChange = (event, fieldName) => {
     const inputValue = event.target.value;
@@ -103,13 +85,12 @@ const Settings = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (
-      !passwordCriteria.lowercase ||
-      !passwordCriteria.uppercase ||
-      !passwordCriteria.number ||
-      !passwordCriteria.specialChar ||
-      !passwordCriteria.minLength
-    ) {
+    // Use the checkPasswordCriteria function on the current password
+    const passwordCriteria = checkPasswordCriteria(userData.newPassword);
+    let areAllTrue = Object.values(passwordCriteria).every(value => value === true);
+
+
+    if (!areAllTrue) {
       dispatch(
         showToast({
           type: "danger",
@@ -327,35 +308,7 @@ const Settings = () => {
             </CCol>
 
             <CCol sm={6}>
-              <div id="passwordCriteria">
-                <CListGroup className="list-group-noBorder">
-                  <CListGroupItem>
-                    <CheckCriteria valid={passwordCriteria.lowercase}>
-                      {t("OneLowercaseCharacter")}
-                    </CheckCriteria>
-                  </CListGroupItem>
-                  <CListGroupItem>
-                    <CheckCriteria valid={passwordCriteria.uppercase}>
-                      {t("OneUppercaseCharacter")}
-                    </CheckCriteria>
-                  </CListGroupItem>
-                  <CListGroupItem>
-                    <CheckCriteria valid={passwordCriteria.number}>
-                      {t("OneNumber")}
-                    </CheckCriteria>
-                  </CListGroupItem>
-                  <CListGroupItem>
-                    <CheckCriteria valid={passwordCriteria.specialChar}>
-                      {t("OneSpecialCharacter")}
-                    </CheckCriteria>
-                  </CListGroupItem>
-                  <CListGroupItem>
-                    <CheckCriteria valid={passwordCriteria.minLength}>
-                      {t("EightCharactersMinimum")}
-                    </CheckCriteria>
-                  </CListGroupItem>
-                </CListGroup>
-              </div>
+              <PasswordCriteria password={userData.newPassword} />
             </CCol>
 
           </CRow>
