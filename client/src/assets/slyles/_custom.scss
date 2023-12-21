@@ -104,12 +104,6 @@ body {
 }
 
 .card {
-  &-group {
-    > .card:first-of-type {
-      margin-top: var(--cui-card-group-margin);
-    }
-  }
-
   &-title {
     display: flex;
     align-items: center;
@@ -131,7 +125,19 @@ body {
   }
 }
 
-@media only screen and (max-width: 993px) and (min-width: 576px) {
+//small devices
+@media only screen and (max-width: 576px) {
+  .card {
+    &-group {
+      > .card:first-of-type {
+        margin-top: var(--cui-card-group-margin);
+      }
+    }
+  }
+}
+
+//medium devices
+@media only screen and (max-width: 992px) and (min-width: 576px) {
   .card-group > .card:not(:first-child) {
     border-radius: var(--cui-card-border-radius);
     border-top-left-radius: 0;
@@ -145,6 +151,7 @@ body {
   }
 }
 
+//large devices
 @media only screen and (max-width: 992px) {
   .card-group {
     flex-direction: column;
