@@ -116,6 +116,6 @@ export const languageMap = [
   { code: "gr", icon: cifGr, name: "Ελληνικά" },
   { code: "nl", icon: cifNl, name: "Nederlands" },
   { code: "tr", icon: cifTr, name: "Türkçe" }
-  // Add more mappings as needed for other languages
+  // Add more mappings as needed for other languages -> https://coreui.io/react/docs/components/icon/
 ];
 //#endregion

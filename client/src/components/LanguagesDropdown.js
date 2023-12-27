@@ -11,13 +11,12 @@ import { languageMap, setCookie } from 'src/hooks';
 import useLanguages from 'src/hooks/useLanguages';
 
 const LanguagesDropdown = () => {
-    const { i18n, t } = useTranslation();
+    const { i18n } = useTranslation();
 
     const { languages, isLoading, error } = useLanguages();
 
     // Utility function to find language details from the map
     const findLanguageDetails = (code) => languageMap.find(lang => lang.code === code);
-
 
     const handleLanguageChange = (language) => {
         if (language !== i18n.language) {
@@ -42,7 +41,7 @@ const LanguagesDropdown = () => {
                 )}
             </CDropdownToggle>
             {error ? (
-                <p>{t("ErrorLoadingLanguages")}</p>
+                <p>{error}</p>
             ) : (
                 <CDropdownMenu>
                     {languages && languages.map((language) => {
