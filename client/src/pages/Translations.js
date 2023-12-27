@@ -92,9 +92,18 @@ const Translations = () => {
     await api
       .post("/locales/update", changes)
       .then((response) => {
-
-        localStorage.setItem("shouldShowToast", "true");
-        localStorage.setItem("toastMessage", JSON.stringify(response.data.message));
+        if (process.env.REACT_APP_ENV === "development") {
+          localStorage.setItem("shouldShowToast", "true");
+          localStorage.setItem("toastMessage", JSON.stringify(response.data.message));
+        }
+        else {
+          dispatch(
+            showToast({
+              type: "success",
+              content: t(convertToKey(response.data.message)),
+            })
+          );
+        }
       })
       .catch((error) => {
         handleError(error);
@@ -107,21 +116,23 @@ const Translations = () => {
     // Fetch translations keys
     fetchKeys();
 
-    // Check if the toast should be shown
-    const shouldShowToast = localStorage.getItem("shouldShowToast");
-    const message = localStorage.getItem("toastMessage");
+    if (process.env.REACT_APP_ENV === "development") {
+      // Check if the toast should be shown
+      const shouldShowToast = localStorage.getItem("shouldShowToast");
+      const message = localStorage.getItem("toastMessage");
 
-    if (shouldShowToast === "true") {
-      dispatch(
-        showToast({
-          type: "success",
-          content: t(convertToKey(JSON.parse(message))),
-        })
-      );
+      if (shouldShowToast === "true") {
+        dispatch(
+          showToast({
+            type: "success",
+            content: t(convertToKey(JSON.parse(message))),
+          })
+        );
 
-      // Clear the flag after showing toast
-      localStorage.removeItem("shouldShowToast");
-      localStorage.removeItem("toastMessage");
+        // Clear the flag after showing toast
+        localStorage.removeItem("shouldShowToast");
+        localStorage.removeItem("toastMessage");
+      }
     }
   }, []);
   //#endregion

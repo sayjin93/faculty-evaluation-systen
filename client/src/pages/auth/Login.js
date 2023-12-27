@@ -180,7 +180,7 @@ const Login = () => {
                       />
                       <CButton type="button" color="secondary" variant="outline" onClick={handeViewPassStateChange}>{viewPass ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
                     </CInputGroup>
-                    <CRow>
+                    <CRow className="flex-align-center" >
                       <CCol xs={6}>
                         <CButton
                           disabled={isLoading}

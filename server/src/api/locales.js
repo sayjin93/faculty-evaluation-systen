@@ -7,7 +7,8 @@ const router = express.Router();
 
 const auth = passport.authenticate('jwt', { session: false });
 
-const localesPath = path.join(__dirname, '../../../client/public/locales');
+let localesPath = path.join(__dirname, '../../../client/public/locales');
+if (process.env.LOCALES_PATH) localesPath = path.join(__dirname, process.env.LOCALES_PATH);
 
 // GET route to retrieve all keys for all languages
 router.get('/', auth, (req, res) => {

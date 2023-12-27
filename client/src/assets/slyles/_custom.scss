@@ -70,6 +70,12 @@ body {
     }
   }
 
+  &-align {
+    &-center {
+      align-items: center;
+    }
+  }
+
   &-gap {
     gap: 1rem;
 

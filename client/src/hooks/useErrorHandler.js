@@ -41,7 +41,7 @@ const useErrorHandler = () => {
       dispatch(
         showToast({
           type: "danger",
-          content: error,
+          content: error.message,
         })
       );
     }
