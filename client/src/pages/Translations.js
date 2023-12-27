@@ -38,7 +38,7 @@ import { getModal } from "src/store/selectors";
 
 //components
 import LanguagesDropdown from "src/components/LanguagesDropdown";
-import DataGrid, { Column, SearchPanel } from "devextreme-react/data-grid";
+import DataGrid, { Column, ColumnFixing, Editing, Pager, Paging, SearchPanel } from "devextreme-react/data-grid";
 
 const Translations = () => {
   //#region constants
@@ -54,10 +54,19 @@ const Translations = () => {
   //#endregion
 
   //#region functions
+  const addNewLanguage = async () => {
+    dispatch(
+      showToast({
+        type: "warning",
+        content: "Work in progress",
+      })
+    );
+  }
   const fetchKeys = async () => {
     await api
-      .get("/locales/keys")
+      .get("/locales")
       .then((response) => {
+        setDataSource(response.data);
 
       })
       .catch((error) => {
@@ -65,94 +74,159 @@ const Translations = () => {
       });
   };
 
-  const handleStateChange = (value, fieldName) => {
-    setDataSource(prevConfig => ({
-      ...prevConfig,
-      [fieldName]: value
-    }));
+  // A function to generate column components for each language dynamically
+  const renderLanguageColumns = () => {
+    if (dataSource.length === 0) return null;
+
+    // Get the keys of the first item in the array as a representation of all
+    // Assuming all items have the same structure
+    const languageKeys = Object.keys(dataSource[0]).filter(key => key !== 'key');
+
+    // Generate a column for each language
+    return languageKeys.map(langKey => (
+      <Column key={langKey} dataField={langKey} caption={langKey.toUpperCase()} />
+    ));
   };
-  const handleSubmit = async (event) => {
-    event.preventDefault();
 
-
-
+  const onSaved = async ({ changes }) => {
     await api
-      .put("/keys", dataSource)
+      .post("/locales/update", changes)
       .then((response) => {
 
-        dispatch(
-          showToast({
-            type: "success",
-            content: t(convertToKey(response.data.message)),
-          })
-        );
+        localStorage.setItem("shouldShowToast", "true");
+        localStorage.setItem("toastMessage", JSON.stringify(response.data.message));
       })
       .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        handleError(error);
       });
   }
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    // fetchKeys();
+    // Fetch translations keys
+    fetchKeys();
+
+    // Check if the toast should be shown
+    const shouldShowToast = localStorage.getItem("shouldShowToast");
+    const message = localStorage.getItem("toastMessage");
+
+    if (shouldShowToast === "true") {
+      dispatch(
+        showToast({
+          type: "success",
+          content: t(convertToKey(JSON.parse(message))),
+        })
+      );
+
+      // Clear the flag after showing toast
+      localStorage.removeItem("shouldShowToast");
+      localStorage.removeItem("toastMessage");
+    }
   }, []);
   //#endregion
 
   return (
     <>
       <CCard>
-        <CCardHeader>
-          <h6 className="card-title" style={{ minHeight: "38px" }}>
+        <CCardHeader className="flex justify-content-between align-items-center">
+          <h6 className="card-title">
             <HiLanguage />
             <span className="title">{t("Translations")}</span>
           </h6>
-          {/* <CButton
+          <CButton
             color="primary"
             className="float-right"
-            onClick={() => dispatch(setModal("editConference"))}
+            onClick={() => dispatch(setModal("addLanguage"))}
           >
             {t("Add")}
-          </CButton> */}
+          </CButton>
         </CCardHeader>
 
         <CCardBody>
-
           <div className='dx-viewport'>
             <DataGrid
               dataSource={dataSource}
-              keyExpr="id"
+              keyExpr="key"
               hoverStateEnabled={true}
               columnAutoWidth={true}
               showColumnLines={true}
               showBorders={true}
-              columnHidingEnabled={true}
               noDataText={t("NoDataToDisplay")}
               repaintChangesOnly={true}
+              onSaved={onSaved}
+
             >
-              <SearchPanel visible={true}
-                width={240}
-                placeholder={t("Search") + "..."} />
+              <Editing
+                mode="batch"
+                allowUpdating={true}
+                selectTextOnEditStart={true}
+                startEditAction="click"
+              />
 
               <SearchPanel visible={true}
                 width={240}
                 placeholder={t("Search") + "..."} />
 
+              <Paging defaultPageSize={20} />
+              <Pager
+                visible={true}
+                infoText={`${t("Page")} {0} of {1} ({2} ${t("Items").toLowerCase()})`}
+                showPageSizeSelector={true}
+                showInfo={true}
+                showNavigationButtons={true}
+              />
 
+              <ColumnFixing enabled={true} />
 
-              <p>volumns here</p>
+              <Column fixed={true}
+                allowEditing={false} dataField="key" caption="KEY" />
+
+              {renderLanguageColumns()}
             </DataGrid>
           </div>
 
         </CCardBody>
       </CCard >
+
+      <CModal
+        id="addLanguage"
+        backdrop="static"
+        visible={modal.isOpen && modal.id === "addLanguage"}
+        onClose={() => {
+          dispatch(setModal());
+        }}
+      >
+        <CModalHeader>
+          <CModalTitle>{t("Add")}</CModalTitle>
+        </CModalHeader>
+
+        <CModalBody>
+          <p>Selectbox here with filter (select2)</p>
+        </CModalBody>
+
+        <CModalFooter>
+          <CButton
+            color="secondary"
+            onClick={() => {
+              dispatch(setModal());
+            }}
+          >
+            {t("Close")}
+          </CButton>
+          <CButton
+            // disabled={newAcademicYear.length === 0}
+            onClick={() => {
+              addNewLanguage();
+              dispatch(setModal());
+            }}
+          >
+            {t("Add")}
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </>
   );
 };
 
-export default Translations;
+export default React.memo(Translations);

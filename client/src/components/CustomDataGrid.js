@@ -24,7 +24,7 @@ const CustomDataGrid = ({ dataSource, children }) => {
                 columnAutoWidth={true}
                 showColumnLines={true}
                 showBorders={true}
-                columnHidingEnabled={true}
+                // columnHidingEnabled={true}
                 noDataText={t("NoDataToDisplay")}
                 repaintChangesOnly={true}
             >

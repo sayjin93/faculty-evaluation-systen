@@ -37,6 +37,14 @@ const useErrorHandler = () => {
         dispatch(setFirstLogin(true));
       });
     }
+    else {
+      dispatch(
+        showToast({
+          type: "danger",
+          content: error,
+        })
+      );
+    }
   };
 
   return handleError;

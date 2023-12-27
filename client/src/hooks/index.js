@@ -1,6 +1,9 @@
-//#region cookies
+//#region imports
 import Cookies from "universal-cookie";
+import { cifAl, cifGb, cifIt, cifDe, cifFr, cifEs, cifGr, cifNl, cifTr } from "@coreui/icons";
+//#endregion
 
+//#region cookies
 export function setCookie(props) {
   try {
     const cookies = new Cookies();
@@ -102,4 +105,17 @@ export const SidebarRoutes = {
   Settings: '/settings',
   Translations: '/translations',
 };
+
+export const languageMap = [
+  { code: "sq", icon: cifAl, name: "Shqip" },
+  { code: "en", icon: cifGb, name: "English" },
+  { code: "it", icon: cifIt, name: "Italiano" },
+  { code: "de", icon: cifDe, name: "Deutsch" },
+  { code: "fr", icon: cifFr, name: "Français" },
+  { code: "es", icon: cifEs, name: "Español" },
+  { code: "gr", icon: cifGr, name: "Ελληνικά" },
+  { code: "nl", icon: cifNl, name: "Nederlands" },
+  { code: "tr", icon: cifTr, name: "Türkçe" }
+  // Add more mappings as needed for other languages
+];
 //#endregion

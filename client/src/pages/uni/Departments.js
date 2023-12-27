@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next'
 
@@ -35,6 +35,10 @@ const Departments = () => {
   const handleError = useErrorHandler();
 
   const modal = useSelector(getModal);
+  //#endregion
+
+  //#region refs
+  const myRef = useRef(null);
   //#endregion
 
   //#region states
@@ -357,7 +361,7 @@ const Departments = () => {
               floatingClassName="mb-3"
               floatingLabel={t("DepartmentName")}
               placeholder={t("DepartmentName")}
-              value={formData.name !== "" ? t(formData.name) : ""}
+              defaultValue={formData.name !== "" ? t(myRef.current) : ""}
               onChange={(event) => handleInputChange(event, "name")}
             />
             <CFormCheck

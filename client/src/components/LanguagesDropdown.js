@@ -3,58 +3,65 @@ import { useTranslation } from 'react-i18next';
 
 //coreUI
 import { CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle } from '@coreui/react'
+import { CSpinner } from "@coreui/react";
 import CIcon from '@coreui/icons-react'
-import { cifAl, cifGb } from "@coreui/icons";
 
 //hooks
-import { setCookie } from 'src/hooks';
+import { languageMap, setCookie } from 'src/hooks';
+import useLanguages from 'src/hooks/useLanguages';
 
 const LanguagesDropdown = () => {
-    const { i18n } = useTranslation();
+    const { i18n, t } = useTranslation();
+
+    const { languages, isLoading, error } = useLanguages();
+
+    // Utility function to find language details from the map
+    const findLanguageDetails = (code) => languageMap.find(lang => lang.code === code);
+
 
     const handleLanguageChange = (language) => {
-        i18n.changeLanguage(language);
-        setCookie({
-            name: "language",
-            value: language,
-            options: { path: "/", sameSite: "strict" },
-        });
-    };
+        if (language !== i18n.language) {
+            i18n.changeLanguage(language);
 
+            setCookie({
+                name: "language",
+                value: language,
+                options: { path: "/", sameSite: "strict" },
+            });
+        }
+    };
 
     return (
         <CDropdown>
             <CDropdownToggle color="light">
-                {i18n.language === "sq" ? (
+                {isLoading ? <CSpinner color="primary" /> : (
                     <>
-                        <CIcon icon={cifAl} />
-                        <span className="ms-2">Shqip</span>
-                    </>
-                ) : (
-                    <>
-                        <CIcon icon={cifGb} />
-                        <span className="ms-2">English</span>
+                        <CIcon icon={findLanguageDetails(i18n.language)?.icon} />
+                        <span className="ms-2">{findLanguageDetails(i18n.language)?.name}</span>
                     </>
                 )}
             </CDropdownToggle>
-            <CDropdownMenu>
-                <CDropdownItem
-                    className="cursor"
-                    onClick={() => handleLanguageChange("sq")}
-                >
-                    <CIcon icon={cifAl} />
-                    <span className="ms-2">Shqip</span>
-                </CDropdownItem>
-                <CDropdownItem
-                    className="cursor"
-                    onClick={() => handleLanguageChange("en")}
-                >
-                    <CIcon icon={cifGb} />
-                    <span className="ms-2">English</span>
-                </CDropdownItem>
-            </CDropdownMenu>
+            {error ? (
+                <p>{t("ErrorLoadingLanguages")}</p>
+            ) : (
+                <CDropdownMenu>
+                    {languages && languages.map((language) => {
+                        const details = findLanguageDetails(language);
+                        return (
+                            <CDropdownItem
+                                key={language}
+                                className="cursor"
+                                onClick={() => handleLanguageChange(language)}
+                            >
+                                <CIcon icon={details?.icon} />
+                                <span className="ms-2">{details?.name}</span>
+                            </CDropdownItem>
+                        );
+                    })}
+                </CDropdownMenu>
+            )}
         </CDropdown>
-    )
+    );
 }
 
 export default LanguagesDropdown;

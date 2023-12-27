@@ -24,7 +24,7 @@ i18n
     saveMissing: true,
     backend: {
       loadPath: '/locales/{{lng}}.json',
-      addPath: `${process.env.REACT_APP_API_URL}/locales/add/key`,
+      addPath: `${process.env.REACT_APP_API_URL}/locales/add`,
     },
   });
 

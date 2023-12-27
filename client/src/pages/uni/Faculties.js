@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Column, HeaderFilter } from "devextreme-react/data-grid";
@@ -45,8 +45,11 @@ const Faculties = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
-
   const modal = useSelector(getModal);
+  //#endregion
+
+  //#region refs
+  const myRef = useRef(null);
   //#endregion
 
   //#region states
@@ -80,6 +83,9 @@ const Faculties = () => {
           name: response.data.key,
           is_deleted: response.data.is_deleted
         });
+
+        myRef.current = response.data.key;
+
         dispatch(setModal("editFaculty"));
       })
       .catch((error) => {
@@ -358,7 +364,7 @@ const Faculties = () => {
               floatingClassName="mb-3"
               floatingLabel={t("FacultyName")}
               placeholder={t("FacultyName")}
-              value={formData.name !== "" ? t(formData.name) : ""}
+              defaultValue={formData.name !== "" ? t(myRef.current) : ""}
               onChange={(event) => handleInputChange(event, "name")}
             />
             <CFormCheck
