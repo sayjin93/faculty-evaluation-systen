@@ -40,6 +40,7 @@ import { getActiveAcademicYear, getModal } from "src/store/selectors";
 
 //components
 import LanguagesDropdown from "src/components/LanguagesDropdown";
+import LanguageAdd from "src/components/LanguageAdd";
 
 const defaultSmtpConfigs = {
   smtp_sender: "UET Support",
@@ -220,7 +221,10 @@ const Settings = () => {
                 </h6>
               </CCardHeader>
               <CCardBody>
-                <LanguagesDropdown />
+                <div className="flex flex-justify-between flex-gap-10">
+                  <LanguagesDropdown />
+                  <LanguageAdd />
+                </div>
               </CCardBody>
             </CCard>
           </CCol>
@@ -382,7 +386,7 @@ const Settings = () => {
                   </CRow>
 
                   <CButton type="submit">{t("Save")}</CButton>
-                  
+
                 </CForm>
               </CCardBody>
             </CCard>

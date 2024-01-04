@@ -1,28 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 //coreUI
 import {
   CCard,
   CCardBody,
-  CCardHeader,
-  CCol,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
-  CRow,
-  CButton,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CModalBody,
-  CFormInput,
-  CModalFooter,
-  CForm,
-  CFormSelect,
+  CCardHeader
 } from "@coreui/react";
+
+//devextreme
+import DataGrid, { Column, ColumnFixing, Editing, Pager, Paging, SearchPanel } from "devextreme-react/data-grid";
 
 //icons
 import { HiLanguage } from "react-icons/hi2";
@@ -33,20 +21,16 @@ import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
-import { setModal, showToast } from "src/store";
-import { getModal } from "src/store/selectors";
+import { showToast } from "src/store";
 
 //components
-import LanguagesDropdown from "src/components/LanguagesDropdown";
-import DataGrid, { Column, ColumnFixing, Editing, Pager, Paging, SearchPanel } from "devextreme-react/data-grid";
+import LanguageAdd from "src/components/LanguageAdd";
 
 const Translations = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
-
-  const modal = useSelector(getModal);
   //#endregion
 
   //#region states
@@ -54,14 +38,6 @@ const Translations = () => {
   //#endregion
 
   //#region functions
-  const addNewLanguage = async () => {
-    dispatch(
-      showToast({
-        type: "warning",
-        content: "Work in progress",
-      })
-    );
-  }
   const fetchKeys = async () => {
     await api
       .get("/locales")
@@ -145,13 +121,7 @@ const Translations = () => {
             <HiLanguage />
             <span className="title">{t("Translations")}</span>
           </h6>
-          <CButton
-            color="primary"
-            className="float-right"
-            onClick={() => dispatch(setModal("addLanguage"))}
-          >
-            {t("Add")}
-          </CButton>
+          <LanguageAdd btnColor="primary" btnClass="text-end" />
         </CCardHeader>
 
         <CCardBody>
@@ -199,43 +169,6 @@ const Translations = () => {
 
         </CCardBody>
       </CCard >
-
-      <CModal
-        id="addLanguage"
-        backdrop="static"
-        visible={modal.isOpen && modal.id === "addLanguage"}
-        onClose={() => {
-          dispatch(setModal());
-        }}
-      >
-        <CModalHeader>
-          <CModalTitle>{t("Add")}</CModalTitle>
-        </CModalHeader>
-
-        <CModalBody>
-          <p>Selectbox here with filter (select2)</p>
-        </CModalBody>
-
-        <CModalFooter>
-          <CButton
-            color="secondary"
-            onClick={() => {
-              dispatch(setModal());
-            }}
-          >
-            {t("Close")}
-          </CButton>
-          <CButton
-            // disabled={newAcademicYear.length === 0}
-            onClick={() => {
-              addNewLanguage();
-              dispatch(setModal());
-            }}
-          >
-            {t("Add")}
-          </CButton>
-        </CModalFooter>
-      </CModal>
     </>
   );
 };
