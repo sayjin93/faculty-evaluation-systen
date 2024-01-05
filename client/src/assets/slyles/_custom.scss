@@ -131,9 +131,15 @@ body {
   }
 }
 
-.dx-editor-cell .dx-texteditor .dx-texteditor-input {
-  height: 34px;
-  line-height: 34px;
+.dx-editor-cell .dx-texteditor {
+  &-input {
+    height: 34px;
+    line-height: 34px;
+  }
+}
+
+.dx-placeholder {
+  display: none;
 }
 
 //small devices

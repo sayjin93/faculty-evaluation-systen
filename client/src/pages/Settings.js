@@ -22,9 +22,11 @@ import {
   CModalFooter,
   CForm,
   CFormSelect,
+  CInputGroup,
 } from "@coreui/react";
 
-//react-icons
+//icons
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 import { LuSettings2, LuLanguages } from "react-icons/lu";
 import { HiAcademicCap } from "react-icons/hi";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
@@ -65,6 +67,7 @@ const Settings = () => {
   const [academicYear, setAcademicYear] = useState([]);
   const [newAcademicYear, setNewAcademicYear] = useState("");
   const [smtpConfig, setSmtpConfig] = useState(defaultSmtpConfigs);
+  const [viewPass, setViewPass] = useState(false);
   //#endregion
 
   //#region functions
@@ -370,18 +373,20 @@ const Settings = () => {
                       />
                     </CCol>
                     <CCol sm={6} lg={12}>
-                      <CFormInput
-                        name="smtp_pass"
-                        size="sm"
-                        type="text"
-                        floatingClassName="mb-3"
-                        floatingLabel={t("Password")}
-                        placeholder={t("Password")}
-                        value={smtpConfig.smtp_pass}
-                        onChange={(event) =>
-                          handleSmtpChange(event.target.value, "smtp_pass")
-                        }
-                      />
+                      <CInputGroup className="mb-3">
+                        <CFormInput
+                          name="smtp_pass"
+                          size="sm"
+                          type={viewPass ? "text" : "password"}
+                          floatingLabel={t("Password")}
+                          placeholder={t("Password")}
+                          value={smtpConfig.smtp_pass}
+                          onChange={(event) =>
+                            handleSmtpChange(event.target.value, "smtp_pass")
+                          }
+                        />
+                        <CButton type="button" color="secondary" variant="outline" onClick={() => setViewPass(!viewPass)}>{viewPass ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
+                      </CInputGroup>
                     </CCol>
                   </CRow>
 

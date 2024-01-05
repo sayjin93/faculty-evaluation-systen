@@ -1,90 +1,68 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next';
 
+//devextreme
+import { SelectBox, TextBox } from 'devextreme-react';
+
 //coreUI
-import { CAlert, CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
-import { CSpinner } from "@coreui/react";
+import { CAlert, CSpinner, CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
+import CIcon from '@coreui/icons-react';
 
 //hooks
-import { languageMap, setCookie } from 'src/hooks';
+import { languageMap } from 'src/hooks';
 import useLanguages from 'src/hooks/useLanguages';
-import { useDispatch, useSelector } from 'react-redux';
-import useErrorHandler from 'src/hooks/useErrorHandler';
 
 //store
 import { setModal, } from "src/store";
 import { getModal } from "src/store/selectors";
-import { SelectBox } from 'devextreme-react';
-import { renderLngSwitcher } from 'src/hooks/languageSwitcher';
-
-const temp = [
-    {
-        "id": 0,
-        "name": "English",
-        "value": "en",
-        "icon": null,
-        "isDisable": false,
-        "isSelected": false,
-        "disabled": false
-    },
-    {
-        "id": 0,
-        "name": "Deutsch",
-        "value": "de",
-        "icon": null,
-        "isDisable": false,
-        "isSelected": false,
-        "disabled": false
-    },
-    {
-        "id": 0,
-        "name": "Française",
-        "value": "fr",
-        "icon": null,
-        "isDisable": false,
-        "isSelected": false,
-        "disabled": false
-    },
-    {
-        "id": 0,
-        "name": "Italiano",
-        "value": "it",
-        "icon": null,
-        "isDisable": false,
-        "isSelected": false,
-        "disabled": false
-    }
-]
 
 const LanguageAdd = ({ btnColor = "light", btnClass = "" }) => {
     //#region constants
-    const { i18n, t } = useTranslation();
+    const { t } = useTranslation();
     const dispatch = useDispatch();
-    const handleError = useErrorHandler();
-
     const modal = useSelector(getModal);
 
+    //Get existing languages list
+    const { languages, isLoading, error } = useLanguages();
+
+    //Remove existing list from new languages list
+    const filteredLanguageMap = languageMap.filter(language => !languages.includes(language.code));
     //#endregion
 
     //#region states
-    const { languages, isLoading, error } = useLanguages();
+    const [value, setValue] = useState(null);
     //#endregion
 
-    // Utility function to find language details from the map
-    const findLanguageDetails = (code) => languageMap.find(lang => lang.code === code);
-
     //#region functions
-    const handleLanguageChange = (language) => {
-        if (language !== i18n.language) {
-            i18n.changeLanguage(language);
+    const renderField = (data) => {
+        return (
+            <div className="flex flex-align-center">
+                {value && <CIcon style={{ marginLeft: "16px" }} icon={data && data?.icon} />}
 
-            setCookie({
-                name: "language",
-                value: language,
-                options: { path: "/", sameSite: "strict" },
-            });
-        }
+                <TextBox
+                    placeholder={t("SelectALanguage") + "..."}
+                    defaultValue={data && data.name}
+                    readOnly={true}
+                />
+            </div>
+        );
     };
+    const renderItem = (data) => {
+        return (
+            <div className="flex flex-align-center flex-gap-10">
+                <CIcon icon={data?.icon} />
+                <div style={{ marginLeft: "7px" }}>{data?.name}</div>
+            </div>
+        );
+    };
+    const onValueChanged = useCallback((e) => {
+        setValue(e.value);
+    }, []);
+
+    const handleAddLanguage = async () => {
+        alert(value);
+    }
     //#endregion
 
     if (error) return <CAlert color="danger">{error.message}</CAlert>
@@ -113,36 +91,27 @@ const LanguageAdd = ({ btnColor = "light", btnClass = "" }) => {
                 </CModalHeader>
 
                 <CModalBody>
-                    <SelectBox
-                        className="lngSelector"
-                        dataSource={temp}
-                        valueExpr="value"
-                        displayExpr="name"
-                        // value={lang}
-                        // width="130px"
-                        deferRendering={false}
-                        fieldRender={(e) => renderLngSwitcher(e, "field")}
-                        itemRender={(e) => renderLngSwitcher(e, "item")}
-                    // onValueChanged={(e) => handleLngChange(e)}
-                    />
+                    {
+                        error ? <CAlert color="danger">{error.message}</CAlert>
+                            : isLoading ? <CSpinner color="pt-1 primary" /> : <SelectBox
+                                dataSource={filteredLanguageMap}
+                                valueExpr="code"
+                                displayExpr="name"
+                                onValueChanged={onValueChanged}
+                                fieldRender={renderField}
+                                itemRender={renderItem}
+                            />
+                    }
                 </CModalBody>
 
                 <CModalFooter>
                     <CButton
                         color="secondary"
-                        onClick={() => {
-                            dispatch(setModal());
-                        }}
+                        onClick={() => { dispatch(setModal()) }}
                     >
                         {t("Close")}
                     </CButton>
-                    <CButton
-                    // disabled={newAcademicYear.length === 0}
-                    // onClick={() => {
-                    //     addAcademicYear();
-                    //     dispatch(setModal());
-                    // }}
-                    >
+                    <CButton disabled={!value} onClick={handleAddLanguage}>
                         {t("Add")}
                     </CButton>
                 </CModalFooter>

@@ -13,16 +13,12 @@ import useLanguages from 'src/hooks/useLanguages';
 const LanguagesDropdown = () => {
     //#region constants
     const { i18n } = useTranslation();
-    //#endregion
-
-    //#region states
     const { languages, isLoading, error } = useLanguages();
     //#endregion
 
-    // Utility function to find language details from the map
+    //#region functions
     const findLanguageDetails = (code) => languageMap.find(lang => lang.code === code);
 
-    //#region functions
     const handleLanguageChange = (language) => {
         if (language !== i18n.language) {
             i18n.changeLanguage(language);

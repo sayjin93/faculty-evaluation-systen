@@ -1,6 +1,6 @@
 //#region imports
 import Cookies from "universal-cookie";
-import { cifAl, cifGb, cifIt, cifDe, cifFr, cifEs, cifGr, cifNl, cifTr } from "@coreui/icons";
+import { cifAl, cifGb, cifIt, cifDe, cifFr, cifEs, cifGr, cifNl, cifTr, cifMk, cifRu } from "@coreui/icons";
 //#endregion
 
 //#region cookies
@@ -108,13 +108,15 @@ export const SidebarRoutes = {
 
 export const languageMap = [
   { code: "sq", icon: cifAl, name: "Shqip" },
-  { code: "en", icon: cifGb, name: "English" },
-  { code: "it", icon: cifIt, name: "Italiano" },
   { code: "de", icon: cifDe, name: "Deutsch" },
-  { code: "fr", icon: cifFr, name: "Français" },
   { code: "es", icon: cifEs, name: "Español" },
+  { code: "fr", icon: cifFr, name: "Français" },
+  { code: "en", icon: cifGb, name: "English" },
   { code: "gr", icon: cifGr, name: "Ελληνικά" },
+  { code: "it", icon: cifIt, name: "Italiano" },
+  { code: "mk", icon: cifMk, name: "Македонски" },
   { code: "nl", icon: cifNl, name: "Nederlands" },
+  { code: "ru", icon: cifRu, name: "русский" },
   { code: "tr", icon: cifTr, name: "Türkçe" }
   // Add more mappings as needed for other languages -> https://coreui.io/react/docs/components/icon/
 ];
