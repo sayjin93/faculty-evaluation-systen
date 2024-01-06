@@ -67,7 +67,6 @@ const Departments = () => {
     await api
       .get("/department/" + id)
       .then((response) => {
-        debugger;
         setFormData({
           ...formData,
           name: response.data.key,

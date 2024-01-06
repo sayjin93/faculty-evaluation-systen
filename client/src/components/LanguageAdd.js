@@ -13,7 +13,6 @@ import CIcon from '@coreui/icons-react';
 import { convertToKey, languageMap } from 'src/hooks';
 import api from 'src/hooks/api';
 import useLanguages from 'src/hooks/useLanguages';
-import useErrorHandler from 'src/hooks/useErrorHandler';
 
 //store
 import { setModal, showToast, } from "src/store";
@@ -23,7 +22,6 @@ const LanguageAdd = ({ btnColor = "light", btnClass = "" }) => {
     //#region constants
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const handleError = useErrorHandler();
     const modal = useSelector(getModal);
 
     //Get existing languages list

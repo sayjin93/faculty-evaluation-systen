@@ -1,4 +1,4 @@
-import { useDispatch, batch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { showToast, setFirstLogin } from "../store";
@@ -8,7 +8,6 @@ const useErrorHandler = () => {
   const navigate = useNavigate();
 
   const handleError = (error) => {
-    debugger;
     if (error.code === "ERR_NETWORK") {
       // Dispatches a Redux action to show a danger toast with the error message.
       dispatch(
