@@ -10,6 +10,13 @@ const auth = passport.authenticate('jwt', { session: false });
 let localesPath = path.join(__dirname, '../../../client/public/locales');
 if (process.env.LOCALES_PATH) localesPath = path.join(__dirname, process.env.LOCALES_PATH);
 
+// Imports the Google Cloud client library
+const { Translate } = require('@google-cloud/translate').v2;
+
+// Configure the translation client with your API key
+const translate = new Translate({ key: process.env.GOOGLE_TRANSLATE_API_KEY });
+const translateTexts = async (texts, targetLang) => Promise.all(texts.map((text) => translate.translate(text, targetLang)));
+
 // GET route to retrieve all keys for all languages
 router.get('/', auth, (req, res) => {
   try {
@@ -125,6 +132,40 @@ router.post('/update', auth, (req, res) => {
     });
 
     res.json({ success: true, message: 'Translations updated' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+// Add new language
+router.post('/add-language', auth, async (req, res) => {
+  const newLangCode = req.body.lang; // The language code sent from the request, e.g., 'de'
+
+  try {
+    const baseLangPath = path.join(localesPath, 'en.json');
+    const newLangPath = path.join(localesPath, `${newLangCode}.json`);
+
+    if (fs.existsSync(newLangPath)) {
+      return res.status(406).json({ success: false, error: 'Language already exists' });
+    }
+
+    const baseLangContent = JSON.parse(fs.readFileSync(baseLangPath, 'utf-8'));
+    const keys = Object.keys(baseLangContent);
+    const values = Object.values(baseLangContent);
+
+    // Translate all texts in parallel
+    const translations = await translateTexts(values, newLangCode);
+
+    // Combine keys and translations into an object
+    const translatedContent = {};
+    translations.forEach(([translated], index) => {
+      translatedContent[keys[index]] = translated;
+    });
+
+    fs.writeFileSync(newLangPath, JSON.stringify(translatedContent, null, 2));
+
+    res.status(200).json({ success: true });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: 'Internal Server Error' });

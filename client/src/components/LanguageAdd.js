@@ -10,17 +10,20 @@ import { CAlert, CSpinner, CButton, CModal, CModalBody, CModalFooter, CModalHead
 import CIcon from '@coreui/icons-react';
 
 //hooks
-import { languageMap } from 'src/hooks';
+import { convertToKey, languageMap } from 'src/hooks';
+import api from 'src/hooks/api';
 import useLanguages from 'src/hooks/useLanguages';
+import useErrorHandler from 'src/hooks/useErrorHandler';
 
 //store
-import { setModal, } from "src/store";
+import { setModal, showToast, } from "src/store";
 import { getModal } from "src/store/selectors";
 
 const LanguageAdd = ({ btnColor = "light", btnClass = "" }) => {
     //#region constants
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const handleError = useErrorHandler();
     const modal = useSelector(getModal);
 
     //Get existing languages list
@@ -32,6 +35,7 @@ const LanguageAdd = ({ btnColor = "light", btnClass = "" }) => {
 
     //#region states
     const [value, setValue] = useState(null);
+    const [pending, setPending] = useState(false);
     //#endregion
 
     //#region functions
@@ -61,7 +65,41 @@ const LanguageAdd = ({ btnColor = "light", btnClass = "" }) => {
     }, []);
 
     const handleAddLanguage = async () => {
-        alert(value);
+        setPending(true);
+
+        await api
+            .post("/locales/add-language", { lang: value })
+            .then(() => {
+                dispatch(setModal());
+                dispatch(
+                    showToast({
+                        type: "success",
+                        content: t("NewLanguageAddedSuccessfully"),
+                    })
+                );
+            })
+            .catch((error) => {
+                const { status, data } = error.response;
+
+                if (status === 406) {
+                    dispatch(
+                        showToast({
+                            type: "warning",
+                            content: t(convertToKey(data.error)),
+                        })
+                    );
+                }
+                else {
+                    dispatch(
+                        showToast({
+                            type: "danger",
+                            content: t(convertToKey(data.error)),
+                        })
+                    );
+                }
+            });
+
+        setPending(false);
     }
     //#endregion
 
@@ -82,11 +120,12 @@ const LanguageAdd = ({ btnColor = "light", btnClass = "" }) => {
                 id="addLanguage"
                 backdrop="static"
                 visible={modal.isOpen && modal.id === "addLanguage"}
+
                 onClose={() => {
-                    dispatch(setModal());
+                    if (!pending) dispatch(setModal());
                 }}
             >
-                <CModalHeader>
+                <CModalHeader closeButton={pending ? false : true}>
                     <CModalTitle>{t("AddNewLanguage")}</CModalTitle>
                 </CModalHeader>
 
@@ -106,13 +145,14 @@ const LanguageAdd = ({ btnColor = "light", btnClass = "" }) => {
 
                 <CModalFooter>
                     <CButton
+                        disabled={pending}
                         color="secondary"
                         onClick={() => { dispatch(setModal()) }}
                     >
                         {t("Close")}
                     </CButton>
                     <CButton disabled={!value} onClick={handleAddLanguage}>
-                        {t("Add")}
+                        {pending ? <CSpinner color="light" size="sm" /> : t("Add")}
                     </CButton>
                 </CModalFooter>
             </CModal>

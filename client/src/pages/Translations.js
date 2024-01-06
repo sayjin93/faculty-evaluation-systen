@@ -10,7 +10,7 @@ import {
 } from "@coreui/react";
 
 //devextreme
-import DataGrid, { Column, ColumnFixing, Editing, Pager, Paging, SearchPanel } from "devextreme-react/data-grid";
+import DataGrid, { Column, ColumnChooser, ColumnFixing, Editing, Pager, Paging, Position, SearchPanel } from "devextreme-react/data-grid";
 
 //icons
 import { HiLanguage } from "react-icons/hi2";
@@ -149,6 +149,14 @@ const Translations = () => {
                 width={240}
                 placeholder={t("Search") + "..."} />
 
+              <ColumnChooser enabled={true} mode="select" title={t("ColumnChooser")}>
+                <Position
+                  my="right top"
+                  at="right bottom"
+                  of=".dx-datagrid-column-chooser-button"
+                />
+              </ColumnChooser>
+
               <Paging defaultPageSize={20} />
               <Pager
                 visible={true}
@@ -158,7 +166,7 @@ const Translations = () => {
                 showNavigationButtons={true}
               />
 
-              <ColumnFixing enabled={true} />
+              <ColumnFixing enabled={false} />
 
               <Column fixed={true}
                 allowEditing={false} dataField="key" caption="KEY" />
@@ -166,7 +174,6 @@ const Translations = () => {
               {renderLanguageColumns()}
             </DataGrid>
           </div>
-
         </CCardBody>
       </CCard >
     </>
