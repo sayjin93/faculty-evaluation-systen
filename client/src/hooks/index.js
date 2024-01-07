@@ -112,7 +112,7 @@ export const languageMap = [
   { code: "es", icon: cifEs, name: "Español" },
   { code: "fr", icon: cifFr, name: "Français" },
   { code: "en", icon: cifGb, name: "English" },
-  { code: "gr", icon: cifGr, name: "Ελληνικά" },
+  { code: "el", icon: cifGr, name: "Ελληνικά" },
   { code: "it", icon: cifIt, name: "Italiano" },
   { code: "mk", icon: cifMk, name: "Македонски" },
   { code: "nl", icon: cifNl, name: "Nederlands" },
