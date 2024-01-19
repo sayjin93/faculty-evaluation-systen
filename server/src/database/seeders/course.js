@@ -1,6 +1,9 @@
 const Course = require('../../models/course');
 
 async function seed() {
+  const professorsCount = 11;
+  const academicYearsCount = 10;
+
   const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
   const dummyCourseNames = [
@@ -67,8 +70,8 @@ async function seed() {
     semester: randomInt(1, 2), // Randomly choose between 1 and 2 for semester
     week_hours: randomInt(3, 4), // Randomly choose between 3 and 4 for week_hours
     program: dummyPrograms[randomInt(0, 1)], // Randomly choose between 'Bachelor' and 'Master' for program
-    academic_year_id: randomInt(1, 10), // Random academic year ID between 1 and 10
-    professor_id: randomInt(1, 10), // Random professor ID between 1 and 10
+    academic_year_id: randomInt(1, academicYearsCount), // Random academic year ID between 1 and 10
+    professor_id: randomInt(2, professorsCount), // Random professor ID between 1 and 10
   });
 
   const coursesData = Array.from({ length: 100 }, generateRandomCourse);

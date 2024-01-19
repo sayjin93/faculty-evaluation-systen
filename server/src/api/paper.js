@@ -28,7 +28,7 @@ router.post('/', auth, async (req, res) => {
   };
 
   // Save Paper in the database
-  Paper.create(paperData)
+  await Paper.create(paperData)
     .then((data) => {
       res.send(data);
     })
@@ -59,7 +59,7 @@ router.get('/', auth, async (req, res) => {
 router.get('/academic_year/:academic_year_id', auth, async (req, res) => {
   const { academic_year_id } = req.params;
 
-  Paper.findAll({
+  await Paper.findAll({
     where: { academic_year_id },
     include: [
       {
@@ -94,7 +94,7 @@ router.get('/academic_year/:academic_year_id', auth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Paper.findByPk(id)
+  await Paper.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
@@ -115,7 +115,7 @@ router.get('/:id', auth, async (req, res) => {
 router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Paper.update(req.body, {
+  await Paper.update(req.body, {
     where: { id },
   })
     .then((num) => {
@@ -140,7 +140,7 @@ router.put('/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Paper.destroy({
+  await Paper.destroy({
     where: { id },
   })
     .then((num) => {
@@ -163,7 +163,7 @@ router.delete('/:id', auth, async (req, res) => {
 
 // Delete all Papers
 router.delete('/', auth, async (req, res) => {
-  Paper.destroy({
+  await Paper.destroy({
     where: {},
     truncate: false,
   })

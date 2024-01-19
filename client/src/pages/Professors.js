@@ -10,6 +10,7 @@ import {
   CCard,
   CCardBody,
   CCardHeader,
+  CCol,
   CForm,
   CFormCheck,
   CFormInput,
@@ -19,11 +20,12 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
+  CRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 import { BsGenderMale, BsGenderFemale } from "react-icons/bs"
-import { ImCross } from "react-icons/im"
+import { ImCross, ImCheckmark } from "react-icons/im"
 
 //react-icons
 import { FaChalkboardTeacher } from "react-icons/fa"
@@ -49,7 +51,7 @@ const Professors = () => {
 
   const modal = useSelector(getModal);
 
-  const defaultFormData = { first_name: "", last_name: "", gender: "m", is_deleted: false };
+  const defaultFormData = { first_name: "", last_name: "", gender: "m", username: "", email: "", is_verified: true, is_deleted: false };
   //#endregion
 
   //#region states
@@ -62,6 +64,8 @@ const Professors = () => {
     selectedId: -1,
   });
   //#endregion
+
+  console.log(formData);
 
   //#region functions
   const fetchProfessors = async () => {
@@ -83,6 +87,9 @@ const Professors = () => {
           first_name: response.data.first_name,
           last_name: response.data.last_name,
           gender: response.data.gender,
+          username: response.data.username,
+          email: response.data.email,
+          is_verified: response.data.is_verified,
           is_deleted: response.data.is_deleted,
         });
         dispatch(setModal("editProfessor"));
@@ -102,7 +109,8 @@ const Professors = () => {
         first_name: formData.first_name,
         last_name: formData.last_name,
         gender: formData.gender,
-        is_deleted: formData.is_deleted,
+        username: formData.username,
+        email: formData.email
       })
       .then((response) => {
         const firstName = response.data.first_name;
@@ -134,6 +142,9 @@ const Professors = () => {
         first_name: formData.first_name,
         last_name: formData.last_name,
         gender: formData.gender,
+        username: formData.username,
+        email: formData.email,
+        is_verified: formData.is_verified,
         is_deleted: formData.is_deleted,
       })
       .then((response) => {
@@ -191,14 +202,26 @@ const Professors = () => {
   };
 
   const handleInputChange = (event, fieldName) => {
+    debugger;
     const checkboxVal = event.target.checked;
-    const textboxVal = event.target.value
+    const textboxVal = event.target.value;
+
+    let newValue;
+
+    if (fieldName === "is_deleted" || fieldName === "is_verified") {
+      // Handle checkbox inputs differently for "is_deleted" and "is_verified"
+      newValue = checkboxVal;
+    } else {
+      // For other fields, use the textbox value
+      newValue = textboxVal;
+    }
 
     setFormData({
       ...formData,
-      [fieldName]: fieldName === "is_deleted" ? checkboxVal : textboxVal,
+      [fieldName]: newValue,
     });
   };
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -224,6 +247,11 @@ const Professors = () => {
         <span>{gender}</span>
       </div>)
   }
+  const cellRenderVerified = ({ data }) => {
+    debugger;
+    const checked = data.is_verified ? <ImCheckmark title={t("Verified")} className="text-success" /> : <ImCross title={t("Disabled")} className="text-danger" />;
+    return checked;
+  };
   const cellRenderDeleted = ({ data }) => {
     const checked = data.is_deleted ? (
       <ImCross title={t("Deleted")} className="text-danger" />
@@ -319,6 +347,32 @@ const Professors = () => {
               cellRender={cellRenderGender}
             />
             <Column
+              dataField="username"
+              caption={t("Username")}
+              dataType="string"
+            />
+            <Column
+              dataField="email"
+              caption={t("Email")}
+              dataType="string"
+            />
+            <Column
+              width={140}
+              alignment="center"
+              dataField="is_verified"
+              caption={t("Verified")}
+              dataType="string"
+              cellRender={cellRenderVerified}
+            >
+              <HeaderFilter dataSource={[{
+                text: t('Verified'),
+                value: ['is_verified', '=', true],
+              }, {
+                text: t('Disabled'),
+                value: ['is_verified', '=', false],
+              }]} />
+            </Column>
+            <Column
               width={140}
               alignment="center"
               dataField="is_deleted"
@@ -382,22 +436,27 @@ const Professors = () => {
           </CModalHeader>
 
           <CModalBody>
-            <CFormInput
-              type="text"
-              floatingClassName="mb-3"
-              floatingLabel={t("FirstName")}
-              placeholder={t("FirstName")}
-              value={formData.first_name}
-              onChange={(event) => handleInputChange(event, "first_name")}
-            />
-            <CFormInput
-              type="text"
-              floatingClassName="mb-3"
-              floatingLabel={t("LastName")}
-              placeholder={t("LastName")}
-              value={formData.last_name}
-              onChange={(event) => handleInputChange(event, "last_name")}
-            />
+            <CRow>
+              <CCol xs={6} className="mb-3">
+                <CFormInput
+                  type="text"
+                  floatingLabel={t("FirstName")}
+                  placeholder={t("FirstName")}
+                  value={formData.first_name}
+                  onChange={(event) => handleInputChange(event, "first_name")}
+                />
+              </CCol>
+              <CCol xs={6} className="mb-3">
+                <CFormInput
+                  type="text"
+                  floatingLabel={t("LastName")}
+                  placeholder={t("LastName")}
+                  value={formData.last_name}
+                  onChange={(event) => handleInputChange(event, "last_name")}
+                />
+              </CCol>
+            </CRow>
+
             <CFormSelect
               floatingClassName="mb-3"
               floatingLabel={t("Gender")}
@@ -407,12 +466,49 @@ const Professors = () => {
               <option value="m">{t("Male")}</option>
               <option value="f">{t("Female")}</option>
             </CFormSelect>
-            <CFormCheck
-              type="checkbox"
-              label={t("Deleted")}
-              onChange={(event) => handleInputChange(event, "is_deleted")}
-              defaultChecked={formData.is_deleted}
-            />
+
+            <CRow>
+              <CCol xs={6} className="mb-3">
+                <CFormInput
+                  type="text"
+                  floatingLabel={t("Username")}
+                  placeholder={t("Username")}
+                  value={formData.username}
+                  onChange={(event) => handleInputChange(event, "username")}
+                />
+              </CCol>
+              <CCol xs={6} className="mb-3">
+                <CFormInput
+                  type="email"
+                  floatingLabel={t("Email")}
+                  placeholder={t("Email")}
+                  value={formData.email}
+                  onChange={(event) => handleInputChange(event, "email")}
+                />
+              </CCol>
+            </CRow>
+
+            {modalOptions.editMode && (
+              <CRow>
+                <CCol xs={6} className="mb-3">
+                  <CFormCheck
+                    type="checkbox"
+                    label={t("Verified")}
+                    onChange={(event) => handleInputChange(event, "is_verified")}
+                    defaultChecked={formData.is_verified}
+                  />
+                </CCol>
+                <CCol xs={6} className="mb-3">
+                  <CFormCheck
+                    type="checkbox"
+                    label={t("Deleted")}
+                    onChange={(event) => handleInputChange(event, "is_deleted")}
+                    defaultChecked={formData.is_deleted}
+                  />
+                </CCol>
+              </CRow>
+            )}
+
           </CModalBody>
 
           <CModalFooter>

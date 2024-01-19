@@ -13,6 +13,7 @@ import {
   CContainer,
   CForm,
   CFormInput,
+  CFormSelect,
   CInputGroup,
   CInputGroupText,
   CRow,
@@ -21,19 +22,20 @@ import {
 
 //icons
 import CIcon from "@coreui/icons-react";
-
+import { PiGenderIntersexDuotone } from "react-icons/pi";
 import { cilLockLocked, cilUser } from "@coreui/icons";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 //hooks
 import api from "src/hooks/api";
-import { capitalizeWords } from "src/hooks";
+import { capitalizeWords, convertToKey } from "src/hooks";
 
 //store
 import { showToast } from "src/store";
 
 //components
 import PasswordCriteria, { checkPasswordCriteria } from "src/components/PasswordCriteria";
+import LanguagesDropdown from "src/components/LanguagesDropdown";
 
 const Register = () => {
   //#region constants
@@ -47,6 +49,7 @@ const Register = () => {
     firstName: "",
     lastName: "",
     username: "",
+    gender: "m",
     email: "",
     password: "",
     repeatPassword: "",
@@ -59,13 +62,38 @@ const Register = () => {
   //#endregion
 
   //#region functions
+  const handleFullName = (event, fieldName) => {
+    const inputValue = capitalizeWords(event.target.value);
+
+    let newUser = {
+      ...user,
+      [fieldName]: inputValue,
+    };
+
+    // Automatically set email when firstName or lastName changes
+    if (fieldName === "firstName" || fieldName === "lastName") {
+      const firstName = fieldName === "firstName" ? inputValue : user.firstName;
+      const lastName = fieldName === "lastName" ? inputValue : user.lastName;
+
+      if (firstName && lastName) {
+        const username = `${firstName[0]}${lastName}`.toLowerCase().replace(/\s+/g, '');
+        newUser.username = username;
+        newUser.email = username;
+      }
+    }
+
+    setUser(newUser);
+  };
+
   const handleInputChange = (event, fieldName) => {
     const inputValue = event.target.value;
 
-    setUser({
+    let newUser = {
       ...user,
       [fieldName]: inputValue,
-    });
+    };
+
+    setUser(newUser);
 
     if (fieldName === "password") checkPasswordCriteria(inputValue);
   };
@@ -112,10 +140,11 @@ const Register = () => {
 
       await api
         .post("/register", {
-          first_name: capitalizeWords(user.firstName),
-          last_name: capitalizeWords(user.lastName),
-          username: user.username.toLowerCase(),
-          email: user.email.toLowerCase(),
+          first_name: capitalizeWords(user.firstName.replace(/\s+/g, '')),
+          last_name: capitalizeWords(user.lastName.replace(/\s+/g, '')),
+          gender: user.gender,
+          username: user.username.toLowerCase().replace(/\s+/g, ''),
+          email: user.email.toLowerCase().replace(/\s+/g, '').split('@')[0],
           password: user.password,
         })
         .then((response) => {
@@ -126,7 +155,7 @@ const Register = () => {
           dispatch(
             showToast({
               type: "success",
-              content: t("AccountCreatedSuccesfully"),
+              content: t(convertToKey(response.data.message)),
             })
           );
         })
@@ -171,30 +200,47 @@ const Register = () => {
                     <CRow>
                       <CCol xs={6} className="mb-3">
                         <CFormInput
+                          required
                           type="text"
                           autoComplete="first-name"
                           placeholder={t("FirstName")}
                           value={user.firstName}
                           onChange={(event) =>
-                            handleInputChange(event, "firstName")
+                            handleFullName(event, "firstName")
                           }
                         />
                       </CCol>
                       <CCol xs={6} className="mb-3">
                         <CFormInput
+                          required
                           type="text"
                           autoComplete="last-name"
                           placeholder={t("LastName")}
                           value={user.lastName}
                           onChange={(event) =>
-                            handleInputChange(event, "lastName")
+                            handleFullName(event, "lastName")
                           }
                         />
                       </CCol>
                     </CRow>
 
                     <CRow>
-                      <CCol md={6} lg={12} xxl={6} className="mb-3">
+                      <CCol xs={12} className="mb-3">
+                        <CInputGroup>
+                          <CInputGroupText>
+                            <PiGenderIntersexDuotone />
+                          </CInputGroupText>
+                          <CFormSelect
+                            floatingLabel={t("Gender")}
+                            value={user.gender}
+                            onChange={(event) => handleInputChange(event, "gender")}
+                          >
+                            <option value="m">{t("Male")}</option>
+                            <option value="f">{t("Female")}</option>
+                          </CFormSelect>
+                        </CInputGroup>
+                      </CCol>
+                      <CCol xs={12} className="mb-3">
                         <CInputGroup>
                           <CInputGroupText>
                             <CIcon icon={cilUser} />
@@ -202,7 +248,8 @@ const Register = () => {
                           <CFormInput
                             required
                             type="text"
-                            placeholder={t("Username") + "*"}
+                            autoComplete="username"
+                            placeholder={t("Username")}
                             value={user.username}
                             onChange={(event) =>
                               handleInputChange(event, "username")
@@ -210,20 +257,22 @@ const Register = () => {
                           />
                         </CInputGroup>
                       </CCol>
-                      <CCol md={6} lg={12} xxl={6} className="mb-3">
+
+                      <CCol xs={12} className="mb-3">
                         <CInputGroup>
                           <CInputGroupText>@</CInputGroupText>
                           <CFormInput
+                            aria-describedby="emal"
                             required
-                            type="email"
                             autoComplete="email"
-                            placeholder={t("Email") + "*"}
+                            placeholder={t("Email")}
                             value={user.email}
-                            size="sm"
                             onChange={(event) =>
                               handleInputChange(event, "email")
                             }
                           />
+                          <CInputGroupText id="emal">@uet.edu.al</CInputGroupText>
+
                         </CInputGroup>
                       </CCol>
                     </CRow>
@@ -238,7 +287,7 @@ const Register = () => {
                             required
                             type={viewPass.new ? "text" : "password"}
                             autoComplete="new-password"
-                            placeholder={t("Password") + "*"}
+                            placeholder={t("Password")}
                             value={user.password}
                             onChange={(event) =>
                               handleInputChange(event, "password")
@@ -269,7 +318,7 @@ const Register = () => {
                             required
                             type={viewPass.retype ? "text" : "password"}
                             autoComplete="new-password"
-                            placeholder={t("RepeatPassword") + "*"}
+                            placeholder={t("RepeatPassword")}
                             value={user.repeatPassword}
                             onChange={(event) =>
                               handleInputChange(event, "repeatPassword")
@@ -296,20 +345,25 @@ const Register = () => {
                       </CCol>
                     </CRow>
 
-                    <CInputGroup className="mb-3">
-                      <CButton
-                        disabled={isLoading}
-                        color="success"
-                        type="submit"
-                        className="w-100"
-                      >
-                        {isLoading ? (
-                          <CSpinner color="light" size="sm" />
-                        ) : (
-                          t("CreateAccount")
-                        )}
-                      </CButton>
-                    </CInputGroup>
+                    <CRow className="flex-align-center mb-3">
+                      <CCol xs={6}>
+                        <CButton
+                          disabled={isLoading}
+                          color="success"
+                          type="submit"
+                          className="w-100"
+                        >
+                          {isLoading ? (
+                            <CSpinner color="light" size="sm" />
+                          ) : (
+                            t("CreateAccount")
+                          )}
+                        </CButton>
+                      </CCol>
+                      <CCol xs={6} className="text-end">
+                        <LanguagesDropdown />
+                      </CCol>
+                    </CRow>
                   </CForm>
 
                   <Link to="/login">
@@ -322,18 +376,16 @@ const Register = () => {
 
               <CCard className="p-4 text-white bg-primary">
                 <CCardBody className="text-center">
-                  <div>
-                    <h3>{t("SecurePasswordRequirements")}</h3>
+                  <h3>{t("SecurePasswordRequirements")}</h3>
 
-                    <p className="pt-4">
-                      {t("StrengthenYourShield") +
-                        ": " +
-                        t("FollowThePasswordCriteriaBelow") +
-                        "."}
-                    </p>
+                  <p className="pt-4">
+                    {t("StrengthenYourShield") +
+                      ": " +
+                      t("FollowThePasswordCriteriaBelow") +
+                      "."}
+                  </p>
 
-                    <PasswordCriteria password={user.password} />
-                  </div>
+                  <PasswordCriteria password={user.password} />
                 </CCardBody>
               </CCard>
             </CCardGroup>

@@ -10,7 +10,7 @@ const auth = passport.authenticate('jwt', { session: false });
 // Create a new Professor
 router.post('/', auth, async (req, res) => {
   // Validate request
-  if (!req.body.first_name || !req.body.last_name || !req.body.gender) {
+  if (!req.body.first_name || !req.body.last_name || !req.body.gender || !req.body.username || !req.body.email) {
     res.status(400).send({
       message: 'Content can not be empty',
     });
@@ -21,11 +21,15 @@ router.post('/', auth, async (req, res) => {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     gender: req.body.gender,
-    is_deleted: req.body.is_deleted,
+    username: req.body.username,
+    email: req.body.email,
+    is_verified: 1,
+    is_deleted: 0,
+    is_admin: 0,
   };
 
   // Save Professor in the database
-  Professor.create(professorData)
+  await Professor.create(professorData)
     .then((data) => {
       res.send(data);
     })
@@ -38,7 +42,7 @@ router.post('/', auth, async (req, res) => {
 
 // Retrieve all Professors
 router.get('/', auth, async (req, res) => {
-  const result = await Professor.findAll().catch((err) => {
+  const result = await Professor.findAll({ where: { is_admin: false } }).catch((err) => {
     console.log('Error: ', err);
   });
 
@@ -54,6 +58,9 @@ router.get('/', auth, async (req, res) => {
     first_name: professor.first_name,
     last_name: professor.last_name,
     gender: professor.gender === 'm' ? 'Male' : 'Female',
+    username: professor.username,
+    email: professor.email,
+    is_verified: professor.is_verified,
     is_deleted: professor.is_deleted,
     createdAt: professor.createdAt,
     updatedAt: professor.updatedAt,
@@ -62,24 +69,11 @@ router.get('/', auth, async (req, res) => {
   res.send(modifiedResult);
 });
 
-// Retrieve all active Professors
-router.get('/active', auth, async (req, res) => {
-  Professor.findAll({ where: { is_deleted: false } })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || 'Some error occurred while retrieving Professors',
-      });
-    });
-});
-
 // Retrieve a single Professor with id
 router.get('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Professor.findByPk(id)
+  await Professor.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
@@ -104,10 +98,13 @@ router.put('/:id', auth, async (req, res) => {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     gender: req.body.gender,
+    username: req.body.username,
+    email: req.body.email,
+    is_verified: req.body.is_verified,
     is_deleted: req.body.is_deleted,
   };
 
-  Professor.update(professorData, {
+  await Professor.update(professorData, {
     where: { id },
   })
     .then((num) => {
@@ -132,7 +129,7 @@ router.put('/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Professor.destroy({
+  await Professor.destroy({
     where: { id },
   })
     .then((num) => {
@@ -155,7 +152,7 @@ router.delete('/:id', auth, async (req, res) => {
 
 // Delete all Professors
 router.delete('/', auth, async (req, res) => {
-  Professor.destroy({
+  await Professor.destroy({
     where: {},
     truncate: false,
   })

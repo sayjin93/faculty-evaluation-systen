@@ -19,7 +19,7 @@ router.get('/dashboard', auth, async (req, res) => {
     .then((academicYears) => {
       const academic_year_ids = academicYears.map((year) => year.id);
 
-      Professor.findAll()
+      Professor.findAll({ where: { is_admin: false } })
         .then((professors) => {
           const professorsData = professors;
 

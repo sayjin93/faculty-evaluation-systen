@@ -29,7 +29,7 @@ router.post('/', auth, async (req, res) => {
   };
 
   // Save Community Service in the database
-  Community.create(CommunityServiceData)
+  await Community.create(CommunityServiceData)
     .then((data) => {
       res.send(data);
     })
@@ -61,7 +61,7 @@ router.get('/', auth, async (req, res) => {
 router.get('/academic_year/:academic_year_id', auth, async (req, res) => {
   const { academic_year_id } = req.params;
 
-  Community.findAll({
+  await Community.findAll({
     where: { academic_year_id },
     include: [
       {
@@ -97,7 +97,7 @@ router.get('/academic_year/:academic_year_id', auth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Community.findByPk(id)
+  await Community.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
@@ -118,7 +118,7 @@ router.get('/:id', auth, async (req, res) => {
 router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Community.update(req.body, {
+  await Community.update(req.body, {
     where: { id },
   })
     .then((num) => {
@@ -143,7 +143,7 @@ router.put('/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Community.destroy({
+  await Community.destroy({
     where: { id },
   })
     .then((num) => {
@@ -166,7 +166,7 @@ router.delete('/:id', auth, async (req, res) => {
 
 // Delete all Community Services
 router.delete('/', auth, async (req, res) => {
-  Community.destroy({
+  await Community.destroy({
     where: {},
     truncate: false,
   })

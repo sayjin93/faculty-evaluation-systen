@@ -13,6 +13,7 @@ import { SidebarRoutes } from "src/hooks";
 //public pages
 const Login = lazy(() => import("../pages/auth/Login"));
 const Register = lazy(() => import("../pages/auth/Register"));
+const VerifyToken = lazy(() => import("../pages/auth/VerifyToken"));
 const Reset = lazy(() => import("../pages/auth/Reset"));
 const ResetToken = lazy(() => import("../pages/auth/ResetToken"));
 
@@ -101,6 +102,10 @@ const publicRoutes = [
   {
     path: "/register",
     element: <Register />,
+  },
+  {
+    path: "/verify/:token",
+    element: <VerifyToken />,
   },
   {
     path: "/reset",

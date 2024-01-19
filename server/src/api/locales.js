@@ -68,7 +68,7 @@ router.get('/languages', (req, res) => {
 });
 
 // Add key automatically in json files if i18n read a new key
-router.post('/add', (req, res) => {
+router.post('/add', auth, (req, res) => {
   try {
     const translations = req.body;
 

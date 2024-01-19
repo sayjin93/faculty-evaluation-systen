@@ -261,6 +261,7 @@ const ResetToken = () => {
                     </CCol>
                   </CRow>
                 </CForm>
+
                 <Link to="/login">
                   <CButton color="link" className="mt-4 d-block mx-auto">
                     {t("BackToLogin") + "?"}

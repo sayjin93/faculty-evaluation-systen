@@ -23,7 +23,7 @@ router.post('/', auth, async (req, res) => {
   };
 
   // Save Faculty in the database
-  Faculty.create(FacultyData)
+  await Faculty.create(FacultyData)
     .then((data) => {
       res.send(data);
     })
@@ -54,7 +54,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Faculty.findByPk(id)
+  await Faculty.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
@@ -75,7 +75,7 @@ router.get('/:id', auth, async (req, res) => {
 router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Faculty.update(req.body, {
+  await Faculty.update(req.body, {
     where: { id },
   })
     .then((num) => {
@@ -100,7 +100,7 @@ router.put('/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Faculty.destroy({
+  await Faculty.destroy({
     where: { id },
   })
     .then((num) => {
@@ -123,7 +123,7 @@ router.delete('/:id', auth, async (req, res) => {
 
 // Delete all Facultys
 router.delete('/', auth, async (req, res) => {
-  Faculty.destroy({
+  await Faculty.destroy({
     where: {},
     truncate: false,
   })

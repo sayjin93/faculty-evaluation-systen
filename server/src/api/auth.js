@@ -5,7 +5,8 @@ const { Op } = require('sequelize');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
-const User = require('../models/user');
+// models
+const Professor = require('../models/professor');
 const Settings = require('../models/settings');
 
 const router = express.Router();
@@ -13,7 +14,7 @@ const router = express.Router();
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  User.findOne({
+  Professor.findOne({
     where: {
       [Op.or]: [{ username }, { email: username }],
     },
@@ -22,6 +23,12 @@ router.post('/login', (req, res) => {
       if (!user) {
         return res.status(404).json({
           message: 'User not found',
+        });
+      }
+
+      if (!user.is_verified) {
+        return res.status(410).json({
+          message: 'User is not verified. Please check your email',
         });
       }
 
@@ -37,16 +44,7 @@ router.post('/login', (req, res) => {
           });
         }
 
-        const jwtToken = jwt.sign(
-          {
-            id: user.id,
-            email: user.email,
-          },
-          process.env.JWT_SECRET,
-          {
-            expiresIn: '12h',
-          },
-        );
+        const jwtToken = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '12h' });
 
         // Return the token to the client
         res.json({
@@ -54,6 +52,7 @@ router.post('/login', (req, res) => {
             id: user.id,
             first_name: user.first_name,
             last_name: user.last_name,
+            gender: user.gender,
             username: user.username,
             email: user.email,
           },
@@ -68,41 +67,112 @@ router.post('/login', (req, res) => {
     });
 });
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const {
-    first_name, last_name, username, password, email,
+    first_name, last_name, gender, username, email, password,
   } = req.body;
 
-  // Check if username already exists
-  User.findOne({ where: { username } }).then((user) => {
-    if (user) {
-      return res.status(400).send({
-        message: 'Username or email already exists',
-      });
+  const full_email = email.includes('@') ? email : `${email}@uet.edu.al`;
+
+  try {
+    // Check if username already exists
+    const existingUser = await Professor.findOne({ where: { username } });
+    if (existingUser) {
+      return res.status(400).send({ message: 'Username already exists' });
     }
 
     // Check if email already exists
-    User.findOne({ where: { email } }).then((user2) => {
-      if (user2) {
-        return res.status(400).send({
-          message: 'Username or email already exists',
+    const existingEmail = await Professor.findOne({ where: { email: full_email } });
+    if (existingEmail) {
+      return res.status(400).send({ message: 'Email already exists' });
+    }
+
+    const verificationToken = crypto.randomBytes(20).toString('hex');
+
+    // Create and save the new user
+    const newUser = await Professor.create({
+      first_name,
+      last_name,
+      gender,
+      username,
+      email: full_email,
+      password,
+      is_admin: false,
+      is_verified: false,
+      is_deleted: false,
+      verificationToken, // Add the verification token
+      verificationTokenExpires: Date.now() + 3600000, // Token expires in 1 hour
+    });
+
+    newUser.save().then(async () => {
+      // Retrieve SMTP settings from the database or environment variables
+      const response = await Settings.findOne({ where: { name: 'Email' } });
+
+      if (!response) {
+        return res.status(500).json({
+          message: 'SMTP settings not found',
         });
       }
 
-      // Create a Users
-      const newUser = new User({
-        first_name,
-        last_name,
-        username,
-        password,
-        email,
-        isAdmin: false,
+      const emailSettings = typeof response.settings === 'string'
+        ? JSON.parse(response.settings)
+        : response.settings;
+
+      const {
+        smtp_sender, smtp_host, smtp_port, smtp_secure, smtp_user, smtp_pass,
+      } = emailSettings;
+
+      // Set up nodemailer transporter
+      const transporter = nodemailer.createTransport({
+        host: smtp_host,
+        port: smtp_port,
+        secure: smtp_secure,
+        auth: {
+          user: smtp_user,
+          pass: smtp_pass,
+        },
       });
 
-      newUser.save()
-        .then(() => res.json({ message: 'Thanks for registering' })).catch((err) => res.status(500).json({ message: err }));
+      const base_url = req.headers.origin;
+      const mailOptions = {
+        from: { name: smtp_sender, address: smtp_user },
+        to: full_email,
+        subject: 'Account Verification',
+        text: `Please click on the following link, or paste this into your browser to verify your account:\n\n${base_url}/verify/${verificationToken}\n\n`,
+      };
+
+      await transporter.sendMail(mailOptions);
+      res.json({ message: 'Thanks for registering. Please check your email to verify your account.' });
+    }).catch((err) => res.status(500).json({ message: err }));
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.get('/verify/:token', async (req, res) => {
+  const verificationToken = req.params.token;
+
+  try {
+    const user = await Professor.findOne({
+      where: {
+        verificationToken,
+        verificationTokenExpires: { [Op.gt]: Date.now() },
+      },
     });
-  });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Invalid or expired verification token' });
+    }
+
+    user.is_verified = true;
+    user.verificationToken = null;
+    user.verificationTokenExpires = null;
+    await user.save();
+
+    res.json({ message: 'Account verified successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 router.post('/reset', async (req, res) => {
@@ -131,6 +201,7 @@ router.post('/reset', async (req, res) => {
       smtp_sender, smtp_host, smtp_port, smtp_secure, smtp_user, smtp_pass,
     } = emailSettings;
 
+    // Set up nodemailer transporter
     const transporter = nodemailer.createTransport({
       host: smtp_host,
       port: smtp_port,
@@ -141,7 +212,7 @@ router.post('/reset', async (req, res) => {
       },
     });
 
-    User.findOne({
+    Professor.findOne({
       where: {
         [Op.or]: [{ username }, { email: username }],
       },
@@ -155,9 +226,9 @@ router.post('/reset', async (req, res) => {
 
         // Update the user with the reset token and expiration
         const resetToken = crypto.randomBytes(20).toString('hex');
-        const resetTokenExpiration = Date.now() + 3600000;
+        const resetTokenExpiration = Date.now() + 3600000; // Token expires in 1 hour
 
-        user.resetPasswordToken = resetToken;
+        user.resetPasswordToken = resetToken; // Add the verification token
         user.resetPasswordExpires = resetTokenExpiration;
 
         user.save().then(() => {
@@ -219,7 +290,7 @@ router.post('/reset', async (req, res) => {
 router.get('/reset/:token', (req, res) => {
   const resetToken = req.params.token;
 
-  User.findOne({
+  Professor.findOne({
     where: {
       resetPasswordToken: resetToken,
       resetPasswordExpires: { [Op.gt]: Date.now() }, // Check if token is still valid
@@ -247,7 +318,7 @@ router.post('/reset/:token', (req, res) => {
   const resetToken = req.params.token;
   const newPassword = req.body.password; // Assuming the field is named 'password'
 
-  User.findOne({
+  Professor.findOne({
     where: {
       resetPasswordToken: resetToken,
       resetPasswordExpires: { [Op.gt]: Date.now() },

@@ -1,7 +1,7 @@
 const Book = require('../../models/book');
 
 async function seed() {
-  const professorsCount = 10;
+  const professorsCount = 11;
   const academicYearsCount = 10;
 
   const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -68,7 +68,7 @@ async function seed() {
     publication_house: dummyPublicationHouses[randomInt(0, dummyPublicationHouses.length - 1)],
     publication_year: new Date(`${randomInt(2014, 2023)}-01-01`),
     academic_year_id: randomInt(1, academicYearsCount),
-    professor_id: randomInt(1, professorsCount),
+    professor_id: randomInt(2, professorsCount),
   });
 
   const booksData = Array.from({ length: 100 }, generateRandomBook);

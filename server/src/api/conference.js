@@ -30,7 +30,7 @@ router.post('/', auth, async (req, res) => {
   };
 
   // Save Conference in the database
-  Conference.create(conferenceData)
+  await Conference.create(conferenceData)
     .then((data) => {
       res.send(data);
     })
@@ -61,7 +61,7 @@ router.get('/', auth, async (req, res) => {
 router.get('/academic_year/:academic_year_id', auth, async (req, res) => {
   const { academic_year_id } = req.params;
 
-  Conference.findAll({
+  await Conference.findAll({
     where: { academic_year_id },
     include: [
       {
@@ -98,7 +98,7 @@ router.get('/academic_year/:academic_year_id', auth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Conference.findByPk(id)
+  await Conference.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
@@ -119,7 +119,7 @@ router.get('/:id', auth, async (req, res) => {
 router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Conference.update(req.body, {
+  await Conference.update(req.body, {
     where: { id },
   })
     .then((num) => {
@@ -144,7 +144,7 @@ router.put('/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Conference.destroy({
+  await Conference.destroy({
     where: { id },
   })
     .then((num) => {
@@ -167,7 +167,7 @@ router.delete('/:id', auth, async (req, res) => {
 
 // Delete all Conferences
 router.delete('/', auth, async (req, res) => {
-  Conference.destroy({
+  await Conference.destroy({
     where: {},
     truncate: false,
   })

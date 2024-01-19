@@ -4,7 +4,10 @@ import { initReactI18next } from "react-i18next";
 
 import { getCookie } from "./hooks";
 
-//language cookie
+//token localStorage
+const token = localStorage.getItem("jwt_token");
+
+// language cookie
 const language = getCookie({ name: "language" });
 const languageCookie = language || "en";
 
@@ -25,6 +28,9 @@ i18n
     backend: {
       loadPath: '/locales/{{lng}}.json',
       addPath: `${process.env.REACT_APP_API_URL}/locales/add`,
+      customHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
     },
   });
 

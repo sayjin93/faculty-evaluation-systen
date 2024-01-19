@@ -1,6 +1,9 @@
 const Conference = require('../../models/conference');
 
 async function seed() {
+  const professorsCount = 11;
+  const academicYearsCount = 10;
+
   const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
   const dummyConferenceNames = [
@@ -61,8 +64,8 @@ async function seed() {
     present_title: dummyPresentTitles[randomInt(0, dummyPresentTitles.length - 1)],
     authors: dummyAuthors[randomInt(0, dummyAuthors.length - 1)],
     dates: `20/${randomInt(1, 12)}/202${randomInt(1, 3)} - 24/${randomInt(1, 12)}/202${randomInt(1, 3)}`,
-    academic_year_id: randomInt(1, 10), // Random academic year ID between 1 and 10
-    professor_id: randomInt(1, 10), // Random professor ID between 1 and 10
+    academic_year_id: randomInt(1, academicYearsCount), // Random academic year ID between 1 and 10
+    professor_id: randomInt(2, professorsCount), // Random professor ID between 1 and 10
   });
 
   const conferencesData = Array.from({ length: 100 }, generateRandomConference);

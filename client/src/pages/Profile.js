@@ -23,7 +23,7 @@ import { cilLockLocked, cilUser } from "@coreui/icons";
 import { AiOutlineUser, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 //hooks
-import { convertToKey } from "src/hooks"
+import { capitalizeWords, convertToKey } from "src/hooks"
 import api from "src/hooks/api";
 
 //store
@@ -60,16 +60,22 @@ const Settings = () => {
   //#endregion
 
   //#region functions
-
   const handleInputChange = (event, fieldName) => {
-    const inputValue = event.target.value;
+    let inputValue = event.target.value;
+
+    // Capitalize the first letter of each word for firstName and lastName fields
+    if (fieldName === "firstName" || fieldName === "lastName") {
+      inputValue = capitalizeWords(inputValue);
+    }
 
     setUserData({
       ...userData,
-      [fieldName]: event.target.value,
+      [fieldName]: inputValue,
     });
 
-    if (fieldName === "newPassword") checkPasswordCriteria(inputValue);
+    if (fieldName === "newPassword") {
+      checkPasswordCriteria(inputValue);
+    }
   };
 
   const handeViewPassStateChange = (key, value) => {
@@ -120,7 +126,7 @@ const Settings = () => {
           first_name: userData.firstName,
           last_name: userData.lastName,
           username: userData.username,
-          email: userData.email,
+          email: userData.email.toLowerCase().replace(/\s+/g, ''),
           currentPassword: userData.currentPassword,
           newPassword: userData.newPassword,
         })
@@ -308,7 +314,7 @@ const Settings = () => {
             </CCol>
 
             <CCol sm={6}>
-              <PasswordCriteria password={userData.newPassword} />
+              <PasswordCriteria password={userData.newPassword} className="passwordCriteria-light" />
             </CCol>
 
           </CRow>

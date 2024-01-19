@@ -25,7 +25,7 @@ router.post('/', auth, async (req, res) => {
   };
 
   // Save Department in the database
-  Department.create(DepartmentData)
+  await Department.create(DepartmentData)
     .then((data) => {
       res.send(data);
     })
@@ -75,7 +75,7 @@ router.get('/', auth, async (req, res) => {
 // Retrieve all Departments of a Faculty
 router.get('/faculty/:faculty_id', async (req, res) => {
   const { faculty_id } = req.params;
-  Department.findAll({ where: { faculty_id } })
+  await Department.findAll({ where: { faculty_id } })
     .then((data) => {
       res.send(data);
     })
@@ -91,7 +91,7 @@ router.get('/faculty/:faculty_id', async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Department.findByPk(id)
+  await Department.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
@@ -112,7 +112,7 @@ router.get('/:id', auth, async (req, res) => {
 router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Department.update(req.body, {
+  await Department.update(req.body, {
     where: { id },
   })
     .then((num) => {
@@ -137,7 +137,7 @@ router.put('/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Department.destroy({
+  await Department.destroy({
     where: { id },
   })
     .then((num) => {
@@ -160,7 +160,7 @@ router.delete('/:id', auth, async (req, res) => {
 
 // Delete all Departments
 router.delete('/', auth, async (req, res) => {
-  Department.destroy({
+  await Department.destroy({
     where: {},
     truncate: false,
   })

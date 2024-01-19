@@ -25,7 +25,7 @@ router.post('/', auth, async (req, res) => {
   };
 
   // Save Academic Year in the database
-  AcademicYear.create(AcademicYearData)
+  await AcademicYear.create(AcademicYearData)
     .then((data) => {
       res.send(data);
     })
@@ -55,7 +55,7 @@ router.get('/', auth, async (req, res) => {
 
 // Retrieve all published Academic Years
 router.get('/active', auth, async (req, res) => {
-  AcademicYear.findAll({ where: { active: true } })
+  await AcademicYear.findAll({ where: { active: true } })
     .then((data) => {
       res.send(data);
     })
@@ -71,7 +71,7 @@ router.get('/active', auth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  AcademicYear.findByPk(id)
+  await AcademicYear.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
@@ -92,7 +92,7 @@ router.get('/:id', auth, async (req, res) => {
 router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  AcademicYear.update(req.body, {
+  await AcademicYear.update(req.body, {
     where: { id },
   })
     .then((num) => {
@@ -118,14 +118,14 @@ router.put('/active/:id', auth, async (req, res) => {
   const activeId = req.params.id;
 
   // Set the active property to false for all rows except the specified id
-  AcademicYear.update(
+  await AcademicYear.update(
     { active: false },
     { where: { id: { [Sequelize.Op.ne]: activeId } } },
   )
-    .then((num) => {
+    .then(async (num) => {
       if (Number(num) > 0) {
         // Set the active property to true for the specified id
-        AcademicYear.update({ active: true }, { where: { id: activeId } })
+        await AcademicYear.update({ active: true }, { where: { id: activeId } })
           .then(() => {
             res.send({
               message: 'Academic Year active status updated successfully.',
@@ -154,7 +154,7 @@ router.put('/active/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  AcademicYear.destroy({
+  await AcademicYear.destroy({
     where: { id },
   })
     .then((num) => {
@@ -177,7 +177,7 @@ router.delete('/:id', auth, async (req, res) => {
 
 // Delete all Academic Years
 router.delete('/', auth, async (req, res) => {
-  AcademicYear.destroy({
+  await AcademicYear.destroy({
     where: {},
     truncate: false,
   })

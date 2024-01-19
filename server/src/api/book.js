@@ -28,7 +28,7 @@ router.post('/', auth, async (req, res) => {
   };
 
   // Save Book in the database
-  Book.create(bookData)
+  await Book.create(bookData)
     .then((data) => {
       res.send(data);
     })
@@ -60,7 +60,7 @@ router.get('/', auth, async (req, res) => {
 router.get('/academic_year/:academic_year_id', auth, async (req, res) => {
   const { academic_year_id } = req.params;
 
-  Book.findAll({
+  await Book.findAll({
     where: { academic_year_id },
     include: [
       {
@@ -95,7 +95,7 @@ router.get('/academic_year/:academic_year_id', auth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Book.findByPk(id)
+  await Book.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
@@ -116,7 +116,7 @@ router.get('/:id', auth, async (req, res) => {
 router.put('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Book.update(req.body, {
+  await Book.update(req.body, {
     where: { id },
   })
     .then((num) => {
@@ -141,7 +141,7 @@ router.put('/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
 
-  Book.destroy({
+  await Book.destroy({
     where: { id },
   })
     .then((num) => {
@@ -164,7 +164,7 @@ router.delete('/:id', auth, async (req, res) => {
 
 // Delete all Books
 router.delete('/', auth, async (req, res) => {
-  Book.destroy({
+  await Book.destroy({
     where: {},
     truncate: false,
   })

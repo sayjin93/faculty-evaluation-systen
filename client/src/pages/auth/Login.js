@@ -83,6 +83,7 @@ const Login = () => {
           id: user.id,
           first_name: user.first_name,
           last_name: user.last_name,
+          gender: user.gender,
           username: user.username,
           email: user.email,
         };
@@ -97,7 +98,7 @@ const Login = () => {
 
           dispatch(
             showToast({
-              type: "danger",
+              type: status !== 500 ? "warning" : "danger",
               content: status !== 500 ? t(convertToKey(data.message)) : data.message,
             })
           );

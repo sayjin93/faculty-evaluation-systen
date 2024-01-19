@@ -8,21 +8,23 @@ import { RxCheck, RxCross2 } from "react-icons/rx";
 const CheckCriteria = ({ valid, children }) => {
     const iconProps = {
         className: `text-${valid ? "success" : "danger"}`,
-        style: { fontSize: "18px" },
+        style: { fontSize: "22px" },
     };
 
     const fillLineProps = {
         style: {
             flexGrow: 1,
             height: 1,
-            borderBottom: "1px dashed #d8dbe0",
+            borderWidth: "0 0 1px 0",
+            borderStyle: "dashed",
+            borderColor: "rgba(255, 255, 255, 0.3)",
         },
     };
 
     return (
         <div className="flex flex-center flex-gap-10">
             {valid ? <RxCheck {...iconProps} /> : <RxCross2 {...iconProps} />}
-            {children}
+            <span>{children}</span>
             <span {...fillLineProps} />
         </div>
     );
@@ -41,13 +43,13 @@ export const checkPasswordCriteria = (password) => {
 
 
 // PasswordCriteria Component
-const PasswordCriteria = ({ password }) => {
+const PasswordCriteria = ({ password, className = "" }) => {
     const { t } = useTranslation();
 
     const passwordCriteria = checkPasswordCriteria(password);
 
     return (
-        <div id="passwordCriteria">
+        <div id="passwordCriteria" className={className}>
             <CListGroup className="list-group-noBorder">
                 <CListGroupItem>
                     <CheckCriteria valid={passwordCriteria.lowercase}>
