@@ -28,9 +28,9 @@ const sequelize = new Sequelize(
     if (process.env.DEFAULT_DATA === 'true') {
       // Define an array of seed functions (ordered list)
       const seeds = [
+        require('./seeders/admin'),
         require('./seeders/faculty'),
         require('./seeders/department'),
-        require('./seeders/user'),
         require('./seeders/academicYear'),
         require('./seeders/professor'),
         require('./seeders/course'),
@@ -44,6 +44,11 @@ const sequelize = new Sequelize(
       // Execute all seed functions in parallel using Promise.all
       await Promise.all(seeds.map((seed) => seed()));
       console.log('Seeding completed successfully!'.bgGreen);
+    } else {
+      // Seed admin data
+      const adminSeeder = require('./seeders/admin');
+      await adminSeeder();
+      console.log('Admin seeding completed successfully!'.bgGreen);
     }
   } catch (error) {
     // Handle any errors that occur during the process
