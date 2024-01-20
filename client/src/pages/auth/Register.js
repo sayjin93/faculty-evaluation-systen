@@ -28,7 +28,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 //hooks
 import api from "src/hooks/api";
-import { capitalizeWords, convertToKey } from "src/hooks";
+import { capitalizeWords, convertToKey, getCookie, lowercaseNoSpace } from "src/hooks";
 
 //store
 import { showToast } from "src/store";
@@ -76,7 +76,7 @@ const Register = () => {
       const lastName = fieldName === "lastName" ? inputValue : user.lastName;
 
       if (firstName && lastName) {
-        const username = `${firstName[0]}${lastName}`.toLowerCase().replace(/\s+/g, '');
+        const username = lowercaseNoSpace(`${firstName[0]}${lastName}`);
         newUser.username = username;
         newUser.email = username;
       }
@@ -136,15 +136,19 @@ const Register = () => {
         })
       );
     } else {
+      const language = getCookie({ name: "language" });
+      const languageCookie = language || "en";
+
       setIsLoading(true);
 
       await api
         .post("/register", {
+          language: languageCookie,
           first_name: capitalizeWords(user.firstName.replace(/\s+/g, '')),
           last_name: capitalizeWords(user.lastName.replace(/\s+/g, '')),
           gender: user.gender,
-          username: user.username.toLowerCase().replace(/\s+/g, ''),
-          email: user.email.toLowerCase().replace(/\s+/g, '').split('@')[0],
+          username: lowercaseNoSpace(user.username),
+          email: lowercaseNoSpace(user.email).split('@')[0],
           password: user.password,
         })
         .then((response) => {

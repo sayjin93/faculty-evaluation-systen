@@ -15,6 +15,7 @@ import {
   CRow,
   CCol,
   CSpinner,
+  CFormSelect,
 } from "@coreui/react";
 
 //react-icons
@@ -23,7 +24,7 @@ import { cilLockLocked, cilUser } from "@coreui/icons";
 import { AiOutlineUser, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 //hooks
-import { capitalizeWords, convertToKey } from "src/hooks"
+import { capitalizeWords, convertToKey, lowercaseNoSpace } from "src/hooks"
 import api from "src/hooks/api";
 
 //store
@@ -32,6 +33,7 @@ import { getLoggedUser } from "src/store/selectors";
 
 //components
 import PasswordCriteria, { checkPasswordCriteria } from "src/components/PasswordCriteria";
+import { PiGenderIntersexDuotone } from "react-icons/pi";
 
 const Settings = () => {
   //#region constants
@@ -45,6 +47,7 @@ const Settings = () => {
   const [userData, setUserData] = useState({
     firstName: currentUser.first_name,
     lastName: currentUser.last_name,
+    gender: currentUser.gender,
     username: currentUser.username,
     email: currentUser.email,
     currentPassword: "",
@@ -64,9 +67,10 @@ const Settings = () => {
     let inputValue = event.target.value;
 
     // Capitalize the first letter of each word for firstName and lastName fields
-    if (fieldName === "firstName" || fieldName === "lastName") {
-      inputValue = capitalizeWords(inputValue);
-    }
+    if (fieldName === "firstName" || fieldName === "lastName") inputValue = capitalizeWords(inputValue);
+
+    //Lowercase the text of username
+    if (fieldName === "username") inputValue = lowercaseNoSpace(inputValue);
 
     setUserData({
       ...userData,
@@ -87,87 +91,96 @@ const Settings = () => {
     })
   }
 
+  const updateUserData = async () => {
+    setIsLoading(true);
+
+    await api
+      .put("professor/" + currentUser.id, {
+        first_name: userData.firstName,
+        last_name: userData.lastName,
+        gender: userData.gender,
+        username: userData.username,
+        currentPassword: userData.currentPassword,
+        newPassword: userData.newPassword,
+      })
+      .then((response) => {
+        const loggedUser = {
+          id: currentUser.id,
+          first_name: response.data.first_name,
+          last_name: response.data.last_name,
+          gender: response.data.gender,
+          username: response.data.username,
+          email: response.data.email,
+        };
+
+        setUserData((prevState) => {
+          dispatch(setUser(loggedUser));
+
+          dispatch(
+            showToast({
+              type: "success",
+              content: t("UserWasEditedSuccessfully"),
+            })
+          );
+
+          return {
+            ...prevState,
+            currentPassword: "",
+            newPassword: "",
+            repeatPassword: "",
+          }
+        })
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: t(convertToKey(error.response.data.message)),
+          })
+        );
+      });
+
+    setIsLoading(false);
+  }
+
   const handleUserUpdate = async (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    // Use the checkPasswordCriteria function on the current password
-    const passwordCriteria = checkPasswordCriteria(userData.newPassword);
-    let areAllTrue = Object.values(passwordCriteria).every(value => value === true);
-
-
-    if (!areAllTrue) {
-      dispatch(
-        showToast({
-          type: "danger",
-          content: t("PasswordCriteriaNotMet"),
-        })
-      );
-
-      //scroll to criteria list
-      const element = document.getElementById("passwordCriteria");
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    } else if (userData.newPassword !== "" && (userData.newPassword !== userData.repeatPassword)) {
-      dispatch(
-        showToast({
-          type: "danger",
-          content: t("NewAndRepeatPasswordDidNotMatch"),
-        })
-      );
-      return;
-    }
-    else {
-      setIsLoading(true);
-
-      await api
-        .put("user/" + currentUser.id, {
-          first_name: userData.firstName,
-          last_name: userData.lastName,
-          username: userData.username,
-          email: userData.email.toLowerCase().replace(/\s+/g, ''),
-          currentPassword: userData.currentPassword,
-          newPassword: userData.newPassword,
-        })
-        .then((response) => {
-          const loggedUser = {
-            id: currentUser.id,
-            first_name: response.data.first_name,
-            last_name: response.data.last_name,
-            username: response.data.username,
-            email: response.data.email,
-          };
-
-          setUserData((prevState) => {
-            dispatch(setUser(loggedUser));
-            dispatch(
-              showToast({
-                type: "success",
-                content: t("UserWasEditedSuccessfully"),
-              })
-            );
-
-            return {
-              ...prevState,
-              currentPassword: "",
-              newPassword: "",
-              repeatPassword: "",
-            }
+    if (userData.newPassword !== "") {
+      if (userData.newPassword !== userData.repeatPassword) {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: t("NewAndRepeatPasswordDidNotMatch"),
           })
-        })
-        .catch((error) => {
+        );
+        return;
+      } else {
+        // Use the checkPasswordCriteria function on the current password
+        const passwordCriteria = checkPasswordCriteria(userData.newPassword);
+        let areAllTrue = Object.values(passwordCriteria).every(value => value === true);
+
+        if (!areAllTrue) {
           dispatch(
             showToast({
               type: "danger",
-              content: t(convertToKey(error.response.data.message)),
+              content: t("PasswordCriteriaNotMet"),
             })
           );
-        });
 
-      setIsLoading(false);
+          //scroll to criteria list
+          const element = document.getElementById("passwordCriteria");
+          if (element) element.scrollIntoView({ behavior: "smooth" });
+        } else {
+          updateUserData();
+        }
+      };
     }
-  };
+    else {
+      updateUserData();
+    }
+  }
   //#endregion
 
   return (
@@ -182,7 +195,7 @@ const Settings = () => {
         </CCardHeader>
 
         <CCardBody>
-          <CRow
+          <CRow className="mb-3"
             xs={{ cols: 1, gutter: 3 }}
             lg={{ cols: 2 }}
           >
@@ -203,14 +216,37 @@ const Settings = () => {
                 onChange={(event) => handleInputChange(event, "lastName")}
               />
             </CCol>
+          </CRow>
 
+          <CRow className="mb-3"
+            xs={{ cols: 1, gutter: 3 }}>
+            <CCol sm={12}>
+              <CInputGroup>
+                <CInputGroupText>
+                  <PiGenderIntersexDuotone />
+                </CInputGroupText>
+                <CFormSelect
+                  floatingLabel={t("Gender")}
+                  value={userData.gender}
+                  onChange={(event) => handleInputChange(event, "gender")}
+                >
+                  <option value="m">{t("Male")}</option>
+                  <option value="f">{t("Female")}</option>
+                </CFormSelect>
+              </CInputGroup>
+            </CCol>
+          </CRow>
+
+          <CRow
+            xs={{ cols: 1, gutter: 3 }}
+            lg={{ cols: 2 }}
+          >
             <CCol sm={6}>
               <CInputGroup>
                 <CInputGroupText>
                   <CIcon icon={cilUser} />
                 </CInputGroupText>
                 <CFormInput
-                  disabled
                   title={t("NotAllowedToEdit")}
                   type="text"
                   placeholder={t("Username")}
@@ -225,17 +261,17 @@ const Settings = () => {
               <CInputGroup>
                 <CInputGroupText>@</CInputGroupText>
                 <CFormInput
+                  disabled
                   type="email"
                   placeholder={t("Email")}
                   value={userData.email}
                   size="sm"
-                  onChange={(event) => handleInputChange(event, "email")}
+                // onChange={(event) => handleInputChange(event, "email")}
                 />
               </CInputGroup>
             </CCol>
           </CRow>
         </CCardBody>
-
       </CCard>
 
       {/* Password */}
@@ -313,9 +349,9 @@ const Settings = () => {
               </CRow>
             </CCol>
 
-            <CCol sm={6}>
+            {userData.newPassword && <CCol sm={6}>
               <PasswordCriteria password={userData.newPassword} className="passwordCriteria-light" />
-            </CCol>
+            </CCol>}
 
           </CRow>
         </CCardBody>
@@ -332,7 +368,7 @@ const Settings = () => {
         </CCol>
       </CRow>
 
-    </CForm>
+    </CForm >
   );
 };
 

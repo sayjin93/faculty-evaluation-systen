@@ -16,6 +16,7 @@ import {
 
 //hooks
 import api from "src/hooks/api";
+import { convertToKey } from "src/hooks";
 
 const VerifyToken = () => {
   //#region constants
@@ -34,12 +35,12 @@ const VerifyToken = () => {
     api.get(`/verify/${token}`)
       .then((response) => {
         setStatus(true);
-        setMessage(response.data.message);
+        setMessage(t(convertToKey(response.data.message)));
         setIsLoading(false);
       })
       .catch((error) => {
         setStatus(false);
-        setMessage(error.response ? error.response.data.message : 'An error occurred');
+        setMessage(error.response ? t(convertToKey(error.response.data.message)) : t('AnErrorOccured'));
         setIsLoading(false);
       });
 
@@ -47,7 +48,6 @@ const VerifyToken = () => {
   //#endregion
 
   if (isLoading) {
-    debugger;
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <CSpinner color="primary" />

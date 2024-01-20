@@ -202,7 +202,6 @@ const Professors = () => {
   };
 
   const handleInputChange = (event, fieldName) => {
-    debugger;
     const checkboxVal = event.target.checked;
     const textboxVal = event.target.value;
 
@@ -248,7 +247,6 @@ const Professors = () => {
       </div>)
   }
   const cellRenderVerified = ({ data }) => {
-    debugger;
     const checked = data.is_verified ? <ImCheckmark title={t("Verified")} className="text-success" /> : <ImCross title={t("Disabled")} className="text-danger" />;
     return checked;
   };

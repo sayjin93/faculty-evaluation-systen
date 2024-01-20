@@ -88,6 +88,10 @@ export function convertToKey(text) {
 export function capitalizeWords(str) {
   return str.replace(/\b\w/g, function (l) { return l.toUpperCase() });
 }
+export function lowercaseNoSpace(text) {
+  return text.replace(/\s+/g, '').toLowerCase();
+}
+
 //#endregion
 
 //#region constants

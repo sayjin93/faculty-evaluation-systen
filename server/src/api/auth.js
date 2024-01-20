@@ -5,11 +5,11 @@ const { Op } = require('sequelize');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
-// models
-const Professor = require('../models/professor');
-const Settings = require('../models/settings');
-
 const router = express.Router();
+
+// Models
+const Professor = require('../models/professor'); // Professor Model
+const Settings = require('../models/settings'); // Settings Model
 
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -69,7 +69,7 @@ router.post('/login', (req, res) => {
 
 router.post('/register', async (req, res) => {
   const {
-    first_name, last_name, gender, username, email, password,
+    language, first_name, last_name, gender, username, email, password,
   } = req.body;
 
   const full_email = email.includes('@') ? email : `${email}@uet.edu.al`;
@@ -134,11 +134,24 @@ router.post('/register', async (req, res) => {
       });
 
       const base_url = req.headers.origin;
+      let emailSubject;
+      let emailText;
+      if (language === 'sq') {
+        emailSubject = 'Verifikimi i llogarisë';
+        emailText = `Ju lutemi klikoni në linkun e mëposhtme ose kopjojeni atë në shfletuesin tuaj për të verifikuar llogarinë tuaj:\n\n${base_url}/verify/${verificationToken}\n\n`;
+      } else {
+        emailSubject = 'Account Verification';
+        emailText = `Please click on the following link, or paste this into your browser to verify your account:\n\n${base_url}/verify/${verificationToken}\n\n`;
+      }
+
       const mailOptions = {
-        from: { name: smtp_sender, address: smtp_user },
-        to: full_email,
-        subject: 'Account Verification',
-        text: `Please click on the following link, or paste this into your browser to verify your account:\n\n${base_url}/verify/${verificationToken}\n\n`,
+        from: {
+          name: smtp_sender, // Your Sender name
+          address: smtp_user, // Your email address
+        },
+        to: full_email, // User's email address
+        subject: emailSubject,
+        text: emailText,
       };
 
       await transporter.sendMail(mailOptions);
@@ -161,7 +174,7 @@ router.get('/verify/:token', async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ message: 'Invalid or expired verification token' });
+      return res.status(404).json({ message: 'Invalid or expired token' });
     }
 
     user.is_verified = true;

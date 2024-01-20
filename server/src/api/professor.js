@@ -1,11 +1,13 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const passport = require('passport');
 
-const Professor = require('../models/professor');
-
 const router = express.Router();
-
 const auth = passport.authenticate('jwt', { session: false });
+
+const Professor = require('../models/professor'); // Professor Model
+
+const { capitalizeWords, lowercaseNoSpace } = require('../utils'); // Utils
 
 // Create a new Professor
 router.post('/', auth, async (req, res) => {
@@ -18,11 +20,11 @@ router.post('/', auth, async (req, res) => {
   }
 
   const professorData = {
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
+    first_name: capitalizeWords(req.body.first_name),
+    last_name: capitalizeWords(req.body.last_name),
     gender: req.body.gender,
-    username: req.body.username,
-    email: req.body.email,
+    username: lowercaseNoSpace(req.body.username),
+    email: lowercaseNoSpace(req.body.email),
     is_verified: 1,
     is_deleted: 0,
     is_admin: 0,
@@ -91,36 +93,84 @@ router.get('/:id', auth, async (req, res) => {
 });
 
 // Update a Professor with id
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', auth, (req, res) => {
   const { id } = req.params;
+  const {
+    first_name, last_name, gender, username, currentPassword, newPassword,
+  } = req.body;
 
-  const professorData = {
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
-    gender: req.body.gender,
-    username: req.body.username,
-    email: req.body.email,
-    is_verified: req.body.is_verified,
-    is_deleted: req.body.is_deleted,
-  };
-
-  await Professor.update(professorData, {
-    where: { id },
-  })
-    .then((num) => {
-      if (Number(num) === 1) {
-        res.send({
-          message: 'Professor was updated successfully',
+  // Fetch the user
+  Professor.findByPk(id)
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({
+          message: 'User not found!',
         });
-      } else {
-        res.send({
-          message: `Cannot update Professor with id=${id}. Maybe Professor was not found or req.body is empty!`,
-        });
+        return;
       }
+
+      // Check if current password is correct
+      bcrypt.compare(currentPassword, user.password, async (err, result) => {
+        if (err) {
+          res.status(500).send({
+            message: 'Internal server error.',
+          });
+          return;
+        }
+
+        // If the current password is not correct, return an error message
+        if (!result) {
+          res.status(401).send({
+            message: 'Current password is not correct',
+          });
+          return;
+        }
+
+        // Prepare the update object
+        const updateObject = {
+          first_name: capitalizeWords(first_name),
+          last_name: capitalizeWords(last_name),
+          gender,
+          username: lowercaseNoSpace(username),
+        };
+
+        // Check if newPassword is provided
+        if (newPassword) {
+          updateObject.password = newPassword;
+        }
+
+        // Update the Professor
+        Professor.update(updateObject, { where: { id } })
+          .then((num) => {
+            if (Number(num) === 1) {
+              // Fetch updated user data
+              Professor.findByPk(id, {
+                attributes: [
+                  'first_name',
+                  'last_name',
+                  'gender',
+                  'username',
+                  'email',
+                ],
+              }).then((updatedUser) => {
+                res.send(updatedUser);
+              });
+            } else {
+              res.send({
+                message: `Cannot update Professor with id=${id}. Maybe Professor was not found or req.body is empty!`,
+              });
+            }
+          })
+          .catch(() => {
+            res.status(500).send({
+              message: `Error updating Professor with id=${id}`,
+            });
+          });
+      });
     })
     .catch(() => {
       res.status(500).send({
-        message: `Error updating Professor with id=${id}`,
+        message: `Error retrieving Professor with id=${id}`,
       });
     });
 });
