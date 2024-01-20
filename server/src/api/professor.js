@@ -11,20 +11,29 @@ const { capitalizeWords, lowercaseNoSpace } = require('../utils'); // Utils
 
 // Create a new Professor
 router.post('/', auth, async (req, res) => {
+  const {
+    first_name, last_name, gender, username, email,
+  } = req.body;
+
   // Validate request
-  if (!req.body.first_name || !req.body.last_name || !req.body.gender || !req.body.username || !req.body.email) {
+  if (!first_name || !last_name || !gender || !username || !email) {
     res.status(400).send({
       message: 'Content can not be empty',
     });
     return;
   }
 
+  const new_first_name = capitalizeWords(first_name);
+  const new_last_name = capitalizeWords(last_name);
+  const new_username = lowercaseNoSpace(username);
+  const new_email = lowercaseNoSpace(email);
+
   const professorData = {
-    first_name: capitalizeWords(req.body.first_name),
-    last_name: capitalizeWords(req.body.last_name),
+    first_name: new_first_name,
+    last_name: new_last_name,
     gender: req.body.gender,
-    username: lowercaseNoSpace(req.body.username),
-    email: lowercaseNoSpace(req.body.email),
+    username: new_username,
+    email: new_email,
     is_verified: 1,
     is_deleted: 0,
     is_admin: 0,
@@ -99,6 +108,10 @@ router.put('/:id', auth, (req, res) => {
     first_name, last_name, gender, username, currentPassword, newPassword,
   } = req.body;
 
+  const new_first_name = capitalizeWords(first_name);
+  const new_last_name = capitalizeWords(last_name);
+  const new_username = lowercaseNoSpace(username);
+
   // Fetch the user
   Professor.findByPk(id)
     .then((user) => {
@@ -128,10 +141,10 @@ router.put('/:id', auth, (req, res) => {
 
         // Prepare the update object
         const updateObject = {
-          first_name: capitalizeWords(first_name),
-          last_name: capitalizeWords(last_name),
+          first_name: new_first_name,
+          last_name: new_last_name,
           gender,
-          username: lowercaseNoSpace(username),
+          username: new_username,
         };
 
         // Check if newPassword is provided

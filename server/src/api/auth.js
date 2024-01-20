@@ -7,16 +7,19 @@ const nodemailer = require('nodemailer');
 
 const router = express.Router();
 
-// Models
 const Professor = require('../models/professor'); // Professor Model
 const Settings = require('../models/settings'); // Settings Model
+
+const { capitalizeWords, lowercaseNoSpace } = require('../utils'); // Utils
 
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
+  const new_username = lowercaseNoSpace(username);
+
   Professor.findOne({
     where: {
-      [Op.or]: [{ username }, { email: username }],
+      [Op.or]: [{ username: new_username }, { email: new_username }],
     },
   })
     .then((user) => {
@@ -72,11 +75,16 @@ router.post('/register', async (req, res) => {
     language, first_name, last_name, gender, username, email, password,
   } = req.body;
 
-  const full_email = email.includes('@') ? email : `${email}@uet.edu.al`;
+  const new_first_name = capitalizeWords(first_name);
+  const new_last_name = capitalizeWords(last_name);
+  const new_username = lowercaseNoSpace(username);
+  const new_email = lowercaseNoSpace(email);
+
+  const full_email = new_email.includes('@') ? new_email : `${new_email}@uet.edu.al`;
 
   try {
     // Check if username already exists
-    const existingUser = await Professor.findOne({ where: { username } });
+    const existingUser = await Professor.findOne({ where: { username: new_username } });
     if (existingUser) {
       return res.status(400).send({ message: 'Username already exists' });
     }
@@ -91,10 +99,10 @@ router.post('/register', async (req, res) => {
 
     // Create and save the new user
     const newUser = await Professor.create({
-      first_name,
-      last_name,
+      first_name: new_first_name,
+      last_name: new_last_name,
       gender,
-      username,
+      username: new_username,
       email: full_email,
       password,
       is_admin: false,
@@ -191,7 +199,9 @@ router.get('/verify/:token', async (req, res) => {
 router.post('/reset', async (req, res) => {
   const { username, language } = req.body;
 
-  if (!username) {
+  const new_username = capitalizeWords(username);
+
+  if (!new_username) {
     return res.status(400).json({
       message: 'Please provide either username or email',
     });
@@ -227,7 +237,7 @@ router.post('/reset', async (req, res) => {
 
     Professor.findOne({
       where: {
-        [Op.or]: [{ username }, { email: username }],
+        [Op.or]: [{ username: new_username }, { email: new_username }],
       },
     })
       .then((user) => {

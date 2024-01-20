@@ -42,7 +42,6 @@ import { getModal } from "src/store/selectors";
 //components
 import CustomDataGrid from "src/components/CustomDataGrid";
 
-
 const Professors = () => {
   //#region constants
   const { t } = useTranslation();
