@@ -28,13 +28,20 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 //hooks
 import api from "src/hooks/api";
-import { capitalizeWords, convertToKey, getCookie, lowercaseNoSpace } from "src/hooks";
+import {
+  capitalizeWords,
+  convertToKey,
+  getCookie,
+  lowercaseNoSpace,
+} from "src/hooks";
 
 //store
 import { showToast } from "src/store";
 
 //components
-import PasswordCriteria, { checkPasswordCriteria } from "src/components/PasswordCriteria";
+import PasswordCriteria, {
+  checkPasswordCriteria,
+} from "src/components/PasswordCriteria";
 import LanguagesDropdown from "src/components/LanguagesDropdown";
 
 const Register = () => {
@@ -113,7 +120,9 @@ const Register = () => {
 
     // Use the checkPasswordCriteria function on the current password
     const passwordCriteria = checkPasswordCriteria(user.password);
-    let areAllTrue = Object.values(passwordCriteria).every(value => value === true);
+    let areAllTrue = Object.values(passwordCriteria).every(
+      (value) => value === true
+    );
 
     if (!areAllTrue) {
       dispatch(
@@ -144,11 +153,11 @@ const Register = () => {
       await api
         .post("/register", {
           language: languageCookie,
-          first_name: capitalizeWords(user.firstName.replace(/\s+/g, '')),
-          last_name: capitalizeWords(user.lastName.replace(/\s+/g, '')),
+          first_name: capitalizeWords(user.firstName.replace(/\s+/g, "")),
+          last_name: capitalizeWords(user.lastName.replace(/\s+/g, "")),
           gender: user.gender,
           username: lowercaseNoSpace(user.username),
-          email: lowercaseNoSpace(user.email).split('@')[0],
+          email: lowercaseNoSpace(user.email).split("@")[0],
           password: user.password,
         })
         .then((response) => {
@@ -237,7 +246,9 @@ const Register = () => {
                           <CFormSelect
                             floatingLabel={t("Gender")}
                             value={user.gender}
-                            onChange={(event) => handleInputChange(event, "gender")}
+                            onChange={(event) =>
+                              handleInputChange(event, "gender")
+                            }
                           >
                             <option value="m">{t("Male")}</option>
                             <option value="f">{t("Female")}</option>
@@ -252,7 +263,6 @@ const Register = () => {
                           <CFormInput
                             required
                             type="text"
-                            autoComplete="username"
                             placeholder={t("Username")}
                             value={user.username}
                             onChange={(event) =>
@@ -268,15 +278,15 @@ const Register = () => {
                           <CFormInput
                             aria-describedby="emal"
                             required
-                            autoComplete="email"
                             placeholder={t("Email")}
                             value={user.email}
                             onChange={(event) =>
                               handleInputChange(event, "email")
                             }
                           />
-                          <CInputGroupText id="emal">@uet.edu.al</CInputGroupText>
-
+                          <CInputGroupText id="emal">
+                            @uet.edu.al
+                          </CInputGroupText>
                         </CInputGroup>
                       </CCol>
                     </CRow>
@@ -290,7 +300,6 @@ const Register = () => {
                           <CFormInput
                             required
                             type={viewPass.new ? "text" : "password"}
-                            autoComplete="new-password"
                             placeholder={t("Password")}
                             value={user.password}
                             onChange={(event) =>
@@ -321,7 +330,6 @@ const Register = () => {
                           <CFormInput
                             required
                             type={viewPass.retype ? "text" : "password"}
-                            autoComplete="new-password"
                             placeholder={t("RepeatPassword")}
                             value={user.repeatPassword}
                             onChange={(event) =>

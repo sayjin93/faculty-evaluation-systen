@@ -297,7 +297,6 @@ const Profile = () => {
                       required
                       type={viewPass.current ? "text" : "password"}
                       placeholder={t("CurrentPassword") + "*"}
-                      autoComplete="current-password"
                       value={userData.currentPassword}
                       onChange={(event) =>
                         handleInputChange(event, "currentPassword")
@@ -328,7 +327,6 @@ const Profile = () => {
                     <CFormInput
                       type={viewPass.new ? "text" : "password"}
                       placeholder={t("NewPassword")}
-                      autoComplete="new-password"
                       value={userData.newPassword}
                       onChange={(event) =>
                         handleInputChange(event, "newPassword")
@@ -360,7 +358,6 @@ const Profile = () => {
                       type={viewPass.retype ? "text" : "password"}
                       disabled={userData.newPassword === ""}
                       placeholder={t("RepeatPassword")}
-                      autoComplete="new-password"
                       value={userData.repeatPassword}
                       onChange={(event) =>
                         handleInputChange(event, "repeatPassword")

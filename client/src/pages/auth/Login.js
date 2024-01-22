@@ -22,7 +22,7 @@ import {
 //icons
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 //hooks
 import { convertToKey } from "src/hooks";
@@ -52,8 +52,8 @@ const Login = () => {
 
   //#region functions
   const handeViewPassStateChange = () => {
-    setViewPass(!viewPass)
-  }
+    setViewPass(!viewPass);
+  };
 
   const handleInputChange = (event, fieldName) => {
     setFormData({
@@ -99,21 +99,19 @@ const Login = () => {
           dispatch(
             showToast({
               type: status !== 500 ? "warning" : "danger",
-              content: status !== 500 ? t(convertToKey(data.message)) : data.message,
+              content:
+                status !== 500 ? t(convertToKey(data.message)) : data.message,
             })
           );
-
-        }
-        else {
+        } else {
           dispatch(
             showToast({
               type: "danger",
               content: error.message,
             })
           );
-
         }
-      })
+      });
 
     setIsLoading(false);
   };
@@ -173,15 +171,25 @@ const Login = () => {
                         required
                         type={viewPass ? "text" : "password"}
                         placeholder={t("Password")}
-                        autoComplete="current-password"
                         value={formData.password}
                         onChange={(event) =>
                           handleInputChange(event, "password")
                         }
                       />
-                      <CButton type="button" color="secondary" variant="outline" onClick={handeViewPassStateChange}>{viewPass ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
+                      <CButton
+                        type="button"
+                        color="secondary"
+                        variant="outline"
+                        onClick={handeViewPassStateChange}
+                      >
+                        {viewPass ? (
+                          <AiOutlineEyeInvisible />
+                        ) : (
+                          <AiOutlineEye />
+                        )}
+                      </CButton>
                     </CInputGroup>
-                    <CRow className="flex-align-center" >
+                    <CRow className="flex-align-center">
                       <CCol xs={6}>
                         <CButton
                           disabled={isLoading}
@@ -190,14 +198,22 @@ const Login = () => {
                           color="primary"
                           className="px-4"
                         >
-                          {isLoading ? <CSpinner color="light" size="sm" /> : t("Login")}
+                          {isLoading ? (
+                            <CSpinner color="light" size="sm" />
+                          ) : (
+                            t("Login")
+                          )}
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-end">
                         <LanguagesDropdown />
                       </CCol>
                       <CCol xs={12} className="text-center">
-                        <CButton color="link" className="pt-4" onClick={() => navigate("/reset")}>
+                        <CButton
+                          color="link"
+                          className="pt-4"
+                          onClick={() => navigate("/reset")}
+                        >
                           {t("ForgotPassword") + "?"}
                         </CButton>
                       </CCol>
