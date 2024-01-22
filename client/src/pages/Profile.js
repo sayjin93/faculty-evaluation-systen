@@ -21,10 +21,14 @@ import {
 //react-icons
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
-import { AiOutlineUser, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import {
+  AiOutlineUser,
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+} from "react-icons/ai";
 
 //hooks
-import { capitalizeWords, convertToKey, lowercaseNoSpace } from "src/hooks"
+import { capitalizeWords, convertToKey, lowercaseNoSpace } from "src/hooks";
 import api from "src/hooks/api";
 
 //store
@@ -32,10 +36,12 @@ import { showToast, setUser } from "src/store";
 import { getLoggedUser } from "src/store/selectors";
 
 //components
-import PasswordCriteria, { checkPasswordCriteria } from "src/components/PasswordCriteria";
+import PasswordCriteria, {
+  checkPasswordCriteria,
+} from "src/components/PasswordCriteria";
 import { PiGenderIntersexDuotone } from "react-icons/pi";
 
-const Settings = () => {
+const Profile = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -67,7 +73,8 @@ const Settings = () => {
     let inputValue = event.target.value;
 
     // Capitalize the first letter of each word for firstName and lastName fields
-    if (fieldName === "firstName" || fieldName === "lastName") inputValue = capitalizeWords(inputValue);
+    if (fieldName === "firstName" || fieldName === "lastName")
+      inputValue = capitalizeWords(inputValue);
 
     //Lowercase the text of username
     if (fieldName === "username") inputValue = lowercaseNoSpace(inputValue);
@@ -83,13 +90,13 @@ const Settings = () => {
   };
 
   const handeViewPassStateChange = (key, value) => {
-    setViewPass(prevState => {
+    setViewPass((prevState) => {
       return {
         ...prevState,
         [key]: !value,
       };
-    })
-  }
+    });
+  };
 
   const updateUserData = async () => {
     setIsLoading(true);
@@ -128,8 +135,8 @@ const Settings = () => {
             currentPassword: "",
             newPassword: "",
             repeatPassword: "",
-          }
-        })
+          };
+        });
       })
       .catch((error) => {
         dispatch(
@@ -141,7 +148,7 @@ const Settings = () => {
       });
 
     setIsLoading(false);
-  }
+  };
 
   const handleUserUpdate = async (event) => {
     event.preventDefault();
@@ -159,7 +166,9 @@ const Settings = () => {
       } else {
         // Use the checkPasswordCriteria function on the current password
         const passwordCriteria = checkPasswordCriteria(userData.newPassword);
-        let areAllTrue = Object.values(passwordCriteria).every(value => value === true);
+        let areAllTrue = Object.values(passwordCriteria).every(
+          (value) => value === true
+        );
 
         if (!areAllTrue) {
           dispatch(
@@ -175,12 +184,11 @@ const Settings = () => {
         } else {
           updateUserData();
         }
-      };
-    }
-    else {
+      }
+    } else {
       updateUserData();
     }
-  }
+  };
   //#endregion
 
   return (
@@ -195,10 +203,7 @@ const Settings = () => {
         </CCardHeader>
 
         <CCardBody>
-          <CRow className="mb-3"
-            xs={{ cols: 1, gutter: 3 }}
-            lg={{ cols: 2 }}
-          >
+          <CRow className="mb-3" xs={{ cols: 1, gutter: 3 }} lg={{ cols: 2 }}>
             <CCol sm={6}>
               <CFormInput
                 type="text"
@@ -218,8 +223,7 @@ const Settings = () => {
             </CCol>
           </CRow>
 
-          <CRow className="mb-3"
-            xs={{ cols: 1, gutter: 3 }}>
+          <CRow className="mb-3" xs={{ cols: 1, gutter: 3 }}>
             <CCol sm={12}>
               <CInputGroup>
                 <CInputGroupText>
@@ -237,10 +241,7 @@ const Settings = () => {
             </CCol>
           </CRow>
 
-          <CRow
-            xs={{ cols: 1, gutter: 3 }}
-            lg={{ cols: 2 }}
-          >
+          <CRow xs={{ cols: 1, gutter: 3 }} lg={{ cols: 2 }}>
             <CCol sm={6}>
               <CInputGroup>
                 <CInputGroupText>
@@ -266,7 +267,7 @@ const Settings = () => {
                   placeholder={t("Email")}
                   value={userData.email}
                   size="sm"
-                // onChange={(event) => handleInputChange(event, "email")}
+                  // onChange={(event) => handleInputChange(event, "email")}
                 />
               </CInputGroup>
             </CCol>
@@ -284,10 +285,7 @@ const Settings = () => {
         </CCardHeader>
 
         <CCardBody>
-          <CRow
-            xs={{ cols: 1, gutter: 3 }}
-            lg={{ cols: 2 }}
-          >
+          <CRow xs={{ cols: 1, gutter: 3 }} lg={{ cols: 2 }}>
             <CCol sm={6}>
               <CRow xs={{ cols: 1, gutter: 3 }}>
                 <CCol>
@@ -305,7 +303,20 @@ const Settings = () => {
                         handleInputChange(event, "currentPassword")
                       }
                     />
-                    <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("current", viewPass.current)}>{viewPass.current ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
+                    <CButton
+                      type="button"
+                      color="secondary"
+                      variant="outline"
+                      onClick={() =>
+                        handeViewPassStateChange("current", viewPass.current)
+                      }
+                    >
+                      {viewPass.current ? (
+                        <AiOutlineEyeInvisible />
+                      ) : (
+                        <AiOutlineEye />
+                      )}
+                    </CButton>
                   </CInputGroup>
                 </CCol>
 
@@ -323,7 +334,20 @@ const Settings = () => {
                         handleInputChange(event, "newPassword")
                       }
                     />
-                    <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("new", viewPass.new)}>{viewPass.new ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
+                    <CButton
+                      type="button"
+                      color="secondary"
+                      variant="outline"
+                      onClick={() =>
+                        handeViewPassStateChange("new", viewPass.new)
+                      }
+                    >
+                      {viewPass.new ? (
+                        <AiOutlineEyeInvisible />
+                      ) : (
+                        <AiOutlineEye />
+                      )}
+                    </CButton>
                   </CInputGroup>
                 </CCol>
 
@@ -342,17 +366,33 @@ const Settings = () => {
                         handleInputChange(event, "repeatPassword")
                       }
                     />
-                    <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("retype", viewPass.retype)}>{viewPass.retype ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
-
+                    <CButton
+                      type="button"
+                      color="secondary"
+                      variant="outline"
+                      onClick={() =>
+                        handeViewPassStateChange("retype", viewPass.retype)
+                      }
+                    >
+                      {viewPass.retype ? (
+                        <AiOutlineEyeInvisible />
+                      ) : (
+                        <AiOutlineEye />
+                      )}
+                    </CButton>
                   </CInputGroup>
                 </CCol>
               </CRow>
             </CCol>
 
-            {userData.newPassword && <CCol sm={6}>
-              <PasswordCriteria password={userData.newPassword} className="passwordCriteria-light" />
-            </CCol>}
-
+            {userData.newPassword && (
+              <CCol sm={6}>
+                <PasswordCriteria
+                  password={userData.newPassword}
+                  className="passwordCriteria-light"
+                />
+              </CCol>
+            )}
           </CRow>
         </CCardBody>
       </CCard>
@@ -361,15 +401,12 @@ const Settings = () => {
       <CRow className="mb-4">
         <CCol className="text-end">
           <CButton disabled={isLoading} color="primary" type="submit">
-            {isLoading ? (
-              <CSpinner color="light" size="sm" />
-            ) : t("Update")}
+            {isLoading ? <CSpinner color="light" size="sm" /> : t("Update")}
           </CButton>
         </CCol>
       </CRow>
-
-    </CForm >
+    </CForm>
   );
 };
 
-export default Settings;
+export default Profile;
