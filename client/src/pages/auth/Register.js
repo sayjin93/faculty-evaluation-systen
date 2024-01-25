@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 //coreUI
@@ -14,6 +14,7 @@ import {
   CForm,
   CFormInput,
   CFormSelect,
+  CImage,
   CInputGroup,
   CInputGroupText,
   CRow,
@@ -43,6 +44,9 @@ import PasswordCriteria, {
   checkPasswordCriteria,
 } from "src/components/PasswordCriteria";
 import LanguagesDropdown from "src/components/LanguagesDropdown";
+
+//images
+import icon from "src/assets/images/icon.svg";
 
 const Register = () => {
   //#region constants
@@ -200,7 +204,7 @@ const Register = () => {
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={10}>
-            <CCardGroup>
+            <CCardGroup className="overflow-hidden">
               <CCard className="p-4">
                 <CCardBody>
                   <h3>{t("Register")}</h3>
@@ -378,23 +382,22 @@ const Register = () => {
                     </CRow>
                   </CForm>
 
-                  <Link to="/login">
-                    <CButton color="link" className="d-block mx-auto">
-                      {t("BackToLogin") + "?"}
-                    </CButton>
-                  </Link>
+                  <CButton color="link" size="sm" className="d-block mx-auto" onClick={() => navigate("/login")}>
+                    {t("BackToLogin")}
+                  </CButton>
                 </CCardBody>
               </CCard>
 
               <CCard className="p-4 text-white bg-primary">
+                <CImage className="overlayBg register" src={icon} height={200} />
+
                 <CCardBody className="text-center">
                   <h3>{t("SecurePasswordRequirements")}</h3>
 
                   <p className="pt-4">
-                    {t("StrengthenYourShield") +
-                      ": " +
-                      t("FollowThePasswordCriteriaBelow") +
-                      "."}
+                    {t("StrengthenYourShield")}
+                    <br />
+                    {t("FollowThePasswordCriteriaBelow")}
                   </p>
 
                   <PasswordCriteria password={user.password} />

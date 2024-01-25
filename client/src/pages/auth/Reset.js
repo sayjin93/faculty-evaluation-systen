@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { convertToKey, getCookie, setCookie } from "src/hooks";
 import { showToast } from "../../store";
@@ -29,6 +29,7 @@ import api from "src/hooks/api";
 const Reset = () => {
   //#region constants
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   //#endregion
 
@@ -148,7 +149,7 @@ const Reset = () => {
                       onChange={(event) => handleInputChange(event)}
                     />
                   </CInputGroup>
-                  <CRow>
+                  <CRow className="mb-4">
                     <CCol xs={6}>
                       <CButton
                         disabled={isLoading}
@@ -193,12 +194,11 @@ const Reset = () => {
                     </CCol>
                   </CRow>
                 </CForm>
-                
-                <Link to="/login">
-                  <CButton color="link" className="mt-4 d-block mx-auto">
-                    {t("BackToLogin") + "?"}
-                  </CButton>
-                </Link>
+
+                <CButton color="link" size="sm" className="d-block mx-auto" onClick={() => navigate("/login")}>
+                  {t("BackToLogin")}
+                </CButton>
+
               </CCardBody>
             </CCard>
           </CCol>

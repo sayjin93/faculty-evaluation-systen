@@ -13,6 +13,7 @@ import {
   CContainer,
   CForm,
   CFormInput,
+  CImage,
   CInputGroup,
   CInputGroupText,
   CRow,
@@ -33,6 +34,9 @@ import { setUser, showToast } from "src/store";
 
 //components
 import LanguagesDropdown from "src/components/LanguagesDropdown";
+
+//images
+import icon from "src/assets/images/icon.svg";
 
 const Login = () => {
   //#region constants
@@ -138,14 +142,12 @@ const Login = () => {
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
-            <CCardGroup>
+            <CCardGroup className="overflow-hidden">
               <CCard className="p-4">
                 <CCardBody>
                   <CForm onSubmit={handleSubmit}>
-                    <h1>{t("Login")}</h1>
-                    <p className="text-medium-emphasis">
-                      {t("SignInToYourAccount")}
-                    </p>
+                    <h4>{t("Login")}</h4>
+
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
@@ -163,6 +165,7 @@ const Login = () => {
                         }
                       />
                     </CInputGroup>
+
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
                         <CIcon icon={cilLockLocked} />
@@ -189,7 +192,8 @@ const Login = () => {
                         )}
                       </CButton>
                     </CInputGroup>
-                    <CRow className="flex-align-center">
+
+                    <CRow className="mb-4 flex-align-center">
                       <CCol xs={6}>
                         <CButton
                           disabled={isLoading}
@@ -205,36 +209,29 @@ const Login = () => {
                           )}
                         </CButton>
                       </CCol>
+
                       <CCol xs={6} className="text-end">
                         <LanguagesDropdown />
                       </CCol>
-                      <CCol xs={12} className="text-center">
-                        <CButton
-                          color="link"
-                          className="pt-4"
-                          onClick={() => navigate("/reset")}
-                        >
-                          {t("ForgotPassword") + "?"}
-                        </CButton>
-                      </CCol>
                     </CRow>
                   </CForm>
+
+                  <CButton color="link" size="sm" className="d-block mx-auto" onClick={() => navigate("/reset")}>
+                    {t("ForgotPassword") + "?"}
+                  </CButton>
                 </CCardBody>
               </CCard>
+
               <CCard className="text-white bg-primary py-5">
+                <CImage className="overlayBg" src={icon} height={200} />
+
                 <CCardBody className="text-center">
                   <div>
-                    <h2>{t("SignUp")}</h2>
-                    <p className="pt-4">
-                      {t(
-                        "RegisterNowByClickingButtonBelowToHaveAccessInTheFacultyEvaluationSystem"
-                      )}
-                    </p>
+                    <h4>{t("SignUp")}</h4>
+                    <p className="my-4" style={{ fontSize: "0.9em" }}>{t("RegisterNowByClickingButtonBelowToHaveAccessInTheFacultyEvaluationSystem")}</p>
 
                     <CButton
-                      color="primary"
-                      className="mt-3"
-                      active
+                      color="primary hover"
                       tabIndex={-1}
                       onClick={() => navigate("/register")}
                     >

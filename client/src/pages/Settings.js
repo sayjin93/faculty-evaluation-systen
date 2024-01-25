@@ -226,7 +226,7 @@ const Settings = () => {
               <CCardBody>
                 <div className="flex flex-justify-between flex-gap-10">
                   <LanguagesDropdown />
-                  <LanguageAdd />
+                  <LanguageAdd btnColor="primary" />
                 </div>
               </CCardBody>
             </CCard>
@@ -390,8 +390,7 @@ const Settings = () => {
                     </CCol>
                   </CRow>
 
-                  <CButton type="submit">{t("Save")}</CButton>
-
+                  <CButton type="submit" className="float-end">{t("Save")}</CButton>
                 </CForm>
               </CCardBody>
             </CCard>

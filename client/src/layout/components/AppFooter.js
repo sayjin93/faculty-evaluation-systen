@@ -2,7 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 //coreUI
-import { CFooter } from "@coreui/react";
+import { CCol, CFooter } from "@coreui/react";
+import { Link } from "react-router-dom";
 
 
 const AppFooter = () => {
@@ -11,19 +12,17 @@ const AppFooter = () => {
   //#endregion
 
   return (
-    <CFooter>
-      <div>
-        <span className="ms-1">
-          Copyright &copy; {new Date().getFullYear()}
-        </span>
-      </div>
-      <div className="ms-auto">
+    <CFooter className="justify-content-end">
+      <CCol>
+        Copyright &copy; {new Date().getFullYear()}
+      </CCol>
+
+      <CCol className="text-end">
         <span className="me-1">{t("DevelopedBy")}</span>
-        <a href="https://jkruja.com" target="_blank" rel="noopener noreferrer">
-          Jurgen Kruja
-        </a>
-      </div>
-    </CFooter>
+        <Link target="_blank" to="https://jkruja.com" rel="noopener noreferrer">Jurgen Kruja</Link>
+      </CCol>
+
+    </CFooter >
   );
 };
 
