@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 //coreUI
@@ -25,6 +25,7 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cifAl, cifGb } from "@coreui/icons";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 //hooks
 import { convertToKey, setCookie } from "src/hooks";
@@ -182,8 +183,8 @@ const ResetToken = () => {
         <CRow className="justify-content-center">
           <CCol md={9} lg={7} xl={6}>
             <CCard className="p-4">
-              <CCardBody className="p-4">
-                <h1>{t("ResetPassword")}</h1>
+              <CCardBody>
+                <h4>{t("ResetPassword")}</h4>
                 <p className="text-medium-emphasis">
                   {t("EnterYourNewPasswordBelow")}
                 </p>
@@ -262,11 +263,9 @@ const ResetToken = () => {
                   </CRow>
                 </CForm>
 
-                <Link to="/login">
-                  <CButton color="link" className="mt-4 d-block mx-auto">
-                    {t("BackToLogin") + "?"}
-                  </CButton>
-                </Link>
+                <CButton color="link" size="sm" className="mt-4 d-block mx-auto" onClick={() => navigate("/login")}>
+                  <IoIosArrowRoundBack /> {t("BackToLogin")}
+                </CButton>
               </CCardBody>
             </CCard>
           </CCol>

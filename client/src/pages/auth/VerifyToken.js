@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 //coreUI
@@ -14,6 +14,9 @@ import {
   CSpinner,
 } from "@coreui/react";
 
+//icons
+import { IoIosArrowRoundBack } from "react-icons/io";
+
 //hooks
 import api from "src/hooks/api";
 import { convertToKey } from "src/hooks";
@@ -22,6 +25,7 @@ const VerifyToken = () => {
   //#region constants
   const { t } = useTranslation();
   const { token } = useParams();
+  const navigate = useNavigate();
   //#endregion
 
   //#region states
@@ -61,18 +65,16 @@ const VerifyToken = () => {
         <CRow className="justify-content-center">
           <CCol md={9} lg={7} xl={6}>
             <CCard className="p-4">
-              <CCardBody className="p-4">
-                <h1 className="text-center mb-3">{t("AccountVerification")}</h1>
+              <CCardBody >
+                <h4 className="text-center mb-3">{t("AccountVerification")}</h4>
 
                 <CAlert className="text-center" color={status ? "success" : "danger"}>
                   {message}
                 </CAlert>
 
-                <Link to="/login">
-                  <CButton color="link" className="mt-4 d-block mx-auto">
-                    {t("BackToLogin") + "?"}
-                  </CButton>
-                </Link>
+                <CButton color="link" size="sm" className="mt-4 d-block mx-auto" onClick={() => navigate("/login")}>
+                  <IoIosArrowRoundBack /> {t("BackToLogin")}
+                </CButton>
               </CCardBody>
             </CCard>
           </CCol>

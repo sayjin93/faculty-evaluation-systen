@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { convertToKey, getCookie, setCookie } from "src/hooks";
-import { showToast } from "../../store";
 
+//coreUI
 import {
   CButton,
   CCard,
@@ -23,8 +22,16 @@ import {
   CSpinner,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+
+//icons
 import { cilUser, cifAl, cifGb } from "@coreui/icons";
+import { IoIosArrowRoundBack } from "react-icons/io";
+
+//hooks
 import api from "src/hooks/api";
+import { convertToKey, getCookie, setCookie } from "src/hooks";
+//store
+import { showToast } from "src/store";
 
 const Reset = () => {
   //#region constants
@@ -196,9 +203,8 @@ const Reset = () => {
                 </CForm>
 
                 <CButton color="link" size="sm" className="d-block mx-auto" onClick={() => navigate("/login")}>
-                  {t("BackToLogin")}
+                  <IoIosArrowRoundBack /> {t("BackToLogin")}
                 </CButton>
-
               </CCardBody>
             </CCard>
           </CCol>

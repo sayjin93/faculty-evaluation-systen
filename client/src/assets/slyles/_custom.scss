@@ -14,6 +14,13 @@ input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
+@mixin focus-styles {
+  &:focus {
+    border-color: var(--cui-primary);
+    box-shadow: 0 0 0 0.25rem rgba(0, 55, 130, 0.25); // --cui-primary-2
+  }
+}
+
 body {
   min-width: 290px;
   font-family: var(--uet-font);
@@ -223,22 +230,40 @@ body {
 .form {
   &-control {
     font-size: 0.9em;
+
+    @include focus-styles;
   }
 
   &-select {
     font-size: 0.9em;
     cursor: pointer;
 
-    &:focus {
-      border-color: var(--cui-primary);
-      box-shadow: 0 0 0 0.25rem rgba(0, 55, 130, 0.25);
-    }
+    @include focus-styles;
   }
 
   &-check {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+    padding: 0;
+
     &-input {
-      font-size: 0.9em;
+      width: 1.5em;
+      height: 1.5em;
       cursor: pointer;
+      float: none !important;
+      margin: 0 !important;
+      
+      @include focus-styles;
+
+      &:checked {
+        background-color: var(--cui-primary);
+        border-color: var(--cui-primary);
+      }
+    }
+    &-label {
+      font-size: 0.9em;
     }
   }
 }

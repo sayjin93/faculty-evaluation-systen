@@ -311,7 +311,7 @@ const Communities = () => {
           <CButton
             color="primary"
             className="float-right"
-            onClick={() => dispatch(setModal("editConference"))}
+            onClick={() => dispatch(setModal("editCommunity"))}
           >
             {t("Add")}
           </CButton>

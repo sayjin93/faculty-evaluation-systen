@@ -64,8 +64,6 @@ const Professors = () => {
   });
   //#endregion
 
-  console.log(formData);
-
   //#region functions
   const fetchProfessors = async () => {
     await api

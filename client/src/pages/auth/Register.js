@@ -26,6 +26,7 @@ import CIcon from "@coreui/icons-react";
 import { PiGenderIntersexDuotone } from "react-icons/pi";
 import { cilLockLocked, cilUser } from "@coreui/icons";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 //hooks
 import api from "src/hooks/api";
@@ -207,7 +208,7 @@ const Register = () => {
             <CCardGroup className="overflow-hidden">
               <CCard className="p-4">
                 <CCardBody>
-                  <h3>{t("Register")}</h3>
+                  <h4>{t("Register")}</h4>
 
                   <p className="text-medium-emphasis">
                     {t("CreateYourAccountByFillingTheFormBelow")}
@@ -383,7 +384,7 @@ const Register = () => {
                   </CForm>
 
                   <CButton color="link" size="sm" className="d-block mx-auto" onClick={() => navigate("/login")}>
-                    {t("BackToLogin")}
+                    <IoIosArrowRoundBack /> {t("BackToLogin")}
                   </CButton>
                 </CCardBody>
               </CCard>
@@ -392,9 +393,9 @@ const Register = () => {
                 <CImage className="overlayBg register" src={icon} height={200} />
 
                 <CCardBody className="text-center">
-                  <h3>{t("SecurePasswordRequirements")}</h3>
+                  <h4>{t("SecurePasswordRequirements")}</h4>
 
-                  <p className="pt-4">
+                  <p className="py-4">
                     {t("StrengthenYourShield")}
                     <br />
                     {t("FollowThePasswordCriteriaBelow")}
