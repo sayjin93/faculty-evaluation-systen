@@ -226,18 +226,16 @@ const Login = () => {
                 <CImage className="overlayBg" src={icon} height={200} />
 
                 <CCardBody className="text-center">
-                  <div>
-                    <h4>{t("SignUp")}</h4>
-                    <p className="my-4" style={{ fontSize: "0.9em" }}>{t("RegisterNowByClickingButtonBelowToHaveAccessInTheFacultyEvaluationSystem")}</p>
+                  <h4>{t("SignUp")}</h4>
+                  <p className="my-4" style={{ fontSize: "0.9em" }}>{t("RegisterNowByClickingButtonBelowToHaveAccessInTheFacultyEvaluationSystem")}</p>
 
-                    <CButton
-                      color="primary hover"
-                      tabIndex={-1}
-                      onClick={() => navigate("/register")}
-                    >
-                      {t("RegisterNow")} !
-                    </CButton>
-                  </div>
+                  <CButton
+                    color="primary hover"
+                    tabIndex={-1}
+                    onClick={() => navigate("/register")}
+                  >
+                    {t("RegisterNow")} !
+                  </CButton>
                 </CCardBody>
               </CCard>
             </CCardGroup>

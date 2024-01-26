@@ -131,9 +131,9 @@ const Reset = () => {
         <CRow className="justify-content-center">
           <CCol md={9} lg={7} xl={6}>
             <CCard className="p-4">
-              <CCardBody className="p-4">
-                <h1>{t("ResetPassword")}</h1>
-                <p className="text-medium-emphasis">
+              <CCardBody>
+                <h4>{t("ResetPassword")}</h4>
+                <p className="my-4" style={{ fontSize: "0.9em" }}>
                   {t("EnterYourUsernameOrEmailBelowToTesetYourPassword")}
                 </p>
 
