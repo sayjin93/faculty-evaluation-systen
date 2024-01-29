@@ -222,7 +222,7 @@ const Login = () => {
                 </CCardBody>
               </CCard>
 
-              <CCard className="text-white bg-primary py-5">
+              <CCard className="p-4 text-white bg-primary">
                 <CImage className="overlayBg" src={icon} height={200} />
 
                 <CCardBody className="text-center">
