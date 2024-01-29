@@ -5,7 +5,7 @@ import { CListGroup, CListGroupItem } from "@coreui/react";
 import { RxCheck, RxCross2 } from "react-icons/rx";
 
 // CheckCriteria Component
-const CheckCriteria = ({ valid, children }) => {
+const CheckCriteria = ({ valid, smallTxt = "", children }) => {
     const iconProps = {
         className: `text-${valid ? "success" : "danger"}`,
         style: { fontSize: "22px" },
@@ -25,6 +25,7 @@ const CheckCriteria = ({ valid, children }) => {
         <div className="flex flex-center flex-gap-10">
             {valid ? <RxCheck {...iconProps} /> : <RxCross2 {...iconProps} />}
             <span>{children}</span>
+            <span className="small">{smallTxt}</span>
             <span {...fillLineProps} />
         </div>
     );
@@ -52,28 +53,29 @@ const PasswordCriteria = ({ password, className = "" }) => {
         <div id="passwordCriteria" className={className}>
             <CListGroup className="list-group-noBorder">
                 <CListGroupItem>
-                    <CheckCriteria valid={passwordCriteria.lowercase}>
-                        {t("OneLowercaseCharacter")}
-                    </CheckCriteria>
-                </CListGroupItem>
-                <CListGroupItem>
-                    <CheckCriteria valid={passwordCriteria.uppercase}>
-                        {t("OneUppercaseCharacter")}
-                    </CheckCriteria>
-                </CListGroupItem>
-                <CListGroupItem>
-                    <CheckCriteria valid={passwordCriteria.number}>
-                        {t("OneNumber")}
-                    </CheckCriteria>
-                </CListGroupItem>
-                <CListGroupItem>
-                    <CheckCriteria valid={passwordCriteria.specialChar}>
-                        {t("OneSpecialCharacter")}
-                    </CheckCriteria>
-                </CListGroupItem>
-                <CListGroupItem>
                     <CheckCriteria valid={passwordCriteria.minLength}>
-                        {t("EightCharactersMinimum")}
+                        {t("AtLeast8CharactersLength")}
+                    </CheckCriteria>
+                </CListGroupItem>
+                <CListGroupItem>
+                    <CheckCriteria valid={passwordCriteria.number} smallTxt="(0...9)">
+                        {t("AtLeast1Number")}
+                    </CheckCriteria>
+                </CListGroupItem>
+                <CListGroupItem>
+                    <CheckCriteria valid={passwordCriteria.specialChar} smallTxt="(!...$)">
+                        {t("AtLeast1SpecialSymbol")}
+                    </CheckCriteria>
+                </CListGroupItem>
+                <CListGroupItem>
+                    <CheckCriteria valid={passwordCriteria.lowercase} smallTxt="(a...z)">
+                        {t("AtLeast1LowercaseLetter")}
+                    </CheckCriteria>
+                </CListGroupItem>
+
+                <CListGroupItem>
+                    <CheckCriteria valid={passwordCriteria.uppercase} smallTxt="(A...Z)">
+                        {t("AtLeast1UppercaseLetter")}
                     </CheckCriteria>
                 </CListGroupItem>
             </CListGroup>

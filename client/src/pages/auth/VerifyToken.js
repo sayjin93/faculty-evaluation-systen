@@ -19,7 +19,8 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 
 //hooks
 import api from "src/hooks/api";
-import { convertToKey } from "src/hooks";
+import { convertToKey, getCookie } from "src/hooks";
+import i18n from "src/i18n";
 
 const VerifyToken = () => {
   //#region constants
@@ -34,8 +35,8 @@ const VerifyToken = () => {
   const [message, setMessage] = useState('');
   //#endregion
 
-  //#region useEffect
-  useEffect(() => {
+  //#region functions
+  const verifyToken = () => {
     api.get(`/verify/${token}`)
       .then((response) => {
         setStatus(true);
@@ -47,7 +48,28 @@ const VerifyToken = () => {
         setMessage(error.response ? t(convertToKey(error.response.data.message)) : t('AnErrorOccured'));
         setIsLoading(false);
       });
+  };
+  const handleLanguageChange = () => {
+    debugger;
+    const language = getCookie({ name: "language" });
+    const languageCookie = language ? language : "en";
 
+    if (i18n.language !== languageCookie) {
+      debugger;
+      i18n.changeLanguage(languageCookie).then(() => {
+        // Call verifyToken after language change
+        verifyToken();
+      });
+    } else {
+      // Call verifyToken if no language change is needed
+      verifyToken();
+    }
+  };
+  //#endregion
+
+  //#region useEffect
+  useEffect(() => {
+    handleLanguageChange();
   }, [token]);
   //#endregion
 
