@@ -50,12 +50,10 @@ const VerifyToken = () => {
       });
   };
   const handleLanguageChange = () => {
-    debugger;
     const language = getCookie({ name: "language" });
     const languageCookie = language ? language : "en";
 
     if (i18n.language !== languageCookie) {
-      debugger;
       i18n.changeLanguage(languageCookie).then(() => {
         // Call verifyToken after language change
         verifyToken();

@@ -31,7 +31,7 @@ import { ImCross, ImCheckmark } from "react-icons/im"
 import { FaChalkboardTeacher } from "react-icons/fa"
 
 //hooks
-import { convertToKey } from "src/hooks";
+import { capitalizeWords, convertToKey, lowercaseNoSpace } from "src/hooks";
 import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
@@ -123,14 +123,25 @@ const Professors = () => {
               t("Professor") + " " + firstName + " " + lastName + " " + t("WasAddedSuccessfully"),
           })
         );
+
+        dispatch(setModal());
       })
       .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        if (error.response) {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: t(convertToKey(error.response.data.message)),
+            })
+          );
+        } else {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error.message,
+            })
+          );
+        }
       });
   };
   const editProfessor = async (id) => {
@@ -154,6 +165,8 @@ const Professors = () => {
             content: t(convertToKey(response.data.message)),
           })
         );
+
+        dispatch(setModal());
       })
       .catch((error) => {
         dispatch(
@@ -198,9 +211,32 @@ const Professors = () => {
     dispatch(setModal());
   };
 
+  const handleFullName = (event, fieldName) => {
+    const inputValue = capitalizeWords(event.target.value);
+
+    let newUser = {
+      ...formData,
+      [fieldName]: inputValue,
+    };
+
+    // Automatically set email when first_name or last_name changed
+    if (fieldName === "first_name" || fieldName === "last_name") {
+      const firstName = fieldName === "first_name" ? inputValue : formData.first_name;
+      const lastName = fieldName === "last_name" ? inputValue : formData.last_name;
+
+      if (firstName && lastName) {
+        const username = lowercaseNoSpace(`${firstName[0]}${lastName}`);
+        newUser.username = username;
+        newUser.email = username + "@uet.edu.al";
+      }
+    }
+
+    setFormData(newUser);
+  };
+
   const handleInputChange = (event, fieldName) => {
     const checkboxVal = event.target.checked;
-    const textboxVal = event.target.value;
+    const inputValue = event.target.value;
 
     let newValue;
 
@@ -209,7 +245,7 @@ const Professors = () => {
       newValue = checkboxVal;
     } else {
       // For other fields, use the textbox value
-      newValue = textboxVal;
+      newValue = inputValue;
     }
 
     setFormData({
@@ -227,7 +263,6 @@ const Professors = () => {
     } else {
       if (modalOptions.editMode) editProfessor(modalOptions.selectedId);
       else addProfessor();
-      dispatch(setModal());
     }
     setValidated(true);
   };
@@ -438,7 +473,7 @@ const Professors = () => {
                   floatingLabel={t("FirstName")}
                   placeholder={t("FirstName")}
                   value={formData.first_name}
-                  onChange={(event) => handleInputChange(event, "first_name")}
+                  onChange={(event) => handleFullName(event, "first_name")}
                 />
               </CCol>
               <CCol xs={6} className="mb-3">
@@ -447,7 +482,7 @@ const Professors = () => {
                   floatingLabel={t("LastName")}
                   placeholder={t("LastName")}
                   value={formData.last_name}
-                  onChange={(event) => handleInputChange(event, "last_name")}
+                  onChange={(event) => handleFullName(event, "last_name")}
                 />
               </CCol>
             </CRow>

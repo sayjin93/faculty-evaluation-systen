@@ -97,8 +97,7 @@ router.post('/register', async (req, res) => {
 
     const verificationToken = crypto.randomBytes(20).toString('hex');
 
-    // Create and save the new user
-    const newUser = await Professor.create({
+    const newProfessorData = {
       first_name: new_first_name,
       last_name: new_last_name,
       gender,
@@ -110,7 +109,10 @@ router.post('/register', async (req, res) => {
       is_deleted: false,
       verificationToken, // Add the verification token
       verificationTokenExpires: Date.now() + 3600000, // Token expires in 1 hour
-    });
+    };
+
+    // Create and save the new user
+    const newUser = await Professor.create(newProfessorData);
 
     newUser.save().then(async () => {
       // Retrieve SMTP settings from the database or environment variables

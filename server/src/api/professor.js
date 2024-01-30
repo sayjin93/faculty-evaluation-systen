@@ -1,13 +1,15 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+const nodemailer = require('nodemailer');
 
 const router = express.Router();
 const auth = passport.authenticate('jwt', { session: false });
 
 const Professor = require('../models/professor'); // Professor Model
+const Settings = require('../models/settings'); // Settings Model
 
-const { capitalizeWords, lowercaseNoSpace } = require('../utils'); // Utils
+const { capitalizeWords, lowercaseNoSpace, generateRandomPassword } = require('../utils'); // Utils
 
 // Create a new Professor
 router.post('/', auth, async (req, res) => {
@@ -28,20 +30,88 @@ router.post('/', auth, async (req, res) => {
   const new_username = lowercaseNoSpace(username);
   const new_email = lowercaseNoSpace(email);
 
-  const professorData = {
+  const full_email = email.includes('@') ? email : `${email}@uet.edu.al`;
+
+  // Check if username already exists
+  const existingUser = await Professor.findOne({ where: { username: new_username } });
+  if (existingUser) {
+    return res.status(400).send({ message: 'Username already exists' });
+  }
+
+  // Check if email already exists
+  const existingEmail = await Professor.findOne({ where: { email: full_email } });
+  if (existingEmail) {
+    return res.status(400).send({ message: 'Email already exists' });
+  }
+
+  const newPassword = generateRandomPassword();
+
+  const newProfessorData = {
     first_name: new_first_name,
     last_name: new_last_name,
     gender: req.body.gender,
     username: new_username,
-    email: new_email,
+    email: full_email,
+    password: newPassword,
     is_verified: 1,
     is_deleted: 0,
     is_admin: 0,
   };
 
   // Save Professor in the database
-  await Professor.create(professorData)
-    .then((data) => {
+  await Professor.create(newProfessorData)
+    .then(async (data) => {
+      // Retrieve SMTP settings from the database or environment variables
+      const response = await Settings.findOne({ where: { name: 'Email' } });
+
+      if (!response) {
+        return res.status(500).json({
+          message: 'SMTP settings not found',
+        });
+      }
+
+      const emailSettings = typeof response.settings === 'string'
+        ? JSON.parse(response.settings)
+        : response.settings;
+
+      const {
+        smtp_sender, smtp_host, smtp_port, smtp_secure, smtp_user, smtp_pass,
+      } = emailSettings;
+
+      // Set up nodemailer transporter
+      const transporter = nodemailer.createTransport({
+        host: smtp_host,
+        port: smtp_port,
+        secure: smtp_secure,
+        auth: {
+          user: smtp_user,
+          pass: smtp_pass,
+        },
+      });
+
+      const base_url = req.headers.origin;
+
+      const emailSubject = 'Your Account Details';
+      const emailText = 'You are receiving this because administration of the system have created an account for your email.\n\n'
+        + 'Your login credentials are:\n\n'
+        + `Login url: ${base_url}/login\n\n`
+        + `Username: ${new_username}\n`
+        + `Email: ${full_email}\n`
+        + `Password: ${newPassword}\n\n\n`
+        + 'If you did not request this, please contact us to remove your email from our database.\n';
+
+      const mailOptions = {
+        from: {
+          name: smtp_sender, // Your Sender name
+          address: smtp_user, // Your email address
+        },
+        to: new_email, // User's email address
+        subject: emailSubject,
+        text: emailText,
+      };
+
+      await transporter.sendMail(mailOptions);
+
       res.send(data);
     })
     .catch((err) => {

@@ -182,7 +182,7 @@ const Register = () => {
             dispatch(
               showToast({
                 type: "danger",
-                content: error.response.data.message,
+                content: t(convertToKey(error.response.data.message)),
               })
             );
           } else {
