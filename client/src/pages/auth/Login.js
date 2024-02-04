@@ -142,7 +142,7 @@ const Login = () => {
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
-            <CCardGroup className="overflow-hidden">
+            <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
                   <CForm onSubmit={handleSubmit}>
@@ -216,18 +216,27 @@ const Login = () => {
                     </CRow>
                   </CForm>
 
-                  <CButton color="link" size="sm" className="d-block mx-auto" onClick={() => navigate("/reset")}>
+                  <CButton
+                    color="link"
+                    size="sm"
+                    className="d-block mx-auto"
+                    onClick={() => navigate("/reset")}
+                  >
                     {t("ForgotPassword") + "?"}
                   </CButton>
                 </CCardBody>
               </CCard>
 
-              <CCard className="p-4 text-white bg-primary">
+              <CCard className="p-4 text-white bg-primary overflow-hidden">
                 <CImage className="overlayBg" src={icon} height={200} />
 
                 <CCardBody className="text-center">
                   <h4>{t("SignUp")}</h4>
-                  <p className="my-4" style={{ fontSize: "0.9em" }}>{t("RegisterNowByClickingButtonBelowToHaveAccessInTheFacultyEvaluationSystem")}</p>
+                  <p className="my-4" style={{ fontSize: "0.9em" }}>
+                    {t(
+                      "RegisterNowByClickingButtonBelowToHaveAccessInTheFacultyEvaluationSystem"
+                    )}
+                  </p>
 
                   <CButton
                     color="primary hover"

@@ -14,7 +14,7 @@ import CIcon from "@coreui/icons-react";
 import { cilMenu } from "@coreui/icons";
 
 //store
-import { changeState } from "src/store";
+import { changeSidebarState } from "src/store";
 
 //components
 import AppHeaderDropdown from "./AppHeaderDropdown";
@@ -38,7 +38,7 @@ const AppHeader = () => {
         {/* Sidebar Toggle button */}
         <CHeaderToggler
           className="ps-1"
-          onClick={() => dispatch(changeState(!show))}
+          onClick={() => dispatch(changeSidebarState(!show))}
         >
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>

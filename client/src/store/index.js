@@ -13,8 +13,9 @@ import {
   settingsReducer,
   changeAcademicYear,
   setFirstLogin,
+  setLanguages,
 } from "./slices/settingsSlice";
-import { sidebarReducer, changeState } from "./slices/sidebarSlice";
+import { sidebarReducer, changeSidebarState } from "./slices/sidebarSlice";
 import { toastReducer, showToast, hideToast } from "./slices/toastSlice";
 import { userReducer, setUser } from "./slices/userSlice";
 
@@ -32,7 +33,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["professors", "settings", "user"], // only setings will be persisted
+  whitelist: ["professors", "settings", "user"],
 };
 
 // Create the persisted reducer
@@ -59,9 +60,10 @@ export {
   setProfessors,
   setSelectedProfessor,
   changeAcademicYear,
-  changeState,
+  changeSidebarState,
   showToast,
   hideToast,
   setUser,
   setFirstLogin,
+  setLanguages,
 };

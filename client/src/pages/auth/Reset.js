@@ -10,10 +10,6 @@ import {
   CCardBody,
   CCol,
   CContainer,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
   CForm,
   CFormInput,
   CInputGroup,
@@ -24,18 +20,22 @@ import {
 import CIcon from "@coreui/icons-react";
 
 //icons
-import { cilUser, cifAl, cifGb } from "@coreui/icons";
+import { cilUser } from "@coreui/icons";
 import { IoIosArrowRoundBack } from "react-icons/io";
 
 //hooks
 import api from "src/hooks/api";
-import { convertToKey, getCookie, setCookie } from "src/hooks";
+import { convertToKey, getCookie } from "src/hooks";
+
 //store
 import { showToast } from "src/store";
 
+//components
+import LanguagesDropdown from "src/components/LanguagesDropdown";
+
 const Reset = () => {
   //#region constants
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //#endregion
@@ -46,15 +46,6 @@ const Reset = () => {
   //#endregion
 
   //#region functions
-  const handleLanguageChange = (language) => {
-    i18n.changeLanguage(language);
-    setCookie({
-      name: "language",
-      value: language,
-      options: { path: "/", sameSite: "strict" },
-    });
-  };
-
   const handleInputChange = (event) => {
     setUser(event.target.value);
   };
@@ -67,7 +58,7 @@ const Reset = () => {
       dispatch(
         showToast({
           type: "warning",
-          content: t("PleaseWriteYourUsernameOrEmail")
+          content: t("PleaseWriteYourUsernameOrEmail"),
         })
       );
       return;
@@ -81,13 +72,13 @@ const Reset = () => {
     await api
       .post("/reset", {
         username: user.toLowerCase(),
-        language: languageCookie
+        language: languageCookie,
       })
       .then((response) => {
         dispatch(
           showToast({
             type: "success",
-            content: t(convertToKey(response.data.message))
+            content: t(convertToKey(response.data.message)),
           })
         );
 
@@ -101,8 +92,7 @@ const Reset = () => {
               content: t(convertToKey(error.response.data.message)),
             })
           );
-        }
-        else {
+        } else {
           dispatch(
             showToast({
               type: "danger",
@@ -110,7 +100,7 @@ const Reset = () => {
             })
           );
         }
-      })
+      });
 
     setIsLoading(false);
   };
@@ -151,7 +141,9 @@ const Reset = () => {
                     </CInputGroupText>
                     <CFormInput
                       type="text"
-                      placeholder={t("Username") + " " + t("Or") + " " + t("Email")}
+                      placeholder={
+                        t("Username") + " " + t("Or") + " " + t("Email")
+                      }
                       value={user}
                       onChange={(event) => handleInputChange(event)}
                     />
@@ -165,44 +157,25 @@ const Reset = () => {
                         color="primary"
                         className="px-4"
                       >
-                        {isLoading ? <CSpinner color="light" size="sm" /> : t("Reset")}
+                        {isLoading ? (
+                          <CSpinner color="light" size="sm" />
+                        ) : (
+                          t("Reset")
+                        )}
                       </CButton>
                     </CCol>
                     <CCol xs={6} className="text-end">
-                      <CDropdown>
-                        <CDropdownToggle color="light">
-                          {i18n.language === "sq" ? (
-                            <>
-                              <CIcon icon={cifAl} />
-                              <span className="ms-2">Shqip</span>
-                            </>
-                          ) : (
-                            <>
-                              <CIcon icon={cifGb} />
-                              <span className="ms-2">English</span>
-                            </>
-                          )}
-                        </CDropdownToggle>
-                        <CDropdownMenu>
-                          <CDropdownItem
-                            onClick={() => handleLanguageChange("sq")}
-                          >
-                            <CIcon icon={cifAl} />
-                            <span className="ms-2">Shqip</span>
-                          </CDropdownItem>
-                          <CDropdownItem
-                            onClick={() => handleLanguageChange("en")}
-                          >
-                            <CIcon icon={cifGb} />
-                            <span className="ms-2">English</span>
-                          </CDropdownItem>
-                        </CDropdownMenu>
-                      </CDropdown>
+                      <LanguagesDropdown />
                     </CCol>
                   </CRow>
                 </CForm>
 
-                <CButton color="link" size="sm" className="d-block mx-auto" onClick={() => navigate("/login")}>
+                <CButton
+                  color="link"
+                  size="sm"
+                  className="d-block mx-auto"
+                  onClick={() => navigate("/login")}
+                >
                   <IoIosArrowRoundBack /> {t("BackToLogin")}
                 </CButton>
               </CCardBody>

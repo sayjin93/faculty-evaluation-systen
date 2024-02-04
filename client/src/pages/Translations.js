@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 //coreUI
-import {
-  CCard,
-  CCardBody,
-  CCardHeader
-} from "@coreui/react";
+import { CCard, CCardBody, CCardHeader } from "@coreui/react";
 
 //devextreme
-import DataGrid, { Column, ColumnChooser, ColumnFixing, Editing, Pager, Paging, Position, SearchPanel } from "devextreme-react/data-grid";
+import DataGrid, {
+  Column,
+  ColumnChooser,
+  ColumnFixing,
+  Editing,
+  Pager,
+  Paging,
+  Position,
+  SearchPanel,
+} from "devextreme-react/data-grid";
 
 //icons
 import { HiLanguage } from "react-icons/hi2";
@@ -22,6 +27,7 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
 import { showToast } from "src/store";
+import { getLanguages } from "src/store/selectors";
 
 //components
 import LanguageAdd from "src/components/LanguageAdd";
@@ -31,6 +37,8 @@ const Translations = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
+
+  const languages = useSelector(getLanguages);
   //#endregion
 
   //#region states
@@ -43,7 +51,6 @@ const Translations = () => {
       .get("/locales")
       .then((response) => {
         setDataSource(response.data);
-
       })
       .catch((error) => {
         handleError(error);
@@ -56,11 +63,17 @@ const Translations = () => {
 
     // Get the keys of the first item in the array as a representation of all
     // Assuming all items have the same structure
-    const languageKeys = Object.keys(dataSource[0]).filter(key => key !== 'key');
+    const languageKeys = Object.keys(dataSource[0]).filter(
+      (key) => key !== "key"
+    );
 
     // Generate a column for each language
-    return languageKeys.map(langKey => (
-      <Column key={langKey} dataField={langKey} caption={langKey.toUpperCase()} />
+    return languageKeys.map((langKey) => (
+      <Column
+        key={langKey}
+        dataField={langKey}
+        caption={langKey.toUpperCase()}
+      />
     ));
   };
 
@@ -70,9 +83,11 @@ const Translations = () => {
       .then((response) => {
         if (process.env.REACT_APP_ENV === "development") {
           localStorage.setItem("shouldShowToast", "true");
-          localStorage.setItem("toastMessage", JSON.stringify(response.data.message));
-        }
-        else {
+          localStorage.setItem(
+            "toastMessage",
+            JSON.stringify(response.data.message)
+          );
+        } else {
           dispatch(
             showToast({
               type: "success",
@@ -84,7 +99,7 @@ const Translations = () => {
       .catch((error) => {
         handleError(error);
       });
-  }
+  };
   //#endregion
 
   //#region useEffect
@@ -110,7 +125,7 @@ const Translations = () => {
         localStorage.removeItem("toastMessage");
       }
     }
-  }, []);
+  }, [languages]);
   //#endregion
 
   return (
@@ -125,7 +140,7 @@ const Translations = () => {
         </CCardHeader>
 
         <CCardBody>
-          <div className='dx-viewport'>
+          <div className="dx-viewport">
             <DataGrid
               dataSource={dataSource}
               keyExpr="key"
@@ -136,7 +151,6 @@ const Translations = () => {
               noDataText={t("NoDataToDisplay")}
               repaintChangesOnly={true}
               onSaved={onSaved}
-
             >
               <Editing
                 mode="batch"
@@ -145,11 +159,17 @@ const Translations = () => {
                 startEditAction="click"
               />
 
-              <SearchPanel visible={true}
+              <SearchPanel
+                visible={true}
                 width={240}
-                placeholder={t("Search") + "..."} />
+                placeholder={t("Search") + "..."}
+              />
 
-              <ColumnChooser enabled={true} mode="select" title={t("ColumnChooser")}>
+              <ColumnChooser
+                enabled={true}
+                mode="select"
+                title={t("ColumnChooser")}
+              >
                 <Position
                   my="right top"
                   at="right bottom"
@@ -160,7 +180,9 @@ const Translations = () => {
               <Paging defaultPageSize={20} />
               <Pager
                 visible={true}
-                infoText={`${t("Page")} {0} of {1} ({2} ${t("Items").toLowerCase()})`}
+                infoText={`${t("Page")} {0} of {1} ({2} ${t(
+                  "Items"
+                ).toLowerCase()})`}
                 showPageSizeSelector={true}
                 showInfo={true}
                 showNavigationButtons={true}
@@ -168,14 +190,18 @@ const Translations = () => {
 
               <ColumnFixing enabled={false} />
 
-              <Column fixed={true}
-                allowEditing={false} dataField="key" caption="KEY" />
+              <Column
+                // fixed={true}
+                allowEditing={false}
+                dataField="key"
+                caption="KEY"
+              />
 
               {renderLanguageColumns()}
             </DataGrid>
           </div>
         </CCardBody>
-      </CCard >
+      </CCard>
     </>
   );
 };

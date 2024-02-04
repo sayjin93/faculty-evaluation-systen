@@ -1,6 +1,18 @@
 //#region imports
 import Cookies from "universal-cookie";
-import { cifAl, cifGb, cifIt, cifDe, cifFr, cifEs, cifGr, cifNl, cifTr, cifMk, cifRu } from "@coreui/icons";
+import {
+  cifAl,
+  cifGb,
+  cifIt,
+  cifDe,
+  cifFr,
+  cifEs,
+  cifGr,
+  cifNl,
+  cifTr,
+  cifMk,
+  cifRu,
+} from "@coreui/icons";
 //#endregion
 
 //#region cookies
@@ -77,37 +89,49 @@ export function countOccurrences(array, key, value) {
 export function convertToKey(text) {
   if (!text) {
     // Handle the case where 'text' is undefined or null
-    return '';
+    return "";
   }
 
   return text
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join('');
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join("");
 }
 export function capitalizeWords(str) {
-  return str.replace(/\b\w/g, function (l) { return l.toUpperCase() });
+  return str.replace(/\b\w/g, function (l) {
+    return l.toUpperCase();
+  });
 }
 export function lowercaseNoSpace(text) {
-  return text.replace(/\s+/g, '').toLowerCase();
+  return text.replace(/\s+/g, "").toLowerCase();
 }
-
+export function arraysAreEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
+  }
+  return true;
+}
 //#endregion
 
 //#region constants
 export const SidebarRoutes = {
-  Books: '/books',
-  Communities: '/community-services',
-  Conferences: '/conferences',
-  Courses: '/courses',
-  Departments: '/departments',
-  Faculties: '/faculties',
-  Papers: '/papers',
-  Professors: '/professors',
-  Profile: '/profile',
-  Reports: '/reports',
-  Settings: '/settings',
-  Translations: '/translations',
+  Books: "/books",
+  Communities: "/community-services",
+  Conferences: "/conferences",
+  Courses: "/courses",
+  Departments: "/departments",
+  Faculties: "/faculties",
+  Papers: "/papers",
+  Professors: "/professors",
+  Profile: "/profile",
+  Reports: "/reports",
+  Settings: "/settings",
+  Translations: "/translations",
 };
 
 export const languageMap = [
@@ -121,7 +145,7 @@ export const languageMap = [
   { code: "mk", icon: cifMk, name: "Македонски" },
   { code: "nl", icon: cifNl, name: "Nederlands" },
   { code: "ru", icon: cifRu, name: "русский" },
-  { code: "tr", icon: cifTr, name: "Türkçe" }
+  { code: "tr", icon: cifTr, name: "Türkçe" },
   // Add more mappings as needed for other languages -> https://coreui.io/react/docs/components/icon/
 ];
 //#endregion

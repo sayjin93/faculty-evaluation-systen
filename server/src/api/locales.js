@@ -146,6 +146,7 @@ router.post('/add-language', auth, async (req, res) => {
     const baseLangPath = path.join(localesPath, 'en.json');
     const newLangPath = path.join(localesPath, `${newLangCode}.json`);
 
+    // Check if the new language file already exists
     if (fs.existsSync(newLangPath)) {
       return res.status(406).json({ success: false, error: 'Language already exists' });
     }
@@ -163,9 +164,16 @@ router.post('/add-language', auth, async (req, res) => {
       translatedContent[keys[index]] = translated;
     });
 
+    // Write the new language file
     fs.writeFileSync(newLangPath, JSON.stringify(translatedContent, null, 2));
 
-    res.status(200).json({ success: true });
+    // Read the locales directory to get an updated list of languages
+    const updatedLanguages = fs.readdirSync(localesPath)
+      .filter((file) => file.endsWith('.json'))
+      .map((file) => file.replace('.json', ''));
+
+    // Return the updated list of languages
+    res.status(200).json(updatedLanguages);
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: 'Internal Server Error' });

@@ -11,10 +11,6 @@ import {
   CCardGroup,
   CCol,
   CContainer,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
   CForm,
   CFormInput,
   CImage,
@@ -25,12 +21,12 @@ import {
 
 //icons
 import CIcon from "@coreui/icons-react";
-import { cilLockLocked, cifAl, cifGb } from "@coreui/icons";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import { cilLockLocked } from "@coreui/icons";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { IoIosArrowRoundBack } from "react-icons/io";
 
 //hooks
-import { convertToKey, setCookie } from "src/hooks";
+import { convertToKey } from "src/hooks";
 import api from "src/hooks/api";
 
 //store
@@ -38,11 +34,14 @@ import { showToast } from "src/store";
 
 //images
 import icon from "src/assets/images/icon.svg";
+
+//components
 import PasswordCriteria from "src/components/PasswordCriteria";
+import LanguagesDropdown from "src/components/LanguagesDropdown";
 
 const ResetToken = () => {
   //#region constants
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { token } = useParams();
@@ -51,7 +50,7 @@ const ResetToken = () => {
   //#region states
   const [state, setState] = useState({
     newPassword: "",
-    retypePassword: ""
+    retypePassword: "",
   });
   const [viewPass, setViewPass] = useState({
     new: false,
@@ -60,23 +59,14 @@ const ResetToken = () => {
   //#endregion
 
   //#region functions
-  const handleLanguageChange = (language) => {
-    i18n.changeLanguage(language);
-    setCookie({
-      name: "language",
-      value: language,
-      options: { path: "/", sameSite: "strict" },
-    });
-  };
-
   const handeViewPassStateChange = (key, value) => {
-    setViewPass(prevState => {
+    setViewPass((prevState) => {
       return {
         ...prevState,
         [key]: !value,
       };
-    })
-  }
+    });
+  };
 
   const handleInputChange = (event, fieldName) => {
     setState({
@@ -89,7 +79,7 @@ const ResetToken = () => {
     await api
       .get(`/reset/${resetToken}`)
       .then(() => {
-        setState(prevState => {
+        setState((prevState) => {
           return { ...prevState, view: 2 }; // Change the view property to 2, keep other properties unchanged
         });
       })
@@ -100,14 +90,15 @@ const ResetToken = () => {
         dispatch(
           showToast({
             type: "warning",
-            content: status !== 500 ? t(convertToKey(data.message)) : error.message,
+            content:
+              status !== 500 ? t(convertToKey(data.message)) : error.message,
           })
         );
 
         // Redirect the user to the login page
         navigate("/login", { replace: true });
-      })
-  }
+      });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -117,7 +108,7 @@ const ResetToken = () => {
       dispatch(
         showToast({
           type: "warning",
-          content: t("PleaseFillTheFormWithNewPassword")
+          content: t("PleaseFillTheFormWithNewPassword"),
         })
       );
       return;
@@ -129,12 +120,12 @@ const ResetToken = () => {
           content: t("PasswordDoesNotMatch"),
         })
       );
-      return
+      return;
     }
 
     await api
       .post(`/reset/${token}`, {
-        password: state.newPassword
+        password: state.newPassword,
       })
       .then((response) => {
         // Redirect the user to the login page
@@ -144,7 +135,7 @@ const ResetToken = () => {
         dispatch(
           showToast({
             type: "success",
-            content: t(convertToKey(response.data.message))
+            content: t(convertToKey(response.data.message)),
           })
         );
       })
@@ -155,16 +146,16 @@ const ResetToken = () => {
         dispatch(
           showToast({
             type: "danger",
-            content: status !== 500 ? t(convertToKey(data.message)) : error.message,
+            content:
+              status !== 500 ? t(convertToKey(data.message)) : error.message,
           })
         );
-      })
+      });
   };
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-
     //validateToken
     validateToken(token);
 
@@ -206,9 +197,24 @@ const ResetToken = () => {
                         type="password"
                         placeholder={t("NewPassword")}
                         value={state.newPassword}
-                        onChange={(event) => handleInputChange(event, "newPassword")}
+                        onChange={(event) =>
+                          handleInputChange(event, "newPassword")
+                        }
                       />
-                      <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("new", viewPass.new)}>{viewPass.new ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
+                      <CButton
+                        type="button"
+                        color="secondary"
+                        variant="outline"
+                        onClick={() =>
+                          handeViewPassStateChange("new", viewPass.new)
+                        }
+                      >
+                        {viewPass.new ? (
+                          <AiOutlineEyeInvisible />
+                        ) : (
+                          <AiOutlineEye />
+                        )}
+                      </CButton>
                     </CInputGroup>
 
                     <CInputGroup className="mb-3">
@@ -220,9 +226,24 @@ const ResetToken = () => {
                         type="password"
                         placeholder={t("RetypePassword")}
                         value={state.retypePassword}
-                        onChange={(event) => handleInputChange(event, "retypePassword")}
+                        onChange={(event) =>
+                          handleInputChange(event, "retypePassword")
+                        }
                       />
-                      <CButton type="button" color="secondary" variant="outline" onClick={() => handeViewPassStateChange("retype", viewPass.retype)}>{viewPass.retype ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
+                      <CButton
+                        type="button"
+                        color="secondary"
+                        variant="outline"
+                        onClick={() =>
+                          handeViewPassStateChange("retype", viewPass.retype)
+                        }
+                      >
+                        {viewPass.retype ? (
+                          <AiOutlineEyeInvisible />
+                        ) : (
+                          <AiOutlineEye />
+                        )}
+                      </CButton>
                     </CInputGroup>
 
                     <CRow>
@@ -237,46 +258,27 @@ const ResetToken = () => {
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-end">
-                        <CDropdown>
-                          <CDropdownToggle color="light">
-                            {i18n.language === "sq" ? (
-                              <>
-                                <CIcon icon={cifAl} />
-                                <span className="ms-2">Shqip</span>
-                              </>
-                            ) : (
-                              <>
-                                <CIcon icon={cifGb} />
-                                <span className="ms-2">English</span>
-                              </>
-                            )}
-                          </CDropdownToggle>
-                          <CDropdownMenu>
-                            <CDropdownItem
-                              onClick={() => handleLanguageChange("sq")}
-                            >
-                              <CIcon icon={cifAl} />
-                              <span className="ms-2">Shqip</span>
-                            </CDropdownItem>
-                            <CDropdownItem
-                              onClick={() => handleLanguageChange("en")}
-                            >
-                              <CIcon icon={cifGb} />
-                              <span className="ms-2">English</span>
-                            </CDropdownItem>
-                          </CDropdownMenu>
-                        </CDropdown>
+                        <LanguagesDropdown />
                       </CCol>
                     </CRow>
                   </CForm>
 
-                  <CButton color="link" size="sm" className="mt-4 d-block mx-auto" onClick={() => navigate("/login")}>
+                  <CButton
+                    color="link"
+                    size="sm"
+                    className="mt-4 d-block mx-auto"
+                    onClick={() => navigate("/login")}
+                  >
                     <IoIosArrowRoundBack /> {t("BackToLogin")}
                   </CButton>
                 </CCardBody>
               </CCard>
               <CCard className="p-4 text-white bg-primary">
-                <CImage className="overlayBg register" src={icon} height={200} />
+                <CImage
+                  className="overlayBg register"
+                  src={icon}
+                  height={200}
+                />
 
                 <CCardBody className="text-center">
                   <p className="pb-4">

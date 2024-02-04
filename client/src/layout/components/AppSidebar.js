@@ -10,7 +10,7 @@ import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 
 //store
-import { changeState } from "src/store";
+import { changeSidebarState } from "src/store";
 
 //components
 import { AppSidebarNav } from "./AppSidebarNav";
@@ -34,7 +34,7 @@ const AppSidebar = () => {
       unfoldable={false}
       visible={show}
       onVisibleChange={(visible) => {
-        dispatch(changeState(visible));
+        dispatch(changeSidebarState(visible));
       }}
     >
       <CSidebarBrand className="d-none d-md-flex text-center">

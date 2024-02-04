@@ -7,11 +7,11 @@ const sidebarSlice = createSlice({
     unfoldable: false,
   },
   reducers: {
-    changeState: (state, action) => {
+    changeSidebarState: (state, action) => {
       state.show = action.payload;
     },
   },
 });
 
-export const { changeState } = sidebarSlice.actions;
+export const { changeSidebarState } = sidebarSlice.actions;
 export const sidebarReducer = sidebarSlice.reducer;

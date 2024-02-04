@@ -205,7 +205,7 @@ const Register = () => {
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={10}>
-            <CCardGroup className="overflow-hidden">
+            <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
                   <h4>{t("Register")}</h4>
@@ -383,14 +383,23 @@ const Register = () => {
                     </CRow>
                   </CForm>
 
-                  <CButton color="link" size="sm" className="d-block mx-auto" onClick={() => navigate("/login")}>
+                  <CButton
+                    color="link"
+                    size="sm"
+                    className="d-block mx-auto"
+                    onClick={() => navigate("/login")}
+                  >
                     <IoIosArrowRoundBack /> {t("BackToLogin")}
                   </CButton>
                 </CCardBody>
               </CCard>
 
-              <CCard className="p-4 text-white bg-primary">
-                <CImage className="overlayBg register" src={icon} height={200} />
+              <CCard className="p-4 text-white bg-primary overflow-hidden">
+                <CImage
+                  className="overlayBg register"
+                  src={icon}
+                  height={200}
+                />
 
                 <CCardBody className="text-center">
                   <h4>{t("SecurePasswordRequirements")}</h4>

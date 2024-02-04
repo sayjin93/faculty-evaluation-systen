@@ -38,7 +38,7 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
 import { setModal, showToast, changeAcademicYear } from "src/store";
-import { getActiveAcademicYear, getModal } from "src/store/selectors";
+import { getAcademicYear, getModal } from "src/store/selectors";
 
 //components
 import LanguagesDropdown from "src/components/LanguagesDropdown";
@@ -59,7 +59,7 @@ const Settings = () => {
   const dispatch = useDispatch();
   const handleError = useErrorHandler();
 
-  const activeAcademicYear = useSelector(getActiveAcademicYear);
+  const activeAcademicYear = useSelector(getAcademicYear);
   const modal = useSelector(getModal);
   //#endregion
 
@@ -245,7 +245,7 @@ const Settings = () => {
                 <div className="flex flex-justify-between flex-gap-10">
                   <CDropdown>
                     <CDropdownToggle color="light">
-                      {activeAcademicYear}
+                      {activeAcademicYear.year}
                     </CDropdownToggle>
                     <CDropdownMenu>
                       {academicYear.map((element) => {
