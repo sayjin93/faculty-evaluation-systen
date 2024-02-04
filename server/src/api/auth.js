@@ -47,7 +47,11 @@ router.post('/login', (req, res) => {
           });
         }
 
-        const jwtToken = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '12h' });
+        const jwtToken = jwt.sign(
+          { id: user.id, username: user.username },
+          process.env.JWT_SECRET,
+          { expiresIn: '12h' },
+        );
 
         // Return the token to the client
         res.json({
@@ -72,7 +76,14 @@ router.post('/login', (req, res) => {
 
 router.post('/register', async (req, res) => {
   const {
-    language, first_name, last_name, gender, username, email, password,
+    language,
+    first_name,
+    last_name,
+    gender,
+    username,
+    email,
+    password,
+    department_id,
   } = req.body;
 
   const new_first_name = capitalizeWords(first_name);
@@ -80,17 +91,23 @@ router.post('/register', async (req, res) => {
   const new_username = lowercaseNoSpace(username);
   const new_email = lowercaseNoSpace(email);
 
-  const full_email = new_email.includes('@') ? new_email : `${new_email}@uet.edu.al`;
+  const full_email = new_email.includes('@')
+    ? new_email
+    : `${new_email}@uet.edu.al`;
 
   try {
     // Check if username already exists
-    const existingUser = await Professor.findOne({ where: { username: new_username } });
+    const existingUser = await Professor.findOne({
+      where: { username: new_username },
+    });
     if (existingUser) {
       return res.status(400).send({ message: 'Username already exists' });
     }
 
     // Check if email already exists
-    const existingEmail = await Professor.findOne({ where: { email: full_email } });
+    const existingEmail = await Professor.findOne({
+      where: { email: full_email },
+    });
     if (existingEmail) {
       return res.status(400).send({ message: 'Email already exists' });
     }
@@ -104,6 +121,7 @@ router.post('/register', async (req, res) => {
       username: new_username,
       email: full_email,
       password,
+      department_id: Number(department_id),
       is_admin: false,
       is_verified: false,
       is_deleted: false,
@@ -111,62 +129,73 @@ router.post('/register', async (req, res) => {
       verificationTokenExpires: Date.now() + 3600000, // Token expires in 1 hour
     };
 
-    // Create and save the new user
-    const newUser = await Professor.create(newProfessorData);
+    // Save Professor in the database
+    await Professor.create(newProfessorData)
+      .then(async () => {
+        // Retrieve SMTP settings from the database or environment variables
+        const response = await Settings.findOne({ where: { name: 'Email' } });
 
-    newUser.save().then(async () => {
-      // Retrieve SMTP settings from the database or environment variables
-      const response = await Settings.findOne({ where: { name: 'Email' } });
+        if (!response) {
+          return res.status(500).json({
+            message: 'SMTP settings not found',
+          });
+        }
 
-      if (!response) {
-        return res.status(500).json({
-          message: 'SMTP settings not found',
+        const emailSettings = typeof response.settings === 'string'
+          ? JSON.parse(response.settings)
+          : response.settings;
+
+        const {
+          smtp_sender,
+          smtp_host,
+          smtp_port,
+          smtp_secure,
+          smtp_user,
+          smtp_pass,
+        } = emailSettings;
+
+        // Set up nodemailer transporter
+        const transporter = nodemailer.createTransport({
+          host: smtp_host,
+          port: smtp_port,
+          secure: smtp_secure,
+          auth: {
+            user: smtp_user,
+            pass: smtp_pass,
+          },
+          tls: {
+            rejectUnauthorized: false,
+          },
         });
-      }
 
-      const emailSettings = typeof response.settings === 'string'
-        ? JSON.parse(response.settings)
-        : response.settings;
+        const base_url = req.headers.origin;
+        let emailSubject;
+        let emailText;
+        if (language === 'sq') {
+          emailSubject = 'Verifikimi i llogarisë';
+          emailText = `Ju lutemi klikoni në linkun e mëposhtme ose kopjojeni atë në shfletuesin tuaj për të verifikuar llogarinë tuaj:\n\n${base_url}/verify/${verificationToken}\n\n`;
+        } else {
+          emailSubject = 'Account Verification';
+          emailText = `Please click on the following link, or paste this into your browser to verify your account:\n\n${base_url}/verify/${verificationToken}\n\n`;
+        }
 
-      const {
-        smtp_sender, smtp_host, smtp_port, smtp_secure, smtp_user, smtp_pass,
-      } = emailSettings;
+        const mailOptions = {
+          from: {
+            name: smtp_sender, // Your Sender name
+            address: smtp_user, // Your email address
+          },
+          to: full_email, // User's email address
+          subject: emailSubject,
+          text: emailText,
+        };
 
-      // Set up nodemailer transporter
-      const transporter = nodemailer.createTransport({
-        host: smtp_host,
-        port: smtp_port,
-        secure: smtp_secure,
-        auth: {
-          user: smtp_user,
-          pass: smtp_pass,
-        },
-      });
-
-      const base_url = req.headers.origin;
-      let emailSubject;
-      let emailText;
-      if (language === 'sq') {
-        emailSubject = 'Verifikimi i llogarisë';
-        emailText = `Ju lutemi klikoni në linkun e mëposhtme ose kopjojeni atë në shfletuesin tuaj për të verifikuar llogarinë tuaj:\n\n${base_url}/verify/${verificationToken}\n\n`;
-      } else {
-        emailSubject = 'Account Verification';
-        emailText = `Please click on the following link, or paste this into your browser to verify your account:\n\n${base_url}/verify/${verificationToken}\n\n`;
-      }
-
-      const mailOptions = {
-        from: {
-          name: smtp_sender, // Your Sender name
-          address: smtp_user, // Your email address
-        },
-        to: full_email, // User's email address
-        subject: emailSubject,
-        text: emailText,
-      };
-
-      await transporter.sendMail(mailOptions);
-      res.json({ message: 'Thanks for registering. Please check your email to verify your account.' });
-    }).catch((err) => res.status(500).json({ message: err }));
+        await transporter.sendMail(mailOptions);
+        res.json({
+          message:
+            'Thanks for registering. Please check your email to verify your account.',
+        });
+      })
+      .catch((err) => res.status(500).json({ message: err }));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -223,7 +252,12 @@ router.post('/reset', async (req, res) => {
       : response.settings;
 
     const {
-      smtp_sender, smtp_host, smtp_port, smtp_secure, smtp_user, smtp_pass,
+      smtp_sender,
+      smtp_host,
+      smtp_port,
+      smtp_secure,
+      smtp_user,
+      smtp_pass,
     } = emailSettings;
 
     // Set up nodemailer transporter
@@ -296,7 +330,8 @@ router.post('/reset', async (req, res) => {
             console.log('Email sent:', info);
 
             res.json({
-              message: 'Reset password email sent successfully. The Token will expire for 3 hours.',
+              message:
+                'Reset password email sent successfully. The Token will expire for 3 hours.',
             });
           });
         });

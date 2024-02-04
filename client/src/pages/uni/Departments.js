@@ -1,30 +1,44 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next'
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 //coreUI
-import { CButton, CButtonGroup, CCard, CCardBody, CCardHeader, CForm, CFormCheck, CFormInput, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
-import CIcon from '@coreui/icons-react';
+import {
+  CButton,
+  CButtonGroup,
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CForm,
+  CFormCheck,
+  CFormInput,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
+} from "@coreui/react";
+import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
 
 //devextreme
-import { Column, HeaderFilter } from 'devextreme-react/data-grid';
+import { Column, HeaderFilter } from "devextreme-react/data-grid";
 
 //icons
-import { VscSymbolClass } from 'react-icons/vsc';
-import { ImCross } from 'react-icons/im';
+import { VscSymbolClass } from "react-icons/vsc";
+import { ImCross } from "react-icons/im";
 
 //hooks
 import { convertToKey } from "src/hooks";
-import api from 'src/hooks/api';
-import useErrorHandler from 'src/hooks/useErrorHandler';
+import api from "src/hooks/api";
+import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
 import { setModal, showToast } from "src/store";
 import { getModal } from "src/store/selectors";
 
 //components
-import CustomDataGrid from 'src/components/CustomDataGrid';
+import CustomDataGrid from "src/components/CustomDataGrid";
 
 const defaultFormData = { name: "", is_deleted: false };
 
@@ -57,6 +71,7 @@ const Departments = () => {
     await api
       .get("/department")
       .then((response) => {
+        debugger;
         setItems(response.data);
       })
       .catch((error) => {
@@ -70,7 +85,7 @@ const Departments = () => {
         setFormData({
           ...formData,
           name: response.data.key,
-          is_deleted: response.data.is_deleted
+          is_deleted: response.data.is_deleted,
         });
         dispatch(setModal("editDepartment"));
       })
@@ -87,7 +102,7 @@ const Departments = () => {
     await api
       .post("/department", {
         key: convertToKey(formData.name),
-        is_deleted: formData.is_deleted
+        is_deleted: formData.is_deleted,
       })
       .then((response) => {
         setStatus(response);
@@ -96,8 +111,7 @@ const Departments = () => {
         dispatch(
           showToast({
             type: "success",
-            content:
-              t("Department") + t("WasAddedSuccessfully"),
+            content: t("Department") + t("WasAddedSuccessfully"),
           })
         );
       })
@@ -114,7 +128,7 @@ const Departments = () => {
     await api
       .put("/department/" + id, {
         key: convertToKey(formData.name),
-        is_deleted: formData.is_deleted
+        is_deleted: formData.is_deleted,
       })
       .then((response) => {
         setStatus(response);
@@ -144,7 +158,8 @@ const Departments = () => {
         dispatch(
           showToast({
             type: "success",
-            content: t("DepartmentWithId") + " " + id + " " + t("DeletedSuccessfully"),
+            content:
+              t("DepartmentWithId") + " " + id + " " + t("DeletedSuccessfully"),
           })
         );
       })
@@ -153,8 +168,7 @@ const Departments = () => {
           dispatch(
             showToast({
               type: "danger",
-              content:
-                t("CannotDeleteItDueToForeignKeyConstraint")
+              content: t("CannotDeleteItDueToForeignKeyConstraint"),
             })
           );
         } else {
@@ -172,7 +186,7 @@ const Departments = () => {
 
   const handleInputChange = (event, fieldName) => {
     const checkboxVal = event.target.checked;
-    const textboxVal = event.target.value
+    const textboxVal = event.target.value;
 
     setFormData({
       ...formData,
@@ -195,11 +209,11 @@ const Departments = () => {
 
   //DataGrid
   const cellRenderDepartment = ({ data }) => {
-    return t(data.key)
-  }
+    return t(data.key);
+  };
   const cellRenderFaculty = ({ data }) => {
-    return t(data.faculty_key)
-  }
+    return t(data.faculty_key);
+  };
   const cellRenderDeleted = ({ data }) => {
     const checked = data.is_deleted ? (
       <ImCross title={t("Deleted")} className="text-danger" />
@@ -212,11 +226,7 @@ const Departments = () => {
     const { id } = data;
 
     return (
-      <CButtonGroup
-        role="group"
-        aria-label="Button Actions"
-        size="sm"
-      >
+      <CButtonGroup role="group" aria-label="Button Actions" size="sm">
         <CButton
           color="primary"
           variant="outline"
@@ -239,14 +249,14 @@ const Departments = () => {
               ...modalOptions,
               selectedId: id,
             });
-            dispatch(setModal('deleteDepartment'));
+            dispatch(setModal("deleteDepartment"));
           }}
         >
           <CIcon icon={cilTrash} />
         </CButton>
       </CButtonGroup>
-    )
-  }
+    );
+  };
   //#endregion
 
   //#region useEffect
@@ -258,7 +268,6 @@ const Departments = () => {
     if (modalOptions.editMode) fetchOneDepartment(modalOptions.selectedId);
   }, [modalOptions.editMode]);
   //#endregion
-
 
   return (
     <>
@@ -299,13 +308,18 @@ const Departments = () => {
               dataType="string"
               cellRender={cellRenderDeleted}
             >
-              <HeaderFilter dataSource={[{
-                text: t('Deleted'),
-                value: ['is_deleted', '=', true],
-              }, {
-                text: t('Active'),
-                value: ['is_deleted', '=', false],
-              }]} />
+              <HeaderFilter
+                dataSource={[
+                  {
+                    text: t("Deleted"),
+                    value: ["is_deleted", "=", true],
+                  },
+                  {
+                    text: t("Active"),
+                    value: ["is_deleted", "=", false],
+                  },
+                ]}
+              />
             </Column>
             <Column
               dataField="createdAt"
@@ -397,9 +411,7 @@ const Departments = () => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>
-            {t("Confirmation")}
-          </CModalTitle>
+          <CModalTitle>{t("Confirmation")}</CModalTitle>
         </CModalHeader>
 
         <CModalBody>
@@ -410,19 +422,21 @@ const Departments = () => {
           <CButton
             color="light"
             onClick={() => {
-              dispatch(setModal())
+              dispatch(setModal());
             }}
           >
             {t("Cancel")}
           </CButton>
-          <CButton onClick={() => deleteDepartment(modalOptions.selectedId)} color="danger">
+          <CButton
+            onClick={() => deleteDepartment(modalOptions.selectedId)}
+            color="danger"
+          >
             {t("Delete")}
           </CButton>
         </CModalFooter>
-
       </CModal>
     </>
-  )
-}
+  );
+};
 
-export default Departments
+export default Departments;

@@ -38,7 +38,7 @@ router.post('/', auth, async (req, res) => {
 });
 
 // Retrieve all Departments with associated Faculty information
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const results = await Department.findAll({
       include: [{
@@ -73,7 +73,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 // Retrieve all Departments of a Faculty
-router.get('/faculty/:faculty_id', async (req, res) => {
+router.get('/faculty/:faculty_id', auth, async (req, res) => {
   const { faculty_id } = req.params;
   await Department.findAll({ where: { faculty_id } })
     .then((data) => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -48,12 +48,14 @@ import LanguagesDropdown from "src/components/LanguagesDropdown";
 
 //images
 import icon from "src/assets/images/icon.svg";
+import useErrorHandler from "src/hooks/useErrorHandler";
 
 const Register = () => {
   //#region constants
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const handleError = useErrorHandler();
   //#endregion
 
   //#region states
@@ -65,12 +67,16 @@ const Register = () => {
     email: "",
     password: "",
     repeatPassword: "",
+    faculty: "",
+    department: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [viewPass, setViewPass] = useState({
     new: false,
     retype: false,
   });
+  const [faculties, setFaculties] = useState([]);
+  const [departments, setDepartments] = useState([]);
   //#endregion
 
   //#region functions
@@ -164,6 +170,7 @@ const Register = () => {
           username: lowercaseNoSpace(user.username),
           email: lowercaseNoSpace(user.email).split("@")[0],
           password: user.password,
+          department_id: user.department,
         })
         .then((response) => {
           // Redirect the user to the login page
@@ -178,11 +185,12 @@ const Register = () => {
           );
         })
         .catch((error) => {
+          debugger;
           if (error.response) {
             dispatch(
               showToast({
                 type: "danger",
-                content: t(convertToKey(error.response.data.message)),
+                content: t(convertToKey(error.response.data.message[0])),
               })
             );
           } else {
@@ -198,6 +206,37 @@ const Register = () => {
       setIsLoading(false);
     }
   };
+  //#endregion
+
+  //#region useEffect
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      await api
+        .get("/department")
+        .then((response) => {
+          const responseData = response.data;
+
+          // Fetch and populate faculties with unique faculty_id and faculty_key values when the component mounts
+          const facultiesMap = new Map();
+
+          responseData.forEach((item) => {
+            facultiesMap.set(item.faculty_key, {
+              faculty_id: item.faculty_id,
+              faculty_key: item.faculty_key,
+            });
+          });
+
+          const uniqueFaculties = Array.from(facultiesMap.values());
+          setFaculties(uniqueFaculties);
+          setDepartments(responseData);
+        })
+        .catch((error) => {
+          handleError(error);
+        });
+    };
+
+    fetchDepartments();
+  }, []);
   //#endregion
 
   return (
@@ -216,10 +255,11 @@ const Register = () => {
 
                   <CForm onSubmit={handleRegister}>
                     <CRow>
-                      <CCol xs={6} className="mb-3">
+                      <CCol xs={6} sm={4} lg={6} xxl={4} className="mb-3">
                         <CFormInput
                           required
                           type="text"
+                          floatingLabel={t("FirstName")}
                           autoComplete="first-name"
                           placeholder={t("FirstName")}
                           value={user.firstName}
@@ -228,10 +268,11 @@ const Register = () => {
                           }
                         />
                       </CCol>
-                      <CCol xs={6} className="mb-3">
+                      <CCol xs={6} sm={4} lg={6} xxl={4} className="mb-3">
                         <CFormInput
                           required
                           type="text"
+                          floatingLabel={t("LastName")}
                           autoComplete="last-name"
                           placeholder={t("LastName")}
                           value={user.lastName}
@@ -240,10 +281,7 @@ const Register = () => {
                           }
                         />
                       </CCol>
-                    </CRow>
-
-                    <CRow>
-                      <CCol xs={12} className="mb-3">
+                      <CCol xs={12} sm={4} lg={12} xxl={4} className="mb-3">
                         <CInputGroup>
                           <CInputGroupText>
                             <PiGenderIntersexDuotone />
@@ -260,6 +298,56 @@ const Register = () => {
                           </CFormSelect>
                         </CInputGroup>
                       </CCol>
+                    </CRow>
+
+                    <CRow>
+                      <CCol xs={6} className="mb-3">
+                        <CFormSelect
+                          required
+                          floatingLabel={t("Faculty")}
+                          value={user.faculty}
+                          onChange={(event) =>
+                            handleInputChange(event, "faculty")
+                          }
+                        >
+                          <option value="">Please select</option>
+                          {faculties.map((faculty) => (
+                            <option
+                              key={faculty.faculty_id}
+                              value={faculty.faculty_id}
+                            >
+                              {t(faculty.faculty_key)}
+                            </option>
+                          ))}
+                        </CFormSelect>
+                      </CCol>
+                      <CCol xs={6} className="mb-3">
+                        <CFormSelect
+                          required
+                          disabled={!user.faculty}
+                          floatingLabel={t("Department")}
+                          value={user.department}
+                          onChange={(event) =>
+                            handleInputChange(event, "department")
+                          }
+                        >
+                          <option value="">Please select</option>
+                          {departments
+                            .filter(
+                              (department) =>
+                                String(department.faculty_id) ===
+                                String(user.faculty)
+                            )
+                            .map((department) => (
+                              <option key={department.id} value={department.id}>
+                                {t(department.key)}
+                              </option>
+                            ))}
+                        </CFormSelect>
+                      </CCol>
+                    </CRow>
+
+                    <CRow>
                       <CCol xs={12} className="mb-3">
                         <CInputGroup>
                           <CInputGroupText>
@@ -276,7 +364,6 @@ const Register = () => {
                           />
                         </CInputGroup>
                       </CCol>
-
                       <CCol xs={12} className="mb-3">
                         <CInputGroup>
                           <CInputGroupText>@</CInputGroupText>
