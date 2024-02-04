@@ -24,11 +24,11 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash } from "@coreui/icons";
-import { BsGenderMale, BsGenderFemale } from "react-icons/bs"
-import { ImCross, ImCheckmark } from "react-icons/im"
+import { BsGenderMale, BsGenderFemale } from "react-icons/bs";
+import { ImCross, ImCheckmark } from "react-icons/im";
 
 //react-icons
-import { FaChalkboardTeacher } from "react-icons/fa"
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 //hooks
 import { capitalizeWords, convertToKey, lowercaseNoSpace } from "src/hooks";
@@ -50,7 +50,15 @@ const Professors = () => {
 
   const modal = useSelector(getModal);
 
-  const defaultFormData = { first_name: "", last_name: "", gender: "m", username: "", email: "", is_verified: true, is_deleted: false };
+  const defaultFormData = {
+    first_name: "",
+    last_name: "",
+    gender: "m",
+    username: "",
+    email: "",
+    is_verified: true,
+    is_deleted: false,
+  };
   //#endregion
 
   //#region states
@@ -107,7 +115,7 @@ const Professors = () => {
         last_name: formData.last_name,
         gender: formData.gender,
         username: formData.username,
-        email: formData.email
+        email: formData.email,
       })
       .then((response) => {
         const firstName = response.data.first_name;
@@ -120,7 +128,13 @@ const Professors = () => {
           showToast({
             type: "success",
             content:
-              t("Professor") + " " + firstName + " " + lastName + " " + t("WasAddedSuccessfully"),
+              t("Professor") +
+              " " +
+              firstName +
+              " " +
+              lastName +
+              " " +
+              t("WasAddedSuccessfully"),
           })
         );
 
@@ -185,7 +199,8 @@ const Professors = () => {
         dispatch(
           showToast({
             type: "success",
-            content: t("ProfessorWithId") + " " + id + " " + t("DeletedSuccessfully"),
+            content:
+              t("ProfessorWithId") + " " + id + " " + t("DeletedSuccessfully"),
           })
         );
       })
@@ -194,8 +209,7 @@ const Professors = () => {
           dispatch(
             showToast({
               type: "danger",
-              content:
-                t("CannotDeleteItDueToForeignKeyConstraint")
+              content: t("CannotDeleteItDueToForeignKeyConstraint"),
             })
           );
         } else {
@@ -221,8 +235,10 @@ const Professors = () => {
 
     // Automatically set email when first_name or last_name changed
     if (fieldName === "first_name" || fieldName === "last_name") {
-      const firstName = fieldName === "first_name" ? inputValue : formData.first_name;
-      const lastName = fieldName === "last_name" ? inputValue : formData.last_name;
+      const firstName =
+        fieldName === "first_name" ? inputValue : formData.first_name;
+      const lastName =
+        fieldName === "last_name" ? inputValue : formData.last_name;
 
       if (firstName && lastName) {
         const username = lowercaseNoSpace(`${firstName[0]}${lastName}`);
@@ -269,17 +285,27 @@ const Professors = () => {
 
   //DataGrid
   const cellRenderGender = (data) => {
-    let icon = data.value === "Male" ? <BsGenderMale className="text-primary" /> : <BsGenderFemale className="text-danger" />
+    let icon =
+      data.value === "Male" ? (
+        <BsGenderMale className="text-primary" />
+      ) : (
+        <BsGenderFemale className="text-danger" />
+      );
     let gender = t(data.value);
 
     return (
       <div className="flex flex-gap-10">
         <span>{icon}</span>
         <span>{gender}</span>
-      </div>)
-  }
+      </div>
+    );
+  };
   const cellRenderVerified = ({ data }) => {
-    const checked = data.is_verified ? <ImCheckmark title={t("Verified")} className="text-success" /> : <ImCross title={t("Disabled")} className="text-danger" />;
+    const checked = data.is_verified ? (
+      <ImCheckmark title={t("Verified")} className="text-success" />
+    ) : (
+      <ImCross title={t("Disabled")} className="text-danger" />
+    );
     return checked;
   };
   const cellRenderDeleted = ({ data }) => {
@@ -294,11 +320,7 @@ const Professors = () => {
     const { id } = data;
 
     return (
-      <CButtonGroup
-        role="group"
-        aria-label="Button Actions"
-        size="sm"
-      >
+      <CButtonGroup role="group" aria-label="Button Actions" size="sm">
         <CButton
           color="primary"
           variant="outline"
@@ -321,14 +343,14 @@ const Professors = () => {
               ...modalOptions,
               selectedId: id,
             });
-            dispatch(setModal('deleteProfessor'));
+            dispatch(setModal("deleteProfessor"));
           }}
         >
           <CIcon icon={cilTrash} />
         </CButton>
       </CButtonGroup>
-    )
-  }
+    );
+  };
   //#endregion
 
   //#region useEffect
@@ -381,11 +403,7 @@ const Professors = () => {
               caption={t("Username")}
               dataType="string"
             />
-            <Column
-              dataField="email"
-              caption={t("Email")}
-              dataType="string"
-            />
+            <Column dataField="email" caption={t("Email")} dataType="string" />
             <Column
               width={140}
               alignment="center"
@@ -394,13 +412,18 @@ const Professors = () => {
               dataType="string"
               cellRender={cellRenderVerified}
             >
-              <HeaderFilter dataSource={[{
-                text: t('Verified'),
-                value: ['is_verified', '=', true],
-              }, {
-                text: t('Disabled'),
-                value: ['is_verified', '=', false],
-              }]} />
+              <HeaderFilter
+                dataSource={[
+                  {
+                    text: t("Verified"),
+                    value: ["is_verified", "=", true],
+                  },
+                  {
+                    text: t("Disabled"),
+                    value: ["is_verified", "=", false],
+                  },
+                ]}
+              />
             </Column>
             <Column
               width={140}
@@ -410,13 +433,18 @@ const Professors = () => {
               dataType="string"
               cellRender={cellRenderDeleted}
             >
-              <HeaderFilter dataSource={[{
-                text: t('Deleted'),
-                value: ['is_deleted', '=', true],
-              }, {
-                text: t('Active'),
-                value: ['is_deleted', '=', false],
-              }]} />
+              <HeaderFilter
+                dataSource={[
+                  {
+                    text: t("Deleted"),
+                    value: ["is_deleted", "=", true],
+                  },
+                  {
+                    text: t("Active"),
+                    value: ["is_deleted", "=", false],
+                  },
+                ]}
+              />
             </Column>
             <Column
               dataField="createdAt"
@@ -524,7 +552,9 @@ const Professors = () => {
                   <CFormCheck
                     type="checkbox"
                     label={t("Verified")}
-                    onChange={(event) => handleInputChange(event, "is_verified")}
+                    onChange={(event) =>
+                      handleInputChange(event, "is_verified")
+                    }
                     defaultChecked={formData.is_verified}
                   />
                 </CCol>
@@ -538,7 +568,6 @@ const Professors = () => {
                 </CCol>
               </CRow>
             )}
-
           </CModalBody>
 
           <CModalFooter>
@@ -567,9 +596,7 @@ const Professors = () => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>
-            {t("Confirmation")}
-          </CModalTitle>
+          <CModalTitle>{t("Confirmation")}</CModalTitle>
         </CModalHeader>
 
         <CModalBody>
@@ -580,16 +607,18 @@ const Professors = () => {
           <CButton
             color="light"
             onClick={() => {
-              dispatch(setModal())
+              dispatch(setModal());
             }}
           >
             {t("Cancel")}
           </CButton>
-          <CButton onClick={() => deleteProfessor(modalOptions.selectedId)} color="danger">
+          <CButton
+            onClick={() => deleteProfessor(modalOptions.selectedId)}
+            color="danger"
+          >
             {t("Delete")}
           </CButton>
         </CModalFooter>
-
       </CModal>
     </>
   );

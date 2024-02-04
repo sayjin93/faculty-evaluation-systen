@@ -1,7 +1,7 @@
 const Book = require('../../models/book');
 
 async function seed() {
-  const professorsCount = 11;
+  const professorsCount = 144;
   const academicYearsCount = 10;
 
   const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;

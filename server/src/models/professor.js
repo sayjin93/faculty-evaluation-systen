@@ -2,6 +2,8 @@ const { DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
 const sequelize = require('../database');
 
+const Department = require('./department');
+
 const Professors = sequelize.define('Professors', {
   first_name: {
     type: DataTypes.STRING,
@@ -27,6 +29,9 @@ const Professors = sequelize.define('Professors', {
       this.setDataValue('password', hashedPassword);
     },
   },
+  department_id: {
+    type: DataTypes.INTEGER,
+  },
   is_admin: {
     type: DataTypes.BOOLEAN,
   },
@@ -49,5 +54,8 @@ const Professors = sequelize.define('Professors', {
     type: DataTypes.STRING,
   },
 });
+
+//  Associations
+Professors.belongsTo(Department, { foreignKey: 'department_id' });
 
 module.exports = Professors;

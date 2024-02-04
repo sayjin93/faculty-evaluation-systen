@@ -1,7 +1,7 @@
 const Community = require('../../models/community');
 
 async function seed() {
-  const professorsCount = 11;
+  const professorsCount = 144;
   const academicYearsCount = 10;
 
   const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
