@@ -310,7 +310,7 @@ const Register = () => {
                             handleInputChange(event, "faculty")
                           }
                         >
-                          <option value="">Please select</option>
+                          <option value="">{t("PleaseSelect")}</option>
                           {faculties.map((faculty) => (
                             <option
                               key={faculty.faculty_id}
@@ -331,7 +331,7 @@ const Register = () => {
                             handleInputChange(event, "department")
                           }
                         >
-                          <option value="">Please select</option>
+                          <option value="">{t("PleaseSelect")}</option>
                           {departments
                             .filter(
                               (department) =>
