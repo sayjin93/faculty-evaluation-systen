@@ -30,6 +30,7 @@ async function seed() {
       where: {
         first_name: professor.first_name,
         last_name: professor.last_name,
+        email: professor.email,
       },
       defaults: defaultProfessorData,
     });

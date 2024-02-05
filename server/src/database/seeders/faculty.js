@@ -2,11 +2,11 @@ const Faculty = require('../../models/faculty');
 
 async function seed() {
   const facultyData = [
-    { key: 'FacultyOfEconomics,BusinessAndDevelopment' },
-    { key: 'FacultyOfEngineering,InformaticsAndArchitecture' },
-    { key: 'FacultyOfHumanities,EducationAndLiberalArts' },
-    { key: 'FacultyOfLaw,PoliticalScienceAndInternationalRelations' },
-    { key: 'FacultyOfMedicalTechnicalSciences' },
+    { id: 1, key: 'FacultyOfEconomics,BusinessAndDevelopment' },
+    { id: 2, key: 'FacultyOfEngineering,InformaticsAndArchitecture' },
+    { id: 3, key: 'FacultyOfHumanities,EducationAndLiberalArts' },
+    { id: 4, key: 'FacultyOfLaw,PoliticalScienceAndInternationalRelations' },
+    { id: 5, key: 'FacultyOfMedicalTechnicalSciences' },
   ];
 
   const promises = facultyData.map(async (faculty) => {
