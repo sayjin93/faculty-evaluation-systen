@@ -87,6 +87,9 @@ router.post('/', auth, async (req, res) => {
           user: smtp_user,
           pass: smtp_pass,
         },
+        tls: {
+          rejectUnauthorized: false,
+        },
       });
 
       const base_url = req.headers.origin;

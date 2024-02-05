@@ -230,7 +230,7 @@ router.get('/verify/:token', async (req, res) => {
 router.post('/reset', async (req, res) => {
   const { username, language } = req.body;
 
-  const new_username = capitalizeWords(username);
+  const new_username = lowercaseNoSpace(username);
 
   if (!new_username) {
     return res.status(400).json({
@@ -268,6 +268,9 @@ router.post('/reset', async (req, res) => {
       auth: {
         user: smtp_user,
         pass: smtp_pass,
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     });
 

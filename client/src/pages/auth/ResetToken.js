@@ -194,7 +194,7 @@ const ResetToken = () => {
                       </CInputGroupText>
                       <CFormInput
                         required
-                        type="password"
+                        type={viewPass.new ? "text" : "password"}
                         placeholder={t("NewPassword")}
                         value={state.newPassword}
                         onChange={(event) =>
@@ -223,7 +223,7 @@ const ResetToken = () => {
                       </CInputGroupText>
                       <CFormInput
                         required
-                        type="password"
+                        type={viewPass.retype ? "text" : "password"}
                         placeholder={t("RetypePassword")}
                         value={state.retypePassword}
                         onChange={(event) =>

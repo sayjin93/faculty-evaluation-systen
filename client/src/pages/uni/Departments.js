@@ -71,7 +71,6 @@ const Departments = () => {
     await api
       .get("/department")
       .then((response) => {
-        debugger;
         setItems(response.data);
       })
       .catch((error) => {

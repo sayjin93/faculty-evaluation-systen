@@ -185,7 +185,6 @@ const Register = () => {
           );
         })
         .catch((error) => {
-          debugger;
           if (error.response) {
             dispatch(
               showToast({
