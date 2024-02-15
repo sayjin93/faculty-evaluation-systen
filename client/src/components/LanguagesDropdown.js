@@ -66,7 +66,7 @@ const LanguagesDropdown = () => {
   }, []);
   //#endregion
 
-  if (error) return <CAlert color="danger">{error.message}</CAlert>;
+  if (error) return <CAlert color="danger m-0 py-1 px-4 ellipsis">{error.message}</CAlert>;
 
   return (
     <CDropdown>

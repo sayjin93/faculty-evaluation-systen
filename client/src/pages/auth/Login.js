@@ -139,6 +139,12 @@ const Login = () => {
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+      <div className="lines">
+        <div className="line"></div>
+        <div className="line"></div>
+        <div className="line"></div>
+      </div>
+
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>

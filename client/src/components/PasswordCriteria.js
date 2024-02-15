@@ -24,9 +24,10 @@ const CheckCriteria = ({ valid, smallTxt = "", children }) => {
     return (
         <div className="flex flex-center flex-gap-10">
             {valid ? <RxCheck {...iconProps} /> : <RxCross2 {...iconProps} />}
-            <span>{children}</span>
-            <span className="small">{smallTxt}</span>
+            <span className="text">{children}</span>
             <span {...fillLineProps} />
+            <span className="small">{smallTxt}</span>
+
         </div>
     );
 };
