@@ -45,10 +45,12 @@ import PasswordCriteria, {
   checkPasswordCriteria,
 } from "src/components/PasswordCriteria";
 import LanguagesDropdown from "src/components/LanguagesDropdown";
+import BgLines from "src/components/BgLines";
 
 //images
 import icon from "src/assets/images/icon.svg";
 import useErrorHandler from "src/hooks/useErrorHandler";
+
 
 const Register = () => {
   //#region constants
@@ -240,11 +242,7 @@ const Register = () => {
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
-      <div className="lines">
-        <div className="line"></div>
-        <div className="line"></div>
-        <div className="line"></div>
-      </div>
+      <BgLines />
 
       <CContainer>
         <CRow className="justify-content-center">

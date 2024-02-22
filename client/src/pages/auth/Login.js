@@ -33,6 +33,7 @@ import api from "src/hooks/api";
 import { setUser, showToast } from "src/store";
 
 //components
+import BgLines from "src/components/BgLines";
 import LanguagesDropdown from "src/components/LanguagesDropdown";
 
 //images
@@ -139,11 +140,7 @@ const Login = () => {
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
-      <div className="lines">
-        <div className="line"></div>
-        <div className="line"></div>
-        <div className="line"></div>
-      </div>
+      <BgLines />
 
       <CContainer>
         <CRow className="justify-content-center">

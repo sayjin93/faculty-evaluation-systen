@@ -28,6 +28,7 @@
     "redux-persist": "^6.0.0",
     "reselect": "^4.1.8",
     "simplebar-react": "^3.2.4",
+    "styled-components": "^6.1.8",
     "universal-cookie": "^7.0.0"
   },
   "devDependencies": {
