@@ -1,5 +1,6 @@
 const express = require('express');
 const passport = require('passport');
+const Sequelize = require('sequelize');
 
 const AcademicYear = require('../models/academicYear');
 const Book = require('../models/book');
@@ -95,6 +96,73 @@ router.get('/dashboard', auth, async (req, res) => {
           err.message || 'Some error occurred while retrieving academic years',
       });
     });
+});
+
+router.get('/statsCards', auth, async (req, res) => {
+  try {
+    // Fetch academic years
+    const academicYears = await AcademicYear.findAll({
+      attributes: ['id', 'year'],
+      order: [['year', 'ASC']],
+      raw: true,
+    });
+
+    // Utility function to get counts by academic year from a model and calculate total and progress
+    const getCountsByAcademicYear = async (model) => {
+      const counts = await model.findAll({
+        attributes: ['academic_year_id', [Sequelize.fn('COUNT', Sequelize.col('id')), 'count']],
+        group: 'academic_year_id',
+        raw: true,
+      });
+
+      let total = 0;
+      let lastYearCount = 0;
+      let previousYearCount = 0;
+      const data = academicYears.map((year, index) => {
+        const countForYear = counts.find((c) => c.academic_year_id === year.id);
+        const count = countForYear ? countForYear.count : 0;
+        total += count;
+
+        // For progress calculation
+        if (index === academicYears.length - 1) {
+          lastYearCount = count;
+        } else if (index === academicYears.length - 2) {
+          previousYearCount = count;
+        }
+
+        return count;
+      });
+
+      // Calculate progress
+      let progress = 0;
+      if (previousYearCount > 0) {
+        progress = ((lastYearCount - previousYearCount) / previousYearCount) * 100;
+        progress = parseFloat(progress.toFixed(1)); // Round to 1 decimal place
+      }
+
+      return {
+        labels: academicYears.map((y) => y.year), data, total, progress,
+      };
+    };
+
+    // Fetching data for each category
+    const papersByYear = await getCountsByAcademicYear(Paper);
+    const booksByYear = await getCountsByAcademicYear(Book);
+    const conferencesByYear = await getCountsByAcademicYear(Conference);
+    const communitiesByYear = await getCountsByAcademicYear(Community);
+
+    // Sending the response
+    res.send({
+      papersByYear,
+      booksByYear,
+      conferencesByYear,
+      communitiesByYear,
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving statistics',
+    });
+  }
 });
 
 // Retrieve all Data for a professor in a specific academic year

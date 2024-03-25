@@ -3,7 +3,7 @@ const AcademicYear = require('../../models/academicYear');
 async function seed() {
   const academicYearsData = [];
 
-  for (let i = 2023; i >= 2014; i -= 1) {
+  for (let i = 2023; i >= 2018; i -= 1) {
     const academicYear = {
       year: `${i}-${i + 1}`,
       active: 0, // Set the active flag to 0 by default

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { batch, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -143,20 +143,18 @@ const Home = () => {
     fetchDashboard();
 
     if (firstLogin) {
-      batch(() => {
-        dispatch(
-          showToast({
-            type: "success",
-            content:
-              t("Welcome") +
-              " " +
-              loggedUser.first_name +
-              " " +
-              loggedUser.last_name,
-          })
-        );
-        dispatch(setFirstLogin(false));
-      });
+      dispatch(
+        showToast({
+          type: "success",
+          content:
+            t("Welcome") +
+            " " +
+            loggedUser.first_name +
+            " " +
+            loggedUser.last_name,
+        })
+      );
+      dispatch(setFirstLogin(false));
     }
   }, []);
   //#endregion

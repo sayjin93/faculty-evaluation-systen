@@ -1,0 +1,21 @@
+// Set the minimum and maximum sizes for the loops
+$min-size: 1;
+$max-size: 300;
+
+// Loop through the sizes to generate height classes
+@for $i from $min-size through $max-size {
+  // Generate a class for setting height
+  .h-#{$i} {
+    // Set the height property with !important
+    height: #{$i}px !important;
+  }
+}
+
+// Loop through the sizes to generate width classes
+@for $i from $min-size through $max-size {
+  // Generate a class for setting width
+  .w-#{$i} {
+    // Set the width property with !important
+    width: #{$i}px !important;
+  }
+}

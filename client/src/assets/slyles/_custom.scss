@@ -333,6 +333,34 @@ body {
   text-overflow: ellipsis;
 }
 
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  margin-bottom: 0.625rem;
+  width: 100%;
+  height: 34px;
+  background-color: #ffffff;
+
+  &-inner {
+    @keyframes shimmer {
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    background-image: linear-gradient(to right, #ffffff, #ebedef, #ffffff);
+    animation: shimmer 1.5s infinite;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    transform: translate(-100%, 0) rotate(0) skewX(0) skewY(0) scaleX(1)
+      scaleY(1);
+  }
+}
+
 //small devices
 @media only screen and (max-width: 576px) {
   .card {
