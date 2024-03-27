@@ -155,7 +155,7 @@ const professorsData = [
     gender: 'm',
     username: 'kbello',
     password: 'kreshnik@@',
-    email: 'kbello@uet.edu.al',
+    email: 'kreshnikbello@uet.edu.al',
     department_id: 2,
     is_admin: 0,
     is_deleted: 0,
@@ -1112,7 +1112,7 @@ const professorsData = [
     gender: 'm',
     username: 'kbello',
     password: 'kristi@@',
-    email: 'kbello@uet.edu.al',
+    email: 'kristibello@uet.edu.al',
     department_id: 9,
     is_admin: 0,
     is_deleted: 0,
@@ -1616,28 +1616,32 @@ const professorsData = [
 
 async function seed() {
   const promises = professorsData.map(async (professor) => {
-    // Generate random dates between 2015 and 2023
-    const randomCreatedAt = randomDate(new Date('2015-01-01'), new Date('2023-12-31'));
-    const randomUpdatedAt = randomDate(randomCreatedAt, new Date('2023-12-31')); // Ensure updatedAt is after createdAt
+    try {
+      // Generate random dates between 2015 and 2023
+      const randomCreatedAt = randomDate(new Date('2015-01-01'), new Date('2023-12-31'));
+      const randomUpdatedAt = randomDate(randomCreatedAt, new Date('2023-12-31')); // Ensure updatedAt is after createdAt
 
-    const defaultProfessorData = {
-      ...professor,
-      is_verified: 1,
-      resetPasswordToken: null,
-      resetPasswordExpires: null,
-      verificationToken: null,
-      verificationTokenExpires: null,
-      createdAt: randomCreatedAt,
-      updatedAt: randomUpdatedAt,
-    };
+      const defaultProfessorData = {
+        ...professor,
+        is_verified: 1,
+        resetPasswordToken: null,
+        resetPasswordExpires: null,
+        verificationToken: null,
+        verificationTokenExpires: null,
+        createdAt: randomCreatedAt,
+        updatedAt: randomUpdatedAt,
+      };
 
-    await Professor.findOrCreate({
-      where: {
-        first_name: professor.first_name,
-        last_name: professor.last_name,
-      },
-      defaults: defaultProfessorData,
-    });
+      await Professor.findOrCreate({
+        where: {
+          first_name: professor.first_name,
+          last_name: professor.last_name,
+        },
+        defaults: defaultProfessorData,
+      });
+    } catch (error) {
+      console.error('Error seeding course:', professor, error);
+    }
   });
 
   await Promise.all(promises);

@@ -1,63 +1,58 @@
 const Conference = require('../../models/conference');
 
+// Temp data
+const { professorsCount, academicYearsCount, randomInt } = require('./utils');
+
+const dummyConferenceNames = [
+  'International Tech Symposium',
+  'Future of Artificial Intelligence Summit',
+  'Global Data Science Conference',
+  'AI Ethics and Innovation Forum',
+  'Emerging Technologies Expo',
+  'Machine Learning Showcase',
+  'Digital Transformation Summit',
+  'Innovations in Robotics Conference',
+  'Cybersecurity and Privacy Symposium',
+  'HealthTech Innovators Forum',
+];
+const dummyLocations = [
+  'New York, USA',
+  'San Francisco, USA',
+  'London, UK',
+  'Paris, France',
+  'Tokyo, Japan',
+  'Sydney, Australia',
+  'Berlin, Germany',
+  'Toronto, Canada',
+  'Seoul, South Korea',
+  'Munich, Germany',
+];
+const dummyPresentTitles = [
+  'Advancements in AI Research',
+  'Ethical Considerations in Machine Learning',
+  'Future of Quantum Computing',
+  'Data Privacy and Security Measures',
+  'Robotics and Automation Innovations',
+  'Emerging Trends in Data Science',
+  'HealthTech Breakthroughs',
+  'Cybersecurity in a Digital Age',
+  'Innovations in Natural Language Processing',
+  'Big Data Analytics: Trends and Insights',
+];
+const dummyAuthors = [
+  'John Smith, Emily Johnson',
+  'Anna Lee, David Brown',
+  'Yuki Tanaka, Hiroshi Sato',
+  'Sophie Martin, Pierre Lefebvre',
+  'Michael Johnson, Jennifer Lee',
+  'Andreas Wagner, Julia Schneider',
+  'James Wilson, Emma Brown',
+  'Ji-hoon Kim, Min-ji Lee',
+  'Alex Johnson, Sarah Miller',
+  'Petraq Papajorgji, Fatos Mustafa',
+];
+
 async function seed() {
-  const professorsCount = 144;
-  const academicYearsCount = 10;
-
-  const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-  const dummyConferenceNames = [
-    'International Tech Symposium',
-    'Future of Artificial Intelligence Summit',
-    'Global Data Science Conference',
-    'AI Ethics and Innovation Forum',
-    'Emerging Technologies Expo',
-    'Machine Learning Showcase',
-    'Digital Transformation Summit',
-    'Innovations in Robotics Conference',
-    'Cybersecurity and Privacy Symposium',
-    'HealthTech Innovators Forum',
-  ];
-
-  const dummyLocations = [
-    'New York, USA',
-    'San Francisco, USA',
-    'London, UK',
-    'Paris, France',
-    'Tokyo, Japan',
-    'Sydney, Australia',
-    'Berlin, Germany',
-    'Toronto, Canada',
-    'Seoul, South Korea',
-    'Munich, Germany',
-  ];
-
-  const dummyPresentTitles = [
-    'Advancements in AI Research',
-    'Ethical Considerations in Machine Learning',
-    'Future of Quantum Computing',
-    'Data Privacy and Security Measures',
-    'Robotics and Automation Innovations',
-    'Emerging Trends in Data Science',
-    'HealthTech Breakthroughs',
-    'Cybersecurity in a Digital Age',
-    'Innovations in Natural Language Processing',
-    'Big Data Analytics: Trends and Insights',
-  ];
-
-  const dummyAuthors = [
-    'John Smith, Emily Johnson',
-    'Anna Lee, David Brown',
-    'Yuki Tanaka, Hiroshi Sato',
-    'Sophie Martin, Pierre Lefebvre',
-    'Michael Johnson, Jennifer Lee',
-    'Andreas Wagner, Julia Schneider',
-    'James Wilson, Emma Brown',
-    'Ji-hoon Kim, Min-ji Lee',
-    'Alex Johnson, Sarah Miller',
-    'Petraq Papajorgji, Fatos Mustafa',
-  ];
-
   const generateRandomConference = () => ({
     name: dummyConferenceNames[randomInt(0, dummyConferenceNames.length - 1)],
     location: dummyLocations[randomInt(0, dummyLocations.length - 1)],
@@ -71,20 +66,24 @@ async function seed() {
   const conferencesData = Array.from({ length: 100 }, generateRandomConference);
 
   const promises = conferencesData.map(async (conference) => {
-    const defaultConferencesData = {
-      ...conference,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    try {
+      const defaultConferencesData = {
+        ...conference,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
 
-    await Conference.findOrCreate({
-      where: {
-        name: conference.name,
-        academic_year_id: conference.academic_year_id,
-        professor_id: conference.professor_id,
-      },
-      defaults: defaultConferencesData,
-    });
+      await Conference.findOrCreate({
+        where: {
+          name: conference.name,
+          academic_year_id: conference.academic_year_id,
+          professor_id: conference.professor_id,
+        },
+        defaults: defaultConferencesData,
+      });
+    } catch (error) {
+      console.error('Error seeding course:', conference, error);
+    }
   });
 
   await Promise.all(promises);

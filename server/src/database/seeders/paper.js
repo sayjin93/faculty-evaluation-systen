@@ -1,47 +1,44 @@
 const Paper = require('../../models/paper');
 
+// Temp data
+const { professorsCount, academicYearsCount, randomInt } = require('./utils');
+
+const dummyTitles = [
+  'Advancements in Artificial Intelligence',
+  'Ethical Considerations in Machine Learning',
+  'Future of Quantum Computing',
+  'Data Privacy and Security Measures',
+  'Robotics and Automation Innovations',
+  'Emerging Trends in Data Science',
+  'HealthTech Breakthroughs',
+  'Cybersecurity in a Digital Age',
+  'Innovations in Natural Language Processing',
+  'Big Data Analytics: Trends and Insights',
+  'AI Implementation in Healthcare',
+  'Impacts of Climate Change: A Scientific Review',
+  'Societal Implications of AI in Education',
+  'Future of Work: Automation and Job Market',
+  'Global Health Challenges and Solutions',
+  'Innovations in Renewable Energy Technologies',
+  'Economic Impact of Digital Transformation',
+  'Cultural Influences on Technological Adoption',
+  'Advances in Medical Imaging Techniques',
+  'The Future of Transportation: Smart Mobility',
+];
+const dummyJournals = [
+  'Buletini Shkencor',
+  'Some Journal',
+  'Another Journal',
+  'Science Journal',
+  'Nature',
+  'International Journal of Computer Science',
+  'Journal of Artificial Intelligence Research',
+  'Environmental Science and Technology',
+  'Journal of Medical Ethics',
+  'Journal of Business Ethics',
+];
+
 async function seed() {
-  const professorsCount = 144;
-  const academicYearsCount = 10;
-
-  const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-  const dummyTitles = [
-    'Advancements in Artificial Intelligence',
-    'Ethical Considerations in Machine Learning',
-    'Future of Quantum Computing',
-    'Data Privacy and Security Measures',
-    'Robotics and Automation Innovations',
-    'Emerging Trends in Data Science',
-    'HealthTech Breakthroughs',
-    'Cybersecurity in a Digital Age',
-    'Innovations in Natural Language Processing',
-    'Big Data Analytics: Trends and Insights',
-    'AI Implementation in Healthcare',
-    'Impacts of Climate Change: A Scientific Review',
-    'Societal Implications of AI in Education',
-    'Future of Work: Automation and Job Market',
-    'Global Health Challenges and Solutions',
-    'Innovations in Renewable Energy Technologies',
-    'Economic Impact of Digital Transformation',
-    'Cultural Influences on Technological Adoption',
-    'Advances in Medical Imaging Techniques',
-    'The Future of Transportation: Smart Mobility',
-  ];
-
-  const dummyJournals = [
-    'Buletini Shkencor',
-    'Some Journal',
-    'Another Journal',
-    'Science Journal',
-    'Nature',
-    'International Journal of Computer Science',
-    'Journal of Artificial Intelligence Research',
-    'Environmental Science and Technology',
-    'Journal of Medical Ethics',
-    'Journal of Business Ethics',
-  ];
-
   const generateRandomPaper = () => ({
     title: dummyTitles[randomInt(0, dummyTitles.length - 1)],
     journal: dummyJournals[randomInt(0, dummyJournals.length - 1)],
@@ -53,20 +50,24 @@ async function seed() {
   const papersData = Array.from({ length: 100 }, generateRandomPaper);
 
   const promises = papersData.map(async (paper) => {
-    const defaultPapersData = {
-      ...paper,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    try {
+      const defaultPapersData = {
+        ...paper,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
 
-    await Paper.findOrCreate({
-      where: {
-        title: paper.title,
-        academic_year_id: paper.academic_year_id,
-        professor_id: paper.professor_id,
-      },
-      defaults: defaultPapersData,
-    });
+      await Paper.findOrCreate({
+        where: {
+          title: paper.title,
+          academic_year_id: paper.academic_year_id,
+          professor_id: paper.professor_id,
+        },
+        defaults: defaultPapersData,
+      });
+    } catch (error) {
+      console.error('Error seeding course:', paper, error);
+    }
   });
 
   await Promise.all(promises);

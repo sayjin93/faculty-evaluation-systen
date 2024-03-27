@@ -15,16 +15,20 @@ async function seed() {
   academicYearsData[0].active = 1;
 
   const promises = academicYearsData.map(async (academicYear) => {
-    const defaultAcademicYearData = {
-      ...academicYear,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    try {
+      const defaultAcademicYearData = {
+        ...academicYear,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
 
-    await AcademicYear.findOrCreate({
-      where: { year: academicYear.year },
-      defaults: defaultAcademicYearData,
-    });
+      await AcademicYear.findOrCreate({
+        where: { year: academicYear.year },
+        defaults: defaultAcademicYearData,
+      });
+    } catch (error) {
+      console.error('Error seeding course:', academicYear, error);
+    }
   });
 
   await Promise.all(promises);
