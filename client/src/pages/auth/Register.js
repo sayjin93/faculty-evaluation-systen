@@ -458,7 +458,7 @@ const Register = () => {
                           disabled={isLoading}
                           color="success"
                           type="submit"
-                          className="w-100"
+                          style={{ width: "100%" }}
                         >
                           {isLoading ? (
                             <CSpinner color="light" size="sm" />

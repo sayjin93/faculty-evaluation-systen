@@ -301,7 +301,7 @@ const Reports = () => {
       {professor && academicYear ? (
         <CRow
           xs={{ cols: 1, gutter: 4 }}
-          // xxl={{ cols: 2 }}
+          xxl={{ cols: 2 }}
           className="align-items-start g-4"
         >
           <CCol>
@@ -541,7 +541,7 @@ const Reports = () => {
             </CCard>
           </CCol>
 
-          <CCol className="w-100">
+          <CCol style={{ width: "100%" }}>
             <CCard
               textColor="dark"
               className="border-dark border-top-dark border-top-3"
