@@ -82,10 +82,6 @@ export function formatDate2(date2) {
 //#endregion
 
 //#region others
-export function countOccurrences(array, key, value) {
-  // Helper function to count the occurrences of an item in an array
-  return array.filter((item) => item[key] === value).length;
-}
 export function convertToKey(text) {
   if (!text) {
     // Handle the case where 'text' is undefined or null

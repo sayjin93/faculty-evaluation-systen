@@ -14,90 +14,50 @@ const router = express.Router();
 
 const auth = passport.authenticate('jwt', { session: false });
 
-// Retrieve all professors data for selected academic year.
-router.get('/dashboard', auth, async (req, res) => {
-  await AcademicYear.findAll()
-    .then((academicYears) => {
-      const academic_year_ids = academicYears.map((year) => year.id);
+// Stats router to retrieve various statistics
+router.get('/stats', auth, async (req, res) => {
+  try {
+    // Find the active academic year
+    const activeYear = await AcademicYear.findOne({ where: { active: true } });
+    if (!activeYear) {
+      return res.status(404).send({ message: 'Active academic year not found' });
+    }
+    const academic_year_id = activeYear.id;
 
-      Professor.findAll({ where: { is_admin: false } })
-        .then((professors) => {
-          const professorsData = professors;
+    // Aggregate data for the active academic year
+    const coursesCount = await Course.count({ where: { academic_year_id } });
+    const papersCount = await Paper.count({ where: { academic_year_id } });
+    const booksCount = await Book.count({ where: { academic_year_id } });
+    const conferencesCount = await Conference.count({ where: { academic_year_id } });
+    const communityServicesCount = await Community.count({ where: { academic_year_id } });
 
-          const promises = academic_year_ids.map((academic_year_id) => Promise.all([
-            Course.findAll({
-              where: { academic_year_id },
-            }),
-            Paper.findAll({
-              where: { academic_year_id },
-            }),
-            Book.findAll({
-              where: { academic_year_id },
-            }),
-            Conference.findAll({
-              where: { academic_year_id },
-            }),
-            Community.findAll({
-              where: { academic_year_id },
-            }),
-          ]));
-
-          return Promise.all(promises).then((results) => {
-            const allDataForEachYear = results.map((data, index) => {
-              const academic_year_id = academic_year_ids[index];
-              const [courses, papers, books, conferences, communityServices] = data;
-
-              // Extracting only the professor_id and week_hours properties for each course
-              const coursesData = courses.map((course) => ({
-                professor_id: course.professor_id,
-                week_hours: course.week_hours,
-              }));
-
-              // Extracting only the professor_id property for each item in books, communityServices, conferences, and papers arrays
-              const booksData = books.map((book) => ({
-                professor_id: book.professor_id,
-              }));
-              const communityServicesData = communityServices.map(
-                (service) => ({ professor_id: service.professor_id }),
-              );
-              const conferencesData = conferences.map((conference) => ({
-                professor_id: conference.professor_id,
-              }));
-              const papersData = papers.map((paper) => ({
-                professor_id: paper.professor_id,
-              }));
-
-              return {
-                academic_year_id,
-                books: booksData,
-                communityServices: communityServicesData,
-                conferences: conferencesData,
-                courses: coursesData,
-                papers: papersData,
-              };
-            });
-
-            res.send({
-              professors: professorsData,
-              academic_years_data: allDataForEachYear,
-            });
-          });
-        })
-        .catch((err) => {
-          res.status(500).send({
-            message:
-              err.message || 'Some error occurred while retrieving data',
-          });
-        });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || 'Some error occurred while retrieving academic years',
-      });
+    // Count professors based on specified criteria
+    const activeProfessorsCount = await Professor.count({
+      where: { is_verified: true, is_deleted: false, is_admin: false },
     });
+    const allProfessorsCount = await Professor.count({
+      where: { is_verified: true, is_admin: false },
+    });
+
+    // Send the aggregated data
+    res.send({
+      active_academic_year: activeYear.year,
+      courses_count: coursesCount,
+      papers_count: papersCount,
+      books_count: booksCount,
+      conferences_count: conferencesCount,
+      community_services_count: communityServicesCount,
+      active_professors_count: activeProfessorsCount,
+      all_professors_count: allProfessorsCount,
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving statistics',
+    });
+  }
 });
 
+// Retrieve all stats counts for all academic years
 router.get('/statsCards', auth, async (req, res) => {
   try {
     // Fetch academic years
@@ -161,6 +121,55 @@ router.get('/statsCards', auth, async (req, res) => {
   } catch (err) {
     res.status(500).send({
       message: err.message || 'Some error occurred while retrieving statistics',
+    });
+  }
+});
+
+// Retrieve all professors data for selected academic year
+router.get('/professors-data', auth, async (req, res) => {
+  try {
+    // Find the active academic year
+    const activeYear = await AcademicYear.findOne({ where: { active: true } });
+    if (!activeYear) {
+      return res.status(404).send({ message: 'Active academic year not found' });
+    }
+    const academic_year_id = activeYear.id;
+
+    // Get all professors who are not admins and not deleted
+    const professors = await Professor.findAll({
+      where: {
+        is_deleted: false,
+        is_admin: false, // Exclude professors who are admins
+      },
+    });
+
+    // Map each professor to their data
+    const professorsData = await Promise.all(professors.map(async (professor) => {
+      const coursesCount = await Course.count({ where: { academic_year_id, professor_id: professor.id } });
+      const papersCount = await Paper.count({ where: { academic_year_id, professor_id: professor.id } });
+      const booksCount = await Book.count({ where: { academic_year_id, professor_id: professor.id } });
+      const conferencesCount = await Conference.count({ where: { academic_year_id, professor_id: professor.id } });
+      const communityServicesCount = await Community.count({ where: { academic_year_id, professor_id: professor.id } });
+
+      // Calculate total week hours and default to 0 if null
+      const totalWeekHours = (await Course.sum('week_hours', { where: { academic_year_id, professor_id: professor.id } })) || 0;
+
+      return {
+        id: professor.id,
+        professor: `${professor.first_name} ${professor.last_name}`,
+        courses: coursesCount,
+        papers: papersCount,
+        books: booksCount,
+        conferences: conferencesCount,
+        community_service: communityServicesCount,
+        total_week_hours: totalWeekHours,
+      };
+    }));
+
+    res.send(professorsData);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving professors data',
     });
   }
 });

@@ -25,7 +25,7 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 //components
 import Skeleton from "src/components/Skeleton";
 
-const WidgetsDropdown = () => {
+const Graphs = () => {
   //#region constants
   const { t } = useTranslation();
   const handleError = useErrorHandler();
@@ -33,30 +33,26 @@ const WidgetsDropdown = () => {
 
   //#region states
   const [isLoading, setIsLoading] = useState(true);
-  const [items, setItems] = useState(null);
-
-  // const labels = items?.professorsByYear?.labels;
-  // const data = items?.professorsByYear?.data;
+  const [stats, setStats] = useState(null);
   //#endregion
 
   //#region functions
+  const generateArrow = (value) => {
+    if (value > 0) return <CIcon icon={cilArrowTop} />
+    else if (value < 0) return <CIcon icon={cilArrowBottom} />
+    else return ""
+  }
   const fetchStatsCards = async () => {
     await api
       .get("/report/statsCards")
       .then((response) => {
-        setItems(response.data);
+        setStats(response.data);
         setIsLoading(false);
       })
       .catch((error) => {
         handleError(error);
       });
   };
-
-  const generateArrow = (value) => {
-    if (value > 0) return <CIcon icon={cilArrowTop} />
-    else if (value < 0) return <CIcon icon={cilArrowBottom} />
-    else return ""
-  }
   //#endregion
 
   //#region useEffect
@@ -65,16 +61,14 @@ const WidgetsDropdown = () => {
   }, []);
   //#endregion
 
-  if (items) console.log("items", items);
-
   return (
     <CRow>
       <CCol sm={6} lg={3}>
         {(() => {
           if (isLoading) {
             return <Skeleton className="h-162 mb-4" />
-          } else if (!isLoading && items.papersByYear) {
-            const { total, progress, labels, data } = items.papersByYear;
+          } else if (!isLoading && stats.papersByYear) {
+            const { total, progress, labels, data } = stats.papersByYear;
 
             return (
               <CWidgetStatsA
@@ -178,8 +172,8 @@ const WidgetsDropdown = () => {
         {(() => {
           if (isLoading) {
             return <Skeleton className="h-162 mb-4" />
-          } else if (!isLoading && items.booksByYear) {
-            const { total, progress, labels, data } = items.booksByYear;
+          } else if (!isLoading && stats.booksByYear) {
+            const { total, progress, labels, data } = stats.booksByYear;
 
             return (
               <CWidgetStatsA
@@ -189,7 +183,7 @@ const WidgetsDropdown = () => {
                   <>
                     {total + " "}
                     <span className="fs-6 fw-normal">
-                    ({progress}% {generateArrow(progress)})
+                      ({progress}% {generateArrow(progress)})
                     </span>
                   </>
                 }
@@ -280,8 +274,8 @@ const WidgetsDropdown = () => {
         {(() => {
           if (isLoading) {
             return <Skeleton className="h-162 mb-4" />
-          } else if (!isLoading && items.conferencesByYear) {
-            const { total, progress, labels, data } = items.conferencesByYear;
+          } else if (!isLoading && stats.conferencesByYear) {
+            const { total, progress, labels, data } = stats.conferencesByYear;
 
             return (
               <CWidgetStatsA
@@ -371,8 +365,8 @@ const WidgetsDropdown = () => {
         {(() => {
           if (isLoading) {
             return <Skeleton className="h-162 mb-4" />
-          } else if (!isLoading && items.communitiesByYear) {
-            const { total, progress, labels, data } = items.communitiesByYear;
+          } else if (!isLoading && stats.communitiesByYear) {
+            const { total, progress, labels, data } = stats.communitiesByYear;
 
             return (
               <CWidgetStatsA
@@ -463,4 +457,4 @@ const WidgetsDropdown = () => {
   );
 };
 
-export default WidgetsDropdown;
+export default Graphs;
