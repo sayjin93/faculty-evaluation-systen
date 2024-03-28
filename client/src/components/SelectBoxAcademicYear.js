@@ -27,21 +27,21 @@ const SelectBoxAcademicYear = ({ className = "" }) => {
   //#endregion
 
   //#region states
-  const [academicYear, setAcademicYear] = useState([]);
+  const [academicYears, setAcademicYears] = useState([]);
   //#endregion
 
   //#region functions
   const handleChange = async (e) => {
-    const seletedAcademicYear = academicYear.filter(
+    const selectedAcademicYear = academicYears.filter(
       (x) => x.id === Number(e.target.value)
     );
 
-    const { id, year } = seletedAcademicYear[0];
+    const { id, year } = selectedAcademicYear[0];
 
     try {
       await api.put("academic-year/active/" + id);
 
-      dispatch(changeAcademicYear(seletedAcademicYear[0]));
+      dispatch(changeAcademicYear(selectedAcademicYear[0]));
       dispatch(
         showToast({
           type: "success",
@@ -62,7 +62,12 @@ const SelectBoxAcademicYear = ({ className = "" }) => {
     await api
       .get("/academic-year")
       .then((response) => {
-        setAcademicYear(response.data);
+        const academicYears = response.data;
+
+        // Sort the academic years by id in descending order
+        const sortedAcademicYears = academicYears.sort((a, b) => b.id - a.id);
+
+        setAcademicYears(sortedAcademicYears);
       })
       .catch((error) => {
         handleError(error);
@@ -84,7 +89,7 @@ const SelectBoxAcademicYear = ({ className = "" }) => {
         value={activeAcademicYear}
         onChange={handleChange}
       >
-        {academicYear.map((item) => {
+        {academicYears.map((item) => {
           const { id, year } = item;
 
           return (

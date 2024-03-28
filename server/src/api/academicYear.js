@@ -18,24 +18,28 @@ router.post('/', auth, async (req, res) => {
     return;
   }
 
-  // Create a Academic Year
-  const AcademicYearData = {
-    year: req.body.year,
-    active: req.body.active,
-  };
-
-  // Save Academic Year in the database
-  await AcademicYear.create(AcademicYearData)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message
-          || 'Some error occurred while creating the Academic Year.',
-      });
+  // Start a transaction
+  try {
+    // Update all academic years to inactive
+    await AcademicYear.update({ active: 0 }, {
+      where: {},
     });
+
+    // Create a new Academic Year
+    const AcademicYearData = {
+      year: req.body.year,
+      active: 1,
+    };
+
+    // Save Academic Year in the database
+    const data = await AcademicYear.create(AcademicYearData);
+    res.send(data);
+  } catch (err) {
+    // Handle any errors
+    res.status(500).send({
+      message: err.message || 'Some error occurred while creating the Academic Year.',
+    });
+  }
 });
 
 // Retrieve all Academic Years

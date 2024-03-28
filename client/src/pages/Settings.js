@@ -64,7 +64,7 @@ const Settings = () => {
   //#endregion
 
   //#region states
-  const [academicYear, setAcademicYear] = useState([]);
+  const [academicYears, setAcademicYears] = useState([]);
   const [newAcademicYear, setNewAcademicYear] = useState("");
   const [smtpConfig, setSmtpConfig] = useState(defaultSmtpConfigs);
   const [viewPass, setViewPass] = useState(false);
@@ -73,30 +73,20 @@ const Settings = () => {
   //#region functions
 
   //academic year
-  const fetchAcademicYears = async () => {
-    await api
-      .get("/academic-year")
-      .then((response) => {
-        setAcademicYear(response.data);
-      })
-      .catch((error) => {
-        handleError(error);
-      });
-  };
   const addAcademicYear = async () => {
     await api
       .post("/academic-year", {
         year: newAcademicYear,
-        active: false,
       })
       .then((response) => {
+        const year = response.data.year;
+
         fetchAcademicYears();
 
-        const year = response.data.year;
         dispatch(
           showToast({
             type: "success",
-            content: "Academic Year " + year + " was added successful!",
+            content: t("AcademicYearWasAddedSuccessful", { 0: year })
           })
         );
       })
@@ -109,6 +99,25 @@ const Settings = () => {
         );
       });
   };
+
+  const fetchAcademicYears = async () => {
+    await api
+      .get("/academic-year")
+      .then((response) => {
+        const academicYears = response.data;
+        const activeAcademicYears = academicYears.filter(academicYear => academicYear.active);
+
+        // Sort the academic years by id in descending order
+        const sortedAcademicYears = academicYears.sort((a, b) => b.id - a.id);
+
+        setAcademicYears(sortedAcademicYears);
+        dispatch(changeAcademicYear(activeAcademicYears[0]));
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+
   const updateActiveStatus = async (item) => {
     const { id, year } = item;
 
@@ -232,7 +241,7 @@ const Settings = () => {
             </CCard>
           </CCol>
 
-          {/* Acaemi Year */}
+          {/* Academic Year */}
           <CCol sm={6} lg={4}>
             <CCard color="dark" textColor="white" className="mb-3">
               <CCardHeader>
@@ -248,7 +257,7 @@ const Settings = () => {
                       {activeAcademicYear.year}
                     </CDropdownToggle>
                     <CDropdownMenu>
-                      {academicYear.map((element) => {
+                      {academicYears.map((element) => {
                         return (
                           <CDropdownItem
                             className="cursor"

@@ -20,7 +20,7 @@ const sequelize = new Sequelize(
     // Synchronize the models with the database (alter: true means it will alter tables if they already exist)
     await sequelize.sync({
       alter: true,
-      // force: process.env.NODE_ENV === 'development',
+      force: process.env.NODE_ENV === 'development',
       logging: false,
     });
     console.log('Models synchronized'.bgGreen);

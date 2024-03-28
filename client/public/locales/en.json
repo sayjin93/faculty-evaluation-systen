@@ -1,6 +1,7 @@
 {
   "535IncorrectAuthenticationData": "Incorrect SMTP Authentication",
   "AcademicYear": "Academic Year",
+  "AcademicYearWasAddedSuccessful": "Academic year {{0}} was added successfully!",
   "AccountVerification": "Account Verification",
   "AccountVerifiedSuccessfully": "Account verified successfully",
   "Actions": "Actions",

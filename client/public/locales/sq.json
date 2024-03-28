@@ -1,6 +1,7 @@
 {
   "535IncorrectAuthenticationData": "Të dhëna të pasakta të smtp auth",
   "AcademicYear": "Viti Akademik",
+  "AcademicYearWasAddedSuccessful": "Viti akademik {{0}} u shtua me sukses!",
   "AccountVerification": "Verifikimi i llogarisë",
   "AccountVerifiedSuccessfully": "Llogaria u verifikua me sukses",
   "Actions": "Veprime",
