@@ -41,11 +41,12 @@ const Layout = () => {
         } else {
           dispatch(changeAcademicYear(""));
         }
-        setIsLoading(false);
       })
       .catch((error) => {
         handleError(error);
       });
+
+    setIsLoading(false);
   };
   //#endregion
 
@@ -60,8 +61,10 @@ const Layout = () => {
       <div className="d-flex justify-content-center align-items-center vh-100">
         <CSpinner color="primary" />
       </div>
-    )
-  } else if (!isLoading && !academicYear) { return <AcademicYearAdd /> }
+    );
+  } else if (!isLoading && !academicYear) {
+    return <AcademicYearAdd />;
+  }
 
   return (
     <>

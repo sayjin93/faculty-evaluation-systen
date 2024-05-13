@@ -38,20 +38,21 @@ const Graphs = () => {
 
   //#region functions
   const generateArrow = (value) => {
-    if (value > 0) return <CIcon icon={cilArrowTop} />
-    else if (value < 0) return <CIcon icon={cilArrowBottom} />
-    else return ""
-  }
+    if (value > 0) return <CIcon icon={cilArrowTop} />;
+    else if (value < 0) return <CIcon icon={cilArrowBottom} />;
+    else return "";
+  };
   const fetchStatsCards = async () => {
     await api
       .get("/report/statsCards")
       .then((response) => {
         setStats(response.data);
-        setIsLoading(false);
       })
       .catch((error) => {
         handleError(error);
       });
+
+    setIsLoading(false);
   };
   //#endregion
 
@@ -66,7 +67,7 @@ const Graphs = () => {
       <CCol sm={6} lg={3}>
         {(() => {
           if (isLoading) {
-            return <Skeleton className="h-162 mb-4" />
+            return <Skeleton className="h-162 mb-4" />;
           } else if (!isLoading && stats.papersByYear) {
             const { total, progress, labels, data } = stats.papersByYear;
 
@@ -163,7 +164,7 @@ const Graphs = () => {
                   />
                 }
               />
-            )
+            );
           }
         })()}
       </CCol>
@@ -171,7 +172,7 @@ const Graphs = () => {
       <CCol sm={6} lg={3}>
         {(() => {
           if (isLoading) {
-            return <Skeleton className="h-162 mb-4" />
+            return <Skeleton className="h-162 mb-4" />;
           } else if (!isLoading && stats.booksByYear) {
             const { total, progress, labels, data } = stats.booksByYear;
 
@@ -265,7 +266,7 @@ const Graphs = () => {
                   />
                 }
               />
-            )
+            );
           }
         })()}
       </CCol>
@@ -273,7 +274,7 @@ const Graphs = () => {
       <CCol sm={6} lg={3}>
         {(() => {
           if (isLoading) {
-            return <Skeleton className="h-162 mb-4" />
+            return <Skeleton className="h-162 mb-4" />;
           } else if (!isLoading && stats.conferencesByYear) {
             const { total, progress, labels, data } = stats.conferencesByYear;
 
@@ -356,7 +357,7 @@ const Graphs = () => {
                   />
                 }
               />
-            )
+            );
           }
         })()}
       </CCol>
@@ -364,7 +365,7 @@ const Graphs = () => {
       <CCol sm={6} lg={3}>
         {(() => {
           if (isLoading) {
-            return <Skeleton className="h-162 mb-4" />
+            return <Skeleton className="h-162 mb-4" />;
           } else if (!isLoading && stats.communitiesByYear) {
             const { total, progress, labels, data } = stats.communitiesByYear;
 
@@ -449,7 +450,7 @@ const Graphs = () => {
                   />
                 }
               />
-            )
+            );
           }
         })()}
       </CCol>

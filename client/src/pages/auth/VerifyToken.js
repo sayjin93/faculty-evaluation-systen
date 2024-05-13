@@ -31,23 +31,30 @@ const VerifyToken = () => {
 
   //#region states
   const [status, setStatus] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
   //#endregion
 
   //#region functions
   const verifyToken = () => {
-    api.get(`/verify/${token}`)
+    setIsLoading(true);
+
+    api
+      .get(`/verify/${token}`)
       .then((response) => {
         setStatus(true);
         setMessage(t(convertToKey(response.data.message)));
-        setIsLoading(false);
       })
       .catch((error) => {
         setStatus(false);
-        setMessage(error.response ? t(convertToKey(error.response.data.message)) : t('AnErrorOccured'));
-        setIsLoading(false);
+        setMessage(
+          error.response
+            ? t(convertToKey(error.response.data.message))
+            : t("AnErrorOccured")
+        );
       });
+
+    setIsLoading(false);
   };
   const handleLanguageChange = () => {
     const language = getCookie({ name: "language" });
@@ -76,7 +83,7 @@ const VerifyToken = () => {
       <div className="d-flex justify-content-center align-items-center vh-100">
         <CSpinner color="primary" />
       </div>
-    )
+    );
   }
 
   return (
@@ -91,14 +98,22 @@ const VerifyToken = () => {
         <CRow className="justify-content-center">
           <CCol md={9} lg={7} xl={6}>
             <CCard className="p-4">
-              <CCardBody >
+              <CCardBody>
                 <h4 className="text-center mb-3">{t("AccountVerification")}</h4>
 
-                <CAlert className="text-center" color={status ? "success" : "danger"}>
+                <CAlert
+                  className="text-center"
+                  color={status ? "success" : "danger"}
+                >
                   {message}
                 </CAlert>
 
-                <CButton color="link" size="sm" className="mt-4 d-block mx-auto" onClick={() => navigate("/login")}>
+                <CButton
+                  color="link"
+                  size="sm"
+                  className="mt-4 d-block mx-auto"
+                  onClick={() => navigate("/login")}
+                >
                   <IoIosArrowRoundBack /> {t("BackToLogin")}
                 </CButton>
               </CCardBody>
