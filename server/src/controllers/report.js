@@ -1,5 +1,3 @@
-const express = require('express');
-const passport = require('passport');
 const Sequelize = require('sequelize');
 
 const AcademicYear = require('../models/academicYear');
@@ -10,12 +8,7 @@ const Course = require('../models/course');
 const Paper = require('../models/paper');
 const Professor = require('../models/professor');
 
-const router = express.Router();
-
-const auth = passport.authenticate('jwt', { session: false });
-
-// Stats router to retrieve various statistics
-router.get('/stats', auth, async (req, res) => {
+exports.getStats = async (req, res) => {
   try {
     // Find the active academic year
     const activeYear = await AcademicYear.findOne({ where: { active: true } });
@@ -55,10 +48,9 @@ router.get('/stats', auth, async (req, res) => {
       message: err.message || 'Some error occurred while retrieving statistics',
     });
   }
-});
+};
 
-// Retrieve all stats counts for all academic years
-router.get('/statsCards', auth, async (req, res) => {
+exports.getStatsCards = async (req, res) => {
   try {
     // Fetch academic years
     const academicYears = await AcademicYear.findAll({
@@ -123,10 +115,9 @@ router.get('/statsCards', auth, async (req, res) => {
       message: err.message || 'Some error occurred while retrieving statistics',
     });
   }
-});
+};
 
-// Retrieve all professors data for selected academic year
-router.get('/professors-data', auth, async (req, res) => {
+exports.getProfessorsData = async (req, res) => {
   try {
     // Find the active academic year
     const activeYear = await AcademicYear.findOne({ where: { active: true } });
@@ -172,10 +163,9 @@ router.get('/professors-data', auth, async (req, res) => {
       message: err.message || 'Some error occurred while retrieving professors data',
     });
   }
-});
+};
 
-// Retrieve all Data for a professor in a specific academic year
-router.get('/academic_year/:academic_year_id/professor/:professor_id', auth, async (req, res) => {
+exports.getProfessorDataByYear = async (req, res) => {
   const { professor_id } = req.params;
   const { academic_year_id } = req.params;
 
@@ -212,6 +202,4 @@ router.get('/academic_year/:academic_year_id/professor/:professor_id', auth, asy
         message: err.message || 'Some error occurred while retrieving data',
       });
     });
-});
-
-module.exports = router;
+};

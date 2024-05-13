@@ -1,18 +1,15 @@
-const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
-const router = express.Router();
+const Professor = require('../models/professor');
+const Settings = require('../models/settings');
 
-const Professor = require('../models/professor'); // Professor Model
-const Settings = require('../models/settings'); // Settings Model
+const { capitalizeWords, lowercaseNoSpace } = require('../utils');
 
-const { capitalizeWords, lowercaseNoSpace } = require('../utils'); // Utils
-
-router.post('/login', (req, res) => {
+exports.login = (req, res) => {
   const { username, password } = req.body;
 
   const new_username = lowercaseNoSpace(username);
@@ -72,9 +69,9 @@ router.post('/login', (req, res) => {
         message: err,
       });
     });
-});
+};
 
-router.post('/register', async (req, res) => {
+exports.register = async (req, res) => {
   const {
     language,
     first_name,
@@ -199,9 +196,9 @@ router.post('/register', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-});
+};
 
-router.get('/verify/:token', async (req, res) => {
+exports.verifyAccount = async (req, res) => {
   const verificationToken = req.params.token;
 
   try {
@@ -225,9 +222,9 @@ router.get('/verify/:token', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-});
+};
 
-router.post('/reset', async (req, res) => {
+exports.requestPasswordReset = async (req, res) => {
   const { username, language } = req.body;
 
   const new_username = lowercaseNoSpace(username);
@@ -301,15 +298,15 @@ router.post('/reset', async (req, res) => {
           if (language === 'sq') {
             emailSubject = 'Rivendosja e fjalëkalimit';
             emailText = 'Ju po e merrni këtë sepse ju (ose dikush tjetër) keni kërkuar rivendosjen e fjalëkalimit për llogarinë tuaj.\n\n'
-              + 'Ju lutemi klikoni në linkun e mëposhtme ose ngjisni këtë në shfletuesin tuaj për të përfunduar procesin:\n\n'
-              + `${base_url}/reset/${resetToken}\n\n`
-              + 'Nëse nuk e keni kërkuar këtë, ju lutemi injoroni këtë email dhe fjalëkalimi juaj do të mbetet i pandryshuar.\n';
+                + 'Ju lutemi klikoni në linkun e mëposhtme ose ngjisni këtë në shfletuesin tuaj për të përfunduar procesin:\n\n'
+                + `${base_url}/reset/${resetToken}\n\n`
+                + 'Nëse nuk e keni kërkuar këtë, ju lutemi injoroni këtë email dhe fjalëkalimi juaj do të mbetet i pandryshuar.\n';
           } else {
             emailSubject = 'Password Reset';
             emailText = 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n'
-              + 'Please click on the following link, or paste this into your browser to complete the process:\n\n'
-              + `${base_url}/reset/${resetToken}\n\n`
-              + 'If you did not request this, please ignore this email and your password will remain unchanged.\n';
+                + 'Please click on the following link, or paste this into your browser to complete the process:\n\n'
+                + `${base_url}/reset/${resetToken}\n\n`
+                + 'If you did not request this, please ignore this email and your password will remain unchanged.\n';
           }
 
           const mailOptions = {
@@ -334,7 +331,7 @@ router.post('/reset', async (req, res) => {
 
             res.json({
               message:
-                'Reset password email sent successfully. The Token will expire for 3 hours.',
+                  'Reset password email sent successfully. The Token will expire for 3 hours.',
             });
           });
         });
@@ -348,9 +345,9 @@ router.post('/reset', async (req, res) => {
     console.error('Error retrieving SMTP settings:', error);
     return res.status(500).json({ message: 'Internal Server Error' });
   }
-});
+};
 
-router.get('/reset/:token', (req, res) => {
+exports.resetPasswordTokenValidation = (req, res) => {
   const resetToken = req.params.token;
 
   Professor.findOne({
@@ -375,9 +372,9 @@ router.get('/reset/:token', (req, res) => {
         message: err,
       });
     });
-});
+};
 
-router.post('/reset/:token', (req, res) => {
+exports.resetPassword = (req, res) => {
   const resetToken = req.params.token;
   const newPassword = req.body.password; // Assuming the field is named 'password'
 
@@ -410,6 +407,6 @@ router.post('/reset/:token', (req, res) => {
         message: err,
       });
     });
-});
+};
 
-module.exports = router;
+module.exports = exports;

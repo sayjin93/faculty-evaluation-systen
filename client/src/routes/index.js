@@ -11,16 +11,16 @@ import Page404 from "../pages/Page404";
 import { SidebarRoutes } from "src/hooks";
 
 //public pages
-const Login = lazy(() => import("../pages/Auth/Login"));
-const Register = lazy(() => import("../pages/Auth/Register"));
-const VerifyToken = lazy(() => import("../pages/Auth/VerifyToken"));
-const Reset = lazy(() => import("../pages/Auth/Reset"));
-const ResetToken = lazy(() => import("../pages/Auth/ResetToken"));
+const Login = lazy(() => import("../pages/auth/Login"));
+const Register = lazy(() => import("../pages/auth/Register"));
+const VerifyToken = lazy(() => import("../pages/auth/VerifyToken"));
+const Reset = lazy(() => import("../pages/auth/Reset"));
+const ResetToken = lazy(() => import("../pages/auth/ResetToken"));
 
 //private pages
-const Home = lazy(() => import("../pages/Home"));
-const Faculties = lazy(() => import("../pages/Uni/Faculties"));
-const Departments = lazy(() => import("../pages/Uni/Departments"));
+const Home = lazy(() => import("../pages/home"));
+const Faculties = lazy(() => import("../pages/uni/Faculties"));
+const Departments = lazy(() => import("../pages/uni/Departments"));
 const Professors = lazy(() => import("../pages/Professors"));
 const Courses = lazy(() => import("../pages/Courses"));
 const Papers = lazy(() => import("../pages/Papers"));

@@ -7,6 +7,9 @@ const Department = sequelize.define('Department', {
   key: {
     type: DataTypes.STRING,
   },
+  is_deleted: {
+    type: DataTypes.BOOLEAN,
+  },
   faculty_id: {
     type: DataTypes.INTEGER,
   },

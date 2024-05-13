@@ -7,7 +7,7 @@ require('dotenv').config();
 require('./auth/passport');
 
 const middlewares = require('./middlewares');
-const api = require('./api');
+const routes = require('./routes');
 
 const app = express();
 
@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
   });
 });
 
-app.use('/api/v1', api);
+app.use('/api/v1', routes);
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);

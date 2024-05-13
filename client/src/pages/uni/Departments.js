@@ -86,6 +86,9 @@ const Departments = () => {
           name: response.data.key,
           is_deleted: response.data.is_deleted,
         });
+
+        myRef.current = response.data.key;
+
         dispatch(setModal("editDepartment"));
       })
       .catch((error) => {
@@ -130,6 +133,7 @@ const Departments = () => {
         is_deleted: formData.is_deleted,
       })
       .then((response) => {
+        debugger;
         setStatus(response);
         setValidated(false);
 

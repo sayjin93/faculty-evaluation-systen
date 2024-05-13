@@ -35,8 +35,8 @@ const AppHeaderDropdown = () => {
 
   const firstName = loggedUser?.first_name;
   const lastName = loggedUser?.last_name;
-  const fNameInit = firstName?.charAt(0);
-  const lNameInit = lastName?.charAt(0);
+  const fNameInit = firstName?.charAt(0) || "";
+  const lNameInit = lastName?.charAt(0) || "";
   const initials = fNameInit + lNameInit;
   //#endregion
 
@@ -68,9 +68,11 @@ const AppHeaderDropdown = () => {
           {initials ? initials : <AiOutlineUser />}
         </CAvatar>
       </CDropdownToggle>
-      <CDropdownMenu className="pt-0"
+      <CDropdownMenu
+        className="pt-0"
         // @ts-ignore
-        placement='bottom-end'>
+        placement="bottom-end"
+      >
         <CDropdownHeader className="bg-light fw-semibold py-2">
           {t("UserMenu")}
         </CDropdownHeader>

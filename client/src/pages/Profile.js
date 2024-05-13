@@ -206,6 +206,7 @@ const Profile = () => {
           <CRow className="mb-3" xs={{ cols: 1, gutter: 3 }} lg={{ cols: 2 }}>
             <CCol sm={6}>
               <CFormInput
+                required
                 type="text"
                 placeholder={t("FirstName")}
                 value={userData.firstName}
@@ -215,6 +216,7 @@ const Profile = () => {
 
             <CCol sm={6}>
               <CFormInput
+                required
                 type="text"
                 placeholder={t("LastName")}
                 value={userData.lastName}
@@ -248,7 +250,7 @@ const Profile = () => {
                   <CIcon icon={cilUser} />
                 </CInputGroupText>
                 <CFormInput
-                  title={t("NotAllowedToEdit")}
+                  required
                   type="text"
                   placeholder={t("Username")}
                   autoComplete="username"
@@ -263,6 +265,7 @@ const Profile = () => {
                 <CInputGroupText>@</CInputGroupText>
                 <CFormInput
                   disabled
+                  title={t("NotAllowedToEdit")}
                   type="email"
                   placeholder={t("Email")}
                   value={userData.email}

@@ -12,25 +12,25 @@
   "author": "Jurgen Kruja",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/translate": "^8.0.2",
+    "@google-cloud/translate": "^8.2.0",
     "bcrypt": "^5.1.1",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "helmet": "^7.0.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
-    "mysql2": "^3.6.2",
-    "nodemailer": "^6.9.7",
-    "passport": "^0.6.0",
+    "mysql2": "^3.9.7",
+    "nodemailer": "^6.9.13",
+    "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "sequelize": "^6.33.0"
+    "sequelize": "^6.37.3"
   },
   "devDependencies": {
     "eslint": "^8.42.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.1.0"
   }
 }
