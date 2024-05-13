@@ -29,8 +29,6 @@ const Layout = () => {
 
   //#endregion
 
-  console.log("isAdmin", isAdmin);
-
   //#region states
   const [isLoading, setIsLoading] = useState(true);
   //#endregion
