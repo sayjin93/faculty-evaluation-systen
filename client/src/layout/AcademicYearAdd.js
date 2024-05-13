@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 //coreUI
@@ -24,14 +24,19 @@ import api from "src/hooks/api";
 
 //store
 import { showToast, setFirstLogin } from "src/store";
+import { getIsAdmin } from "src/store/selectors";
 
-const AcademicYearAdd = ({ isAdmin }) => {
+const AcademicYearAdd = () => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   //#endregion
 
+    //#region selectors
+  const isAdmin = useSelector(getIsAdmin);
+  //#endregion
+  
   //#region states
   const [newAcademicYear, setNewAcademicYear] = useState("");
   //#endregion
