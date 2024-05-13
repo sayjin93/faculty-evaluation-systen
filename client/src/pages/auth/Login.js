@@ -82,7 +82,7 @@ const Login = () => {
         const { user, token } = response.data;
         // Set the JWT token to the Local Storage
         localStorage.setItem("jwt_token", token);
-
+        
         // Set leggedUser into redux store
         const loggedUser = {
           id: user.id,
@@ -91,6 +91,7 @@ const Login = () => {
           gender: user.gender,
           username: user.username,
           email: user.email,
+          is_admin: user.is_admin
         };
         dispatch(setUser(loggedUser));
 

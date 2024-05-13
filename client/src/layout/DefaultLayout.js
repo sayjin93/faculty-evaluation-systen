@@ -11,6 +11,7 @@ import AppFooter from "./components/AppFooter";
 import AcademicYearAdd from "./AcademicYearAdd";
 
 import { changeAcademicYear } from "../store";
+import { getIsAdmin } from "src/store/selectors";
 
 import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
@@ -24,7 +25,11 @@ const Layout = () => {
   //#region selectors
   // @ts-ignore
   const academicYear = useSelector((state) => state.settings.academicYear);
+  const isAdmin = useSelector(getIsAdmin);
+
   //#endregion
+
+  console.log("isAdmin", isAdmin);
 
   //#region states
   const [isLoading, setIsLoading] = useState(true);
@@ -63,7 +68,7 @@ const Layout = () => {
       </div>
     );
   } else if (!isLoading && !academicYear) {
-    return <AcademicYearAdd />;
+    return <AcademicYearAdd isAdmin={isAdmin}/>;
   }
 
   return (

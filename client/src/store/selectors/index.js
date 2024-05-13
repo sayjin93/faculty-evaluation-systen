@@ -40,3 +40,8 @@ export const getLoggedUser = createSelector(
   [selectUser],
   (user) => user.loggedUser
 );
+
+export const getIsAdmin = createSelector(
+  [selectUser],
+  (user) => user.loggedUser.is_admin
+);

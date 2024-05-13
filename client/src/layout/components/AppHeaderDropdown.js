@@ -48,7 +48,6 @@ const AppHeaderDropdown = () => {
     // Redirect the user to the login page
     navigate("/login", { replace: true });
 
-    batch(() => {
       //Show toast with notification
       dispatch(
         showToast({
@@ -57,7 +56,6 @@ const AppHeaderDropdown = () => {
         })
       );
       dispatch(setFirstLogin(true));
-    });
   };
   //#endregion
 

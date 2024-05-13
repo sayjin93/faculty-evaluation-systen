@@ -30,7 +30,7 @@ const sequelize = new Sequelize(
 
     await sequelize.sync({
       alter: true,
-      force: process.env.NODE_ENV === 'development',
+      // force: process.env.NODE_ENV === 'development',
       logging: false,
     });
 
@@ -38,17 +38,17 @@ const sequelize = new Sequelize(
 
     if (process.env.DEFAULT_DATA === 'true') {
       const seeds = [
+        require('./seeders/settings'),
         require('./seeders/admin'),
         require('./seeders/faculty'),
         require('./seeders/department'),
-        require('./seeders/academicYear'),
-        require('./seeders/professor'),
-        require('./seeders/course'),
-        require('./seeders/paper'),
-        require('./seeders/book'),
-        require('./seeders/conference'),
-        require('./seeders/community'),
-        require('./seeders/settings'),
+        // require('./seeders/academicYear'),
+        // require('./seeders/professor'),
+        // require('./seeders/course'),
+        // require('./seeders/paper'),
+        // require('./seeders/book'),
+        // require('./seeders/conference'),
+        // require('./seeders/community'),
       ];
 
       await runSeeders(seeds);

@@ -133,7 +133,6 @@ const Departments = () => {
         is_deleted: formData.is_deleted,
       })
       .then((response) => {
-        debugger;
         setStatus(response);
         setValidated(false);
 

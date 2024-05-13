@@ -59,6 +59,7 @@ exports.login = (req, res) => {
             gender: user.gender,
             username: user.username,
             email: user.email,
+            is_admin: user.is_admin,
           },
           token: jwtToken,
         });
@@ -134,7 +135,7 @@ exports.register = async (req, res) => {
 
         if (!response) {
           return res.status(500).json({
-            message: 'SMTP settings not found',
+            message: 'SMTP settings not found! Contact administrator to activate your account.',
           });
         }
 

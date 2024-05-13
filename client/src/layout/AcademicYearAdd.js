@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 
@@ -22,12 +23,13 @@ import { cibHtmlacademy } from "@coreui/icons";
 import api from "src/hooks/api";
 
 //store
-import { showToast } from "src/store";
+import { showToast, setFirstLogin } from "src/store";
 
-const AcademicYearAdd = () => {
+const AcademicYearAdd = ({ isAdmin }) => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   //#endregion
 
   //#region states
@@ -35,7 +37,9 @@ const AcademicYearAdd = () => {
   //#endregion
 
   //#region functions
-  const addAcademicYear = async () => {
+  const addAcademicYear = async (event) => {
+    event.preventDefault();
+
     await api
       .post("/academic-year", {
         year: newAcademicYear,
@@ -59,6 +63,24 @@ const AcademicYearAdd = () => {
         );
       });
   };
+  const logout = (event) => {
+    event.preventDefault();
+
+    // Remove the JWT token from the Local Storage
+    localStorage.removeItem("jwt_token");
+
+    // Redirect the user to the login page
+    navigate("/login", { replace: true });
+
+    //Show toast with notification
+    dispatch(
+      showToast({
+        type: "success",
+        content: "You have been logout successfully!",
+      })
+    );
+    dispatch(setFirstLogin(true));
+  };
   //#endregion
 
   return (
@@ -68,31 +90,46 @@ const AcademicYearAdd = () => {
           <CCol md={9} lg={7} xl={6}>
             <CCard className="mx-4">
               <CCardBody className="p-4">
-                <CForm onSubmit={addAcademicYear}>
-                  <h1>{t("Add") + " " + t("AcademicYear")}</h1>
-                  <p className="text-medium-emphasis">
-                    {t("YouNeedToDefineAcademicYearFirst") + "!"}
-                  </p>
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon icon={cibHtmlacademy} />
-                    </CInputGroupText>
-                    <CFormInput
-                      required
-                      type="text"
-                      placeholder={t("Ex") + ". 2023-2024"}
-                      value={newAcademicYear}
-                      onChange={(event) =>
-                        setNewAcademicYear(event.target.value)
-                      }
-                    />
-                  </CInputGroup>
-                  <div className="d-grid">
-                    <CButton color="success" type="submit">
-                      {t("Add") + " " + t("AcademicYear")}
-                    </CButton>
-                  </div>
-                </CForm>
+                {isAdmin ? (
+                  <CForm onSubmit={addAcademicYear}>
+                    <h1>{t("Add") + " " + t("AcademicYear")}</h1>
+                    <p className="text-medium-emphasis">
+                      {t("YouNeedToDefineAcademicYearFirst") + "!"}
+                    </p>
+                    <CInputGroup className="mb-3">
+                      <CInputGroupText>
+                        <CIcon icon={cibHtmlacademy} />
+                      </CInputGroupText>
+                      <CFormInput
+                        required
+                        type="text"
+                        placeholder={t("Ex") + ". 2023-2024"}
+                        value={newAcademicYear}
+                        onChange={(event) =>
+                          setNewAcademicYear(event.target.value)
+                        }
+                      />
+                    </CInputGroup>
+                    <div className="d-grid">
+                      <CButton color="success" type="submit">
+                        {t("Add") + " " + t("AcademicYear")}
+                      </CButton>
+                    </div>
+                  </CForm>
+                ) : (
+                  <CForm onSubmit={logout}>
+                    <h1>{t("NoAcademicYear")}</h1>
+                    <p className="text-medium-emphasis">
+                      {t("ContactAdministrator") + "!"}
+                    </p>
+
+                    <div className="d-grid">
+                      <CButton color="success" type="submit">
+                        {t("Logout")}
+                      </CButton>
+                    </div>
+                  </CForm>
+                )}
               </CCardBody>
             </CCard>
           </CCol>
