@@ -42,13 +42,13 @@ const sequelize = new Sequelize(
         require('./seeders/admin'),
         require('./seeders/faculty'),
         require('./seeders/department'),
-        // require('./seeders/academicYear'),
-        // require('./seeders/professor'),
-        // require('./seeders/course'),
-        // require('./seeders/paper'),
-        // require('./seeders/book'),
-        // require('./seeders/conference'),
-        // require('./seeders/community'),
+        require('./seeders/academicYear'),
+        require('./seeders/professor'),
+        require('./seeders/course'),
+        require('./seeders/paper'),
+        require('./seeders/book'),
+        require('./seeders/conference'),
+        require('./seeders/community'),
       ];
 
       await runSeeders(seeds);
