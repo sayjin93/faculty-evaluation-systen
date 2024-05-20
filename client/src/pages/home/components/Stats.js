@@ -21,7 +21,7 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 //components
 import CountUp from 'react-countup';
 
-const Stats = () => {
+const Stats = ({ userId, isAdmin }) => {
     //#region constants
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -33,9 +33,19 @@ const Stats = () => {
     //#endregion
 
     //#region functions
-    const fetchDashboard = async () => {
+    const fetchAdminStats = async () => {
         await api
             .get("/report/stats")
+            .then((response) => {
+                setStats(response.data);
+            })
+            .catch((error) => {
+                handleError(error);
+            });
+    };
+    const fetchProfessorStats = async () => {
+        await api
+            .get(`/report/stats/professor/${userId}`)
             .then((response) => {
                 setStats(response.data);
             })
@@ -47,7 +57,7 @@ const Stats = () => {
 
     //#region useEffect
     useEffect(() => {
-        fetchDashboard();
+        isAdmin ? fetchAdminStats() : fetchProfessorStats()
     }, []);
     //#endregion
 
@@ -75,7 +85,7 @@ const Stats = () => {
 
             <CCardFooter>
                 <CRow>
-                    <CCol xs={6} md={4} lg={2}>
+                    {isAdmin && <CCol xs={6} md={4} lg={2}>
                         <div className="border-start border-start-4 border-start-info py-1 px-3">
                             <div className="text-medium-emphasis small">
                                 {t("Professors")}
@@ -84,7 +94,7 @@ const Stats = () => {
                                 <CountUp end={stats?.active_professors_count} />
                             </div>
                         </div>
-                    </CCol>
+                    </CCol>}
                     <CCol xs={6} md={4} lg={2}>
                         <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
                             <div className="text-medium-emphasis small">{t("Courses")}</div>
@@ -109,7 +119,7 @@ const Stats = () => {
                             </div>
                         </div>
                     </CCol>
-                    <CCol xs={6} md={4} lg={2}>
+                    <CCol xs={6} md={4} lg={isAdmin ? 2 : 3}>
                         <div className="border-start border-start-4 border-start-primary py-1 px-3 mb-3">
                             <div className="text-medium-emphasis small">
                                 {t("Conferences")}
@@ -119,7 +129,7 @@ const Stats = () => {
                             </div>
                         </div>
                     </CCol>
-                    <CCol xs={6} md={4} lg={2}>
+                    <CCol xs={isAdmin ? 6 : 12} md={isAdmin ? 4 : 6} lg={isAdmin ? 2 : 3}>
                         <div className="border-start border-start-4 border-start-secondary py-1 px-3 mb-3">
                             <div className="text-medium-emphasis small">
                                 {t("CommunityServices")}

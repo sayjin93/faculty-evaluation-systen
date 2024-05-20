@@ -18,19 +18,15 @@ exports.getStats = async (req, res) => {
     const academic_year_id = activeYear.id;
 
     // Aggregate data for the active academic year
-    const coursesCount = await Course.count({ where: { academic_year_id } });
-    const papersCount = await Paper.count({ where: { academic_year_id } });
-    const booksCount = await Book.count({ where: { academic_year_id } });
-    const conferencesCount = await Conference.count({ where: { academic_year_id } });
-    const communityServicesCount = await Community.count({ where: { academic_year_id } });
-
-    // Count professors based on specified criteria
-    const activeProfessorsCount = await Professor.count({
-      where: { is_verified: true, is_deleted: false, is_admin: false },
-    });
-    const allProfessorsCount = await Professor.count({
-      where: { is_verified: true, is_admin: false },
-    });
+    const [coursesCount, papersCount, booksCount, conferencesCount, communityServicesCount, activeProfessorsCount, allProfessorsCount] = await Promise.all([
+      Course.count({ where: { academic_year_id } }),
+      Paper.count({ where: { academic_year_id } }),
+      Book.count({ where: { academic_year_id } }),
+      Conference.count({ where: { academic_year_id } }),
+      Community.count({ where: { academic_year_id } }),
+      Professor.count({ where: { is_verified: true, is_deleted: false, is_admin: false } }),
+      Professor.count({ where: { is_verified: true, is_admin: false } }),
+    ]);
 
     // Send the aggregated data
     res.send({
@@ -42,6 +38,40 @@ exports.getStats = async (req, res) => {
       community_services_count: communityServicesCount,
       active_professors_count: activeProfessorsCount,
       all_professors_count: allProfessorsCount,
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving statistics',
+    });
+  }
+};
+exports.getProfessorStats = async (req, res) => {
+  const { professor_id } = req.params;
+  try {
+    // Find the active academic year
+    const activeYear = await AcademicYear.findOne({ where: { active: true } });
+    if (!activeYear) {
+      return res.status(404).send({ message: 'Active academic year not found' });
+    }
+    const academic_year_id = activeYear.id;
+
+    // Aggregate data for the active academic year for the specified professor
+    const [coursesCount, papersCount, booksCount, conferencesCount, communityServicesCount] = await Promise.all([
+      Course.count({ where: { academic_year_id, professor_id } }),
+      Paper.count({ where: { academic_year_id, professor_id } }),
+      Book.count({ where: { academic_year_id, professor_id } }),
+      Conference.count({ where: { academic_year_id, professor_id } }),
+      Community.count({ where: { academic_year_id, professor_id } }),
+    ]);
+
+    // Send the aggregated data
+    res.send({
+      active_academic_year: activeYear.year,
+      courses_count: coursesCount,
+      papers_count: papersCount,
+      books_count: booksCount,
+      conferences_count: conferencesCount,
+      community_services_count: communityServicesCount,
     });
   } catch (err) {
     res.status(500).send({
@@ -89,8 +119,81 @@ exports.getStatsCards = async (req, res) => {
       let progress = 0;
       if (previousYearCount > 0) {
         progress = ((lastYearCount - previousYearCount) / previousYearCount) * 100;
-        progress = parseFloat(progress.toFixed(1)); // Round to 1 decimal place
+      } else if (previousYearCount === 0 && lastYearCount > 0) {
+        progress = 100; // If previous year count is 0 and current year count is greater than 0, show 100% increment
       }
+      progress = parseFloat(progress.toFixed(1)); // Round to 1 decimal place
+
+      return {
+        labels: academicYears.map((y) => y.year), data, total, progress,
+      };
+    };
+
+    // Fetching data for each category
+    const papersByYear = await getCountsByAcademicYear(Paper);
+    const booksByYear = await getCountsByAcademicYear(Book);
+    const conferencesByYear = await getCountsByAcademicYear(Conference);
+    const communitiesByYear = await getCountsByAcademicYear(Community);
+
+    // Sending the response
+    res.send({
+      papersByYear,
+      booksByYear,
+      conferencesByYear,
+      communitiesByYear,
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving statistics',
+    });
+  }
+};
+
+exports.getProfessorStatsCards = async (req, res) => {
+  const { professor_id } = req.params;
+  try {
+    // Fetch academic years
+    const academicYears = await AcademicYear.findAll({
+      attributes: ['id', 'year'],
+      order: [['year', 'ASC']],
+      raw: true,
+    });
+
+    // Utility function to get counts by academic year from a model for a specific professor
+    const getCountsByAcademicYear = async (model) => {
+      const counts = await model.findAll({
+        attributes: ['academic_year_id', [Sequelize.fn('COUNT', Sequelize.col('id')), 'count']],
+        where: { professor_id },
+        group: 'academic_year_id',
+        raw: true,
+      });
+
+      let total = 0;
+      let lastYearCount = 0;
+      let previousYearCount = 0;
+      const data = academicYears.map((year, index) => {
+        const countForYear = counts.find((c) => c.academic_year_id === year.id);
+        const count = countForYear ? countForYear.count : 0;
+        total += count;
+
+        // For progress calculation
+        if (index === academicYears.length - 1) {
+          lastYearCount = count;
+        } else if (index === academicYears.length - 2) {
+          previousYearCount = count;
+        }
+
+        return count;
+      });
+
+      // Calculate progress
+      let progress = 0;
+      if (previousYearCount > 0) {
+        progress = ((lastYearCount - previousYearCount) / previousYearCount) * 100;
+      } else if (previousYearCount === 0 && lastYearCount > 0) {
+        progress = 100; // If previous year count is 0 and current year count is greater than 0, show 100% increment
+      }
+      progress = parseFloat(progress.toFixed(1)); // Round to 1 decimal place
 
       return {
         labels: academicYears.map((y) => y.year), data, total, progress,
@@ -136,14 +239,14 @@ exports.getProfessorsData = async (req, res) => {
 
     // Map each professor to their data
     const professorsData = await Promise.all(professors.map(async (professor) => {
-      const coursesCount = await Course.count({ where: { academic_year_id, professor_id: professor.id } });
-      const papersCount = await Paper.count({ where: { academic_year_id, professor_id: professor.id } });
-      const booksCount = await Book.count({ where: { academic_year_id, professor_id: professor.id } });
-      const conferencesCount = await Conference.count({ where: { academic_year_id, professor_id: professor.id } });
-      const communityServicesCount = await Community.count({ where: { academic_year_id, professor_id: professor.id } });
-
-      // Calculate total week hours and default to 0 if null
-      const totalWeekHours = (await Course.sum('week_hours', { where: { academic_year_id, professor_id: professor.id } })) || 0;
+      const [coursesCount, papersCount, booksCount, conferencesCount, communityServicesCount, totalWeekHours] = await Promise.all([
+        Course.count({ where: { academic_year_id, professor_id: professor.id } }),
+        Paper.count({ where: { academic_year_id, professor_id: professor.id } }),
+        Book.count({ where: { academic_year_id, professor_id: professor.id } }),
+        Conference.count({ where: { academic_year_id, professor_id: professor.id } }),
+        Community.count({ where: { academic_year_id, professor_id: professor.id } }),
+        Course.sum('week_hours', { where: { academic_year_id, professor_id: professor.id } }),
+      ]);
 
       return {
         id: professor.id,
@@ -153,7 +256,7 @@ exports.getProfessorsData = async (req, res) => {
         books: booksCount,
         conferences: conferencesCount,
         community_service: communityServicesCount,
-        total_week_hours: totalWeekHours,
+        total_week_hours: totalWeekHours || 0,
       };
     }));
 
@@ -164,42 +267,74 @@ exports.getProfessorsData = async (req, res) => {
     });
   }
 };
-
-exports.getProfessorDataByYear = async (req, res) => {
+exports.getProfessorData = async (req, res) => {
   const { professor_id } = req.params;
-  const { academic_year_id } = req.params;
+  try {
+    // Fetch academic years
+    const academicYears = await AcademicYear.findAll({
+      attributes: ['id', 'year'],
+      order: [['year', 'DESC']], // Order by newest to oldest
+      raw: true,
+    });
 
-  // Use Promise.all to run multiple queries in parallel
-  Promise.all([
-    Course.findAll({
-      where: { academic_year_id, professor_id },
-    }),
-    Paper.findAll({
-      where: { academic_year_id, professor_id },
-    }),
-    Book.findAll({
-      where: { academic_year_id, professor_id },
-    }),
-    Conference.findAll({
-      where: { academic_year_id, professor_id },
-    }),
-    Community.findAll({
-      where: { academic_year_id, professor_id },
-    }),
-  ])
-    .then(([courses, papers, books, conferences, communities]) => {
-      const allData = {
+    // Function to get counts by academic year for a specific professor
+    const getCountsByAcademicYear = async (model, academicYearId) => {
+      const count = await model.count({
+        where: {
+          academic_year_id: academicYearId,
+          professor_id,
+        },
+      });
+      return count;
+    };
+
+    // Gather stats for each academic year
+    const statsByYear = await Promise.all(academicYears.map(async (year) => {
+      const [books, communities, conferences, courses, papers] = await Promise.all([
+        getCountsByAcademicYear(Book, year.id),
+        getCountsByAcademicYear(Community, year.id),
+        getCountsByAcademicYear(Conference, year.id),
+        getCountsByAcademicYear(Course, year.id),
+        getCountsByAcademicYear(Paper, year.id),
+      ]);
+
+      return {
+        id: year.id,
+        year: year.year,
+        books,
+        communities,
+        conferences,
         courses,
         papers,
-        books,
-        conferences,
-        communities,
       };
-      res.send(allData);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || 'Some error occurred while retrieving data',
-      });
+    }));
+
+    // Send the response
+    res.send(statsByYear);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving statistics',
     });
+  }
+};
+
+exports.getProfessorDataByYear = async (req, res) => {
+  const { professor_id, academic_year_id } = req.params;
+  try {
+    const [courses, papers, books, conferences, communities] = await Promise.all([
+      Course.findAll({ where: { academic_year_id, professor_id } }),
+      Paper.findAll({ where: { academic_year_id, professor_id } }),
+      Book.findAll({ where: { academic_year_id, professor_id } }),
+      Conference.findAll({ where: { academic_year_id, professor_id } }),
+      Community.findAll({ where: { academic_year_id, professor_id } }),
+    ]);
+
+    res.send({
+      courses, papers, books, conferences, communities,
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving data',
+    });
+  }
 };

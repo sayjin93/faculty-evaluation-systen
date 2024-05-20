@@ -15,7 +15,7 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 import CustomDataGrid from "src/components/CustomDataGrid";
 import Skeleton from "src/components/Skeleton";
 
-const ProfessorsStats = () => {
+const ProfessorsStats = ({ userId, isAdmin }) => {
   //#region constants
   const { t } = useTranslation();
   const handleError = useErrorHandler();
@@ -43,11 +43,28 @@ const ProfessorsStats = () => {
 
     setIsLoading(false);
   };
+
+  const fetchProfessorData = async () => {
+    setIsLoading(true);
+
+    await api
+      .get(`/report/professors-data/professor/${userId}`)
+      .then((response) => {
+        if (stats !== response.data) {
+          setStats(response.data);
+        }
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+
+    setIsLoading(false);
+  };
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    fetchProfessorsData();
+    isAdmin ? fetchProfessorsData() : fetchProfessorData()
   }, []);
   //#endregion
 
@@ -56,14 +73,14 @@ const ProfessorsStats = () => {
       textColor="primary"
       className="border-primary border-top-primary border-top-3 mb-4"
     >
-      <CCardHeader>{t("ProfessorsStatistics")}</CCardHeader>
+      <CCardHeader>{isAdmin ? t("ProfessorsStatistics") : t("ProfessorStatistics")}</CCardHeader>
 
       <CCardBody>
         {(() => {
           if (isLoading) {
             return <Skeleton className="h-48 mb-1" times={6} />;
           } else {
-            return (
+            return isAdmin ? (
               <CustomDataGrid dataSource={stats}>
                 <Column
                   dataField="professor"
@@ -101,7 +118,40 @@ const ProfessorsStats = () => {
                   dataType="number"
                 />
               </CustomDataGrid>
-            );
+            ) : (
+              <CustomDataGrid dataSource={stats}>
+                <Column
+                  dataField="year"
+                  caption={t("AcademicYear")}
+                  dataType="string"
+                />
+                <Column
+                  dataField="courses"
+                  caption={t("Courses")}
+                  dataType="number"
+                />
+                <Column
+                  dataField="papers"
+                  caption={t("Papers")}
+                  dataType="number"
+                />
+                <Column
+                  dataField="books"
+                  caption={t("Books")}
+                  dataType="number"
+                />
+                <Column
+                  dataField="conferences"
+                  caption={t("Conferences")}
+                  dataType="number"
+                />
+                <Column
+                  dataField="communities"
+                  caption={t("Communities")}
+                  dataType="number"
+                />
+              </CustomDataGrid>
+            )
           }
         })()}
       </CCardBody>

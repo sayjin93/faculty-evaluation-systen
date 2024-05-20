@@ -33,10 +33,10 @@ const AcademicYearAdd = () => {
   const navigate = useNavigate();
   //#endregion
 
-    //#region selectors
+  //#region selectors
   const isAdmin = useSelector(getIsAdmin);
   //#endregion
-  
+
   //#region states
   const [newAcademicYear, setNewAcademicYear] = useState("");
   //#endregion

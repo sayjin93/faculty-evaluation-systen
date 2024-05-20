@@ -56,7 +56,8 @@ const sequelize = new Sequelize(
     } else {
       const adminSeeder = require('./seeders/admin');
       await adminSeeder();
-      console.log('Admin seeding completed successfully!');
+
+      console.log('Admin seeding completed successfully!'.bgGreen);
     }
   } catch (error) {
     console.log('Unable to connect to the database:', error);

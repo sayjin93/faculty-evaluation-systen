@@ -4,6 +4,8 @@ import { CSpinner } from "@coreui/react";
 
 import Public from "./public";
 import Private from "./private";
+import PrivateAdmin from "./privateAdmin";
+
 
 //default layout for private pages
 import DefaultLayout from "../layout/DefaultLayout";
@@ -43,11 +45,19 @@ const privateRoutes = [
       },
       {
         path: SidebarRoutes.Faculties,
-        element: <Faculties />,
+        element: (
+          <PrivateAdmin>
+            <Faculties />
+          </PrivateAdmin>
+        ),
       },
       {
         path: SidebarRoutes.Departments,
-        element: <Departments />,
+        element: (
+          <PrivateAdmin>
+            <Departments />
+          </PrivateAdmin>
+        ),
       },
       {
         path: SidebarRoutes.Courses,
@@ -55,7 +65,11 @@ const privateRoutes = [
       },
       {
         path: SidebarRoutes.Professors,
-        element: <Professors />,
+        element: (
+          <PrivateAdmin>
+            <Professors />
+          </PrivateAdmin>
+        ),
       },
       {
         path: SidebarRoutes.Papers,
@@ -83,7 +97,11 @@ const privateRoutes = [
       },
       {
         path: SidebarRoutes.Translations,
-        element: <Translations />,
+        element: (
+          <PrivateAdmin>
+            <Translations />
+          </PrivateAdmin>
+        ),
       },
       {
         path: SidebarRoutes.Profile,

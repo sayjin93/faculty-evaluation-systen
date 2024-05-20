@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useMemo } from "react";
+import { useSelector } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { SidebarRoutes } from "src/hooks";
@@ -18,13 +19,21 @@ import { RiCommunityLine } from "react-icons/ri";
 import { TbReportSearch } from "react-icons/tb";
 import { HiLanguage } from "react-icons/hi2";
 
+//store
+import { getIsAdmin } from "src/store/selectors";
 
 export const AppSidebarNav = () => {
   //#region constants
   const { t } = useTranslation();
   const location = useLocation();
+  //#endregion
 
-  const items = [
+  //#region selectors
+  const isAdmin = useSelector(getIsAdmin);
+  //#endregion
+
+  //#region data
+  const items = useMemo(() => [
     {
       component: CNavItem,
       name: t("Dashboard"),
@@ -32,24 +41,27 @@ export const AppSidebarNav = () => {
       icon: <LuLayoutDashboard className="nav-icon" />,
       badge: {
         color: "info",
-        text: t("Working").toUpperCase(),
+        // text: t("Working").toUpperCase(),
       },
     },
     {
       component: CNavTitle,
       name: t('University'),
+      admin: true,
     },
     {
       component: CNavItem,
       name: t('Faculties'),
       to: SidebarRoutes.Faculties,
       icon: <PiBuildingsBold className="nav-icon" />,
+      admin: true,
     },
     {
       component: CNavItem,
       name: t('Departments'),
       to: SidebarRoutes.Departments,
       icon: <VscSymbolClass className="nav-icon" />,
+      admin: true,
     },
     {
       component: CNavTitle,
@@ -60,6 +72,7 @@ export const AppSidebarNav = () => {
       name: t("Professors"),
       to: SidebarRoutes.Professors,
       icon: <FaChalkboardTeacher className="nav-icon" style={{ height: "18px" }} />,
+      admin: true,
     },
     {
       component: CNavItem,
@@ -119,11 +132,16 @@ export const AppSidebarNav = () => {
       name: t("Translations"),
       to: SidebarRoutes.Translations,
       icon: <HiLanguage className="nav-icon" />,
+      admin: true,
     },
-  ];
+  ], [isAdmin]);
   //#endregion
 
   //#region functions
+  const filteredItems = isAdmin
+    ? items
+    : items.filter((item) => !item.admin);
+
   const navLink = (name, icon, badge) => {
     return (
       <>
@@ -172,12 +190,8 @@ export const AppSidebarNav = () => {
   };
   //#endregion
 
-  return (
-    <React.Fragment>
-      {items &&
-        items.map((item, index) =>
-          item.items ? navGroup(item, index) : navItem(item, index)
-        )}
-    </React.Fragment>
-  );
+  return filteredItems &&
+    filteredItems.map((item, index) =>
+      item.items ? navGroup(item, index) : navItem(item, index)
+    )
 };

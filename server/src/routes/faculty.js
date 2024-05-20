@@ -1,16 +1,18 @@
 const express = require('express');
 const passport = require('passport');
-const facultyController = require('../controllers/faculty');
 
 const router = express.Router();
 const auth = passport.authenticate('jwt', { session: false });
 
+const { isAdminMiddleware } = require('../middlewares');
+const facultyController = require('../controllers/faculty');
+
 // Faculty routes
-router.post('/', auth, facultyController.createFaculty);
-router.get('/', facultyController.getAllFaculties);
-router.get('/:id', auth, facultyController.getFacultyById);
-router.put('/:id', auth, facultyController.updateFaculty);
-router.delete('/:id', auth, facultyController.deleteFaculty);
-router.delete('/', auth, facultyController.deleteAllFaculties);
+router.post('/', auth, isAdminMiddleware, facultyController.createFaculty);
+router.get('/', auth, isAdminMiddleware, facultyController.getAllFaculties);
+router.get('/:id', auth, isAdminMiddleware, facultyController.getFacultyById);
+router.put('/:id', auth, isAdminMiddleware, facultyController.updateFaculty);
+router.delete('/:id', auth, isAdminMiddleware, facultyController.deleteFaculty);
+router.delete('/', auth, isAdminMiddleware, facultyController.deleteAllFaculties);
 
 module.exports = router;

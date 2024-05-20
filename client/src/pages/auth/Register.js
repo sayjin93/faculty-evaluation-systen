@@ -51,7 +51,6 @@ import BgLines from "src/components/BgLines";
 import icon from "src/assets/images/icon.svg";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
-
 const Register = () => {
   //#region constants
   const { t } = useTranslation();

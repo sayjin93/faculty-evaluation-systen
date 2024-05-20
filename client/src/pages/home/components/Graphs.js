@@ -5,10 +5,6 @@ import { useTranslation } from "react-i18next";
 import {
   CRow,
   CCol,
-  CDropdown,
-  CDropdownMenu,
-  CDropdownItem,
-  CDropdownToggle,
   CWidgetStatsA,
 } from "@coreui/react";
 import { getStyle } from "@coreui/utils";
@@ -16,7 +12,7 @@ import { CChartBar, CChartLine } from "@coreui/react-chartjs";
 import CIcon from "@coreui/icons-react";
 
 //icons
-import { cilArrowBottom, cilArrowTop, cilOptions } from "@coreui/icons";
+import { cilArrowBottom, cilArrowTop } from "@coreui/icons";
 
 //hooks
 import api from "src/hooks/api";
@@ -25,7 +21,7 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 //components
 import Skeleton from "src/components/Skeleton";
 
-const Graphs = () => {
+const Graphs = ({ userId, isAdmin }) => {
   //#region constants
   const { t } = useTranslation();
   const handleError = useErrorHandler();
@@ -42,9 +38,21 @@ const Graphs = () => {
     else if (value < 0) return <CIcon icon={cilArrowBottom} />;
     else return "";
   };
-  const fetchStatsCards = async () => {
+  const fetchAdminStatsCards = async () => {
     await api
       .get("/report/statsCards")
+      .then((response) => {
+        setStats(response.data);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+
+    setIsLoading(false);
+  };
+  const fetchProfessorStats = async () => {
+    await api
+      .get(`/report/statsCards/professor/${userId}`)
       .then((response) => {
         setStats(response.data);
       })
@@ -58,7 +66,7 @@ const Graphs = () => {
 
   //#region useEffect
   useEffect(() => {
-    fetchStatsCards();
+    isAdmin ? fetchAdminStatsCards() : fetchProfessorStats()
   }, []);
   //#endregion
 
@@ -84,26 +92,6 @@ const Graphs = () => {
                   </>
                 }
                 title={t("Papers")}
-                action={
-                  <CDropdown alignment="end">
-                    <CDropdownToggle
-                      color="transparent"
-                      caret={false}
-                      className="p-0"
-                    >
-                      <CIcon
-                        icon={cilOptions}
-                        className="text-high-emphasis-inverse"
-                      />
-                    </CDropdownToggle>
-                    <CDropdownMenu>
-                      <CDropdownItem>Action</CDropdownItem>
-                      <CDropdownItem>Another action</CDropdownItem>
-                      <CDropdownItem>Something else here...</CDropdownItem>
-                      <CDropdownItem disabled>Disabled action</CDropdownItem>
-                    </CDropdownMenu>
-                  </CDropdown>
-                }
                 chart={
                   <CChartLine
                     className="mt-3 mx-3"
@@ -189,26 +177,6 @@ const Graphs = () => {
                   </>
                 }
                 title={t("Books")}
-                action={
-                  <CDropdown alignment="end">
-                    <CDropdownToggle
-                      color="transparent"
-                      caret={false}
-                      className="p-0"
-                    >
-                      <CIcon
-                        icon={cilOptions}
-                        className="text-high-emphasis-inverse"
-                      />
-                    </CDropdownToggle>
-                    <CDropdownMenu>
-                      <CDropdownItem>Action</CDropdownItem>
-                      <CDropdownItem>Another action</CDropdownItem>
-                      <CDropdownItem>Something else here...</CDropdownItem>
-                      <CDropdownItem disabled>Disabled action</CDropdownItem>
-                    </CDropdownMenu>
-                  </CDropdown>
-                }
                 chart={
                   <CChartLine
                     className="mt-3 mx-3"
@@ -291,26 +259,6 @@ const Graphs = () => {
                   </>
                 }
                 title={t("Conferences")}
-                action={
-                  <CDropdown alignment="end">
-                    <CDropdownToggle
-                      color="transparent"
-                      caret={false}
-                      className="p-0"
-                    >
-                      <CIcon
-                        icon={cilOptions}
-                        className="text-high-emphasis-inverse"
-                      />
-                    </CDropdownToggle>
-                    <CDropdownMenu>
-                      <CDropdownItem>Action</CDropdownItem>
-                      <CDropdownItem>Another action</CDropdownItem>
-                      <CDropdownItem>Something else here...</CDropdownItem>
-                      <CDropdownItem disabled>Disabled action</CDropdownItem>
-                    </CDropdownMenu>
-                  </CDropdown>
-                }
                 chart={
                   <CChartLine
                     className="mt-3"
@@ -382,26 +330,6 @@ const Graphs = () => {
                   </>
                 }
                 title={t("Communities")}
-                action={
-                  <CDropdown alignment="end">
-                    <CDropdownToggle
-                      color="transparent"
-                      caret={false}
-                      className="p-0"
-                    >
-                      <CIcon
-                        icon={cilOptions}
-                        className="text-high-emphasis-inverse"
-                      />
-                    </CDropdownToggle>
-                    <CDropdownMenu>
-                      <CDropdownItem>Action</CDropdownItem>
-                      <CDropdownItem>Another action</CDropdownItem>
-                      <CDropdownItem>Something else here...</CDropdownItem>
-                      <CDropdownItem disabled>Disabled action</CDropdownItem>
-                    </CDropdownMenu>
-                  </CDropdown>
-                }
                 chart={
                   <CChartBar
                     className="mt-3 mx-3"

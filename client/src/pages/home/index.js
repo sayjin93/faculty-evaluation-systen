@@ -21,7 +21,12 @@ const Home = () => {
   //#endregion
 
   //#region selectors
-  const loggedUser = useSelector(getLoggedUser);
+  const {
+    id,
+    is_admin,
+    first_name,
+    last_name
+  } = useSelector(getLoggedUser);
   const firstLogin = useSelector(isFirstLogin);
   //#endregion
 
@@ -34,9 +39,9 @@ const Home = () => {
           content:
             t("Welcome") +
             " " +
-            loggedUser.first_name +
+            first_name +
             " " +
-            loggedUser.last_name,
+            last_name,
         })
       );
       dispatch(setFirstLogin(false));
@@ -46,11 +51,11 @@ const Home = () => {
 
   return (
     <>
-      <Stats />
+      <Stats userId={id} isAdmin={is_admin} />
 
-      <Graphs />
+      <Graphs userId={id} isAdmin={is_admin} />
 
-      <ProfessorsStats />
+      <ProfessorsStats userId={id} isAdmin={is_admin} />
     </>
   );
 };

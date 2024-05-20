@@ -361,6 +361,10 @@ body {
   }
 }
 
+.sidebar{
+  --cui-sidebar-bg: #212631;
+}
+
 //small devices
 @media only screen and (max-width: 576px) {
   .card {
