@@ -37,6 +37,7 @@ import {
   getProfessors,
   getSelectedProfessor,
   getModal,
+  getIsAdmin
 } from "src/store/selectors";
 
 //components
@@ -64,6 +65,10 @@ const Conferences = () => {
   };
   //#endregion
 
+  //#region selectors
+  const isAdmin = useSelector(getIsAdmin);
+  //#endregion
+
   //#region states
   const [items, setItems] = useState([]);
   const [formData, setFormData] = useState(defaultFormData);
@@ -81,9 +86,19 @@ const Conferences = () => {
   //#endregion
 
   //#region functions
-  const fetchConferences = async () => {
+  const fetchAllConferences = async () => {
     await api
       .get(`/conference/academic_year/${academicYearId}`)
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+  const fetchAllConferencesByProfessor = async () => {
+    await api
+      .get(`/conference/professor/${selectedProfessor}`)
       .then((response) => {
         setItems(response.data);
       })
@@ -124,7 +139,7 @@ const Conferences = () => {
         authors: formData.authors,
         dates: formData.dates,
         academic_year_id: academicYearId,
-        professor_id: formData.professor,
+        professor_id: isAdmin ? formData.professor : selectedProfessor
       })
       .then((response) => {
         setStatus(response);
@@ -139,12 +154,21 @@ const Conferences = () => {
         );
       })
       .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        if (error.response.data.message) {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: t(convertToKey(error.response.data.message)),
+            })
+          );
+        } else {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error,
+            })
+          );
+        }
       });
   };
   const editConference = async (id) => {
@@ -274,7 +298,7 @@ const Conferences = () => {
 
   //#region useEffect
   useEffect(() => {
-    fetchConferences();
+    isAdmin ? fetchAllConferences() : fetchAllConferencesByProfessor()
   }, [status]);
 
   useEffect(() => {
@@ -329,12 +353,12 @@ const Conferences = () => {
               caption={t("Dates")}
               dataType="string"
             />
-            <Column
+            {isAdmin && <Column
               alignment="left"
               dataField="professor_full_name"
               caption={t("Professor")}
               dataType="string"
-            />
+            />}
             <Column
               dataField="createdAt"
               caption={t("CreatedAt")}
@@ -436,7 +460,7 @@ const Conferences = () => {
               onChange={(event) => handleInputChange(event, "authors")}
             />
 
-            <CFormSelect
+            {isAdmin && <CFormSelect
               required
               feedbackInvalid={t("PleaseSelectAProfessor")}
               className="cursor"
@@ -457,7 +481,7 @@ const Conferences = () => {
                   </option>
                 );
               })}
-            </CFormSelect>
+            </CFormSelect>}
           </CModalBody>
 
           <CModalFooter>

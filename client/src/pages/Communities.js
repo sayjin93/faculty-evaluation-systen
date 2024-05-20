@@ -38,6 +38,7 @@ import {
   getProfessors,
   getSelectedProfessor,
   getModal,
+  getIsAdmin
 } from "src/store/selectors";
 
 //flatpick
@@ -68,6 +69,10 @@ const Communities = () => {
   };
   //#endregion
 
+  //#region selectors
+  const isAdmin = useSelector(getIsAdmin);
+  //#endregion
+
   //#region states
   const [items, setItems] = useState([]);
   const [formData, setFormData] = useState(defaultFormData);
@@ -85,9 +90,19 @@ const Communities = () => {
   //#endregion
 
   //#region functions
-  const fetchCommunity = async () => {
+  const fetchAllCommunities = async () => {
     await api
       .get(`/community/academic_year/${academicYearId}`)
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+  const fetchAllCommunitiesByProfessor = async () => {
+    await api
+      .get(`/community/professor/${selectedProfessor}`)
       .then((response) => {
         setItems(response.data);
       })
@@ -126,7 +141,7 @@ const Communities = () => {
         description: formData.description,
         external: formData.external,
         academic_year_id: academicYearId,
-        professor_id: formData.professor,
+        professor_id: isAdmin ? formData.professor : selectedProfessor,
       })
       .then((response) => {
         setStatus(response);
@@ -142,12 +157,21 @@ const Communities = () => {
         );
       })
       .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        if (error.response.data.message) {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: t(convertToKey(error.response.data.message)),
+            })
+          );
+        } else {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error,
+            })
+          );
+        }
       });
   };
   const editCommunity = async (id) => {
@@ -292,7 +316,7 @@ const Communities = () => {
 
   //#region useEffect
   useEffect(() => {
-    fetchCommunity();
+    isAdmin ? fetchAllCommunities() : fetchAllCommunitiesByProfessor()
   }, [status]);
 
   useEffect(() => {
@@ -345,12 +369,12 @@ const Communities = () => {
               caption={t("External")}
               cellRender={cellRenderExternal}
             />
-            <Column
+            {isAdmin && <Column
               alignment="left"
               dataField="professor_full_name"
               caption={t("Professor")}
               dataType="string"
-            />
+            />}
             <Column
               dataField="createdAt"
               caption={t("CreatedAt")}
@@ -451,7 +475,7 @@ const Communities = () => {
               />
             </div>
 
-            <CFormSelect
+            {isAdmin && <CFormSelect
               required
               feedbackInvalid={t("PleaseSelectAProfessor")}
               className="cursor"
@@ -472,7 +496,7 @@ const Communities = () => {
                   </option>
                 );
               })}
-            </CFormSelect>
+            </CFormSelect>}
           </CModalBody>
 
           <CModalFooter>

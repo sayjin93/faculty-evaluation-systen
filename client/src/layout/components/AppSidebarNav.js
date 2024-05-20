@@ -107,13 +107,12 @@ export const AppSidebarNav = () => {
     {
       component: CNavGroup,
       name: t("Reports"),
-      // to: '/reports',
       icon: <TbReportSearch className="nav-icon" />,
       items: [
         {
           component: CNavItem,
-          name: 'Professor',
-          to: SidebarRoutes.Reports,
+          name: t("AnnualSummary"),
+          to: SidebarRoutes.AnnualSummary,
         },
       ],
     },

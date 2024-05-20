@@ -37,6 +37,7 @@ import {
   getProfessors,
   getSelectedProfessor,
   getModal,
+  getIsAdmin
 } from "src/store/selectors";
 
 //flatpickr
@@ -66,6 +67,10 @@ const Papers = () => {
   };
   //#endregion
 
+  //#region selectors
+  const isAdmin = useSelector(getIsAdmin);
+  //#endregion
+
   //#region states
   const [items, setItems] = useState([]);
   const [formData, setFormData] = useState(defaultFormData);
@@ -84,9 +89,19 @@ const Papers = () => {
   //#endregion
 
   //#region functions
-  const fetchPapers = async () => {
+  const fetchAllPapers = async () => {
     await api
       .get(`/paper/academic_year/${academicYearId}`)
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+  const fetchAllBooksByProfessor = async () => {
+    await api
+      .get(`/paper/professor/${selectedProfessor}`)
       .then((response) => {
         setItems(response.data);
       })
@@ -123,7 +138,7 @@ const Papers = () => {
         journal: formData.journal,
         publication: formData.publication,
         academic_year_id: academicYearId,
-        professor_id: formData.professor,
+        professor_id: isAdmin ? formData.professor : selectedProfessor,
       })
       .then((response) => {
         setStatus(response);
@@ -138,12 +153,21 @@ const Papers = () => {
         );
       })
       .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        if (error.response.data.message) {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: t(convertToKey(error.response.data.message)),
+            })
+          );
+        } else {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error,
+            })
+          );
+        }
       });
   };
   const editPaper = async (id) => {
@@ -271,7 +295,7 @@ const Papers = () => {
 
   //#region useEffect
   useEffect(() => {
-    fetchPapers();
+    isAdmin ? fetchAllPapers() : fetchAllBooksByProfessor()
   }, [status]);
 
   useEffect(() => {
@@ -317,12 +341,12 @@ const Papers = () => {
               dataType="date"
               format="dd/MM/yyyy"
             />
-            <Column
+            {isAdmin && <Column
               alignment="left"
               dataField="professor_full_name"
               caption={t("Professor")}
               dataType="string"
-            />
+            />}
             <Column
               dataField="createdAt"
               caption={t("CreatedAt")}
@@ -417,7 +441,7 @@ const Papers = () => {
               </div>
             </div>
 
-            <CFormSelect
+            {isAdmin && <CFormSelect
               required
               feedbackInvalid={t("PleaseSelectAProfessor")}
               className="cursor"
@@ -438,7 +462,7 @@ const Papers = () => {
                   </option>
                 );
               })}
-            </CFormSelect>
+            </CFormSelect>}
           </CModalBody>
 
           <CModalFooter>

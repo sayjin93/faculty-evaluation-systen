@@ -11,6 +11,7 @@
   "AddNewLanguage": "Add New Language",
   "All": "All",
   "AnErrorOccured": "An error ocurred",
+  "AnnualSummary": "Annual Summary",
   "AreYouSureToDeleteTheSelected": "Are you sure to delete the selected",
   "AtLeast1LowercaseLetter": "At least 1 lowercase letter",
   "AtLeast1Number": "At least 1 number",
@@ -238,6 +239,6 @@
   "WeekHours": "Week Hours",
   "Welcome": "Welcome",
   "Working": "Working",
-  "Year": "Year (EN)",
+  "Year": "Year",
   "YouNeedToDefineAcademicYearFirst": "You need to define Academic Year first"
 }

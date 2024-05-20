@@ -36,6 +36,23 @@ exports.getAllBooks = async (req, res) => {
     });
   }
 };
+exports.getBooksByProfessor = async (req, res) => {
+  try {
+    const data = await Book.findAll({
+      where: { professor_id: req.params.professor_id },
+      include: [{ model: Professor, attributes: ['first_name', 'last_name'] }],
+    });
+    const modifiedData = data.map((book) => ({
+      ...book.get(),
+      professor_full_name: `${book.Professor.first_name} ${book.Professor.last_name}`,
+    }));
+    res.send(modifiedData);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving Books for the Professor',
+    });
+  }
+};
 
 exports.getBooksByYear = async (req, res) => {
   try {

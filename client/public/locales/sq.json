@@ -11,6 +11,7 @@
   "AddNewLanguage": "Shto gjuhë të re",
   "All": "Të gjithë",
   "AnErrorOccured": "Ndodhi një gabim",
+  "AnnualSummary": "Përmbledhje vjetore",
   "AreYouSureToDeleteTheSelected": "Jeni i sigurt për të fshirë zgjedhjen",
   "AtLeast1LowercaseLetter": "Së paku 1 shkronjë të vogël",
   "AtLeast1Number": "Së paku 1 numër",
@@ -238,6 +239,6 @@
   "WeekHours": "Orë Javore",
   "Welcome": "Mirësevini",
   "Working": "Në punim",
-  "Year": "Year (EN) (EN)",
+  "Year": "Viti",
   "YouNeedToDefineAcademicYearFirst": "Filimisht duhet të përcaktoni Vitin Akademik"
 }

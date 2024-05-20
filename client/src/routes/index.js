@@ -29,7 +29,7 @@ const Papers = lazy(() => import("../pages/Papers"));
 const Books = lazy(() => import("../pages/Books"));
 const Conferences = lazy(() => import("../pages/Conferences"));
 const Communities = lazy(() => import("../pages/Communities"));
-const Reports = lazy(() => import("../pages/Reports"));
+const AnnualSummary = lazy(() => import("../pages/reports/AnnualSummary"));
 const Settings = lazy(() => import("../pages/Settings"));
 const Translations = lazy(() => import("../pages/Translations"));
 const Profile = lazy(() => import("../pages/Profile"));
@@ -88,8 +88,8 @@ const privateRoutes = [
         element: <Communities />,
       },
       {
-        path: SidebarRoutes.Reports,
-        element: <Reports />,
+        path: SidebarRoutes.AnnualSummary,
+        element: <AnnualSummary />,
       },
       {
         path: SidebarRoutes.Settings,

@@ -15,7 +15,7 @@ import {
   getAcademicYearId
 } from "src/store/selectors";
 
-const SelectBoxAcademicYear = ({ className = "" }) => {
+const SelectBoxAcademicYear = ({ className = "", local = false }) => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -39,15 +39,18 @@ const SelectBoxAcademicYear = ({ className = "" }) => {
     const { id, year } = selectedAcademicYear[0];
 
     try {
-      await api.put("academic-year/active/" + id);
-
       dispatch(changeAcademicYear(selectedAcademicYear[0]));
-      dispatch(
-        showToast({
-          type: "success",
-          content: t("AcademicYear") + " " + year + " " + t("IsSetAsActive"),
-        })
-      );
+
+      if (!local) {
+        await api.put("academic-year/active/" + id);
+
+        dispatch(
+          showToast({
+            type: "success",
+            content: t("AcademicYear") + " " + year + " " + t("IsSetAsActive"),
+          })
+        );
+      }
     } catch (error) {
       dispatch(
         showToast({

@@ -9,10 +9,14 @@ const bookController = require('../controllers/book');
 
 // Book routes
 router.post('/', auth, bookController.createBook);
-router.get('/', auth, bookController.getAllBooks);
+
+router.get('/', auth, isAdminMiddleware, bookController.getAllBooks);
+router.get('/professor/:professor_id', auth, bookController.getBooksByProfessor);
+
 router.get('/academic_year/:academic_year_id', auth, bookController.getBooksByYear);
 router.get('/:id', auth, bookController.getBookById);
 router.put('/:id', auth, bookController.updateBook);
+
 router.delete('/:id', auth, isAdminMiddleware, bookController.deleteBook);
 router.delete('/', auth, isAdminMiddleware, bookController.deleteAllBooks);
 

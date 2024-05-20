@@ -41,6 +41,23 @@ exports.getAllCommunityServices = async (req, res) => {
     });
   }
 };
+exports.getCommunityServicesByProfessor = async (req, res) => {
+  try {
+    const data = await Community.findAll({
+      where: { professor_id: req.params.professor_id },
+      include: [{ model: Professor, attributes: ['first_name', 'last_name'] }],
+    });
+    const modifiedData = data.map((community) => ({
+      ...community.get(),
+      professor_full_name: `${community.Professor.first_name} ${community.Professor.last_name}`,
+    }));
+    res.send(modifiedData);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving Community Services for the Professor',
+    });
+  }
+};
 
 exports.getCommunityServicesByYear = async (req, res) => {
   try {

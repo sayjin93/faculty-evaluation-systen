@@ -38,6 +38,23 @@ exports.getAllCourses = async (req, res) => {
     });
   }
 };
+exports.getCoursesByProfessor = async (req, res) => {
+  try {
+    const data = await Course.findAll({
+      where: { professor_id: req.params.professor_id },
+      include: [{ model: Professor, attributes: ['first_name', 'last_name'] }],
+    });
+    const modifiedData = data.map((course) => ({
+      ...course.get(),
+      professor_full_name: `${course.Professor.first_name} ${course.Professor.last_name}`,
+    }));
+    res.send(modifiedData);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving Courses for the Professor',
+    });
+  }
+};
 
 exports.getCoursesByYear = async (req, res) => {
   try {

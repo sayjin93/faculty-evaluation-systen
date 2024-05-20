@@ -16,6 +16,7 @@ import { setProfessors, setSelectedProfessor } from "src/store";
 import {
   getProfessors,
   getSelectedProfessor,
+  getLoggedUser
 } from "src/store/selectors";
 
 const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
@@ -28,6 +29,7 @@ const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
   //#region selectors
   const professors = useSelector(getProfessors);
   const selectedProfessor = useSelector(getSelectedProfessor);
+  const { id, is_admin } = useSelector(getLoggedUser);
   //#endregion
 
   //#region functions
@@ -57,13 +59,15 @@ const SelectBoxProfessors = ({ hasAll = true, className = "" }) => {
 
   //#region useEffect
   useEffect(() => {
-    fetchProfessors();
+    is_admin ? fetchProfessors() : dispatch(setSelectedProfessor(id));
 
     return (() => {
-      dispatch(setSelectedProfessor(0));
+      is_admin && dispatch(setSelectedProfessor(0));
     })
   }, []);
   //#endregion
+
+  if (!is_admin) return;
 
   return (
     <CInputGroup className={className}>

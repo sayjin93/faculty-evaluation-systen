@@ -34,6 +34,7 @@ import {
   getAcademicYear,
   getProfessors,
   getSelectedProfessor,
+  getLoggedUser
 } from "src/store/selectors";
 
 //components
@@ -47,13 +48,14 @@ import autoTable from "jspdf-autotable";
 //image
 import logoImage from "src/assets/images/uet_logo.png";
 
-const Reports = () => {
+const AnnualSummary = () => {
   //#region constants
   const { t } = useTranslation();
   const handleError = useErrorHandler();
   //#endregion
 
   //#region selectors
+  const { first_name, last_name, is_admin: isAdmin } = useSelector(getLoggedUser);
   const academicYear = useSelector(getAcademicYear);
   const professors = useSelector(getProfessors);
   const selectedProfessor = useSelector(getSelectedProfessor);
@@ -64,10 +66,12 @@ const Reports = () => {
   const professor = professors.find(
     (prof) => prof.id === Number(selectedProfessor)
   );
-  //Get the matched professor full name
-  const professorFullName = professor
-    ? `${professor.first_name} ${professor.last_name}`
-    : "";
+  // Get the matched professor full name or logged user's full name if not admin
+  const professorFullName = isAdmin
+    ? professor
+      ? `${professor.first_name} ${professor.last_name}`
+      : ""
+    : `${first_name} ${last_name}`;
   //#endregion
 
   //#region states
@@ -275,7 +279,7 @@ const Reports = () => {
         <CCardHeader className="flex justify-content-between align-items-center">
           <h6 className="card-title">
             <TbReportSearch />
-            <span className="title">{t("Reports")}</span>
+            <span className="title">{t("Reports")} | {t("AnnualSummary")}</span>
           </h6>
           <CButton color="primary" className="float-right" onClick={exportPDF}>
             {t("GeneratePdf")}
@@ -285,20 +289,20 @@ const Reports = () => {
         <CCardBody>
           <CRow
             xs={{ cols: 1, gutterY: 3 }}
-            md={{ cols: 2, gutterX: 4 }}
+            md={{ cols: isAdmin ? 2 : 1, gutterX: isAdmin ? 4 : 3 }}
             className="align-items-start"
           >
-            <CCol>
+            {isAdmin && <CCol>
               <SelectBoxProfessors hasAll={false} />
-            </CCol>
+            </CCol>}
             <CCol>
-              <SelectBoxAcademicYear />
+              <SelectBoxAcademicYear local />
             </CCol>
           </CRow>
         </CCardBody>
       </CCard>
 
-      {professor && academicYear ? (
+      {academicYear ? (
         <CRow
           xs={{ cols: 1, gutter: 4 }}
           xxl={{ cols: 2 }}
@@ -608,4 +612,4 @@ const Reports = () => {
   );
 };
 
-export default Reports;
+export default AnnualSummary;

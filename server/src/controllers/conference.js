@@ -38,6 +38,23 @@ exports.getAllConferences = async (req, res) => {
     });
   }
 };
+exports.getConferencesByProfessor = async (req, res) => {
+  try {
+    const data = await Conference.findAll({
+      where: { professor_id: req.params.professor_id },
+      include: [{ model: Professor, attributes: ['first_name', 'last_name'] }],
+    });
+    const modifiedData = data.map((conference) => ({
+      ...conference.get(),
+      professor_full_name: `${conference.Professor.first_name} ${conference.Professor.last_name}`,
+    }));
+    res.send(modifiedData);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving Conferences for the Professor',
+    });
+  }
+};
 
 exports.getConferencesByYear = async (req, res) => {
   try {

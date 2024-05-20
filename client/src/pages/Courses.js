@@ -34,6 +34,7 @@ import {
   getProfessors,
   getSelectedProfessor,
   getModal,
+  getIsAdmin
 } from "src/store/selectors";
 
 //components
@@ -61,6 +62,10 @@ const Courses = () => {
   };
   //#endregion
 
+  //#region selectors
+  const isAdmin = useSelector(getIsAdmin);
+  //#endregion
+
   //#region states
   const [items, setItems] = useState([]);
   const [formData, setFormData] = useState(defaultFormData);
@@ -78,9 +83,19 @@ const Courses = () => {
   //#endregion
 
   //#region functions
-  const fetchCourses = async () => {
+  const fetchAllCourses = async () => {
     await api
       .get(`/course/academic_year/${academicYearId}`)
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+  const fetchAllCoursesByProfessor = async () => {
+    await api
+      .get(`/course/professor/${selectedProfessor}`)
       .then((response) => {
         setItems(response.data);
       })
@@ -121,7 +136,7 @@ const Courses = () => {
         week_hours: formData.weekHours,
         program: formData.program,
         academic_year_id: academicYearId,
-        professor_id: formData.professor,
+        professor_id: isAdmin ? formData.professor : selectedProfessor,
       })
       .then((response) => {
         setStatus(response);
@@ -136,12 +151,21 @@ const Courses = () => {
         );
       })
       .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        if (error.response.data.message) {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: t(convertToKey(error.response.data.message)),
+            })
+          );
+        } else {
+          dispatch(
+            showToast({
+              type: "danger",
+              content: error,
+            })
+          );
+        }
       });
   };
   const editCourse = async (id) => {
@@ -278,7 +302,7 @@ const Courses = () => {
 
   //#region useEffect
   useEffect(() => {
-    fetchCourses();
+    isAdmin ? fetchAllCourses() : fetchAllCoursesByProfessor()
   }, [status]);
 
   useEffect(() => {
@@ -307,62 +331,60 @@ const Courses = () => {
         <CCardBody>
           <SelectBoxProfessors className="mb-3" />
 
-          {professors.length > 0 && (
-            <CustomDataGrid dataSource={filteredItems}>
-              <Column
-                dataField="name"
-                caption={t("Name")}
-                dataType="string"
-              />
-              <Column
-                dataField="number"
-                caption={t("Number")}
-                dataType="string"
-              />
-              <Column
-                alignment="center"
-                dataField="semester"
-                caption={t("Semester")}
-                dataType="number"
-                width={80}
-              />
-              <Column
-                alignment="center"
-                dataField="week_hours"
-                caption={t("WeekHours")}
-                dataType="number"
-              />
-              <Column
-                dataField="program"
-                caption={t("Program")}
-                cellRender={cellRenderProgram}
-              />
-              <Column
-                alignment="left"
-                dataField="professor_full_name"
-                caption={t("Professor")}
-                dataType="string"
-              />
-              <Column
-                dataField="createdAt"
-                caption={t("CreatedAt")}
-                dataType="datetime"
-                visible={false}
-              />
-              <Column
-                dataField="updatedAt"
-                caption={t("UpdatedAt")}
-                dataType="datetime"
-                visible={false}
-              />
-              <Column
-                alignment="center"
-                caption={t("Actions")}
-                width={120}
-                cellRender={cellRenderActions}
-              />
-            </CustomDataGrid>
-          )}
+          <CustomDataGrid dataSource={filteredItems}>
+            <Column
+              dataField="name"
+              caption={t("Name")}
+              dataType="string"
+            />
+            <Column
+              dataField="number"
+              caption={t("Number")}
+              dataType="string"
+            />
+            <Column
+              alignment="center"
+              dataField="semester"
+              caption={t("Semester")}
+              dataType="number"
+              width={80}
+            />
+            <Column
+              alignment="center"
+              dataField="week_hours"
+              caption={t("WeekHours")}
+              dataType="number"
+            />
+            <Column
+              dataField="program"
+              caption={t("Program")}
+              cellRender={cellRenderProgram}
+            />
+            {isAdmin && <Column
+              alignment="left"
+              dataField="professor_full_name"
+              caption={t("Professor")}
+              dataType="string"
+            />}
+            <Column
+              dataField="createdAt"
+              caption={t("CreatedAt")}
+              dataType="datetime"
+              visible={false}
+            />
+            <Column
+              dataField="updatedAt"
+              caption={t("UpdatedAt")}
+              dataType="datetime"
+              visible={false}
+            />
+            <Column
+              alignment="center"
+              caption={t("Actions")}
+              width={120}
+              cellRender={cellRenderActions}
+            />
+          </CustomDataGrid>
 
         </CCardBody>
       </CCard>
@@ -453,7 +475,7 @@ const Courses = () => {
               <option value="Master">{t("Master")}</option>
             </CFormSelect>
 
-            <CFormSelect
+            {isAdmin && <CFormSelect
               className="cursor"
               required
               feedbackInvalid={t("PleaseSelectAProfessor")}
@@ -474,7 +496,7 @@ const Courses = () => {
                   </option>
                 );
               })}
-            </CFormSelect>
+            </CFormSelect>}
           </CModalBody>
 
           <CModalFooter>

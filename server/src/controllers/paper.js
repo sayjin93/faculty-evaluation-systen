@@ -36,6 +36,23 @@ exports.getAllPapers = async (req, res) => {
     });
   }
 };
+exports.getPapersByProfessor = async (req, res) => {
+  try {
+    const data = await Paper.findAll({
+      where: { professor_id: req.params.professor_id },
+      include: [{ model: Professor, attributes: ['first_name', 'last_name'] }],
+    });
+    const modifiedData = data.map((paper) => ({
+      ...paper.get(),
+      professor_full_name: `${paper.Professor.first_name} ${paper.Professor.last_name}`,
+    }));
+    res.send(modifiedData);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving Papers for the Professor',
+    });
+  }
+};
 
 exports.getPapersByYear = async (req, res) => {
   try {

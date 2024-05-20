@@ -125,7 +125,7 @@ export const SidebarRoutes = {
   Papers: "/papers",
   Professors: "/professors",
   Profile: "/profile",
-  Reports: "/reports",
+  AnnualSummary: "/reports/annual-summary",
   Settings: "/settings",
   Translations: "/translations",
 };
