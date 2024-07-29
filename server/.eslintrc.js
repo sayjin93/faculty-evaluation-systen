@@ -14,5 +14,6 @@ module.exports = {
     'max-len': 'off', // Disable the max-len rule
     'import/no-dynamic-require': 'off', // Disable the import/no-dynamic-require rule
     'global-require': 'off', // Disable the global-require import
+    'linebreak-style': ['error', 'unix'], // Enforce LF linebreaks
   },
 };

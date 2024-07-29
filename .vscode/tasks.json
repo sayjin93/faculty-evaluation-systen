@@ -1,0 +1,54 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Install Client Dependencies",
+      "type": "shell",
+      "command": "npm install",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Client",
+      "type": "shell",
+      "command": "npm start",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "problemMatcher": [],
+      "dependsOn": "Install Client Dependencies"
+    },
+    {
+      "label": "Install Server Dependencies",
+      "type": "shell",
+      "command": "npm install",
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Server",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      },
+      "problemMatcher": [],
+      "dependsOn": "Install Server Dependencies"
+    },
+    {
+      "label": "Run All",
+      "dependsOn": ["Run Client", "Run Server"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Stop All",
+      "type": "shell",
+      "command": "taskkill /F /IM node.exe",
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "files.eol": "\n",
+  "editor.formatOnSave": true, // Optional: automatically format files on save
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "prettier.endOfLine": "lf" // If you use Prettier
+}
