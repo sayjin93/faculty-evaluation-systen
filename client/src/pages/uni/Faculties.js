@@ -11,7 +11,6 @@ import {
   CCardBody,
   CCardHeader,
   CForm,
-  CFormCheck,
   CFormInput,
   CModal,
   CModalBody,
@@ -20,7 +19,7 @@ import {
   CModalTitle,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash } from "@coreui/icons";
+import { cilPen, cilTrash, cilMediaPlay } from "@coreui/icons";
 import { ImCross } from "react-icons/im"
 
 //react-icons
@@ -38,7 +37,7 @@ import { getModal } from "src/store/selectors";
 //components
 import CustomDataGrid from "src/components/CustomDataGrid";
 
-const defaultFormData = { name: "", is_deleted: false };
+const defaultFormData = { name: "" };
 
 const Faculties = () => {
   //#region constants
@@ -60,6 +59,7 @@ const Faculties = () => {
   const [modalOptions, setModalOptions] = useState({
     editMode: false,
     selectedId: -1,
+    is_deleted: false,
   });
   //#endregion
 
@@ -81,7 +81,6 @@ const Faculties = () => {
         setFormData({
           ...formData,
           name: response.data.key,
-          is_deleted: response.data.is_deleted
         });
 
         myRef.current = response.data.key;
@@ -128,7 +127,6 @@ const Faculties = () => {
     await api
       .put("/faculty/" + id, {
         key: convertToKey(formData.name),
-        is_deleted: formData.is_deleted
       })
       .then((response) => {
         setStatus(response);
@@ -152,13 +150,15 @@ const Faculties = () => {
   };
   const deleteFaculty = async (id) => {
     await api
-      .delete("/faculty/" + id)
+      .put("/faculty/delete/" + id)
       .then((response) => {
+        const { is_deleted } = response.data;
+
         setStatus(response);
         dispatch(
           showToast({
             type: "success",
-            content: t("FacultyWithId") + " " + id + " " + t("DeletedSuccessfully"),
+            content: t("FacultyWithId") + " " + id + " " + (is_deleted ? t("DeletedSuccessfully") : t("RestoredSuccessfully")),
           })
         );
       })
@@ -167,8 +167,7 @@ const Faculties = () => {
           dispatch(
             showToast({
               type: "danger",
-              content:
-                t("CannotDeleteItDueToForeignKeyConstraint")
+              content: t("CannotDeleteItDueToForeignKeyConstraint"),
             })
           );
         } else {
@@ -220,7 +219,7 @@ const Faculties = () => {
     return checked;
   };
   const cellRenderActions = ({ data }) => {
-    const { id } = data;
+    const { id, is_deleted } = data;
 
     return (
       <CButtonGroup
@@ -243,21 +242,23 @@ const Faculties = () => {
         </CButton>
 
         <CButton
-          color="danger"
+          color={is_deleted ? "secondary" : "danger"}
           variant="outline"
           onClick={() => {
             setModalOptions({
               ...modalOptions,
               selectedId: id,
+              is_deleted: is_deleted,
             });
             dispatch(setModal('deleteFaculty'));
           }}
         >
-          <CIcon icon={cilTrash} />
+          {is_deleted ? <CIcon icon={cilMediaPlay} /> : <CIcon icon={cilTrash} />}
         </CButton>
       </CButtonGroup>
     )
-  }
+  };
+
   //#endregion
 
   //#region useEffect
@@ -343,6 +344,7 @@ const Faculties = () => {
           setModalOptions({
             editMode: false,
             selectedId: -1,
+            is_deleted: false,
           });
         }}
       >
@@ -366,12 +368,6 @@ const Faculties = () => {
               placeholder={t("FacultyName")}
               defaultValue={formData.name !== "" ? t(myRef.current) : ""}
               onChange={(event) => handleInputChange(event, "name")}
-            />
-            <CFormCheck
-              type="checkbox"
-              label={t("Deleted")}
-              onChange={(event) => handleInputChange(event, "is_deleted")}
-              defaultChecked={formData.is_deleted}
             />
           </CModalBody>
 
@@ -407,7 +403,12 @@ const Faculties = () => {
         </CModalHeader>
 
         <CModalBody>
-          <span>{t("AreYouSureToDeleteTheSelected") + " ?"}</span>
+          <span>
+            {modalOptions.is_deleted
+              ? t("AreYouSureToRestoreTheSelected") + " ?"
+              : t("AreYouSureToDeleteTheSelected") + " ?"
+            }
+          </span>
         </CModalBody>
 
         <CModalFooter>
@@ -419,8 +420,10 @@ const Faculties = () => {
           >
             {t("Cancel")}
           </CButton>
-          <CButton onClick={() => deleteFaculty(modalOptions.selectedId)} color="danger">
-            {t("Delete")}
+          <CButton onClick={() => deleteFaculty(modalOptions.selectedId)}
+            color={modalOptions.is_deleted ? "success" : "danger"}
+          >
+            {modalOptions.is_deleted ? t("Restore") : t("Delete")}
           </CButton>
         </CModalFooter>
 

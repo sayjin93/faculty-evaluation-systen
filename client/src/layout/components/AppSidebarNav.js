@@ -155,7 +155,7 @@ export const AppSidebarNav = () => {
     );
   };
   const navItem = (item, index) => {
-    const { component, name, badge, icon, ...rest } = item;
+    const { component, name, badge, icon, admin, ...rest } = item;
     const Component = component;
     return (
       <Component
@@ -171,7 +171,7 @@ export const AppSidebarNav = () => {
     );
   };
   const navGroup = (item, index) => {
-    const { component, name, icon, to, ...rest } = item;
+    const { component, name, icon, to, admin, ...rest } = item;
     const Component = component;
     return (
       <Component

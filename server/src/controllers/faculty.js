@@ -20,7 +20,6 @@ exports.createFaculty = async (req, res) => {
     });
   }
 };
-
 exports.getAllFaculties = async (req, res) => {
   try {
     const faculties = await Faculty.findAll();
@@ -33,7 +32,6 @@ exports.getAllFaculties = async (req, res) => {
     res.status(500).send({ message: 'Some error occurred while retrieving faculties' });
   }
 };
-
 exports.getFacultyById = async (req, res) => {
   const { id } = req.params;
 
@@ -47,7 +45,6 @@ exports.getFacultyById = async (req, res) => {
     res.status(500).send({ message: `Error retrieving Faculty with id=${id}` });
   }
 };
-
 exports.updateFaculty = async (req, res) => {
   const { id } = req.params;
 
@@ -62,7 +59,30 @@ exports.updateFaculty = async (req, res) => {
     res.status(500).send({ message: `Error updating Faculty with id=${id}` });
   }
 };
+exports.updateDeleteFaculty = async (req, res) => {
+  const { id } = req.params;
 
+  try {
+    // Find the current Faculty entry by id
+    const faculty = await Faculty.findOne({ where: { id } });
+
+    if (faculty) {
+      // Toggle the is_deleted status
+      faculty.is_deleted = !faculty.is_deleted;
+
+      // Save the updated entry
+      await faculty.save();
+
+      res.send({ is_deleted: faculty.is_deleted });
+    } else {
+      res.status(409).send({ message: `Cannot update Faculty with id=${id}. Maybe Faculty was not found!` });
+    }
+  } catch (err) {
+    res.status(500).send({ message: `Error updating Faculty with id=${id}` });
+  }
+};
+
+// NOT IN USE YET
 exports.deleteFaculty = async (req, res) => {
   const { id } = req.params;
 
@@ -77,7 +97,6 @@ exports.deleteFaculty = async (req, res) => {
     res.status(409).send({ message: `Could not delete Faculty with id=${id}` });
   }
 };
-
 exports.deleteAllFaculties = async (req, res) => {
   try {
     const nums = await Faculty.destroy({ where: {} });
