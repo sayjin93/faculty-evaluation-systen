@@ -20,11 +20,13 @@ import CIcon from "@coreui/icons-react";
 import { cibHtmlacademy } from "@coreui/icons";
 
 //hooks
+import { convertToKey } from "src/hooks";
 import api from "src/hooks/api";
 
 //store
 import { showToast, setFirstLogin } from "src/store";
 import { getIsAdmin } from "src/store/selectors";
+
 
 const AcademicYearAdd = () => {
   //#region constants
@@ -58,15 +60,21 @@ const AcademicYearAdd = () => {
             content: "Academic Year " + year + " was added successful!",
           })
         );
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000)
       })
-      .catch((error) => {
+      .catch((err) => {
+        console.log(err);
+        debugger;
         dispatch(
           showToast({
             type: "danger",
-            content: error,
+            content: t(convertToKey(err.response?.data?.message)),
           })
         );
-      });
+      })
   };
   const logout = (event) => {
     event.preventDefault();

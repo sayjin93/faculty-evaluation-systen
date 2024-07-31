@@ -236,6 +236,7 @@
   "Username": "Username",
   "UsernameAlreadyExists": "Username already exists",
   "UsernameOrEmailAlreadyExists": "Username or email already exists",
+  "ValidationError": "Validation Error",
   "Verified": "Verified",
   "WasAddedSuccessfully": "was added successfully",
   "WeekHours": "Week Hours",

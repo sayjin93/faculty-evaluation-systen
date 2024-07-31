@@ -16,6 +16,7 @@ const Professors = sequelize.define('Professors', {
   },
   username: {
     type: DataTypes.STRING,
+    unique: true,
   },
   email: {
     type: DataTypes.STRING,
@@ -53,6 +54,8 @@ const Professors = sequelize.define('Professors', {
   verificationTokenExpires: {
     type: DataTypes.STRING,
   },
+}, {
+  paranoid: true, // This enables the soft delete functionality
 });
 
 //  Associations

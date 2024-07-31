@@ -37,7 +37,7 @@ async function seed() {
         defaults: defaultProfessorData,
       });
     } catch (error) {
-      console.error('Error seeding course:', admin, error);
+      console.error('Error seeding admin:', admin, error);
     }
   });
 

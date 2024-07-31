@@ -63,9 +63,9 @@ async function seed() {
   const generateRandomBook = () => ({
     title: dummyBookTitles[randomInt(0, dummyBookTitles.length - 1)],
     publication_house: dummyPublicationHouses[randomInt(0, dummyPublicationHouses.length - 1)],
-    publication_year: new Date(`${randomInt(2014, 2023)}-01-01`),
+    publication_year: new Date(`${randomInt(2014, 2024)}-01-01`),
     academic_year_id: randomInt(1, academicYearsCount),
-    professor_id: randomInt(2, professorsCount),
+    professor_id: randomInt(2, professorsCount + 1),
   });
 
   const booksData = Array.from({ length: 100 }, generateRandomBook);

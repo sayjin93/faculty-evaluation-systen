@@ -43,8 +43,8 @@ async function seed() {
     title: dummyTitles[randomInt(0, dummyTitles.length - 1)],
     journal: dummyJournals[randomInt(0, dummyJournals.length - 1)],
     publication: new Date(`${randomInt(2018, 2023)}-${randomInt(1, 12)}-${randomInt(1, 28)}`), // Random date between 2018 and 2023
-    academic_year_id: randomInt(1, academicYearsCount), // Random academic year ID between 1 and 10
-    professor_id: randomInt(2, professorsCount), // Random professor ID between 1 and 10
+    academic_year_id: randomInt(1, academicYearsCount), // Random academic year ID between 1 and 4
+    professor_id: randomInt(2, professorsCount + 1), // Random professor ID between 2 and 10
   });
 
   const papersData = Array.from({ length: 100 }, generateRandomPaper);

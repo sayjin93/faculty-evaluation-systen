@@ -13,6 +13,8 @@ const Department = sequelize.define('Department', {
   faculty_id: {
     type: DataTypes.INTEGER,
   },
+}, {
+  paranoid: true, // This enables the soft delete functionality
 });
 
 //  Associations

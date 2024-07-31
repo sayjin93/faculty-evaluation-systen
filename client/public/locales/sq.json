@@ -236,6 +236,7 @@
   "Username": "Emri i përdoruesit",
   "UsernameAlreadyExists": "Emri i përdoruesit ekziston",
   "UsernameOrEmailAlreadyExists": "Emri përdoruesit ose email ekzistojnë",
+  "ValidationError": "Gabim verifikimi",
   "Verified": "Verifikuar",
   "WasAddedSuccessfully": "u shtua me sukses",
   "WeekHours": "Orë Javore",

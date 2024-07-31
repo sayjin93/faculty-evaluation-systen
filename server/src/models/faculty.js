@@ -8,6 +8,8 @@ const Faculty = sequelize.define('Faculty', {
   is_deleted: {
     type: DataTypes.BOOLEAN,
   },
+}, {
+  paranoid: true, // This enables the soft delete functionality
 });
 
 module.exports = Faculty;

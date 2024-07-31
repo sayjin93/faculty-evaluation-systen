@@ -30,11 +30,10 @@ const sequelize = new Sequelize(
 
     await sequelize.sync({
       alter: true,
-      // force: process.env.NODE_ENV === 'development',
+      force: process.env.NODE_ENV === 'development',
       logging: false,
     });
-
-    console.log('Models synchronized'.bgGreen);
+    console.log('All models were synchronized successfully.'.bgGreen);
 
     if (process.env.DEFAULT_DATA === 'true') {
       const seeds = [
