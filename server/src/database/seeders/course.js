@@ -27,7 +27,6 @@ const dummyCourseNames = [
   'Fundamentals of Finance',
   'Media and Communication Studies',
   'Introduction to Psychology',
-  'Introduction to Philosophy',
   'Applied Ethics',
   'Introduction to Economics',
 ];
@@ -56,13 +55,14 @@ const dummyCourseNumbers = [
   'C22',
   'C23',
   'C24',
+  'C25',
 ];
 const dummyPrograms = ['Bachelor', 'Master'];
 
 async function seed() {
-  const generateRandomCourse = () => ({
-    name: dummyCourseNames[randomInt(0, dummyCourseNames.length - 1)],
-    number: dummyCourseNumbers[randomInt(0, dummyCourseNumbers.length - 1)],
+  const generateRandomCourse = (name, number) => ({
+    name,
+    number,
     semester: randomInt(1, 2), // Randomly choose between 1 and 2 for semester
     week_hours: randomInt(3, 4), // Randomly choose between 3 and 4 for week_hours
     program: dummyPrograms[randomInt(0, 1)], // Randomly choose between 'Bachelor' and 'Master' for program
@@ -70,7 +70,8 @@ async function seed() {
     professor_id: randomInt(2, professorsCount + 1), // Random professor ID between 2 and 10
   });
 
-  const coursesData = Array.from({ length: 100 }, generateRandomCourse);
+  // Ensure each course name gets a unique course number
+  const coursesData = dummyCourseNumbers.map((number, index) => generateRandomCourse(dummyCourseNames[index % dummyCourseNames.length], number));
 
   const promises = coursesData.map(async (course) => {
     try {
@@ -82,10 +83,7 @@ async function seed() {
 
       await Course.findOrCreate({
         where: {
-          name: course.name,
           number: course.number,
-          academic_year_id: course.academic_year_id,
-          professor_id: course.professor_id,
         },
         defaults: defaultCourseData,
       });

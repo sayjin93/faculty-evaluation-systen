@@ -27,16 +27,16 @@ const dummyEventNames = [
 ];
 
 async function seed() {
-  const generateRandomCommunity = () => ({
-    event: dummyEventNames[randomInt(0, dummyEventNames.length - 1)],
+  const generateRandomCommunity = (event) => ({
+    event,
     date: new Date(`${randomInt(2014, 2023)}-${randomInt(1, 12)}-${randomInt(1, 28)}`), // Random date between 2014 and 2023
-    description: `Description for ${dummyEventNames[randomInt(0, dummyEventNames.length - 1)]}`,
+    description: `Description for ${event}`,
     external: randomInt(0, 1), // Randomly choose between 0 and 1 for external value
     academic_year_id: randomInt(1, academicYearsCount), // Random academic year ID between 1 and 4
     professor_id: randomInt(2, professorsCount + 1), // Random professor ID between 2 and 10
   });
 
-  const communitiesData = Array.from({ length: 100 }, generateRandomCommunity);
+  const communitiesData = dummyEventNames.map(generateRandomCommunity);
 
   const promises = communitiesData.map(async (community) => {
     try {
@@ -49,13 +49,11 @@ async function seed() {
       await Community.findOrCreate({
         where: {
           event: community.event,
-          academic_year_id: community.academic_year_id,
-          professor_id: community.professor_id,
         },
         defaults: defaultCommunitiesData,
       });
     } catch (error) {
-      console.error('Error seeding course:', community, error);
+      console.error('Error seeding community:', community, error);
     }
   });
 

@@ -39,15 +39,15 @@ const dummyJournals = [
 ];
 
 async function seed() {
-  const generateRandomPaper = () => ({
-    title: dummyTitles[randomInt(0, dummyTitles.length - 1)],
+  const generateRandomPaper = (title) => ({
+    title,
     journal: dummyJournals[randomInt(0, dummyJournals.length - 1)],
     publication: new Date(`${randomInt(2018, 2023)}-${randomInt(1, 12)}-${randomInt(1, 28)}`), // Random date between 2018 and 2023
     academic_year_id: randomInt(1, academicYearsCount), // Random academic year ID between 1 and 4
     professor_id: randomInt(2, professorsCount + 1), // Random professor ID between 2 and 10
   });
 
-  const papersData = Array.from({ length: 100 }, generateRandomPaper);
+  const papersData = dummyTitles.map(generateRandomPaper);
 
   const promises = papersData.map(async (paper) => {
     try {
@@ -60,13 +60,11 @@ async function seed() {
       await Paper.findOrCreate({
         where: {
           title: paper.title,
-          academic_year_id: paper.academic_year_id,
-          professor_id: paper.professor_id,
         },
         defaults: defaultPapersData,
       });
     } catch (error) {
-      console.error('Error seeding course:', paper, error);
+      console.error('Error seeding paper:', paper, error);
     }
   });
 

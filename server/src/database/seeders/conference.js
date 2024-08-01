@@ -53,8 +53,8 @@ const dummyAuthors = [
 ];
 
 async function seed() {
-  const generateRandomConference = () => ({
-    name: dummyConferenceNames[randomInt(0, dummyConferenceNames.length - 1)],
+  const generateRandomConference = (name) => ({
+    name,
     location: dummyLocations[randomInt(0, dummyLocations.length - 1)],
     present_title: dummyPresentTitles[randomInt(0, dummyPresentTitles.length - 1)],
     authors: dummyAuthors[randomInt(0, dummyAuthors.length - 1)],
@@ -63,7 +63,7 @@ async function seed() {
     professor_id: randomInt(2, professorsCount + 1), // Random professor ID between 2 and 10
   });
 
-  const conferencesData = Array.from({ length: 100 }, generateRandomConference);
+  const conferencesData = dummyConferenceNames.map(generateRandomConference);
 
   const promises = conferencesData.map(async (conference) => {
     try {
@@ -76,13 +76,11 @@ async function seed() {
       await Conference.findOrCreate({
         where: {
           name: conference.name,
-          academic_year_id: conference.academic_year_id,
-          professor_id: conference.professor_id,
         },
         defaults: defaultConferencesData,
       });
     } catch (error) {
-      console.error('Error seeding course:', conference, error);
+      console.error('Error seeding conference:', conference, error);
     }
   });
 

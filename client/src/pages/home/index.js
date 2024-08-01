@@ -11,6 +11,7 @@ import {
 
 //components
 import Stats from "./components/Stats";
+import BigStats from "./components/BigStats";
 import Graphs from "./components/Graphs";
 import ProfessorsStats from "./components/ProfessorsStats";
 
@@ -52,6 +53,8 @@ const Home = () => {
   return (
     <>
       <Stats userId={id} isAdmin={is_admin} />
+
+      {is_admin && <BigStats />}
 
       <Graphs userId={id} isAdmin={is_admin} />
 

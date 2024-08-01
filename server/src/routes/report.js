@@ -11,6 +11,8 @@ const statsController = require('../controllers/report');
 router.get('/stats', auth, isAdminMiddleware, statsController.getStats);
 router.get('/stats/professor/:professor_id', auth, statsController.getProfessorStats);
 
+router.get('/bigStats', auth, isAdminMiddleware, statsController.getBigStats);
+
 router.get('/statsCards', auth, isAdminMiddleware, statsController.getStatsCards);
 router.get('/statsCards/professor/:professor_id', auth, statsController.getProfessorStatsCards);
 

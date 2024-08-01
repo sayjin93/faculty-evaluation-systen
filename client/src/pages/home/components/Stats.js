@@ -85,25 +85,15 @@ const Stats = ({ userId, isAdmin }) => {
 
             <CCardFooter>
                 <CRow>
-                    {isAdmin && <CCol xs={6} md={4} lg={2}>
-                        <div className="border-start border-start-4 border-start-info py-1 px-3">
-                            <div className="text-medium-emphasis small">
-                                {t("Professors")}
-                            </div>
-                            <div className="fs-5 fw-semibold">
-                                <CountUp end={stats?.active_professors_count} />
-                            </div>
-                        </div>
-                    </CCol>}
-                    <CCol xs={6} md={4} lg={2}>
+                    {!isAdmin && <CCol xs={6} md={4} lg={2}>
                         <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
                             <div className="text-medium-emphasis small">{t("Courses")}</div>
                             <div className="fs-5 fw-semibold">
                                 <CountUp end={stats?.courses_count} />
                             </div>
                         </div>
-                    </CCol>
-                    <CCol xs={6} md={4} lg={2}>
+                    </CCol>}
+                    <CCol xs={6} md={isAdmin ? 3 : 4} lg={isAdmin ? 3 : 2}>
                         <div className="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
                             <div className="text-medium-emphasis small">{t("Papers")}</div>
                             <div className="fs-5 fw-semibold">
@@ -111,7 +101,7 @@ const Stats = ({ userId, isAdmin }) => {
                             </div>
                         </div>
                     </CCol>
-                    <CCol xs={6} md={4} lg={2}>
+                    <CCol xs={6} md={isAdmin ? 3 : 4} lg={isAdmin ? 3 : 2} >
                         <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
                             <div className="text-medium-emphasis small">{t("Books")}</div>
                             <div className="fs-5 fw-semibold">
@@ -119,7 +109,7 @@ const Stats = ({ userId, isAdmin }) => {
                             </div>
                         </div>
                     </CCol>
-                    <CCol xs={6} md={4} lg={isAdmin ? 2 : 3}>
+                    <CCol xs={6} md={isAdmin ? 3 : 4} lg={isAdmin ? 3 : 2}>
                         <div className="border-start border-start-4 border-start-primary py-1 px-3 mb-3">
                             <div className="text-medium-emphasis small">
                                 {t("Conferences")}
@@ -129,7 +119,7 @@ const Stats = ({ userId, isAdmin }) => {
                             </div>
                         </div>
                     </CCol>
-                    <CCol xs={isAdmin ? 6 : 12} md={isAdmin ? 4 : 6} lg={isAdmin ? 2 : 3}>
+                    <CCol xs={isAdmin ? 6 : 12} md={isAdmin ? 3 : 8} lg={isAdmin ? 3 : 4} >
                         <div className="border-start border-start-4 border-start-secondary py-1 px-3 mb-3">
                             <div className="text-medium-emphasis small">
                                 {t("CommunityServices")}

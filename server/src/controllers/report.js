@@ -18,14 +18,12 @@ exports.getStats = async (req, res) => {
     const academic_year_id = activeYear.id;
 
     // Aggregate data for the active academic year
-    const [coursesCount, papersCount, booksCount, conferencesCount, communityServicesCount, activeProfessorsCount, allProfessorsCount] = await Promise.all([
+    const [coursesCount, papersCount, booksCount, conferencesCount, communityServicesCount] = await Promise.all([
       Course.count({ where: { academic_year_id } }),
       Paper.count({ where: { academic_year_id } }),
       Book.count({ where: { academic_year_id } }),
       Conference.count({ where: { academic_year_id } }),
       Community.count({ where: { academic_year_id } }),
-      Professor.count({ where: { is_verified: true, is_deleted: false, is_admin: false } }),
-      Professor.count({ where: { is_verified: true, is_admin: false } }),
     ]);
 
     // Send the aggregated data
@@ -36,8 +34,6 @@ exports.getStats = async (req, res) => {
       books_count: booksCount,
       conferences_count: conferencesCount,
       community_services_count: communityServicesCount,
-      active_professors_count: activeProfessorsCount,
-      all_professors_count: allProfessorsCount,
     });
   } catch (err) {
     res.status(500).send({
@@ -76,6 +72,38 @@ exports.getProfessorStats = async (req, res) => {
   } catch (err) {
     res.status(500).send({
       message: err.message || 'Some error occurred while retrieving statistics',
+    });
+  }
+};
+
+exports.getBigStats = async (req, res) => {
+  try {
+    // Aggregate data for course counts based on program
+    const [masterCoursesCount, bachelorCoursesCount, totalCoursesCount] = await Promise.all([
+      Course.count({ where: { program: 'Master' } }),
+      Course.count({ where: { program: 'Bachelor' } }),
+      Course.count(),
+    ]);
+
+    // Aggregate data for professor counts based on gender, excluding admins
+    const [maleProfessorsCount, femaleProfessorsCount, totalProfessorsCount] = await Promise.all([
+      Professor.count({ where: { gender: 'm', is_admin: false } }),
+      Professor.count({ where: { gender: 'f', is_admin: false } }),
+      Professor.count({ where: { is_admin: false } }),
+    ]);
+
+    // Send the aggregated data
+    res.send({
+      master_courses_count: masterCoursesCount,
+      bachelor_courses_count: bachelorCoursesCount,
+      total_courses_count: totalCoursesCount,
+      male_professors_count: maleProfessorsCount,
+      female_professors_count: femaleProfessorsCount,
+      total_professors_count: totalProfessorsCount,
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving big statistics',
     });
   }
 };
@@ -148,7 +176,6 @@ exports.getStatsCards = async (req, res) => {
     });
   }
 };
-
 exports.getProfessorStatsCards = async (req, res) => {
   const { professor_id } = req.params;
   try {
