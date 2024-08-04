@@ -15,16 +15,20 @@ exports.getAllTranslations = (req, res) => {
 
     languageFiles.forEach((file) => {
       const filePath = path.join(localesPath, file);
-      const fileContents = fs.readFileSync(filePath, 'utf-8');
-      const translations = JSON.parse(fileContents);
-      const languageKey = file.split('.')[0];
 
-      Object.keys(translations).forEach((translationKey) => {
-        if (!combinedTranslations[translationKey]) {
-          combinedTranslations[translationKey] = { key: translationKey };
-        }
-        combinedTranslations[translationKey][languageKey] = translations[translationKey];
-      });
+      // Check if filePath is a file, not a directory
+      if (fs.statSync(filePath).isFile()) {
+        const fileContents = fs.readFileSync(filePath, 'utf-8');
+        const translations = JSON.parse(fileContents);
+        const languageKey = path.basename(file, path.extname(file));
+
+        Object.keys(translations).forEach((translationKey) => {
+          if (!combinedTranslations[translationKey]) {
+            combinedTranslations[translationKey] = { key: translationKey };
+          }
+          combinedTranslations[translationKey][languageKey] = translations[translationKey];
+        });
+      }
     });
 
     const translationsArray = Object.values(combinedTranslations);
