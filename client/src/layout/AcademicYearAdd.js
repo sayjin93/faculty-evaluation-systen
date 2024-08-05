@@ -27,7 +27,6 @@ import api from "src/hooks/api";
 import { showToast, setFirstLogin } from "src/store";
 import { getIsAdmin } from "src/store/selectors";
 
-
 const AcademicYearAdd = () => {
   //#region constants
   const { t } = useTranslation();
@@ -66,8 +65,6 @@ const AcademicYearAdd = () => {
         }, 1000)
       })
       .catch((err) => {
-        console.log(err);
-        debugger;
         dispatch(
           showToast({
             type: "danger",
