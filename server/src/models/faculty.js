@@ -5,9 +5,6 @@ const Faculty = sequelize.define('Faculty', {
   key: {
     type: DataTypes.STRING,
   },
-  is_deleted: {
-    type: DataTypes.BOOLEAN,
-  },
 }, {
   paranoid: true, // This enables the soft delete functionality
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Column, HeaderFilter } from "devextreme-react/data-grid";
@@ -17,6 +17,7 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
+  CSpinner,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilPen, cilTrash, cilMediaPlay } from "@coreui/icons";
@@ -37,8 +38,6 @@ import { getModal } from "src/store/selectors";
 //components
 import CustomDataGrid from "src/components/CustomDataGrid";
 
-const defaultFormData = { name: "" };
-
 const Faculties = () => {
   //#region constants
   const { t } = useTranslation();
@@ -47,65 +46,63 @@ const Faculties = () => {
   const modal = useSelector(getModal);
   //#endregion
 
-  //#region refs
-  const myRef = useRef(null);
+  //#region states
+  const [isLoading, setIsLoading] = useState(true);
+  const [items, setItems] = useState([]);
+  const [formData, setFormData] = useState(null);
+  const [validated, setValidated] = useState(false);
+  const [action, setAction] = useState(null)
   //#endregion
 
-  //#region states
-  const [items, setItems] = useState([]);
-  const [formData, setFormData] = useState(defaultFormData);
-  const [status, setStatus] = useState(null);
-  const [validated, setValidated] = useState(false);
-  const [modalOptions, setModalOptions] = useState({
-    editMode: false,
-    selectedId: -1,
-    is_deleted: false,
-  });
-  //#endregion
+  console.log("items", items);
+  console.log("formData", formData);
+  console.log("action", action);
 
   //#region functions
+  const handleInputChange = (event, fieldName) => {
+    setFormData({
+      ...formData,
+      [fieldName]: event.target.value,
+    });
+  };
+  const handleAddEditFormSubmit = (event) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+    } else {
+      if (action === "edit") editFaculty();
+      else addFaculty();
+      dispatch(setModal());
+    }
+    setValidated(true);
+  };
+
+  //Actions
   const fetchFaculties = async () => {
+    // setIsLoading(true);
+
     await api
       .get("/faculty")
       .then((response) => {
         setItems(response.data);
+        setIsLoading(false);
+
       })
       .catch((error) => {
         handleError(error);
-      });
-  };
-  const fetchOneFaculty = async (id) => {
-    await api
-      .get("/faculty/" + id)
-      .then((response) => {
-        setFormData({
-          ...formData,
-          name: response.data.key,
-        });
-
-        myRef.current = response.data.key;
-
-        dispatch(setModal("editFaculty"));
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        setIsLoading(false);
       });
   };
   const addFaculty = async () => {
     await api
       .post("/faculty", {
         key: convertToKey(formData.name),
-        is_deleted: formData.is_deleted
       })
-      .then((response) => {
-        setStatus(response);
+      .then(() => {
         setValidated(false);
-
+        fetchFaculties(); // refetch faculties
         dispatch(
           showToast({
             type: "success",
@@ -123,15 +120,14 @@ const Faculties = () => {
         );
       });
   };
-  const editFaculty = async (id) => {
+  const editFaculty = async () => {
     await api
-      .put("/faculty/" + id, {
+      .put("/faculty/" + formData.id, {
         key: convertToKey(formData.name),
       })
       .then((response) => {
-        setStatus(response);
         setValidated(false);
-
+        fetchFaculties(); // refetch faculties
         dispatch(
           showToast({
             type: "success",
@@ -148,17 +144,15 @@ const Faculties = () => {
         );
       });
   };
-  const deleteFaculty = async (id) => {
+  const deleteFaculty = async () => {
     await api
-      .put("/faculty/delete/" + id)
-      .then((response) => {
-        const { is_deleted } = response.data;
-
-        setStatus(response);
+      .delete("/faculty/" + formData.id)
+      .then(() => {
+        fetchFaculties(); // refetch faculties
         dispatch(
           showToast({
             type: "success",
-            content: t("FacultyWithId") + " " + id + " " + (is_deleted ? t("DeletedSuccessfully") : t("RestoredSuccessfully")),
+            content: t("FacultyDeletedSuccessfully"),
           })
         );
       })
@@ -182,28 +176,28 @@ const Faculties = () => {
 
     dispatch(setModal());
   };
+  const restoreFaculty = async () => {
+    await api
+      .post("/faculty/restore/" + formData.id)
+      .then(() => {
+        fetchFaculties(); // refetch faculties
+        dispatch(
+          showToast({
+            type: "success",
+            content: t("FacultyRestoredSuccessfully"),
+          })
+        );
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error.message,
+          })
+        );
+      });
 
-  const handleInputChange = (event, fieldName) => {
-    const checkboxVal = event.target.checked;
-    const textboxVal = event.target.value
-
-    setFormData({
-      ...formData,
-      [fieldName]: fieldName === "is_deleted" ? checkboxVal : textboxVal,
-    });
-  };
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.stopPropagation();
-    } else {
-      if (modalOptions.editMode) editFaculty(modalOptions.selectedId);
-      else addFaculty();
-      dispatch(setModal());
-    }
-    setValidated(true);
+    dispatch(setModal());
   };
 
   //DataGrid
@@ -211,15 +205,15 @@ const Faculties = () => {
     return t(data.key)
   }
   const cellRenderDeleted = ({ data }) => {
-    const checked = data.is_deleted ? (
+    const deleted = data.deletedAt ? (
       <ImCross title={t("Deleted")} className="text-danger" />
     ) : (
       ""
     );
-    return checked;
+    return deleted;
   };
   const cellRenderActions = ({ data }) => {
-    const { id, is_deleted } = data;
+    const { id, deletedAt } = data;
 
     return (
       <CButtonGroup
@@ -231,29 +225,26 @@ const Faculties = () => {
           color="primary"
           variant="outline"
           onClick={() => {
-            setModalOptions({
-              ...modalOptions,
-              editMode: true,
-              selectedId: id,
-            });
+            const selectedFaculty = items.find(item => item.id === id);
+            setFormData(selectedFaculty);
+            setAction("edit");
+            dispatch(setModal("addEditFaculty"));
           }}
         >
           <CIcon icon={cilPen} />
         </CButton>
 
         <CButton
-          color={is_deleted ? "secondary" : "danger"}
+          color={deletedAt ? "success" : "danger"}
           variant="outline"
           onClick={() => {
-            setModalOptions({
-              ...modalOptions,
-              selectedId: id,
-              is_deleted: is_deleted,
-            });
-            dispatch(setModal('deleteFaculty'));
+            const selectedFaculty = items.find(item => item.id === id);
+            setFormData(selectedFaculty);
+            setAction(deletedAt ? "restore" : "delete");
+            dispatch(setModal('deleteRestoreFaculty'));
           }}
         >
-          {is_deleted ? <CIcon icon={cilMediaPlay} /> : <CIcon icon={cilTrash} />}
+          {deletedAt ? <CIcon icon={cilMediaPlay} /> : <CIcon icon={cilTrash} />}
         </CButton>
       </CButtonGroup>
     )
@@ -264,11 +255,7 @@ const Faculties = () => {
   //#region useEffect
   useEffect(() => {
     fetchFaculties();
-  }, [status]);
-
-  useEffect(() => {
-    if (modalOptions.editMode) fetchOneFaculty(modalOptions.selectedId);
-  }, [modalOptions.editMode]);
+  }, []);
   //#endregion
 
   return (
@@ -280,93 +267,100 @@ const Faculties = () => {
             <span className="title">{t("Faculties")}</span>
           </h6>
           <CButton
+            disabled={isLoading}
             color="primary"
             className="float-right"
-            onClick={() => dispatch(setModal("editFaculty"))}
+            onClick={() => {
+              setAction("add");
+              dispatch(setModal("addEditFaculty"))
+            }}
           >
             {t("Add")}
           </CButton>
         </CCardHeader>
 
-        <CCardBody>
-          <CustomDataGrid dataSource={items}>
-            <Column
-              dataField="key"
-              caption={t("Name")}
-              dataType="string"
-              cellRender={cellRenderFaculty}
-            />
-            <Column
-              width={140}
-              alignment="center"
-              dataField="is_deleted"
-              caption={t("Deleted")}
-              dataType="string"
-              cellRender={cellRenderDeleted}
-            >
-              <HeaderFilter dataSource={[{
-                text: t('Deleted'),
-                value: ['is_deleted', '=', true],
-              }, {
-                text: t('Active'),
-                value: ['is_deleted', '=', false],
-              }]} />
-            </Column>
-            <Column
-              dataField="createdAt"
-              caption={t("CreatedAt")}
-              dataType="datetime"
-              visible={false}
-            />
-            <Column
-              dataField="updatedAt"
-              caption={t("UpdatedAt")}
-              dataType="datetime"
-              visible={false}
-            />
-            <Column
-              alignment="center"
-              caption={t("Actions")}
-              width={120}
-              cellRender={cellRenderActions}
-            />
-          </CustomDataGrid>
-        </CCardBody>
+        {isLoading ? (
+          <div className="d-flex justify-content-center align-items-center vh-100">
+            <CSpinner color="primary" />
+          </div>
+        ) : (
+          <CCardBody>
+            <CustomDataGrid dataSource={items}>
+              <Column
+                dataField="key"
+                caption={t("Name")}
+                dataType="string"
+                cellRender={cellRenderFaculty}
+              />
+              <Column
+                width={140}
+                alignment="center"
+                dataField="deletedAt"
+                caption={t("Deleted")}
+                dataType="string"
+                cellRender={cellRenderDeleted}
+              >
+                <HeaderFilter dataSource={[{
+                  text: t('Deleted'),
+                  value: ['deletedAt', '<>', null],
+                }, {
+                  text: t('Active'),
+                  value: ['deletedAt', '=', null],
+                }]} />
+              </Column>
+              <Column
+                dataField="createdAt"
+                caption={t("CreatedAt")}
+                dataType="datetime"
+                visible={false}
+              />
+              <Column
+                dataField="updatedAt"
+                caption={t("UpdatedAt")}
+                dataType="datetime"
+                visible={false}
+              />
+              <Column
+                alignment="center"
+                caption={t("Actions")}
+                width={120}
+                cellRender={cellRenderActions}
+              />
+            </CustomDataGrid>
+          </CCardBody>
+        )}
       </CCard>
 
       <CModal
-        id="editFaculty"
+        id="addEditFaculty"
         backdrop="static"
-        visible={modal.isOpen && modal.id === "editFaculty"}
+        visible={modal.isOpen && modal.id === "addEditFaculty"}
         onClose={() => {
           dispatch(setModal());
-          setFormData(defaultFormData);
-          setModalOptions({
-            editMode: false,
-            selectedId: -1,
-            is_deleted: false,
-          });
+          setFormData(null);
+          setAction(null);
         }}
       >
         <CForm
           className="needs-validation"
           noValidate
           validated={validated}
-          onSubmit={handleSubmit}
+          onSubmit={handleAddEditFormSubmit}
         >
           <CModalHeader>
             <CModalTitle>
-              {modalOptions.editMode ? t("Edit") : t("Add")}
+              {action === "edit" ? t("Edit") : t("Add")}
             </CModalTitle>
           </CModalHeader>
 
           <CModalBody>
             <CFormInput
               type="text"
+              required
               floatingClassName="mb-3"
               floatingLabel={t("FacultyName")}
               placeholder={t("FacultyName")}
-              defaultValue={formData.name !== "" ? t(myRef.current) : ""}
+              defaultValue={formData?.key && t(formData?.key)}
               onChange={(event) => handleInputChange(event, "name")}
             />
           </CModalBody>
@@ -382,16 +376,16 @@ const Faculties = () => {
               {t("Close")}
             </CButton>
             <CButton type="submit">
-              {modalOptions.editMode ? t("Update") : t("Add")}
+              {action === "edit" ? t("Update") : t("Add")}
             </CButton>
           </CModalFooter>
         </CForm>
       </CModal>
 
       <CModal
-        id="deleteFaculty"
+        id="deleteRestoreFaculty"
         backdrop="static"
-        visible={modal.isOpen && modal.id === "deleteFaculty"}
+        visible={modal.isOpen && modal.id === "deleteRestoreFaculty"}
         onClose={() => {
           dispatch(setModal());
         }}
@@ -404,7 +398,7 @@ const Faculties = () => {
 
         <CModalBody>
           <span>
-            {modalOptions.is_deleted
+            {action === "restore"
               ? t("AreYouSureToRestoreTheSelected") + " ?"
               : t("AreYouSureToDeleteTheSelected") + " ?"
             }
@@ -420,10 +414,17 @@ const Faculties = () => {
           >
             {t("Cancel")}
           </CButton>
-          <CButton onClick={() => deleteFaculty(modalOptions.selectedId)}
-            color={modalOptions.is_deleted ? "success" : "danger"}
+          <CButton
+            onClick={() => {
+              if (action === "restore") {
+                restoreFaculty();
+              } else {
+                deleteFaculty();
+              }
+            }}
+            color={action === "restore" ? "success" : "danger"}
           >
-            {modalOptions.is_deleted ? t("Restore") : t("Delete")}
+            {action === "restore" ? t("Restore") : t("Delete")}
           </CButton>
         </CModalFooter>
 

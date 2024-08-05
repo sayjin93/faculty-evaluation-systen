@@ -22,7 +22,9 @@ exports.createFaculty = async (req, res) => {
 };
 exports.getAllFaculties = async (req, res) => {
   try {
-    const faculties = await Faculty.findAll();
+    const faculties = await Faculty.findAll({
+      paranoid: false, // This includes the soft-deleted records
+    });
     if (!faculties || faculties.length === 0) {
       return res.status(404).json({ message: 'No Faculties found.' });
     }
@@ -59,30 +61,6 @@ exports.updateFaculty = async (req, res) => {
     res.status(500).send({ message: `Error updating Faculty with id=${id}` });
   }
 };
-exports.updateDeleteFaculty = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    // Find the current Faculty entry by id
-    const faculty = await Faculty.findOne({ where: { id } });
-
-    if (faculty) {
-      // Toggle the is_deleted status
-      faculty.is_deleted = !faculty.is_deleted;
-
-      // Save the updated entry
-      await faculty.save();
-
-      res.send({ is_deleted: faculty.is_deleted });
-    } else {
-      res.status(409).send({ message: `Cannot update Faculty with id=${id}. Maybe Faculty was not found!` });
-    }
-  } catch (err) {
-    res.status(500).send({ message: `Error updating Faculty with id=${id}` });
-  }
-};
-
-// NOT IN USE YET
 exports.deleteFaculty = async (req, res) => {
   const { id } = req.params;
 
@@ -97,11 +75,17 @@ exports.deleteFaculty = async (req, res) => {
     res.status(409).send({ message: `Could not delete Faculty with id=${id}` });
   }
 };
-exports.deleteAllFaculties = async (req, res) => {
+exports.restoreFaculties = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const nums = await Faculty.destroy({ where: {} });
-    res.send({ message: `${nums} Faculties were deleted successfully` });
+    const num = await Faculty.restore({ where: { id } });
+    if (Number(num) === 1) {
+      res.send({ message: 'Faculty was restored successfully' });
+    } else {
+      res.send({ message: `Cannot restore Faculty with id=${id}. Maybe Faculty was not found!` });
+    }
   } catch (err) {
-    res.status(500).send({ message: err.message || 'Some error occurred while removing all Faculties' });
+    res.status(500).send({ message: `Error restoring Faculty with id=${id}` });
   }
 };

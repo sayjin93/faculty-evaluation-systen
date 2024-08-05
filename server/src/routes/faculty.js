@@ -12,8 +12,7 @@ router.post('/', auth, isAdminMiddleware, facultyController.createFaculty);
 router.get('/', auth, isAdminMiddleware, facultyController.getAllFaculties);
 router.get('/:id', auth, isAdminMiddleware, facultyController.getFacultyById);
 router.put('/:id', auth, isAdminMiddleware, facultyController.updateFaculty);
-router.put('/delete/:id', auth, isAdminMiddleware, facultyController.updateDeleteFaculty);
 router.delete('/:id', auth, isAdminMiddleware, facultyController.deleteFaculty);
-router.delete('/', auth, isAdminMiddleware, facultyController.deleteAllFaculties);
+router.post('/restore/:id', auth, isAdminMiddleware, facultyController.restoreFaculties);
 
 module.exports = router;
