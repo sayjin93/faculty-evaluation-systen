@@ -86,7 +86,7 @@ exports.updateDepartment = async (req, res) => {
   try {
     const num = await Department.update(req.body, { where: { id } });
     if (Number(num) === 1) {
-      res.send({ message: 'Department was updated successfully' });
+      res.send({ message: 'Department updated successfully' });
     } else {
       res.send({ message: `Cannot update Department with id=${id}. Maybe Department was not found or req.body is empty!` });
     }
@@ -101,7 +101,7 @@ exports.deleteDepartment = async (req, res) => {
   try {
     const num = await Department.destroy({ where: { id } });
     if (Number(num) === 1) {
-      res.send({ message: 'Department was deleted successfully' });
+      res.send({ message: 'Department deleted successfully' });
     } else {
       res.send({ message: `Cannot delete Department with id=${id}. Maybe Department was not found!` });
     }
@@ -113,7 +113,7 @@ exports.deleteDepartment = async (req, res) => {
 exports.deleteAllDepartments = async (req, res) => {
   try {
     const nums = await Department.destroy({ where: {} });
-    res.send({ message: `${nums} Departments were deleted successfully` });
+    res.send({ message: `${nums} Departments deleted successfully` });
   } catch (err) {
     res.status(500).send({ message: err.message || 'Some error occurred while removing all Departments' });
   }
