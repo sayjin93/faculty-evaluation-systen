@@ -255,7 +255,7 @@ exports.updateProfessor = async (req, res) => {
             });
           });
       } else {
-      // Check if current password is correct
+        // Check if current password is correct
         bcrypt.compare(currentPassword, user.password, async (err, result) => {
           if (err) {
             res.status(500).send({
@@ -290,7 +290,7 @@ exports.updateProfessor = async (req, res) => {
           Professor.update(updateObject, { where: { id } })
             .then((num) => {
               if (Number(num) === 1) {
-              // Fetch updated user data
+                // Fetch updated user data
                 Professor.findByPk(id, {
                   attributes: [
                     'first_name',
@@ -332,7 +332,7 @@ exports.deleteProfessor = async (req, res) => {
     .then((num) => {
       if (Number(num) === 1) {
         res.send({
-          message: 'Professor was deleted successfully',
+          message: 'Professor deleted successfully',
         });
       } else {
         res.send({

@@ -199,8 +199,7 @@ const Professors = () => {
         dispatch(
           showToast({
             type: "success",
-            content:
-              t("ProfessorWithId") + " " + id + " " + t("DeletedSuccessfully"),
+            content: t("ProfessorDeletedSuccessfully"),
           })
         );
       })

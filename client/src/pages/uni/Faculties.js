@@ -54,10 +54,6 @@ const Faculties = () => {
   const [action, setAction] = useState(null)
   //#endregion
 
-  console.log("items", items);
-  console.log("formData", formData);
-  console.log("action", action);
-
   //#region functions
   const handleInputChange = (event, fieldName) => {
     setFormData({
@@ -249,7 +245,6 @@ const Faculties = () => {
       </CButtonGroup>
     )
   };
-
   //#endregion
 
   //#region useEffect
@@ -355,8 +350,8 @@ const Faculties = () => {
 
           <CModalBody>
             <CFormInput
-              type="text"
               required
+              type="text"
               floatingClassName="mb-3"
               floatingLabel={t("FacultyName")}
               placeholder={t("FacultyName")}
@@ -376,7 +371,7 @@ const Faculties = () => {
               {t("Close")}
             </CButton>
             <CButton type="submit">
-              {action === "edit" ? t("Update") : t("Add")}
+              {action === "edit" ? t("Edit") : t("Add")}
             </CButton>
           </CModalFooter>
         </CForm>

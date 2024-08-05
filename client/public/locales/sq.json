@@ -240,5 +240,8 @@
   "Welcome": "Mirësevini",
   "Working": "Në punim",
   "Year": "Viti",
-  "YouNeedToDefineAcademicYearFirst": "Filimisht duhet të përcaktoni Vitin Akademik"
+  "YouNeedToDefineAcademicYearFirst": "Filimisht duhet të përcaktoni Vitin Akademik",
+  "ProfessorDeletedSuccessfully": "Profesori u fshi me sukses",
+  "DepartmentDeletedSuccessfully": "Departamenti u fshi me sukses",
+  "DepartmentRestoredSuccessfully": "Departamenti u rikthye me sukses"
 }

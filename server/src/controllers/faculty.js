@@ -1,4 +1,5 @@
 const Faculty = require('../models/faculty');
+const Department = require('../models/department');
 
 exports.createFaculty = async (req, res) => {
   if (!req.body.key) {
@@ -65,6 +66,19 @@ exports.deleteFaculty = async (req, res) => {
   const { id } = req.params;
 
   try {
+    // Check if there are any active (not deleted) departments associated with this faculty
+    const activeDepartments = await Department.count({
+      where: {
+        faculty_id: id,
+        deletedAt: null, // Ensure only non-deleted departments are counted
+      },
+    });
+
+    if (activeDepartments > 0) {
+      return res.status(409).send({ message: 'Cannot delete Faculty with active departments' });
+    }
+
+    // Proceed with faculty deletion if no active departments are found
     const num = await Faculty.destroy({ where: { id } });
     if (Number(num) === 1) {
       res.send({ message: 'Faculty was deleted successfully' });
@@ -72,7 +86,7 @@ exports.deleteFaculty = async (req, res) => {
       res.send({ message: `Cannot delete Faculty with id=${id}. Maybe Faculty was not found!` });
     }
   } catch (err) {
-    res.status(409).send({ message: `Could not delete Faculty with id=${id}` });
+    res.status(500).send({ message: `Could not delete Faculty with id=${id}` });
   }
 };
 exports.restoreFaculties = async (req, res) => {

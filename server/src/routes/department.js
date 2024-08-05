@@ -10,10 +10,9 @@ const departmentController = require('../controllers/department');
 // Department routes
 router.post('/', auth, isAdminMiddleware, departmentController.createDepartment);
 router.get('/', departmentController.getAllDepartments);
-router.get('/faculty/:faculty_id', auth, isAdminMiddleware, departmentController.getDepartmentsByFaculty);
 router.get('/:id', auth, departmentController.getDepartmentById);
 router.put('/:id', auth, isAdminMiddleware, departmentController.updateDepartment);
 router.delete('/:id', auth, isAdminMiddleware, departmentController.deleteDepartment);
-router.delete('/', auth, isAdminMiddleware, departmentController.deleteAllDepartments);
+router.post('/restore/:id', auth, isAdminMiddleware, departmentController.restoreDepartments);
 
 module.exports = router;

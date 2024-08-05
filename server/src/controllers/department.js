@@ -1,5 +1,6 @@
 const Department = require('../models/department');
 const Faculty = require('../models/faculty');
+const Professors = require('../models/professor');
 
 exports.createDepartment = async (req, res) => {
   if (!req.body.key || !req.body.faculty_id) {
@@ -22,50 +23,26 @@ exports.createDepartment = async (req, res) => {
     });
   }
 };
-
 exports.getAllDepartments = async (req, res) => {
   try {
-    const results = await Department.findAll({
+    const departments = await Department.findAll({
       include: [{
         model: Faculty,
         attributes: ['key'],
       }],
+      paranoid: false, // This includes the soft-deleted records
     });
 
-    if (!results || results.length === 0) {
+    if (!departments || departments.length === 0) {
       return res.json({ message: 'No Departments found' });
     }
 
-    const modifiedResult = results.map((result) => ({
-      id: result.id,
-      key: result.key,
-      is_deleted: result.is_deleted,
-      faculty_id: result.faculty_id,
-      faculty_key: result.Faculty ? result.Faculty.key : '',
-      createdAt: result.createdAt,
-      updatedAt: result.updatedAt,
-    }));
-
-    res.send(modifiedResult);
+    res.send(departments);
   } catch (err) {
     console.log('Error: ', err);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
-
-exports.getDepartmentsByFaculty = async (req, res) => {
-  const { faculty_id } = req.params;
-
-  try {
-    const data = await Department.findAll({ where: { faculty_id } });
-    res.send(data);
-  } catch (err) {
-    res.status(500).send({
-      message: err.message || 'Some error occurred while retrieving Departments.',
-    });
-  }
-};
-
 exports.getDepartmentById = async (req, res) => {
   const { id } = req.params;
 
@@ -79,7 +56,6 @@ exports.getDepartmentById = async (req, res) => {
     res.status(500).send({ message: `Error retrieving Department with id=${id}` });
   }
 };
-
 exports.updateDepartment = async (req, res) => {
   const { id } = req.params;
 
@@ -94,11 +70,23 @@ exports.updateDepartment = async (req, res) => {
     res.status(500).send({ message: `Error updating Department with id=${id}` });
   }
 };
-
 exports.deleteDepartment = async (req, res) => {
   const { id } = req.params;
 
   try {
+    // Check if there are any active (not deleted) departments associated with this faculty
+    const activeProfessors = await Professors.count({
+      where: {
+        department_id: id,
+        deletedAt: null, // Ensure only non-deleted departments are counted
+      },
+    });
+
+    if (activeProfessors > 0) {
+      return res.status(409).send({ message: 'Cannot delete Department with active professors' });
+    }
+
+    // Proceed with department deletion if no active professors are found
     const num = await Department.destroy({ where: { id } });
     if (Number(num) === 1) {
       res.send({ message: 'Department deleted successfully' });
@@ -106,15 +94,20 @@ exports.deleteDepartment = async (req, res) => {
       res.send({ message: `Cannot delete Department with id=${id}. Maybe Department was not found!` });
     }
   } catch (err) {
-    res.status(409).send({ message: `Could not delete Department with id=${id}` });
+    res.status(500).send({ message: `Could not delete Department with id=${id}` });
   }
 };
+exports.restoreDepartments = async (req, res) => {
+  const { id } = req.params;
 
-exports.deleteAllDepartments = async (req, res) => {
   try {
-    const nums = await Department.destroy({ where: {} });
-    res.send({ message: `${nums} Departments deleted successfully` });
+    const num = await Department.restore({ where: { id } });
+    if (Number(num) === 1) {
+      res.send({ message: 'Department restored successfully' });
+    } else {
+      res.send({ message: `Cannot restore Faculty with id=${id}. Maybe Faculty was not found!` });
+    }
   } catch (err) {
-    res.status(500).send({ message: err.message || 'Some error occurred while removing all Departments' });
+    res.status(500).send({ message: `Error restoring Faculty with id=${id}` });
   }
 };
