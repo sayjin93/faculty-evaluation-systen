@@ -98,7 +98,7 @@ const Departments = () => {
       .post("/department", {
         key: convertToKey(formData.name),
       })
-      .then((response) => {
+      .then(() => {
         setValidated(false);
         fetchDepartments(); // refetch departments
         dispatch(
@@ -155,21 +155,12 @@ const Departments = () => {
         );
       })
       .catch((error) => {
-        if (error.response && error.response.status === 409) {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: t("CannotDeleteItDueToForeignKeyConstraint"),
-            })
-          );
-        } else {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: error.message,
-            })
-          );
-        }
+        dispatch(
+          showToast({
+            type: "danger",
+            content: t(convertToKey(error.response.data.message)),
+          })
+        );
       });
 
     dispatch(setModal());
@@ -203,7 +194,8 @@ const Departments = () => {
     return t(data.key);
   };
   const cellRenderFaculty = ({ data }) => {
-    return t(data.Faculty.key);
+    const { Faculty } = data;
+    return <span className={Faculty.deletedAt ? "disabled" : ""} title={Faculty.deletedAt ? t("Deleted") : ""}>{t(Faculty.key)}</span>
   };
   const cellRenderDeleted = ({ data }) => {
     const deleted = data.deletedAt ? (
@@ -389,9 +381,7 @@ const Departments = () => {
         }}
       >
         <CModalHeader>
-          <CModalTitle>
-            {t("Confirmation")}
-          </CModalTitle>
+          <CModalTitle>{t("Confirmation")}</CModalTitle>
         </CModalHeader>
 
         <CModalBody>

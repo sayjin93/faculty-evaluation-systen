@@ -15,7 +15,6 @@ const professorsData = [
     password: 'admin',
     email: 'jurgen-kruja@live.com',
     is_admin: 1,
-    is_deleted: 0,
   },
   {
     first_name: 'Professor',
@@ -26,7 +25,6 @@ const professorsData = [
     email: 'pone@uet.edu.al',
     department_id: 1,
     is_admin: 0,
-    is_deleted: 0,
   },
   {
     first_name: 'Professor',
@@ -37,7 +35,6 @@ const professorsData = [
     email: 'ptwo@uet.edu.al',
     department_id: 2,
     is_admin: 0,
-    is_deleted: 0,
   },
   {
     first_name: 'Professor',
@@ -48,7 +45,6 @@ const professorsData = [
     email: 'pthree@abozdo.edu.al',
     department_id: 3,
     is_admin: 0,
-    is_deleted: 0,
   },
   {
     first_name: 'Professor',
@@ -59,7 +55,6 @@ const professorsData = [
     email: 'pfour@uet.edu.al',
     department_id: 4,
     is_admin: 0,
-    is_deleted: 0,
   },
   {
     first_name: 'Professor',
@@ -70,7 +65,6 @@ const professorsData = [
     email: 'pfive@uet.edu.al',
     department_id: 5,
     is_admin: 0,
-    is_deleted: 0,
   },
   {
     first_name: 'Professor',
@@ -81,7 +75,6 @@ const professorsData = [
     email: 'psix@uet.edu.al',
     department_id: 6,
     is_admin: 0,
-    is_deleted: 0,
   },
   {
     first_name: 'Professor',
@@ -92,7 +85,6 @@ const professorsData = [
     email: 'pseven@uet.edu.al',
     department_id: 7,
     is_admin: 0,
-    is_deleted: 0,
   },
   {
     first_name: 'Professor',
@@ -103,7 +95,6 @@ const professorsData = [
     email: 'peight@uet.edu.al',
     department_id: 8,
     is_admin: 0,
-    is_deleted: 0,
   },
   {
     first_name: 'Professor',
@@ -114,7 +105,6 @@ const professorsData = [
     email: 'pnine@uet.edu.al',
     department_id: 9,
     is_admin: 0,
-    is_deleted: 0,
   },
   {
     first_name: 'Professor',
@@ -125,7 +115,6 @@ const professorsData = [
     email: 'pten@uet.edu.al',
     department_id: 10,
     is_admin: 0,
-    is_deleted: 0,
   },
 ];
 

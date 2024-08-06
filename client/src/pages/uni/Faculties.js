@@ -153,21 +153,12 @@ const Faculties = () => {
         );
       })
       .catch((error) => {
-        if (error.response && error.response.status === 409) {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: t("CannotDeleteItDueToForeignKeyConstraint"),
-            })
-          );
-        } else {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: error.message,
-            })
-          );
-        }
+        dispatch(
+          showToast({
+            type: "danger",
+            content: t(convertToKey(error.response.data.message)),
+          })
+        );
       });
 
     dispatch(setModal());

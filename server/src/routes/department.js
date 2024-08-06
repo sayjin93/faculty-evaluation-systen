@@ -8,11 +8,11 @@ const { isAdminMiddleware } = require('../middlewares');
 const departmentController = require('../controllers/department');
 
 // Department routes
-router.post('/', auth, isAdminMiddleware, departmentController.createDepartment);
-router.get('/', departmentController.getAllDepartments);
-router.get('/:id', auth, departmentController.getDepartmentById);
-router.put('/:id', auth, isAdminMiddleware, departmentController.updateDepartment);
-router.delete('/:id', auth, isAdminMiddleware, departmentController.deleteDepartment);
-router.post('/restore/:id', auth, isAdminMiddleware, departmentController.restoreDepartments);
+router.post('/', auth, isAdminMiddleware, departmentController.create);
+router.get('/', departmentController.getAll);
+router.get('/:id', auth, departmentController.getOne);
+router.put('/:id', auth, isAdminMiddleware, departmentController.update);
+router.delete('/:id', auth, isAdminMiddleware, departmentController.delete);
+router.post('/restore/:id', auth, isAdminMiddleware, departmentController.restore);
 
 module.exports = router;

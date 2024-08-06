@@ -23,8 +23,6 @@ const Community = sequelize.define('Community', {
   professor_id: {
     type: DataTypes.INTEGER,
   },
-}, {
-  paranoid: true, // This enables the soft delete functionality
 });
 
 //  Associations

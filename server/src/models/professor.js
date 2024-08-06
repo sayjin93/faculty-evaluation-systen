@@ -4,7 +4,7 @@ const sequelize = require('../database');
 
 const Department = require('./department');
 
-const Professors = sequelize.define('Professors', {
+const Professor = sequelize.define('Professors', {
   first_name: {
     type: DataTypes.STRING,
   },
@@ -39,9 +39,6 @@ const Professors = sequelize.define('Professors', {
   is_verified: {
     type: DataTypes.BOOLEAN,
   },
-  is_deleted: {
-    type: DataTypes.BOOLEAN,
-  },
   resetPasswordToken: {
     type: DataTypes.STRING,
   },
@@ -59,6 +56,6 @@ const Professors = sequelize.define('Professors', {
 });
 
 //  Associations
-Professors.belongsTo(Department, { foreignKey: 'department_id' });
+Professor.belongsTo(Department, { foreignKey: 'department_id' });
 
-module.exports = Professors;
+module.exports = Professor;

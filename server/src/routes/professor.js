@@ -8,11 +8,11 @@ const { isAdminMiddleware } = require('../middlewares');
 const professorController = require('../controllers/professor');
 
 // Professor routes
-router.post('/', auth, isAdminMiddleware, professorController.createProfessor);
-router.get('/', auth, professorController.getAllProfessors);
-router.get('/:id', auth, professorController.getProfessorById);
-router.put('/:id', auth, professorController.updateProfessor);
-router.delete('/:id', auth, isAdminMiddleware, professorController.deleteProfessor);
-router.delete('/', auth, isAdminMiddleware, professorController.deleteAllProfessors);
+router.post('/', auth, isAdminMiddleware, professorController.create);
+router.get('/', auth, professorController.getAll);
+router.get('/:id', auth, professorController.getOne);
+router.put('/:id', auth, professorController.update);
+router.delete('/:id', auth, isAdminMiddleware, professorController.delete);
+router.post('/restore/:id', auth, isAdminMiddleware, professorController.restore);
 
 module.exports = router;

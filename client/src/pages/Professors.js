@@ -21,9 +21,10 @@ import {
   CModalHeader,
   CModalTitle,
   CRow,
+  CSpinner,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilPen, cilTrash } from "@coreui/icons";
+import { cilMediaPlay, cilPen, cilTrash } from "@coreui/icons";
 import { BsGenderMale, BsGenderFemale } from "react-icons/bs";
 import { ImCross, ImCheckmark } from "react-icons/im";
 
@@ -49,63 +50,87 @@ const Professors = () => {
   const handleError = useErrorHandler();
 
   const modal = useSelector(getModal);
-
-  const defaultFormData = {
-    first_name: "",
-    last_name: "",
-    gender: "m",
-    username: "",
-    email: "",
-    is_verified: true,
-    is_deleted: false,
-  };
   //#endregion
 
   //#region states
+  const [isLoading, setIsLoading] = useState(true);
   const [items, setItems] = useState([]);
-  const [formData, setFormData] = useState(defaultFormData);
-  const [status, setStatus] = useState(null);
+  const [formData, setFormData] = useState(null);
   const [validated, setValidated] = useState(false);
-  const [modalOptions, setModalOptions] = useState({
-    editMode: false,
-    selectedId: -1,
-  });
+  const [action, setAction] = useState(null)
   //#endregion
 
   //#region functions
+  const handleFullName = (event, fieldName) => {
+    const inputValue = capitalizeWords(event.target.value);
+
+    let newUser = {
+      ...formData,
+      [fieldName]: inputValue,
+    };
+
+    // Automatically set email when first_name or last_name changed
+    if (fieldName === "first_name" || fieldName === "last_name") {
+      const firstName =
+        fieldName === "first_name" ? inputValue : formData?.first_name;
+      const lastName =
+        fieldName === "last_name" ? inputValue : formData?.last_name;
+
+      if (firstName && lastName) {
+        const username = lowercaseNoSpace(`${firstName[0]}${lastName}`);
+        newUser.username = username;
+        newUser.email = username + "@uet.edu.al";
+      }
+    }
+
+    setFormData(newUser);
+  };
+  const handleInputChange = (event, fieldName) => {
+    const checkboxVal = event.target.checked;
+    const inputValue = event.target.value;
+
+    let newValue;
+
+    if (fieldName === "is_verified") {
+      // Handle checkbox inputs differently for "is_verified"
+      newValue = checkboxVal;
+    } else {
+      // For other fields, use the textbox value
+      newValue = inputValue;
+    }
+
+    setFormData({
+      ...formData,
+      [fieldName]: newValue,
+    });
+  };
+  const handleAddEditFormSubmit = (event) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+    } else {
+      if (action === "edit") editProfessor();
+      else addProfessor();
+      dispatch(setModal());
+    }
+    setValidated(true);
+  };
+
+  //Actions
   const fetchProfessors = async () => {
+    // setIsLoading(true);
+
     await api
       .get("/professor")
       .then((response) => {
         setItems(response.data);
+        setIsLoading(false);
       })
       .catch((error) => {
         handleError(error);
-      });
-  };
-  const fetchOneProfessor = async (id) => {
-    await api
-      .get("/professor/" + id)
-      .then((response) => {
-        setFormData({
-          ...formData,
-          first_name: response.data.first_name,
-          last_name: response.data.last_name,
-          gender: response.data.gender,
-          username: response.data.username,
-          email: response.data.email,
-          is_verified: response.data.is_verified,
-          is_deleted: response.data.is_deleted,
-        });
-        dispatch(setModal("editProfessor"));
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: error,
-          })
-        );
+        setIsLoading(false);
       });
   };
   const addProfessor = async () => {
@@ -121,9 +146,8 @@ const Professors = () => {
         const firstName = response.data.first_name;
         const lastName = response.data.last_name;
 
-        setStatus(response);
         setValidated(false);
-
+        fetchProfessors(); // refetch professors
         dispatch(
           showToast({
             type: "success",
@@ -158,21 +182,19 @@ const Professors = () => {
         }
       });
   };
-  const editProfessor = async (id) => {
+  const editProfessor = async () => {
     await api
-      .put("/professor/" + id, {
+      .put("/professor/" + formData.id, {
         first_name: formData.first_name,
         last_name: formData.last_name,
         gender: formData.gender,
         username: formData.username,
         email: formData.email,
         is_verified: formData.is_verified,
-        is_deleted: formData.is_deleted,
       })
       .then((response) => {
-        setStatus(response);
         setValidated(false);
-
+        fetchProfessors(); // refetch professors
         dispatch(
           showToast({
             type: "success",
@@ -191,11 +213,11 @@ const Professors = () => {
         );
       });
   };
-  const deleteProfessor = async (id) => {
+  const deleteProfessor = async () => {
     await api
-      .delete("/professor/" + id)
-      .then((response) => {
-        setStatus(response);
+      .delete("/professor/" + formData.id)
+      .then(() => {
+        fetchProfessors(); // refetch professors
         dispatch(
           showToast({
             type: "success",
@@ -204,82 +226,38 @@ const Professors = () => {
         );
       })
       .catch((error) => {
-        if (error.response && error.response.status === 409) {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: t("CannotDeleteItDueToForeignKeyConstraint"),
-            })
-          );
-        } else {
-          dispatch(
-            showToast({
-              type: "danger",
-              content: error.message,
-            })
-          );
-        }
+        dispatch(
+          showToast({
+            type: "danger",
+            content: t(convertToKey(error.response.data.message)),
+          })
+        );
       });
 
     dispatch(setModal());
   };
+  const restoreProfessor = async () => {
+    await api
+      .post("/professor/restore/" + formData.id)
+      .then(() => {
+        fetchProfessors(); // refetch professors
+        dispatch(
+          showToast({
+            type: "success",
+            content: t("ProfessorRestoredSuccessfully"),
+          })
+        );
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error.message,
+          })
+        );
+      });
 
-  const handleFullName = (event, fieldName) => {
-    const inputValue = capitalizeWords(event.target.value);
-
-    let newUser = {
-      ...formData,
-      [fieldName]: inputValue,
-    };
-
-    // Automatically set email when first_name or last_name changed
-    if (fieldName === "first_name" || fieldName === "last_name") {
-      const firstName =
-        fieldName === "first_name" ? inputValue : formData.first_name;
-      const lastName =
-        fieldName === "last_name" ? inputValue : formData.last_name;
-
-      if (firstName && lastName) {
-        const username = lowercaseNoSpace(`${firstName[0]}${lastName}`);
-        newUser.username = username;
-        newUser.email = username + "@uet.edu.al";
-      }
-    }
-
-    setFormData(newUser);
-  };
-
-  const handleInputChange = (event, fieldName) => {
-    const checkboxVal = event.target.checked;
-    const inputValue = event.target.value;
-
-    let newValue;
-
-    if (fieldName === "is_deleted" || fieldName === "is_verified") {
-      // Handle checkbox inputs differently for "is_deleted" and "is_verified"
-      newValue = checkboxVal;
-    } else {
-      // For other fields, use the textbox value
-      newValue = inputValue;
-    }
-
-    setFormData({
-      ...formData,
-      [fieldName]: newValue,
-    });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.stopPropagation();
-    } else {
-      if (modalOptions.editMode) editProfessor(modalOptions.selectedId);
-      else addProfessor();
-    }
-    setValidated(true);
+    dispatch(setModal());
   };
 
   //DataGrid
@@ -308,15 +286,15 @@ const Professors = () => {
     return checked;
   };
   const cellRenderDeleted = ({ data }) => {
-    const checked = data.is_deleted ? (
+    const deleted = data.deletedAt ? (
       <ImCross title={t("Deleted")} className="text-danger" />
     ) : (
       ""
     );
-    return checked;
+    return deleted;
   };
   const cellRenderActions = ({ data }) => {
-    const { id } = data;
+    const { id, deletedAt } = data;
 
     return (
       <CButtonGroup role="group" aria-label="Button Actions" size="sm">
@@ -324,28 +302,26 @@ const Professors = () => {
           color="primary"
           variant="outline"
           onClick={() => {
-            setModalOptions({
-              ...modalOptions,
-              editMode: true,
-              selectedId: id,
-            });
+            const selectedProfessor = items.find(item => item.id === id);
+            setFormData(selectedProfessor);
+            setAction("edit");
+            dispatch(setModal("addEditProfessor"));
           }}
         >
           <CIcon icon={cilPen} />
         </CButton>
 
         <CButton
-          color="danger"
+          color={deletedAt ? "success" : "danger"}
           variant="outline"
           onClick={() => {
-            setModalOptions({
-              ...modalOptions,
-              selectedId: id,
-            });
-            dispatch(setModal("deleteProfessor"));
+            const selectedProfessor = items.find(item => item.id === id);
+            setFormData(selectedProfessor);
+            setAction(deletedAt ? "restore" : "delete");
+            dispatch(setModal('deleteRestoreProfessor'));
           }}
         >
-          <CIcon icon={cilTrash} />
+          {deletedAt ? <CIcon icon={cilMediaPlay} /> : <CIcon icon={cilTrash} />}
         </CButton>
       </CButtonGroup>
     );
@@ -355,11 +331,7 @@ const Professors = () => {
   //#region useEffect
   useEffect(() => {
     fetchProfessors();
-  }, [status]);
-
-  useEffect(() => {
-    if (modalOptions.editMode) fetchOneProfessor(modalOptions.selectedId);
-  }, [modalOptions.editMode]);
+  }, []);
   //#endregion
 
   return (
@@ -373,122 +345,120 @@ const Professors = () => {
           <CButton
             color="primary"
             className="float-right"
-            onClick={() => dispatch(setModal("editProfessor"))}
+            onClick={() => dispatch(setModal("addEditProfessor"))}
           >
             {t("Add")}
           </CButton>
         </CCardHeader>
 
-        <CCardBody>
-          <CustomDataGrid dataSource={items}>
-            <Column
-              dataField="first_name"
-              caption={t("FirstName")}
-              dataType="string"
-            />
-            <Column
-              dataField="last_name"
-              caption={t("LastName")}
-              dataType="string"
-            />
-            <Column
-              dataField="gender"
-              caption={t("Gender")}
-              dataType="string"
-              cellRender={cellRenderGender}
-            />
-            <Column
-              dataField="username"
-              caption={t("Username")}
-              dataType="string"
-            />
-            <Column dataField="email" caption={t("Email")} dataType="string" />
-            <Column
-              width={140}
-              alignment="center"
-              dataField="is_verified"
-              caption={t("Verified")}
-              dataType="string"
-              cellRender={cellRenderVerified}
-            >
-              <HeaderFilter
-                dataSource={[
-                  {
-                    text: t("Verified"),
-                    value: ["is_verified", "=", true],
-                  },
-                  {
-                    text: t("Disabled"),
-                    value: ["is_verified", "=", false],
-                  },
-                ]}
+        {isLoading ? (
+          <div className="d-flex justify-content-center align-items-center vh-100">
+            <CSpinner color="primary" />
+          </div>
+        ) : (
+          <CCardBody>
+            <CustomDataGrid dataSource={items}>
+              <Column
+                dataField="first_name"
+                caption={t("FirstName")}
+                dataType="string"
               />
-            </Column>
-            <Column
-              width={140}
-              alignment="center"
-              dataField="is_deleted"
-              caption={t("Deleted")}
-              dataType="string"
-              cellRender={cellRenderDeleted}
-            >
-              <HeaderFilter
-                dataSource={[
-                  {
-                    text: t("Deleted"),
-                    value: ["is_deleted", "=", true],
-                  },
-                  {
-                    text: t("Active"),
-                    value: ["is_deleted", "=", false],
-                  },
-                ]}
+              <Column
+                dataField="last_name"
+                caption={t("LastName")}
+                dataType="string"
               />
-            </Column>
-            <Column
-              dataField="createdAt"
-              caption={t("CreatedAt")}
-              dataType="datetime"
-              visible={false}
-            />
-            <Column
-              dataField="updatedAt"
-              caption={t("UpdatedAt")}
-              dataType="datetime"
-              visible={false}
-            />
-            <Column
-              alignment="center"
-              caption={t("Actions")}
-              width={120}
-              cellRender={cellRenderActions}
-            />
-          </CustomDataGrid>
-        </CCardBody>
+              <Column
+                dataField="gender"
+                caption={t("Gender")}
+                dataType="string"
+                cellRender={cellRenderGender}
+              />
+              <Column
+                dataField="username"
+                caption={t("Username")}
+                dataType="string"
+              />
+              <Column dataField="email" caption={t("Email")} dataType="string" />
+              <Column
+                width={140}
+                alignment="center"
+                dataField="is_verified"
+                caption={t("Verified")}
+                dataType="string"
+                cellRender={cellRenderVerified}
+              >
+                <HeaderFilter
+                  dataSource={[
+                    {
+                      text: t("Verified"),
+                      value: ["is_verified", "=", true],
+                    },
+                    {
+                      text: t("Disabled"),
+                      value: ["is_verified", "=", false],
+                    },
+                  ]}
+                />
+              </Column>
+              <Column
+                width={140}
+                alignment="center"
+                dataField="deletedAt"
+                caption={t("Deleted")}
+                dataType="string"
+                cellRender={cellRenderDeleted}
+              >
+                <HeaderFilter dataSource={[{
+                  text: t('Deleted'),
+                  value: ['deletedAt', '<>', null],
+                }, {
+                  text: t('Active'),
+                  value: ['deletedAt', '=', null],
+                }]} />
+              </Column>
+              <Column
+                dataField="createdAt"
+                caption={t("CreatedAt")}
+                dataType="datetime"
+                visible={false}
+              />
+              <Column
+                dataField="updatedAt"
+                caption={t("UpdatedAt")}
+                dataType="datetime"
+                visible={false}
+              />
+              <Column
+                alignment="center"
+                caption={t("Actions")}
+                width={120}
+                cellRender={cellRenderActions}
+              />
+            </CustomDataGrid>
+          </CCardBody>
+        )}
       </CCard>
 
       <CModal
-        id="editProfessor"
+        id="addEditProfessor"
         backdrop="static"
-        visible={modal.isOpen && modal.id === "editProfessor"}
+        visible={modal.isOpen && modal.id === "addEditProfessor"}
         onClose={() => {
           dispatch(setModal());
-          setFormData(defaultFormData);
-          setModalOptions({
-            editMode: false,
-            selectedId: -1,
-          });
+          setFormData(null);
+          setAction(null);
         }}
       >
         <CForm
           className="needs-validation"
           noValidate
           validated={validated}
-          onSubmit={handleSubmit}
+          onSubmit={handleAddEditFormSubmit}
         >
           <CModalHeader>
             <CModalTitle>
-              {modalOptions.editMode ? t("Edit") : t("Add")}
+              {action === "edit" ? t("Edit") : t("Add")}
             </CModalTitle>
           </CModalHeader>
 
@@ -499,7 +469,7 @@ const Professors = () => {
                   type="text"
                   floatingLabel={t("FirstName")}
                   placeholder={t("FirstName")}
-                  value={formData.first_name}
+                  value={formData?.first_name}
                   onChange={(event) => handleFullName(event, "first_name")}
                 />
               </CCol>
@@ -508,7 +478,7 @@ const Professors = () => {
                   type="text"
                   floatingLabel={t("LastName")}
                   placeholder={t("LastName")}
-                  value={formData.last_name}
+                  value={formData?.last_name}
                   onChange={(event) => handleFullName(event, "last_name")}
                 />
               </CCol>
@@ -518,7 +488,7 @@ const Professors = () => {
               floatingClassName="mb-3"
               floatingLabel={t("Gender")}
               onChange={(event) => handleInputChange(event, "gender")}
-              value={formData.gender}
+              value={formData?.gender}
             >
               <option value="m">{t("Male")}</option>
               <option value="f">{t("Female")}</option>
@@ -530,7 +500,7 @@ const Professors = () => {
                   type="text"
                   floatingLabel={t("Username")}
                   placeholder={t("Username")}
-                  value={formData.username}
+                  value={formData?.username}
                   onChange={(event) => handleInputChange(event, "username")}
                 />
               </CCol>
@@ -539,30 +509,22 @@ const Professors = () => {
                   type="email"
                   floatingLabel={t("Email")}
                   placeholder={t("Email")}
-                  value={formData.email}
+                  value={formData?.email}
                   onChange={(event) => handleInputChange(event, "email")}
                 />
               </CCol>
             </CRow>
 
-            {modalOptions.editMode && (
+            {action === "edit" && (
               <CRow>
-                <CCol xs={6} className="mb-3">
+                <CCol xs={12} className="mb-3">
                   <CFormCheck
                     type="checkbox"
                     label={t("Verified")}
                     onChange={(event) =>
                       handleInputChange(event, "is_verified")
                     }
-                    defaultChecked={formData.is_verified}
-                  />
-                </CCol>
-                <CCol xs={6} className="mb-3">
-                  <CFormCheck
-                    type="checkbox"
-                    label={t("Deleted")}
-                    onChange={(event) => handleInputChange(event, "is_deleted")}
-                    defaultChecked={formData.is_deleted}
+                    defaultChecked={formData?.is_verified}
                   />
                 </CCol>
               </CRow>
@@ -580,16 +542,16 @@ const Professors = () => {
               {t("Close")}
             </CButton>
             <CButton type="submit">
-              {modalOptions.editMode ? t("Update") : t("Add")}
+              {action === "edit" ? t("Edit") : t("Add")}
             </CButton>
           </CModalFooter>
         </CForm>
       </CModal>
 
       <CModal
-        id="deleteProfessor"
+        id="deleteRestoreProfessor"
         backdrop="static"
-        visible={modal.isOpen && modal.id === "deleteProfessor"}
+        visible={modal.isOpen && modal.id === "deleteRestoreProfessor"}
         onClose={() => {
           dispatch(setModal());
         }}
@@ -599,7 +561,12 @@ const Professors = () => {
         </CModalHeader>
 
         <CModalBody>
-          <span>{t("AreYouSureToDeleteTheSelected") + " ?"}</span>
+          <span>
+            {action === "restore"
+              ? t("AreYouSureToRestoreTheSelected") + " ?"
+              : t("AreYouSureToDeleteTheSelected") + " ?"
+            }
+          </span>
         </CModalBody>
 
         <CModalFooter>
@@ -612,10 +579,16 @@ const Professors = () => {
             {t("Cancel")}
           </CButton>
           <CButton
-            onClick={() => deleteProfessor(modalOptions.selectedId)}
-            color="danger"
+            onClick={() => {
+              if (action === "restore") {
+                restoreProfessor();
+              } else {
+                deleteProfessor();
+              }
+            }}
+            color={action === "restore" ? "success" : "danger"}
           >
-            {t("Delete")}
+            {action === "restore" ? t("Restore") : t("Delete")}
           </CButton>
         </CModalFooter>
       </CModal>

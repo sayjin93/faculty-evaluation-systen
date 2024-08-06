@@ -1,8 +1,8 @@
 const Department = require('../models/department');
 const Faculty = require('../models/faculty');
-const Professors = require('../models/professor');
+const Professor = require('../models/professor');
 
-exports.createDepartment = async (req, res) => {
+exports.create = async (req, res) => {
   if (!req.body.key || !req.body.faculty_id) {
     return res.status(400).send({
       message: 'Content can not be empty',
@@ -23,40 +23,42 @@ exports.createDepartment = async (req, res) => {
     });
   }
 };
-exports.getAllDepartments = async (req, res) => {
+exports.getAll = async (req, res) => {
   try {
-    const departments = await Department.findAll({
+    const result = await Department.findAll({
       include: [{
         model: Faculty,
-        attributes: ['key'],
+        attributes: ['key', 'deletedAt'],
+        paranoid: false, // This includes the soft-deleted faculties
+
       }],
       paranoid: false, // This includes the soft-deleted records
     });
 
-    if (!departments || departments.length === 0) {
+    if (!result || result.length === 0) {
       return res.json({ message: 'No Departments found' });
     }
 
-    res.send(departments);
+    res.send(result);
   } catch (err) {
     console.log('Error: ', err);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
-exports.getDepartmentById = async (req, res) => {
+exports.getOne = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const department = await Department.findByPk(id);
-    if (!department) {
+    const result = await Department.findByPk(id);
+    if (!result) {
       return res.status(404).send({ message: `Cannot find Department with id=${id}` });
     }
-    res.send(department);
+    res.send(result);
   } catch (err) {
     res.status(500).send({ message: `Error retrieving Department with id=${id}` });
   }
 };
-exports.updateDepartment = async (req, res) => {
+exports.update = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -70,25 +72,25 @@ exports.updateDepartment = async (req, res) => {
     res.status(500).send({ message: `Error updating Department with id=${id}` });
   }
 };
-exports.deleteDepartment = async (req, res) => {
+exports.delete = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Check if there are any active (not deleted) departments associated with this faculty
-    const activeProfessors = await Professors.count({
+    // Check if there are any active (not deleted) professors associated with this department
+    const activeProfessors = await Professor.count({
       where: {
         department_id: id,
-        deletedAt: null, // Ensure only non-deleted departments are counted
+        deletedAt: null, // Ensure only non-deleted professors are counted
       },
     });
 
     if (activeProfessors > 0) {
-      return res.status(409).send({ message: 'Cannot delete Department with active professors' });
+      return res.status(409).send({ message: 'Cannot delete with existing associations.' });
     }
 
     // Proceed with department deletion if no active professors are found
-    const num = await Department.destroy({ where: { id } });
-    if (Number(num) === 1) {
+    const result = await Department.destroy({ where: { id } });
+    if (Number(result) === 1) {
       res.send({ message: 'Department deleted successfully' });
     } else {
       res.send({ message: `Cannot delete Department with id=${id}. Maybe Department was not found!` });
@@ -97,12 +99,12 @@ exports.deleteDepartment = async (req, res) => {
     res.status(500).send({ message: `Could not delete Department with id=${id}` });
   }
 };
-exports.restoreDepartments = async (req, res) => {
+exports.restore = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const num = await Department.restore({ where: { id } });
-    if (Number(num) === 1) {
+    const result = await Department.restore({ where: { id } });
+    if (Number(result) === 1) {
       res.send({ message: 'Department restored successfully' });
     } else {
       res.send({ message: `Cannot restore Faculty with id=${id}. Maybe Faculty was not found!` });

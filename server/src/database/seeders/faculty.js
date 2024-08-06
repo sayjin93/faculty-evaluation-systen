@@ -14,7 +14,6 @@ async function seed() {
     try {
       const defaultFacultyData = {
         ...faculty,
-        is_deleted: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
       };

@@ -122,7 +122,6 @@ exports.register = async (req, res) => {
       department_id: Number(department_id),
       is_admin: false,
       is_verified: false,
-      is_deleted: false,
       verificationToken, // Add the verification token
       verificationTokenExpires: Date.now() + 3600000, // Token expires in 1 hour
     };
@@ -299,15 +298,15 @@ exports.requestPasswordReset = async (req, res) => {
           if (language === 'sq') {
             emailSubject = 'Rivendosja e fjalëkalimit';
             emailText = 'Ju po e merrni këtë sepse ju (ose dikush tjetër) keni kërkuar rivendosjen e fjalëkalimit për llogarinë tuaj.\n\n'
-                + 'Ju lutemi klikoni në linkun e mëposhtme ose ngjisni këtë në shfletuesin tuaj për të përfunduar procesin:\n\n'
-                + `${base_url}/reset/${resetToken}\n\n`
-                + 'Nëse nuk e keni kërkuar këtë, ju lutemi injoroni këtë email dhe fjalëkalimi juaj do të mbetet i pandryshuar.\n';
+              + 'Ju lutemi klikoni në linkun e mëposhtme ose ngjisni këtë në shfletuesin tuaj për të përfunduar procesin:\n\n'
+              + `${base_url}/reset/${resetToken}\n\n`
+              + 'Nëse nuk e keni kërkuar këtë, ju lutemi injoroni këtë email dhe fjalëkalimi juaj do të mbetet i pandryshuar.\n';
           } else {
             emailSubject = 'Password Reset';
             emailText = 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n'
-                + 'Please click on the following link, or paste this into your browser to complete the process:\n\n'
-                + `${base_url}/reset/${resetToken}\n\n`
-                + 'If you did not request this, please ignore this email and your password will remain unchanged.\n';
+              + 'Please click on the following link, or paste this into your browser to complete the process:\n\n'
+              + `${base_url}/reset/${resetToken}\n\n`
+              + 'If you did not request this, please ignore this email and your password will remain unchanged.\n';
           }
 
           const mailOptions = {
@@ -332,7 +331,7 @@ exports.requestPasswordReset = async (req, res) => {
 
             res.json({
               message:
-                  'Reset password email sent successfully. The Token will expire for 3 hours.',
+                'Reset password email sent successfully. The Token will expire for 3 hours.',
             });
           });
         });

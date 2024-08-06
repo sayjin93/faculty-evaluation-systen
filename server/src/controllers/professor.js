@@ -3,6 +3,11 @@ const nodemailer = require('nodemailer');
 
 const Professor = require('../models/professor');
 const Settings = require('../models/settings');
+const Book = require('../models/book');
+const Community = require('../models/community');
+const Conference = require('../models/conference');
+const Course = require('../models/course');
+const Paper = require('../models/paper');
 
 const {
   capitalizeWords,
@@ -10,7 +15,7 @@ const {
   generateRandomPassword,
 } = require('../utils');
 
-exports.createProfessor = async (req, res) => {
+exports.create = async (req, res) => {
   const {
     first_name, last_name, gender, username, email,
   } = req.body;
@@ -56,7 +61,6 @@ exports.createProfessor = async (req, res) => {
     email: full_email,
     password: newPassword,
     is_verified: 1,
-    is_deleted: 0,
     is_admin: 0,
   };
 
@@ -131,58 +135,57 @@ exports.createProfessor = async (req, res) => {
       });
     });
 };
+exports.getAll = async (req, res) => {
+  try {
+    const result = await Professor.findAll({
+      where: { is_admin: false },
+      paranoid: false, // This includes the soft-deleted records
+    }).catch(
+      (err) => {
+        console.log('Error: ', err);
+      },
+    );
 
-exports.getAllProfessors = async (req, res) => {
-  const result = await Professor.findAll({ where: { is_admin: false } }).catch(
-    (err) => {
-      console.log('Error: ', err);
-    },
-  );
+    if (!result || result.length === 0) {
+      return res.json({ message: 'No Professors found' });
+    }
 
-  if (!result) {
-    return res.json({
-      message: 'No Professors found',
-    });
+    // Modify gender property in the result array
+    const modifiedResult = result.map((professor) => ({
+      id: professor.id,
+      first_name: professor.first_name,
+      last_name: professor.last_name,
+      gender: professor.gender === 'm' ? 'Male' : 'Female',
+      username: professor.username,
+      email: professor.email,
+      is_verified: professor.is_verified,
+      createdAt: professor.createdAt,
+      updatedAt: professor.updatedAt,
+      deletedAt: professor.deletedAt,
+    }));
+
+    res.send(modifiedResult);
+  } catch (err) {
+    console.log('Error: ', err);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
-
-  // Modify gender property in the result array
-  const modifiedResult = result.map((professor) => ({
-    id: professor.id,
-    first_name: professor.first_name,
-    last_name: professor.last_name,
-    gender: professor.gender === 'm' ? 'Male' : 'Female',
-    username: professor.username,
-    email: professor.email,
-    is_verified: professor.is_verified,
-    is_deleted: professor.is_deleted,
-    createdAt: professor.createdAt,
-    updatedAt: professor.updatedAt,
-  }));
-
-  res.send(modifiedResult);
 };
-
-exports.getProfessorById = async (req, res) => {
+exports.getOne = async (req, res) => {
   const { id } = req.params;
 
-  await Professor.findByPk(id)
-    .then((data) => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.status(404).send({
-          message: `Cannot find Professor with id=${id}`,
-        });
-      }
-    })
-    .catch(() => {
-      res.status(500).send({
-        message: `Error retrieving Professor with id=${id}`,
-      });
-    });
-};
+  try {
+    const result = await Professor.findByPk(id);
 
-exports.updateProfessor = async (req, res) => {
+    if (!result) {
+      return res.status(404).send({ message: `Cannot find Professor with id=${id}` });
+    }
+
+    res.send(result);
+  } catch (err) {
+    res.status(500).send({ message: `Error retrieving Department with id=${id}` });
+  }
+};
+exports.update = async (req, res) => {
   const { id } = req.params;
   const {
     first_name,
@@ -191,7 +194,6 @@ exports.updateProfessor = async (req, res) => {
     username,
     email,
     is_verified,
-    is_deleted,
     currentPassword,
     newPassword,
   } = req.body;
@@ -223,7 +225,6 @@ exports.updateProfessor = async (req, res) => {
           email: new_email,
           username: new_username,
           is_verified,
-          is_deleted,
         };
         // Update the Professor
         Professor.update(updateObject, { where: { id } })
@@ -238,7 +239,6 @@ exports.updateProfessor = async (req, res) => {
                   'username',
                   'email',
                   'is_verified',
-                  'is_deleted',
                 ],
               }).then((updatedUser) => {
                 res.send(updatedUser);
@@ -322,50 +322,42 @@ exports.updateProfessor = async (req, res) => {
       });
     });
 };
+exports.delete = async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Check for related records
+    const bookCount = await Book.count({ where: { professor_id: id } });
+    const communityCount = await Community.count({ where: { professor_id: id } });
+    const conferenceCount = await Conference.count({ where: { professor_id: id } });
+    const courseCount = await Course.count({ where: { professor_id: id } });
+    const paperCount = await Paper.count({ where: { professor_id: id } });
 
-exports.deleteProfessor = async (req, res) => {
+    if (bookCount > 0 || communityCount > 0 || conferenceCount > 0 || courseCount > 0 || paperCount > 0) {
+      return res.status(400).send({ message: 'Cannot delete with existing associations.' });
+    }
+
+    const result = await Professor.destroy({ where: { id } });
+
+    if (Number(result) === 1) {
+      res.send({ message: 'Professor deleted successfully' });
+    } else {
+      res.send({ message: `Cannot delete Professor with id=${id}. Maybe Professor was not found!` });
+    }
+  } catch (err) {
+    res.status(500).send({ message: `Could not delete Professor with id=${id}` });
+  }
+};
+exports.restore = async (req, res) => {
   const { id } = req.params;
 
-  await Professor.destroy({
-    where: { id },
-  })
-    .then((num) => {
-      if (Number(num) === 1) {
-        res.send({
-          message: 'Professor deleted successfully',
-        });
-      } else {
-        res.send({
-          message: `Cannot delete Professor with id=${id}. Maybe Professor was not found!`,
-        });
-      }
-    })
-    .catch(() => {
-      res.status(409).send({
-        message: `Could not delete Professor with id=${id}`,
-      });
-    });
-};
-
-exports.deleteAllProfessors = async (req, res) => {
-  await Professor.destroy({
-    where: {},
-    truncate: false,
-  })
-    .then((nums) => {
-      res.send({
-        message: `${nums} Professors were deleted successfully`,
-      });
-    })
-    .catch((err) => {
-      if (err.name === 'SequelizeForeignKeyConstraintError') {
-        res.status(409).send({
-          message: 'Cannot delete professor due to foreign key constraint',
-        });
-      } else {
-        res.status(500).send({
-          message: 'Some error occurred while removing all professors',
-        });
-      }
-    });
+  try {
+    const result = await Professor.restore({ where: { id } });
+    if (Number(result) === 1) {
+      res.send({ message: 'Professor restored successfully' });
+    } else {
+      res.send({ message: `Cannot restore Professor with id=${id}. Maybe Faculty was not found!` });
+    }
+  } catch (err) {
+    res.status(500).send({ message: `Error restoring Professor with id=${id}` });
+  }
 };

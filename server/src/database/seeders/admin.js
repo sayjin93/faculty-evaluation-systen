@@ -10,7 +10,6 @@ const adminData = [
     password: 'admin',
     email: 'jurgen-kruja@live.com',
     is_admin: 1,
-    is_deleted: 0,
   },
 ];
 

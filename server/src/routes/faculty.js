@@ -8,11 +8,11 @@ const { isAdminMiddleware } = require('../middlewares');
 const facultyController = require('../controllers/faculty');
 
 // Faculty routes
-router.post('/', auth, isAdminMiddleware, facultyController.createFaculty);
-router.get('/', auth, isAdminMiddleware, facultyController.getAllFaculties);
-router.get('/:id', auth, isAdminMiddleware, facultyController.getFacultyById);
-router.put('/:id', auth, isAdminMiddleware, facultyController.updateFaculty);
-router.delete('/:id', auth, isAdminMiddleware, facultyController.deleteFaculty);
-router.post('/restore/:id', auth, isAdminMiddleware, facultyController.restoreFaculties);
+router.post('/', auth, isAdminMiddleware, facultyController.create);
+router.get('/', auth, isAdminMiddleware, facultyController.getAll);
+router.get('/:id', auth, isAdminMiddleware, facultyController.getOne);
+router.put('/:id', auth, isAdminMiddleware, facultyController.update);
+router.delete('/:id', auth, isAdminMiddleware, facultyController.delete);
+router.post('/restore/:id', auth, isAdminMiddleware, facultyController.restore);
 
 module.exports = router;

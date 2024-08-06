@@ -259,7 +259,6 @@ exports.getProfessorsData = async (req, res) => {
     // Get all professors who are not admins and not deleted
     const professors = await Professor.findAll({
       where: {
-        is_deleted: false,
         is_admin: false, // Exclude professors who are admins
       },
     });
