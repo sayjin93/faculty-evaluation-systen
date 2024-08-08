@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Column, HeaderFilter } from "devextreme-react/data-grid";
@@ -55,6 +55,13 @@ const Faculties = () => {
   //#endregion
 
   //#region functions
+  const transformedItems = useMemo(() => {
+    return items.map(item => ({
+      text: t(item.key),
+      value: item.key,
+    }));
+  }, [items]);
+
   const handleInputChange = (event, fieldName) => {
     setFormData({
       ...formData,
@@ -277,7 +284,10 @@ const Faculties = () => {
                 caption={t("Name")}
                 dataType="string"
                 cellRender={cellRenderFaculty}
-              />
+              >
+                <HeaderFilter dataSource={transformedItems} />
+              </Column>
+
               <Column
                 width={140}
                 alignment="center"

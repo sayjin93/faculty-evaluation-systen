@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
@@ -57,7 +57,21 @@ const Departments = () => {
   const [action, setAction] = useState(null)
   //#endregion
 
+  console.log(items);
   //#region functions
+  const departmentItems = useMemo(() => {
+    return items.map(item => ({
+      text: t(item.key),
+      value: item.key,
+    }));
+  }, [items]);
+
+  const facultyItems = useMemo(() => {
+    return items.map(item => ({
+      text: t(item.Faculty.key),
+      value: item.Faculty.key,
+    }));
+  }, [items]);
   const handleInputChange = (event, fieldName) => {
     setFormData({
       ...formData,
@@ -275,13 +289,17 @@ const Departments = () => {
                 caption={t("Name")}
                 dataType="string"
                 cellRender={cellRenderDepartment}
-              />
+              >
+                <HeaderFilter dataSource={departmentItems} />
+              </Column>
               <Column
                 dataField="faculty_key"
                 caption={t("Faculty")}
                 dataType="string"
                 cellRender={cellRenderFaculty}
-              />
+              >
+                <HeaderFilter dataSource={facultyItems} />
+              </Column>
               <Column
                 width={140}
                 alignment="center"
