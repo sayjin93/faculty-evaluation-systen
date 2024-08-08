@@ -57,8 +57,7 @@ const Departments = () => {
   const [action, setAction] = useState(null)
   //#endregion
 
-  console.log(items);
-  //#region functions
+  //#region memoized contants
   const departmentItems = useMemo(() => {
     return items.map(item => ({
       text: t(item.key),
@@ -72,6 +71,9 @@ const Departments = () => {
       value: item.Faculty.key,
     }));
   }, [items]);
+  //#endregion
+
+  //#region functions
   const handleInputChange = (event, fieldName) => {
     setFormData({
       ...formData,

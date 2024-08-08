@@ -54,14 +54,16 @@ const Faculties = () => {
   const [action, setAction] = useState(null)
   //#endregion
 
-  //#region functions
+  //#region memoized contants
   const transformedItems = useMemo(() => {
     return items.map(item => ({
       text: t(item.key),
       value: item.key,
     }));
   }, [items]);
+  //#endregion
 
+  //#region functions
   const handleInputChange = (event, fieldName) => {
     setFormData({
       ...formData,
