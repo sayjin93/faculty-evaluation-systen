@@ -94,7 +94,7 @@ const DepartmentWiseDistribution = () => {
     );
 
     // Calculate text positions for centering
-    const facultyText = `${t("Faculty")}: ${t(facultyName)}`;
+    const facultyText = t(facultyName);
     const facultyTextWidth = doc.getTextWidth(facultyText);
     const facultyTextXPosition = (pageWidth - facultyTextWidth) / 2;
 
@@ -142,7 +142,7 @@ const DepartmentWiseDistribution = () => {
 
   //#region useEffect
   useEffect(() => {
-    fetchReport();
+    if (faculty > 0) fetchReport();
   }, [faculty, academicYear]);
 
   useEffect(() => {

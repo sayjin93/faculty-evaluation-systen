@@ -39,6 +39,7 @@ const SelectBoxFaculty = ({ className = "" }) => {
       .get("/faculty")
       .then((response) => {
         setFaculties(response.data);
+        dispatch(setFaculty(response.data[0].id));
       })
       .catch((error) => {
         handleError(error);
