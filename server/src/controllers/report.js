@@ -403,11 +403,11 @@ exports.getDepartmentWiseDistribution = async (req, res) => {
 
       return {
         department: department.key,
-        courses_count: coursesCount,
-        papers_count: papersCount,
-        books_count: booksCount,
-        conferences_count: conferencesCount,
-        community_services_count: communityServicesCount,
+        courses: coursesCount,
+        papers: papersCount,
+        books: booksCount,
+        conferences: conferencesCount,
+        communityServices: communityServicesCount,
       };
     }));
 

@@ -14,7 +14,7 @@ const fixTableHeaderName = (text) => {
 };
 
 const TableHeader = ({ items, timestamp = true, color = "light" }) => {
-  //#constants
+  //#region constants
   const { t } = useTranslation();
   //#endregion
 
