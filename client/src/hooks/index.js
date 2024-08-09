@@ -125,9 +125,11 @@ export const SidebarRoutes = {
   Papers: "/papers",
   Professors: "/professors",
   Profile: "/profile",
-  AnnualSummary: "/reports/annual-summary",
+  ProfessorActivityByAcademicYear: "/reports/professor-activity",
+  DepartmentWiseDistribution: "/reports/department-wise-distribution",
   Settings: "/settings",
   Translations: "/translations",
+
 };
 
 export const languageMap = [

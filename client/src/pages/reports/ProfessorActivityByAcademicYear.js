@@ -48,7 +48,7 @@ import autoTable from "jspdf-autotable";
 //image
 import logoImage from "src/assets/images/uet_logo.png";
 
-const AnnualSummary = () => {
+const ProfessorActivity = () => {
   //#region constants
   const { t } = useTranslation();
   const handleError = useErrorHandler();
@@ -88,7 +88,7 @@ const AnnualSummary = () => {
   const fetchReport = async () => {
     await api
       .get(
-        `/report/academic_year/${academicYear.id}/professor/${selectedProfessor}`
+        `/report/professor-activity/academic_year/${academicYear.id}/professor/${selectedProfessor}`
       )
       .then((response) => {
         setItems(response.data);
@@ -279,7 +279,7 @@ const AnnualSummary = () => {
         <CCardHeader className="flex justify-content-between align-items-center">
           <h6 className="card-title">
             <TbReportSearch />
-            <span className="title">{t("Reports")} | {t("AnnualSummary")}</span>
+            <span className="title">{t("Reports")} | {t("ProfessorActivity")}</span>
           </h6>
           <CButton color="primary" className="float-right" onClick={exportPDF}>
             {t("GeneratePdf")}
@@ -612,4 +612,4 @@ const AnnualSummary = () => {
   );
 };
 
-export default AnnualSummary;
+export default ProfessorActivity;

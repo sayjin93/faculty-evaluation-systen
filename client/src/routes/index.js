@@ -29,7 +29,8 @@ const Papers = lazy(() => import("../pages/Papers"));
 const Books = lazy(() => import("../pages/Books"));
 const Conferences = lazy(() => import("../pages/Conferences"));
 const Communities = lazy(() => import("../pages/Communities"));
-const AnnualSummary = lazy(() => import("../pages/reports/AnnualSummary"));
+const ProfessorActivityByAcademicYear = lazy(() => import("../pages/reports/ProfessorActivityByAcademicYear"));
+const DepartmentWiseDistribution = lazy(() => import("../pages/reports/DepartmentWiseDistribution"));
 const Settings = lazy(() => import("../pages/Settings"));
 const Translations = lazy(() => import("../pages/Translations"));
 const Profile = lazy(() => import("../pages/Profile"));
@@ -88,8 +89,12 @@ const privateRoutes = [
         element: <Communities />,
       },
       {
-        path: SidebarRoutes.AnnualSummary,
-        element: <AnnualSummary />,
+        path: SidebarRoutes.ProfessorActivityByAcademicYear,
+        element: <ProfessorActivityByAcademicYear />,
+      },
+      {
+        path: SidebarRoutes.DepartmentWiseDistribution,
+        element: <DepartmentWiseDistribution />,
       },
       {
         path: SidebarRoutes.Settings,

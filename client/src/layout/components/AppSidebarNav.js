@@ -11,7 +11,7 @@ import { cibCodecademy } from "@coreui/icons";
 
 //react-icons
 import { LuLayoutDashboard, LuSettings2 } from "react-icons/lu";
-import { FaChalkboardTeacher } from "react-icons/fa";
+import { FaChalkboardTeacher, FaSitemap } from "react-icons/fa";
 import { PiBuildingsBold, PiBooksDuotone, PiArticleMediumLight } from "react-icons/pi";
 import { VscSymbolClass } from "react-icons/vsc";
 import { GiVideoConference } from "react-icons/gi";
@@ -111,8 +111,15 @@ export const AppSidebarNav = () => {
       items: [
         {
           component: CNavItem,
-          name: t("AnnualSummary"),
-          to: SidebarRoutes.AnnualSummary,
+          name: t("ProfessorActivity"),
+          icon: <FaChalkboardTeacher className="nav-icon" />,
+          to: SidebarRoutes.ProfessorActivityByAcademicYear,
+        },
+        {
+          component: CNavItem,
+          name: t("DepartmentWiseDistribution"),
+          icon: <FaSitemap className="nav-icon" />,
+          to: SidebarRoutes.DepartmentWiseDistribution,
         },
       ],
     },

@@ -7,6 +7,8 @@ const Conference = require('../models/conference');
 const Course = require('../models/course');
 const Paper = require('../models/paper');
 const Professor = require('../models/professor');
+const Department = require('../models/department');
+const Faculty = require('../models/faculty');
 
 exports.getStats = async (req, res) => {
   try {
@@ -344,7 +346,7 @@ exports.getProfessorData = async (req, res) => {
   }
 };
 
-exports.getProfessorDataByYear = async (req, res) => {
+exports.getProfessorActivityByAcademicYear = async (req, res) => {
   const { professor_id, academic_year_id } = req.params;
   try {
     const [courses, papers, books, conferences, communities] = await Promise.all([
@@ -361,6 +363,59 @@ exports.getProfessorDataByYear = async (req, res) => {
   } catch (err) {
     res.status(500).send({
       message: err.message || 'Some error occurred while retrieving data',
+    });
+  }
+};
+
+exports.getDepartmentWiseDistribution = async (req, res) => {
+  const { academic_year_id, faculty_id } = req.params;
+
+  try {
+    // Validate the academic year and faculty
+    const [selectedYear, selectedFaculty] = await Promise.all([
+      AcademicYear.findByPk(academic_year_id),
+      Faculty.findByPk(faculty_id),
+    ]);
+
+    if (!selectedYear) {
+      return res.status(404).send({ message: 'Selected academic year not found' });
+    }
+
+    if (!selectedFaculty) {
+      return res.status(404).send({ message: 'Selected faculty not found' });
+    }
+
+    // Get all departments within the selected faculty
+    const departments = await Department.findAll({ where: { faculty_id } });
+
+    // Map each department to its aggregated data
+    const departmentData = await Promise.all(departments.map(async (department) => {
+      const professors = await Professor.findAll({ where: { department_id: department.id } });
+      const professorIds = professors.map((professor) => professor.id);
+
+      const [coursesCount, papersCount, booksCount, conferencesCount, communityServicesCount] = await Promise.all([
+        Course.count({ where: { academic_year_id, professor_id: professorIds } }),
+        Paper.count({ where: { academic_year_id, professor_id: professorIds } }),
+        Book.count({ where: { academic_year_id, professor_id: professorIds } }),
+        Conference.count({ where: { academic_year_id, professor_id: professorIds } }),
+        Community.count({ where: { academic_year_id, professor_id: professorIds } }),
+      ]);
+
+      return {
+        department: department.key,
+        courses_count: coursesCount,
+        papers_count: papersCount,
+        books_count: booksCount,
+        conferences_count: conferencesCount,
+        community_services_count: communityServicesCount,
+      };
+    }));
+
+    // Send the aggregated data
+    res.send(departmentData);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Some error occurred while retrieving department-wise distribution',
     });
   }
 };

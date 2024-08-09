@@ -35,6 +35,11 @@ export const getLanguages = createSelector(
   [selectSettings],
   (settings) => settings.languages
 );
+export const getFaculty = createSelector(
+  [selectSettings],
+  (settings) => settings.faculty
+);
+
 //user
 export const getLoggedUser = createSelector(
   [selectUser],

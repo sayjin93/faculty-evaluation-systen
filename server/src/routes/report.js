@@ -29,6 +29,9 @@ router.get('/professors-data', auth, isAdminMiddleware, statsController.getProfe
 router.get('/professors-data/professor/:professor_id', auth, statsController.getProfessorData);
 
 // Detailed Data for 1 Professor for e specific Academic Year
-router.get('/academic_year/:academic_year_id/professor/:professor_id', auth, statsController.getProfessorDataByYear);
+router.get('/professor-activity/academic_year/:academic_year_id/professor/:professor_id', auth, statsController.getProfessorActivityByAcademicYear);
+
+// Department-wise Distribution
+router.get('/department-wise-distribution/academic_year/:academic_year_id/faculty_id/:faculty_id', auth, isAdminMiddleware, statsController.getDepartmentWiseDistribution);
 
 module.exports = router;
