@@ -24,7 +24,7 @@ import { getIsAdmin } from "src/store/selectors";
 
 export const AppSidebarNav = () => {
   //#region constants
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   //#endregion
 
@@ -133,7 +133,7 @@ export const AppSidebarNav = () => {
       icon: <HiLanguage className="nav-icon" />,
       admin: true,
     },
-  ], [isAdmin]);
+  ], [isAdmin, i18n.language]);
   //#endregion
 
   //#region functions

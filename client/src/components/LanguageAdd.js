@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
@@ -34,8 +34,9 @@ const LanguageAdd = ({ btnColor = "light", btnClass = "" }) => {
   const languages = useSelector(getLanguages);
 
   //Remove existing list from new languages list
-  const filteredLanguageMap = languageMap.filter(
-    (language) => !languages.includes(language.code)
+  const filteredLanguageMap = useMemo(
+    () => languageMap.filter((language) => !languages.includes(language.code)),
+    [languages]
   );
   //#endregion
 
@@ -45,13 +46,12 @@ const LanguageAdd = ({ btnColor = "light", btnClass = "" }) => {
   //#endregion
 
   //#region functions
-  const renderField = (data) => {
+  const renderField = useCallback((data) => {
     return (
       <div className="flex flex-align-center">
         {value && (
           <CIcon style={{ marginLeft: "16px" }} icon={data && data?.icon} />
         )}
-
         <TextBox
           placeholder={t("SelectALanguage") + "..."}
           defaultValue={data && data.name}
@@ -59,15 +59,16 @@ const LanguageAdd = ({ btnColor = "light", btnClass = "" }) => {
         />
       </div>
     );
-  };
-  const renderItem = (data) => {
+  }, [value, t]);
+
+  const renderItem = useCallback((data) => {
     return (
       <div className="flex flex-align-center flex-gap-10">
         <CIcon icon={data?.icon} />
         <div style={{ marginLeft: "7px" }}>{data?.name}</div>
       </div>
     );
-  };
+  }, []);
   const onValueChanged = useCallback((e) => {
     setValue(e.value);
   }, []);
@@ -127,14 +128,17 @@ const LanguageAdd = ({ btnColor = "light", btnClass = "" }) => {
         </CModalHeader>
 
         <CModalBody>
-          <SelectBox
-            dataSource={filteredLanguageMap}
-            valueExpr="code"
-            displayExpr="name"
-            onValueChanged={onValueChanged}
-            fieldRender={renderField}
-            itemRender={renderItem}
-          />
+          <React.Fragment>
+
+            <SelectBox
+              dataSource={filteredLanguageMap}
+              valueExpr="code"
+              displayExpr="name"
+              onValueChanged={onValueChanged}
+              fieldRender={renderField}
+              itemRender={renderItem}
+            />
+          </React.Fragment>
         </CModalBody>
 
         <CModalFooter>
