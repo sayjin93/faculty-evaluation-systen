@@ -120,18 +120,16 @@ const Professors = () => {
 
   //Actions
   const fetchProfessors = async () => {
-    // setIsLoading(true);
-
     await api
       .get("/professor")
       .then((response) => {
         setItems(response.data);
-        setIsLoading(false);
       })
       .catch((error) => {
         handleError(error);
-        setIsLoading(false);
       });
+
+    setIsLoading(false);
   };
   const addProfessor = async () => {
     await api

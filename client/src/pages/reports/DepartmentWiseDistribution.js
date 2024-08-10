@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
@@ -15,6 +15,7 @@ import {
   CTableDataCell,
   CTableRow,
   CCallout,
+  CSpinner,
 } from "@coreui/react";
 
 //react-icons
@@ -23,7 +24,7 @@ import { FaSitemap } from "react-icons/fa";
 //hooks
 import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
-import { capitalizeWords } from "src/hooks";
+import { capitalizeWords, getColorForLabel } from "src/hooks";
 
 //store
 import {
@@ -41,11 +42,17 @@ import autoTable from "jspdf-autotable";
 
 //image
 import logoImage from "src/assets/images/uet_logo.png";
+import { CChart } from "@coreui/react-chartjs";
+import { getStyle } from "@coreui/utils";
 
 const DepartmentWiseDistribution = () => {
   //#region constants
   const { t } = useTranslation();
   const handleError = useErrorHandler();
+  //#endregion
+
+  //#region refs
+  const chartRef = useRef(null);
   //#endregion
 
   //#region selectors
@@ -54,6 +61,7 @@ const DepartmentWiseDistribution = () => {
   //#endregion
 
   //#region states
+  const [isLoading, setIsLoading] = useState(true);
   const [items, setItems] = useState(null);
   const [facultyName, setFacultyName] = useState("");
   //#endregion
@@ -70,6 +78,8 @@ const DepartmentWiseDistribution = () => {
       .catch((error) => {
         handleError(error);
       });
+
+    setIsLoading(false);
   };
 
   const exportPDF = () => {
@@ -135,9 +145,28 @@ const DepartmentWiseDistribution = () => {
       });
     });
 
+    // Capture the chart image using the ref
+    const chartCanvas = chartRef.current.getElementsByTagName('canvas')[0];
+    if (chartCanvas) {
+      const chartImage = chartCanvas.toDataURL('image/png');
+
+      // Add the chart to the PDF at the end
+      currentY += spacingBetweenTables;
+      const chartHeight = 80; // Adjust the height as needed
+      const chartWidth = pageWidth - 20; // Leave some margins
+      doc.addImage(chartImage, 'PNG', 10, currentY, chartWidth, chartHeight);
+
+      // Update currentY to be below the chart
+      currentY += chartHeight + spacingBetweenTables;
+    } else {
+      console.error("Chart canvas is not found.");
+    }
+
     // Save the PDF with a filename
     doc.save(`report_${t(facultyName)}_${academicYear.year}.pdf`);
   };
+
+
   //#endregion
 
   //#region useEffect
@@ -190,33 +219,38 @@ const DepartmentWiseDistribution = () => {
         </CCardBody>
       </CCard>
 
-      {items ? (
+      {isLoading ? (
+        <div className="d-flex justify-content-center align-items-center">
+          <CSpinner color="primary" />
+        </div>
+      ) : (items ? (
         <CRow
           xs={{ cols: 1, gutter: 4 }}
-          xxl={{ cols: 2 }}
-          className="align-items-start g-4"
+          lg={{ cols: 3, gutter: 4 }}
         >
-          {items.map((department, index) => (
-            <CCol key={index}>
-              <CCard
-                textColor="primary"
-                className="border-primary border-top-primary border-top-3"
-              >
-                <CCardHeader>
-                  <h6 className="m-0">{t(department.department)}</h6>
-                </CCardHeader>
-
-                <CCardBody className="p-0">
-                  <CTable
-                    small
-                    align="middle"
-                    className="mb-0"
-                    hover
-                    responsive
-                    borderless
-                    striped
+          <CCol>
+            <CRow xs={{ cols: 1, gutter: 4 }}>
+              {items.map((department, index) => (
+                <CCol key={index}>
+                  <CCard
+                    textColor="primary"
+                    className="border-primary border-top-primary border-top-3"
                   >
-                    {/* <CTableHead color="light">
+                    <CCardHeader>
+                      <h6 className="m-0">{t(department.department)}</h6>
+                    </CCardHeader>
+
+                    <CCardBody className="p-0">
+                      <CTable
+                        small
+                        align="middle"
+                        className="mb-0"
+                        hover
+                        responsive
+                        borderless
+                        striped
+                      >
+                        {/* <CTableHead color="light">
                         <CTableRow>
                           <CTableHeaderCell
                             scope="col"
@@ -232,32 +266,112 @@ const DepartmentWiseDistribution = () => {
                         </CTableRow>
                       </CTableHead> */}
 
-                    <CTableBody>
-                      {Object.keys(department).map((key) => (
-                        <CTableRow key={key}>
-                          {key !== 'department' && (
-                            <>
-                              <CTableDataCell scope="col">
-                                {t(capitalizeWords(key))}
-                              </CTableDataCell>
-                              <CTableDataCell scope="col" className="text-center">
-                                {department[key]}
-                              </CTableDataCell>
-                            </>
-                          )}
-                        </CTableRow>
-                      ))}
-                    </CTableBody>
-                  </CTable>
-                </CCardBody>
-              </CCard>
-            </CCol>
-          ))}
+                        <CTableBody>
+                          {Object.keys(department).map((key) => (
+                            <CTableRow key={key}>
+                              {key !== 'department' && (
+                                <>
+                                  <CTableDataCell scope="col">
+                                    {t(capitalizeWords(key))}
+                                  </CTableDataCell>
+                                  <CTableDataCell scope="col" className="text-center">
+                                    {department[key]}
+                                  </CTableDataCell>
+                                </>
+                              )}
+                            </CTableRow>
+                          ))}
+                        </CTableBody>
+                      </CTable>
+                    </CCardBody>
+                  </CCard>
+                </CCol>
+              ))}
+            </CRow>
+          </CCol>
+          <CCol lg={8}>
+            <CCard
+              textColor="primary"
+              className="border-primary border-top-primary border-top-3"
+            >
+              <CCardHeader>
+                <h6 className="m-0">Chart</h6>
+              </CCardHeader>
+
+              <CCardBody ref={chartRef}>
+                <CChart
+                  id="departmentChart"
+                  type="bar"
+                  data={{
+                    labels: items.map(item => t(item.department)),
+                    datasets: [
+                      {
+                        label: t('Courses'),
+                        backgroundColor: getColorForLabel('Courses'),
+                        data: items.map(item => item.courses),
+                      },
+                      {
+                        label: t('Papers'),
+                        backgroundColor: getColorForLabel('Papers'),
+                        data: items.map(item => item.papers),
+                      },
+                      {
+                        label: t('Books'),
+                        backgroundColor: getColorForLabel('Books'),
+                        data: items.map(item => item.books),
+                      },
+                      {
+                        label: t('Conferences'),
+                        backgroundColor: getColorForLabel('Conferences'),
+                        data: items.map(item => item.conferences),
+                      },
+                      {
+                        label: t('CommunityServices'),
+                        backgroundColor: getColorForLabel('Communities'),
+                        data: items.map(item => item.communityServices),
+                      },
+                    ],
+                  }}
+                  options={{
+                    plugins: {
+                      legend: {
+                        labels: {
+                          color: getStyle('--cui-body-color'),
+                        },
+                      },
+                    },
+                    scales: {
+                      x: {
+                        stacked: true,
+                        grid: {
+                          color: getStyle('--cui-border-color-translucent'),
+                        },
+                        ticks: {
+                          color: getStyle('--cui-body-color'),
+                        },
+                      },
+                      y: {
+                        stacked: true,
+                        grid: {
+                          color: getStyle('--cui-border-color-translucent'),
+                        },
+                        ticks: {
+                          color: getStyle('--cui-body-color'),
+                        },
+                      },
+                    },
+                  }}
+                />
+
+              </CCardBody>
+            </CCard>
+          </CCol>
         </CRow>
       ) : (
         <CCallout color="danger" className="bg-white">
           {t("NoDataToDisplay")}
         </CCallout>
+      )
       )}
     </>
   );

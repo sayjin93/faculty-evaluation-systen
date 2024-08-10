@@ -112,6 +112,19 @@ export function arraysAreEqual(arr1, arr2) {
   }
   return true;
 }
+// helpers.js (or any utility file)
+export function getColorForLabel(label) {
+  const colorMap = {
+    'Courses': '#e55353',           // Red
+    'Papers': '#f9b115 ',           // Oranfe
+    'Books': '#2eb85c ',            // Green
+    'Conferences': '#321fdb ',      // Blue
+    'Communities': '#9da5b1 '       // Gray
+  };
+
+  return colorMap[label] || '#000000'; // Default to black if label not found
+};
+
 //#endregion
 
 //#region constants

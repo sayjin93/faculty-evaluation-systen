@@ -96,18 +96,16 @@ const Departments = () => {
 
   //Actions
   const fetchDepartments = async () => {
-    // setIsLoading(true);
-
     await api
       .get("/department")
       .then((response) => {
         setItems(response.data);
-        setIsLoading(false);
       })
       .catch((error) => {
         handleError(error);
-        setIsLoading(false);
       });
+
+    setIsLoading(false);
   };
   const addDepartment = async () => {
     await api

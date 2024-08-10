@@ -270,7 +270,7 @@ const Profile = () => {
                   placeholder={t("Email")}
                   value={userData.email}
                   size="sm"
-                  // onChange={(event) => handleInputChange(event, "email")}
+                // onChange={(event) => handleInputChange(event, "email")}
                 />
               </CInputGroup>
             </CCol>

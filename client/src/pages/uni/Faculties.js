@@ -86,19 +86,16 @@ const Faculties = () => {
 
   //Actions
   const fetchFaculties = async () => {
-    // setIsLoading(true);
-
     await api
       .get("/faculty")
       .then((response) => {
         setItems(response.data);
-        setIsLoading(false);
-
       })
       .catch((error) => {
         handleError(error);
-        setIsLoading(false);
       });
+
+    setIsLoading(false);
   };
   const addFaculty = async () => {
     await api
