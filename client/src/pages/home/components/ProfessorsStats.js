@@ -48,7 +48,7 @@ const ProfessorsStats = ({ userId, isAdmin }) => {
     setIsLoading(true);
 
     await api
-      .get(`/report/professors-data/professor/${userId}`)
+      .get(`/report/professors-data/${userId}`)
       .then((response) => {
         if (stats !== response.data) {
           setStats(response.data);

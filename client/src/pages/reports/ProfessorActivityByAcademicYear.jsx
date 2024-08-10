@@ -15,13 +15,13 @@ import {
   CTableDataCell,
   CTableHeaderCell,
   CTableRow,
-  CCallout
+  CCallout,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilCheckAlt } from "@coreui/icons";
 
 //react-icons
-import { TbReportSearch } from "react-icons/tb"
+import { TbReportSearch } from "react-icons/tb";
 
 //hooks
 import api from "src/hooks/api";
@@ -34,7 +34,7 @@ import {
   getAcademicYear,
   getProfessors,
   getSelectedProfessor,
-  getLoggedUser
+  getLoggedUser,
 } from "src/store/selectors";
 
 //components
@@ -55,7 +55,11 @@ const ProfessorActivity = () => {
   //#endregion
 
   //#region selectors
-  const { first_name, last_name, is_admin: isAdmin } = useSelector(getLoggedUser);
+  const {
+    first_name,
+    last_name,
+    is_admin: isAdmin,
+  } = useSelector(getLoggedUser);
   const academicYear = useSelector(getAcademicYear);
   const professors = useSelector(getProfessors);
   const selectedProfessor = useSelector(getSelectedProfessor);
@@ -87,9 +91,7 @@ const ProfessorActivity = () => {
   //#region functions
   const fetchReport = async () => {
     await api
-      .get(
-        `/report/professor-activity/academic_year/${academicYear.id}/professor/${selectedProfessor}`
-      )
+      .get(`/report/professor-activity/${academicYear.id}/${selectedProfessor}`)
       .then((response) => {
         setItems(response.data);
       })
@@ -279,7 +281,9 @@ const ProfessorActivity = () => {
         <CCardHeader className="flex justify-content-between align-items-center">
           <h6 className="card-title">
             <TbReportSearch />
-            <span className="title">{t("Reports")} | {t("ProfessorActivity")}</span>
+            <span className="title">
+              {t("Reports")} | {t("ProfessorActivity")}
+            </span>
           </h6>
           <CButton color="primary" className="float-right" onClick={exportPDF}>
             {t("GeneratePdf")}
@@ -292,9 +296,11 @@ const ProfessorActivity = () => {
             md={{ cols: isAdmin ? 2 : 1, gutterX: isAdmin ? 4 : 3 }}
             className="align-items-start"
           >
-            {isAdmin && <CCol>
-              <SelectBoxProfessors hasAll={false} />
-            </CCol>}
+            {isAdmin && (
+              <CCol>
+                <SelectBoxProfessors hasAll={false} />
+              </CCol>
+            )}
             <CCol>
               <SelectBoxAcademicYear local />
             </CCol>
@@ -349,7 +355,9 @@ const ProfessorActivity = () => {
                             <CTableDataCell>{element.name}</CTableDataCell>
                             <CTableDataCell>{element.number}</CTableDataCell>
                             <CTableDataCell>{element.semester}</CTableDataCell>
-                            <CTableDataCell>{element.week_hours}</CTableDataCell>
+                            <CTableDataCell>
+                              {element.week_hours}
+                            </CTableDataCell>
                             <CTableDataCell>{program}</CTableDataCell>
                           </CTableRow>
                         );
@@ -525,7 +533,9 @@ const ProfessorActivity = () => {
                             </CTableHeaderCell>
                             <CTableDataCell>{element.event}</CTableDataCell>
                             <CTableDataCell>{date}</CTableDataCell>
-                            <CTableDataCell>{element.description}</CTableDataCell>
+                            <CTableDataCell>
+                              {element.description}
+                            </CTableDataCell>
                             <CTableDataCell className="text-center">
                               {checked}
                             </CTableDataCell>
@@ -606,8 +616,7 @@ const ProfessorActivity = () => {
         <CCallout color="danger" className="bg-white">
           {t("NoDataToDisplay")}
         </CCallout>
-      )
-      }
+      )}
     </>
   );
 };

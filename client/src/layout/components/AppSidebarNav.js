@@ -11,7 +11,7 @@ import { cibCodecademy } from "@coreui/icons";
 
 //react-icons
 import { LuLayoutDashboard, LuSettings2 } from "react-icons/lu";
-import { FaChalkboardTeacher, FaSitemap } from "react-icons/fa";
+import { FaChalkboardTeacher, FaRegCalendarAlt, FaSitemap } from "react-icons/fa";
 import { PiBuildingsBold, PiBooksDuotone, PiArticleMediumLight } from "react-icons/pi";
 import { VscSymbolClass } from "react-icons/vsc";
 import { GiVideoConference } from "react-icons/gi";
@@ -39,10 +39,10 @@ export const AppSidebarNav = () => {
       name: t("Dashboard"),
       to: "/",
       icon: <LuLayoutDashboard className="nav-icon" />,
-      badge: {
-        color: "info",
-        // text: t("Working").toUpperCase(),
-      },
+      // badge: {
+      //   color: "info",
+      //   text: t("Working").toUpperCase(),
+      // },
     },
     {
       component: CNavTitle,
@@ -108,6 +108,10 @@ export const AppSidebarNav = () => {
       component: CNavGroup,
       name: t("Reports"),
       icon: <TbReportSearch className="nav-icon" />,
+      badge: {
+        color: "info",
+        text: t("New").toUpperCase(),
+      },
       items: [
         {
           component: CNavItem,
@@ -120,6 +124,12 @@ export const AppSidebarNav = () => {
           name: t("DepartmentWiseDistribution"),
           icon: <FaSitemap className="nav-icon" />,
           to: SidebarRoutes.DepartmentWiseDistribution,
+        },
+        {
+          component: CNavItem,
+          name: t("CourseLoadAnalysis"),
+          icon: <FaRegCalendarAlt className="nav-icon" />,
+          to: SidebarRoutes.CourseLoadAnalysis,
         },
       ],
     },

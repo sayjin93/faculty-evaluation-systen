@@ -52,7 +52,7 @@ const Graphs = ({ userId, isAdmin }) => {
   };
   const fetchProfessorStats = async () => {
     await api
-      .get(`/report/statsCards/professor/${userId}`)
+      .get(`/report/statsCards/${userId}`)
       .then((response) => {
         setStats(response.data);
       })

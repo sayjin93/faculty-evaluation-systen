@@ -45,7 +45,7 @@ const Stats = ({ userId, isAdmin }) => {
     };
     const fetchProfessorStats = async () => {
         await api
-            .get(`/report/stats/professor/${userId}`)
+            .get(`/report/stats/${userId}`)
             .then((response) => {
                 setStats(response.data);
             })

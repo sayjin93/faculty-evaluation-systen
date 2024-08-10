@@ -27,10 +27,7 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 import { capitalizeWords, getColorForLabel } from "src/hooks";
 
 //store
-import {
-  getAcademicYear,
-  getFaculty
-} from "src/store/selectors";
+import { getAcademicYear, getFaculty } from "src/store/selectors";
 
 //components
 import SelectBoxFaculty from "src/components/SelectBoxFaculty";
@@ -69,9 +66,7 @@ const DepartmentWiseDistribution = () => {
   //#region functions
   const fetchReport = async () => {
     await api
-      .get(
-        `/report/department-wise-distribution/academic_year/${academicYear.id}/faculty_id/${faculty}`
-      )
+      .get(`/report/department-wise-distribution/${academicYear.id}/${faculty}`)
       .then((response) => {
         setItems(response.data);
       })
@@ -136,7 +131,7 @@ const DepartmentWiseDistribution = () => {
         head: [[t("Activity"), t("Count")]],
         body: departmentData,
         startY: currentY + 5,
-        theme: 'grid',
+        theme: "grid",
         styles: { cellPadding: 3, fontSize: 10 },
         didDrawPage: (data) => {
           // Update currentY after the table is drawn
@@ -146,15 +141,15 @@ const DepartmentWiseDistribution = () => {
     });
 
     // Capture the chart image using the ref
-    const chartCanvas = chartRef.current.getElementsByTagName('canvas')[0];
+    const chartCanvas = chartRef.current.getElementsByTagName("canvas")[0];
     if (chartCanvas) {
-      const chartImage = chartCanvas.toDataURL('image/png');
+      const chartImage = chartCanvas.toDataURL("image/png");
 
       // Add the chart to the PDF at the end
       currentY += spacingBetweenTables;
       const chartHeight = 80; // Adjust the height as needed
       const chartWidth = pageWidth - 20; // Leave some margins
-      doc.addImage(chartImage, 'PNG', 10, currentY, chartWidth, chartHeight);
+      doc.addImage(chartImage, "PNG", 10, currentY, chartWidth, chartHeight);
 
       // Update currentY to be below the chart
       currentY += chartHeight + spacingBetweenTables;
@@ -165,7 +160,6 @@ const DepartmentWiseDistribution = () => {
     // Save the PDF with a filename
     doc.save(`report_${t(facultyName)}_${academicYear.year}.pdf`);
   };
-
 
   //#endregion
 
@@ -196,7 +190,9 @@ const DepartmentWiseDistribution = () => {
         <CCardHeader className="flex justify-content-between align-items-center">
           <h6 className="card-title">
             <FaSitemap />
-            <span className="title">{t("Reports")} | {t("DepartmentWiseDistribution")}</span>
+            <span className="title">
+              {t("Reports")} | {t("DepartmentWiseDistribution")}
+            </span>
           </h6>
           <CButton color="primary" className="float-right" onClick={exportPDF}>
             {t("GeneratePdf")}
@@ -223,11 +219,8 @@ const DepartmentWiseDistribution = () => {
         <div className="d-flex justify-content-center align-items-center">
           <CSpinner color="primary" />
         </div>
-      ) : (items ? (
-        <CRow
-          xs={{ cols: 1, gutter: 4 }}
-          lg={{ cols: 3, gutter: 4 }}
-        >
+      ) : items ? (
+        <CRow xs={{ cols: 1, gutter: 4 }} lg={{ cols: 3, gutter: 4 }}>
           <CCol>
             <CRow xs={{ cols: 1, gutter: 4 }}>
               {items.map((department, index) => (
@@ -269,12 +262,15 @@ const DepartmentWiseDistribution = () => {
                         <CTableBody>
                           {Object.keys(department).map((key) => (
                             <CTableRow key={key}>
-                              {key !== 'department' && (
+                              {key !== "department" && (
                                 <>
                                   <CTableDataCell scope="col">
                                     {t(capitalizeWords(key))}
                                   </CTableDataCell>
-                                  <CTableDataCell scope="col" className="text-center">
+                                  <CTableDataCell
+                                    scope="col"
+                                    className="text-center"
+                                  >
                                     {department[key]}
                                   </CTableDataCell>
                                 </>
@@ -303,32 +299,32 @@ const DepartmentWiseDistribution = () => {
                   id="departmentChart"
                   type="bar"
                   data={{
-                    labels: items.map(item => t(item.department)),
+                    labels: items.map((item) => t(item.department)),
                     datasets: [
                       {
-                        label: t('Courses'),
-                        backgroundColor: getColorForLabel('Courses'),
-                        data: items.map(item => item.courses),
+                        label: t("Courses"),
+                        backgroundColor: getColorForLabel("Courses"),
+                        data: items.map((item) => item.courses),
                       },
                       {
-                        label: t('Papers'),
-                        backgroundColor: getColorForLabel('Papers'),
-                        data: items.map(item => item.papers),
+                        label: t("Papers"),
+                        backgroundColor: getColorForLabel("Papers"),
+                        data: items.map((item) => item.papers),
                       },
                       {
-                        label: t('Books'),
-                        backgroundColor: getColorForLabel('Books'),
-                        data: items.map(item => item.books),
+                        label: t("Books"),
+                        backgroundColor: getColorForLabel("Books"),
+                        data: items.map((item) => item.books),
                       },
                       {
-                        label: t('Conferences'),
-                        backgroundColor: getColorForLabel('Conferences'),
-                        data: items.map(item => item.conferences),
+                        label: t("Conferences"),
+                        backgroundColor: getColorForLabel("Conferences"),
+                        data: items.map((item) => item.conferences),
                       },
                       {
-                        label: t('CommunityServices'),
-                        backgroundColor: getColorForLabel('Communities'),
-                        data: items.map(item => item.communityServices),
+                        label: t("CommunityServices"),
+                        backgroundColor: getColorForLabel("Communities"),
+                        data: items.map((item) => item.communityServices),
                       },
                     ],
                   }}
@@ -336,7 +332,7 @@ const DepartmentWiseDistribution = () => {
                     plugins: {
                       legend: {
                         labels: {
-                          color: getStyle('--cui-body-color'),
+                          color: getStyle("--cui-body-color"),
                         },
                       },
                     },
@@ -344,25 +340,24 @@ const DepartmentWiseDistribution = () => {
                       x: {
                         stacked: true,
                         grid: {
-                          color: getStyle('--cui-border-color-translucent'),
+                          color: getStyle("--cui-border-color-translucent"),
                         },
                         ticks: {
-                          color: getStyle('--cui-body-color'),
+                          color: getStyle("--cui-body-color"),
                         },
                       },
                       y: {
                         stacked: true,
                         grid: {
-                          color: getStyle('--cui-border-color-translucent'),
+                          color: getStyle("--cui-border-color-translucent"),
                         },
                         ticks: {
-                          color: getStyle('--cui-body-color'),
+                          color: getStyle("--cui-body-color"),
                         },
                       },
                     },
                   }}
                 />
-
               </CCardBody>
             </CCard>
           </CCol>
@@ -371,7 +366,6 @@ const DepartmentWiseDistribution = () => {
         <CCallout color="danger" className="bg-white">
           {t("NoDataToDisplay")}
         </CCallout>
-      )
       )}
     </>
   );
