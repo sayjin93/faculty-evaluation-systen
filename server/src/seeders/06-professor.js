@@ -107,6 +107,26 @@ const professorsData = [
     department_id: 10,
     is_admin: 0,
   },
+  {
+    first_name: 'Professor',
+    last_name: 'Eleven',
+    gender: 'm',
+    username: 'peleven',
+    password: 'peleven@@',
+    email: 'peleven@uet.edu.al',
+    department_id: 10,
+    is_admin: 0,
+  },
+  {
+    first_name: 'Professor',
+    last_name: 'Twelve',
+    gender: 'm',
+    username: 'ptwelve',
+    password: 'ptwelve@@',
+    email: 'ptwelve@uet.edu.al',
+    department_id: 10,
+    is_admin: 0,
+  },
 ];
 
 module.exports = {

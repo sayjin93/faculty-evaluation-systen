@@ -16,7 +16,7 @@ import DataGrid, {
   Position,
 } from "devextreme-react/data-grid";
 
-const CustomDataGrid = ({ dataSource, children }) => {
+const CustomDataGrid = ({ dataSource, children, keyExpr = "id" }) => {
   //#region constants
   const { t } = useTranslation();
   //#endregion
@@ -36,7 +36,7 @@ const CustomDataGrid = ({ dataSource, children }) => {
     <div className="dx-viewport">
       <DataGrid
         dataSource={dataSource}
-        keyExpr="id"
+        keyExpr={keyExpr}
         hoverStateEnabled={true}
         columnAutoWidth={true}
         showColumnLines={true}
@@ -97,13 +97,13 @@ const CustomDataGrid = ({ dataSource, children }) => {
           showInfo={true}
           showNavigationButtons={true}
         />
-        <Column
+        {keyExpr === "id" && <Column
           alignment="right"
           cssClass="bold"
           caption="#"
           width={57}
           cellRender={cellRenderIndex}
-        />
+        />}
         {children}
       </DataGrid>
     </div>

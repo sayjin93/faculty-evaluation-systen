@@ -17,6 +17,8 @@ import {
   CCallout,
   CSpinner,
 } from "@coreui/react";
+import { CChart } from "@coreui/react-chartjs";
+import { getStyle } from "@coreui/utils";
 
 //react-icons
 import { FaSitemap } from "react-icons/fa";
@@ -39,8 +41,6 @@ import autoTable from "jspdf-autotable";
 
 //image
 import logoImage from "src/assets/images/uet_logo.png";
-import { CChart } from "@coreui/react-chartjs";
-import { getStyle } from "@coreui/utils";
 
 const DepartmentWiseDistribution = () => {
   //#region constants

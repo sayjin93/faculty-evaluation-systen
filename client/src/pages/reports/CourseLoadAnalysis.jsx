@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { Column } from "devextreme-react/data-grid";
 
 //coreUI
 import {
@@ -10,13 +11,11 @@ import {
   CCardHeader,
   CCol,
   CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableRow,
   CCallout,
   CSpinner,
 } from "@coreui/react";
+import { CChart } from "@coreui/react-chartjs";
+import { getStyle } from "@coreui/utils";
 
 //react-icons
 import { FaRegCalendarAlt } from "react-icons/fa";
@@ -27,10 +26,12 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 import { capitalizeWords, getColorForLabel } from "src/hooks";
 
 //store
-import { getAcademicYear } from "src/store/selectors";
+import { getAcademicYear, getFaculty } from "src/store/selectors";
 
 //components
 import SelectBoxAcademicYear from "src/components/SelectBoxAcademicYear";
+import SelectBoxFaculty from "src/components/SelectBoxFaculty";
+import CustomDataGrid from "src/components/CustomDataGrid";
 
 //jspdf
 import { jsPDF } from "jspdf";
@@ -38,8 +39,6 @@ import autoTable from "jspdf-autotable";
 
 //image
 import logoImage from "src/assets/images/uet_logo.png";
-import { CChart } from "@coreui/react-chartjs";
-import { getStyle } from "@coreui/utils";
 
 const CourseLoadAnalysis = () => {
   //#region constants
@@ -52,12 +51,14 @@ const CourseLoadAnalysis = () => {
   //#endregion
 
   //#region selectors
+  const faculty = useSelector(getFaculty);
   const academicYear = useSelector(getAcademicYear);
   //#endregion
 
   //#region states
   const [isLoading, setIsLoading] = useState(true);
   const [items, setItems] = useState(null);
+  const [facultyName, setFacultyName] = useState("");
   //#endregion
 
   console.log(items);
@@ -65,7 +66,7 @@ const CourseLoadAnalysis = () => {
   //#region functions
   const fetchReport = async () => {
     await api
-      .get(`/report/course-load-analysis/${academicYear.id}`)
+      .get(`/report/course-load-analysis/${academicYear.id}/${faculty}`)
       .then((response) => {
         setItems(response.data);
       })
@@ -159,8 +160,23 @@ const CourseLoadAnalysis = () => {
 
   //#region useEffect
   useEffect(() => {
-    fetchReport();
-  }, [academicYear]);
+    if (faculty > 0) fetchReport();
+  }, [faculty, academicYear]);
+
+  useEffect(() => {
+    const fetchFacultyName = async () => {
+      try {
+        const response = await api.get(`/faculty/${faculty}`);
+        setFacultyName(response.data.key);
+      } catch (error) {
+        handleError(error);
+      }
+    };
+
+    if (faculty) {
+      fetchFacultyName();
+    }
+  }, [faculty]);
   //#endregion
 
   return (
@@ -179,7 +195,14 @@ const CourseLoadAnalysis = () => {
         </CCardHeader>
 
         <CCardBody>
-          <CRow xs={{ cols: 1, gutterY: 3 }} className="align-items-start">
+          <CRow
+            xs={{ cols: 1, gutterY: 3 }}
+            md={{ cols: 2, gutterX: 4 }}
+            className="align-items-start"
+          >
+            <CCol>
+              <SelectBoxFaculty />
+            </CCol>
             <CCol>
               <SelectBoxAcademicYear local />
             </CCol>
@@ -192,9 +215,127 @@ const CourseLoadAnalysis = () => {
           <CSpinner color="primary" />
         </div>
       ) : items ? (
-        <>
-          <p>sad</p>
-        </>
+        <CRow xs={{ cols: 1, gutter: 3 }} lg={{ cols: 2, gutter: 3 }}>
+          <CCol>
+            <CCard
+              textColor="primary"
+              className="border-primary border-top-primary border-top-3"
+            >
+              <CCardHeader>
+                <h6 className="m-0">{t("Stats")}</h6>
+              </CCardHeader>
+
+              <CCardBody className="p-0">
+                <CustomDataGrid dataSource={items}>
+                  <Column
+                    dataField="professor"
+                    caption={t("Professor")}
+                    dataType="string"
+                  />
+                  <Column
+                    dataField="courses"
+                    caption={t("Courses")}
+                    dataType="number"
+                  />
+                  <Column
+                    alignment="center"
+                    dataField="weekHours"
+                    caption={t("WeekHours")}
+                    dataType="number"
+                  />
+                  <Column
+                    dataField="bachelorCourses"
+                    caption={t("BachelorCourses")}
+                    dataType="number"
+                  />
+                  <Column
+                    dataField="masterCourses"
+                    caption={t("MasterCourses")}
+                    dataType="number"
+                  />
+                </CustomDataGrid>
+              </CCardBody>
+            </CCard>
+          </CCol>
+          <CCol>
+            <CCard
+              textColor="primary"
+              className="border-primary border-top-primary border-top-3"
+            >
+              <CCardHeader>
+                <h6 className="m-0">Chart</h6>
+              </CCardHeader>
+
+              <CCardBody>
+                <CChart
+                  type="bar"
+                  data={{
+                    labels: items.map((item) => item.professor),
+                    datasets: [
+                      {
+                        label: t("BachelorCourses"),
+                        backgroundColor: getColorForLabel("Courses"),
+                        data: items.map((item) => item.bachelorCourses),
+                      },
+                      {
+                        label: t("MasterCourses"),
+                        backgroundColor: getColorForLabel("Papers"),
+                        data: items.map((item) => item.masterCourses),
+                      },
+                      {
+                        label: t("WeeklyHours"),
+                        type: "line", // A line chart on the same graph
+                        borderColor: getColorForLabel("Books"),
+                        fill: false,
+                        data: items.map((item) => item.weekHours),
+                        yAxisID: "y2", // Second Y axis for Weekly Hours
+                      },
+                    ],
+                  }}
+                  options={{
+                    plugins: {
+                      legend: {
+                        labels: {
+                          color: getStyle("--cui-body-color"),
+                        },
+                      },
+                    },
+                    scales: {
+                      x: {
+                        stacked: true,
+                        grid: {
+                          color: getStyle("--cui-border-color-translucent"),
+                        },
+                        ticks: {
+                          color: getStyle("--cui-body-color"),
+                        },
+                      },
+                      y: {
+                        stacked: true,
+                        grid: {
+                          color: getStyle("--cui-border-color-translucent"),
+                        },
+                        ticks: {
+                          color: getStyle("--cui-body-color"),
+                        },
+                        position: "left",
+                      },
+                      y2: {
+                        position: "right",
+                        grid: {
+                          drawOnChartArea: false, // Only want the grid lines for one axis
+                        },
+                        ticks: {
+                          color: getStyle("--cui-body-color"),
+                        },
+                      },
+                    },
+                  }}
+                />
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
       ) : (
         <CCallout color="danger" className="bg-white">
           {t("NoDataToDisplay")}

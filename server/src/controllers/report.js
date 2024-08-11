@@ -419,8 +419,8 @@ exports.getDepartmentWiseDistribution = async (req, res) => {
 };
 exports.getCourseLoadAnalysis = async (req, res) => {
   try {
-    // Extract the academic year ID from the request parameters
-    const { academicYearId } = req.params;
+    // Extract the academic year ID and faculty ID from the request parameters
+    const { academicYearId, facultyId } = req.params;
 
     // Fetch the academic year to ensure it exists
     const academicYear = await AcademicYear.findByPk(academicYearId);
@@ -428,23 +428,29 @@ exports.getCourseLoadAnalysis = async (req, res) => {
       return res.status(404).json({ error: 'Academic year not found' });
     }
 
-    // Fetch all professors with their courses for the specified academic year
+    // Fetch all professors in the specified faculty with their courses for the specified academic year
     const professors = await Professor.findAll({
+      where: {
+        is_admin: false, // Exclude professors with is_admin set to true
+        department_id: facultyId, // Filter professors by the specified faculty
+      },
       include: [{
         model: Course,
         where: { academic_year_id: academicYearId },
+        required: false, // Ensures professors with no courses are included
         attributes: ['name', 'week_hours', 'program'],
       }],
     });
 
     // Prepare data for course load analysis
-    const courseLoadData = professors.map((professor) => {
+    const courseLoadData = professors.map((professor, index) => {
       const totalCourses = professor.Courses.length;
       const totalWeekHours = professor.Courses.reduce((sum, course) => sum + course.week_hours, 0);
       const bachelorCourses = professor.Courses.filter((course) => course.program === 'Bachelor').length;
       const masterCourses = professor.Courses.filter((course) => course.program === 'Master').length;
 
       return {
+        id: index + 1,
         professor: `${professor.first_name} ${professor.last_name}`,
         courses: totalCourses,
         weekHours: totalWeekHours,

@@ -39,10 +39,6 @@ export const AppSidebarNav = () => {
       name: t("Dashboard"),
       to: "/",
       icon: <LuLayoutDashboard className="nav-icon" />,
-      // badge: {
-      //   color: "info",
-      //   text: t("Working").toUpperCase(),
-      // },
     },
     {
       component: CNavTitle,
@@ -116,20 +112,20 @@ export const AppSidebarNav = () => {
         {
           component: CNavItem,
           name: t("ProfessorActivity"),
-          icon: <FaChalkboardTeacher className="nav-icon" />,
           to: SidebarRoutes.ProfessorActivityByAcademicYear,
+          icon: <FaChalkboardTeacher className="nav-icon" />,
         },
         {
           component: CNavItem,
           name: t("DepartmentWiseDistribution"),
-          icon: <FaSitemap className="nav-icon" />,
           to: SidebarRoutes.DepartmentWiseDistribution,
+          icon: <FaSitemap className="nav-icon" />,
         },
         {
           component: CNavItem,
           name: t("CourseLoadAnalysis"),
-          icon: <FaRegCalendarAlt className="nav-icon" />,
           to: SidebarRoutes.CourseLoadAnalysis,
+          icon: <FaRegCalendarAlt className="nav-icon" />,
         },
       ],
     },
@@ -174,6 +170,7 @@ export const AppSidebarNav = () => {
   const navItem = (item, index) => {
     const { component, name, badge, icon, admin, ...rest } = item;
     const Component = component;
+
     return (
       <Component
         {...(rest.to &&
@@ -188,13 +185,13 @@ export const AppSidebarNav = () => {
     );
   };
   const navGroup = (item, index) => {
-    const { component, name, icon, to, admin, ...rest } = item;
+    const { component, name, icon, to, badge, admin, ...rest } = item; // Added badge here
     const Component = component;
     return (
       <Component
         idx={String(index)}
         key={index}
-        toggler={navLink(name, icon)}
+        toggler={navLink(name, icon, badge)} // Passing badge to navLink
         visible={location.pathname.startsWith(to)}
         {...rest}
       >

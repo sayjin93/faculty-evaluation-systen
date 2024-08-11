@@ -22,6 +22,7 @@
   "Author": "Autori",
   "Authors": "Autorët",
   "Bachelor": "Bachelor",
+  "BachelorCourses": "Kurse Bachelor",
   "BackToHomepage": "Kthehu në faqen kryesore",
   "BackToLogin": "Kthehu te identifikimi",
   "Blanks": "Bosh",
@@ -57,6 +58,7 @@
   "ContactAdministrator": "Kontakto administratorin!",
   "Count": "Numri",
   "Course": "Kursi",
+  "CourseLoadAnalysis": "Ngarkesa e kurseve",
   "CourseName": "Emri Kursit",
   "CourseNumber": "Numri Kursit",
   "CourseWasUpdatedSuccessfully": "Kursi u përditësua me sukses",
@@ -136,8 +138,10 @@
   "Male": "Mashkull",
   "ManagementAndMarketingDepartment": "Departmenti i Menaxhimit dhe Marketingut",
   "Master": "Master",
+  "MasterCourses": "Kuse Master",
   "MinimumValueAllowedIs": "Vlera minimale e lejuar është",
   "Name": "Emri",
+  "New": "E Re",
   "NewAndRepeatPasswordDidNotMatch": "Fjalëkalimet e reja nuk përputhen",
   "NewLanguageAddedSuccessfully": "Gjuha e re u shtua me sukses",
   "NewPassword": "Fjalëkalimi i ri",
@@ -248,6 +252,5 @@
   "Welcome": "Mirësevini",
   "Working": "Në punim",
   "Year": "Viti",
-  "YouNeedToDefineAcademicYearFirst": "Filimisht duhet të përcaktoni Vitin Akademik",
-  "CourseLoadAnalysis": "Ngarkesa e kurseve"
+  "YouNeedToDefineAcademicYearFirst": "Filimisht duhet të përcaktoni Vitin Akademik"
 }

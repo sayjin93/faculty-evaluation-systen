@@ -35,6 +35,6 @@ router.get('/professor-activity/:academic_year_id/:professor_id', auth, reportCo
 router.get('/department-wise-distribution/:academic_year_id/:faculty_id', auth, isAdminMiddleware, reportController.getDepartmentWiseDistribution);
 
 // Course Load Analysis
-router.get('/course-load-analysis/:academicYearId', auth, isAdminMiddleware, reportController.getCourseLoadAnalysis);
+router.get('/course-load-analysis/:academicYearId/:facultyId', auth, isAdminMiddleware, reportController.getCourseLoadAnalysis);
 
 module.exports = router;
