@@ -160,7 +160,6 @@ const DepartmentWiseDistribution = () => {
     // Save the PDF with a filename
     doc.save(`report_${t(facultyName)}_${academicYear.year}.pdf`);
   };
-
   //#endregion
 
   //#region useEffect
@@ -353,7 +352,9 @@ const DepartmentWiseDistribution = () => {
                         },
                         ticks: {
                           color: getStyle("--cui-body-color"),
+                          stepSize: 1, // Set the step size to 1
                         },
+                        min: 0, // Ensures the axis begins at 0
                       },
                     },
                   }}

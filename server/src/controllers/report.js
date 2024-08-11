@@ -432,14 +432,20 @@ exports.getCourseLoadAnalysis = async (req, res) => {
     const professors = await Professor.findAll({
       where: {
         is_admin: false, // Exclude professors with is_admin set to true
-        department_id: facultyId, // Filter professors by the specified faculty
       },
-      include: [{
-        model: Course,
-        where: { academic_year_id: academicYearId },
-        required: false, // Ensures professors with no courses are included
-        attributes: ['name', 'week_hours', 'program'],
-      }],
+      include: [
+        {
+          model: Department,
+          where: { faculty_id: facultyId }, // Filter by faculty through the Department association
+          attributes: [], // We don't need any department attributes, just the filtering
+        },
+        {
+          model: Course,
+          where: { academic_year_id: academicYearId },
+          required: false, // Ensures professors with no courses are included
+          attributes: ['name', 'week_hours', 'program'],
+        },
+      ],
     });
 
     // Prepare data for course load analysis
