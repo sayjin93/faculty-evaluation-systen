@@ -60,13 +60,14 @@ const DepartmentWiseDistribution = () => {
   //#region states
   const [isLoading, setIsLoading] = useState(true);
   const [items, setItems] = useState(null);
-  const [facultyName, setFacultyName] = useState("");
   //#endregion
 
   //#region functions
   const fetchReport = async () => {
     await api
-      .get(`/report/department-wise-distribution/${academicYear.id}/${faculty}`)
+      .get(
+        `/report/department-wise-distribution/${academicYear.id}/${faculty.id}`
+      )
       .then((response) => {
         setItems(response.data);
       })
@@ -99,7 +100,7 @@ const DepartmentWiseDistribution = () => {
     );
 
     // Calculate text positions for centering
-    const facultyText = t(facultyName);
+    const facultyText = t(faculty.key);
     const facultyTextWidth = doc.getTextWidth(facultyText);
     const facultyTextXPosition = (pageWidth - facultyTextWidth) / 2;
 
@@ -158,29 +159,18 @@ const DepartmentWiseDistribution = () => {
     }
 
     // Save the PDF with a filename
-    doc.save(`report_${t(facultyName)}_${academicYear.year}.pdf`);
+    doc.save(
+      `${t("DepartmentWiseDistribution")}_${t(faculty.key)}_${
+        academicYear.year
+      }.pdf`
+    );
   };
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    if (faculty > 0) fetchReport();
+    fetchReport();
   }, [faculty, academicYear]);
-
-  useEffect(() => {
-    const fetchFacultyName = async () => {
-      try {
-        const response = await api.get(`/faculty/${faculty}`);
-        setFacultyName(response.data.key);
-      } catch (error) {
-        handleError(error);
-      }
-    };
-
-    if (faculty) {
-      fetchFacultyName();
-    }
-  }, [faculty]);
   //#endregion
 
   return (
@@ -242,22 +232,6 @@ const DepartmentWiseDistribution = () => {
                         borderless
                         striped
                       >
-                        {/* <CTableHead color="light">
-                        <CTableRow>
-                          <CTableHeaderCell
-                            scope="col"
-                          >
-                            {t("Activity")}
-                          </CTableHeaderCell>
-                          <CTableHeaderCell
-                            scope="col"
-                            className="text-center"
-                          >
-                            {t("Count")}
-                          </CTableHeaderCell>
-                        </CTableRow>
-                      </CTableHead> */}
-
                         <CTableBody>
                           {Object.keys(department).map((key) => (
                             <CTableRow key={key}>

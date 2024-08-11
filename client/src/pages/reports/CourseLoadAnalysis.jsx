@@ -23,7 +23,7 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 //hooks
 import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
-import { capitalizeWords, getColorForLabel } from "src/hooks";
+import { getColorForLabel } from "src/hooks";
 
 //store
 import { getAcademicYear, getFaculty } from "src/store/selectors";
@@ -59,13 +59,12 @@ const CourseLoadAnalysis = () => {
   //#region states
   const [isLoading, setIsLoading] = useState(true);
   const [items, setItems] = useState(null);
-  const [facultyName, setFacultyName] = useState("");
   //#endregion
 
   //#region functions
   const fetchReport = async () => {
     await api
-      .get(`/report/course-load-analysis/${academicYear.id}/${faculty}`)
+      .get(`/report/course-load-analysis/${academicYear.id}/${faculty.id}`)
       .then((response) => {
         setItems(response.data);
       })
@@ -99,7 +98,7 @@ const CourseLoadAnalysis = () => {
     );
 
     // Calculate text positions for centering
-    const facultyText = t(facultyName);
+    const facultyText = t(faculty.key);
     const facultyTextWidth = doc.getTextWidth(facultyText);
     const facultyTextXPosition = (pageWidth - facultyTextWidth) / 2;
 
@@ -186,29 +185,16 @@ const CourseLoadAnalysis = () => {
     }
 
     // Save the PDF with a filename
-    doc.save(`report_${t(facultyName)}_${academicYear.year}.pdf`);
+    doc.save(
+      `${t("CourseLoadAnalysis")}_${t(faculty.key)}_${academicYear.year}.pdf`
+    );
   };
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    if (faculty > 0) fetchReport();
+    fetchReport();
   }, [faculty, academicYear]);
-
-  useEffect(() => {
-    const fetchFacultyName = async () => {
-      try {
-        const response = await api.get(`/faculty/${faculty}`);
-        setFacultyName(response.data.key);
-      } catch (error) {
-        handleError(error);
-      }
-    };
-
-    if (faculty) {
-      fetchFacultyName();
-    }
-  }, [faculty]);
   //#endregion
 
   return (

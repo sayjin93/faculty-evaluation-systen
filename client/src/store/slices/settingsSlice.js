@@ -6,7 +6,7 @@ const settingsSlice = createSlice({
     academicYear: "",
     firstLogin: true,
     languages: ["en"],
-    faculty: 0,
+    faculty: null,
   },
   reducers: {
     changeAcademicYear: (state, action) => {

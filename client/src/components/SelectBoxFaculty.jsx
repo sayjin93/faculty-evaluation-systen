@@ -21,7 +21,7 @@ const SelectBoxFaculty = ({ className = "" }) => {
   //#endregion
 
   //#region selectors
-  const selectedFaculty = useSelector(getFaculty);
+  const faculty = useSelector(getFaculty);
   //#endregion
 
   //#region states
@@ -29,9 +29,17 @@ const SelectBoxFaculty = ({ className = "" }) => {
   //#endregion
 
   //#region functions
-  const handleChange = async (e) => {
-    dispatch(setFaculty(e.target.value));
+  const handleChange = (e) => {
+    const selectedFacultyId = Number(e.target.value);
+    const selectedFaculty = faculties.find(
+      (faculty) => faculty.id === selectedFacultyId
+    );
 
+    if (selectedFaculty) {
+      dispatch(
+        setFaculty({ id: selectedFaculty.id, key: selectedFaculty.key })
+      );
+    }
   };
 
   const fetchFaculties = async () => {
@@ -39,7 +47,8 @@ const SelectBoxFaculty = ({ className = "" }) => {
       .get("/faculty")
       .then((response) => {
         setFaculties(response.data);
-        dispatch(setFaculty(response.data[0].id));
+        const { id, key } = response.data[0]; // Destructuring id and key
+        dispatch(setFaculty({ id, key })); // Dispatching only id and key
       })
       .catch((error) => {
         handleError(error);
@@ -58,7 +67,7 @@ const SelectBoxFaculty = ({ className = "" }) => {
       <CInputGroupText component="label">{t("Faculties")}</CInputGroupText>
       <CFormSelect
         className="cursor"
-        value={selectedFaculty}
+        value={faculty.id}
         onChange={handleChange}
       >
         {faculties
@@ -71,7 +80,6 @@ const SelectBoxFaculty = ({ className = "" }) => {
       </CFormSelect>
     </CInputGroup>
   );
-
 };
 
 export default SelectBoxFaculty;

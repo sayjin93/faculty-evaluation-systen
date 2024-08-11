@@ -265,7 +265,9 @@ const ProfessorActivity = () => {
         : spaceEmptyTable;
 
     // Save the PDF with a filename
-    doc.save(`report_${professorFullName}_${academicYear.year}.pdf`);
+    doc.save(
+      `${t("ProfessorActivity")}_${professorFullName}_${academicYear.year}.pdf`
+    );
   };
   //#endregion
 
