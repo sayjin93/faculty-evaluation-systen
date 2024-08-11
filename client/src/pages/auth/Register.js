@@ -80,8 +80,6 @@ const Register = () => {
   const [departments, setDepartments] = useState([]);
   //#endregion
 
-  console.log(faculties);
-
   //#region functions
   const handleFullName = (event, fieldName) => {
     const inputValue = capitalizeWords(event.target.value);
