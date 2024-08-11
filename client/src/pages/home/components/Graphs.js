@@ -76,7 +76,7 @@ const Graphs = ({ userId, isAdmin }) => {
         {(() => {
           if (isLoading) {
             return <Skeleton className="h-162 mb-4" />;
-          } else if (!isLoading && stats.papersByYear) {
+          } else if (!isLoading && stats?.papersByYear) {
             const { total, progress, labels, data } = stats.papersByYear;
 
             return (
@@ -161,7 +161,7 @@ const Graphs = ({ userId, isAdmin }) => {
         {(() => {
           if (isLoading) {
             return <Skeleton className="h-162 mb-4" />;
-          } else if (!isLoading && stats.booksByYear) {
+          } else if (!isLoading && stats?.booksByYear) {
             const { total, progress, labels, data } = stats.booksByYear;
 
             return (
@@ -243,7 +243,7 @@ const Graphs = ({ userId, isAdmin }) => {
         {(() => {
           if (isLoading) {
             return <Skeleton className="h-162 mb-4" />;
-          } else if (!isLoading && stats.conferencesByYear) {
+          } else if (!isLoading && stats?.conferencesByYear) {
             const { total, progress, labels, data } = stats.conferencesByYear;
 
             return (
@@ -314,7 +314,7 @@ const Graphs = ({ userId, isAdmin }) => {
         {(() => {
           if (isLoading) {
             return <Skeleton className="h-162 mb-4" />;
-          } else if (!isLoading && stats.communitiesByYear) {
+          } else if (!isLoading && stats?.communitiesByYear) {
             const { total, progress, labels, data } = stats.communitiesByYear;
 
             return (

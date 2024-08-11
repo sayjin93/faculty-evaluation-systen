@@ -80,6 +80,8 @@ const Register = () => {
   const [departments, setDepartments] = useState([]);
   //#endregion
 
+  console.log(faculties);
+
   //#region functions
   const handleFullName = (event, fieldName) => {
     const inputValue = capitalizeWords(event.target.value);
@@ -211,32 +213,33 @@ const Register = () => {
   //#region useEffect
   useEffect(() => {
     const fetchDepartments = async () => {
-      await api
-        .get("/department")
-        .then((response) => {
-          const responseData = response.data;
+      try {
+        const response = await api.get("/department");
+        const responseData = response.data;
 
-          // Fetch and populate faculties with unique faculty_id and faculty_key values when the component mounts
-          const facultiesMap = new Map();
+        // Use a Set to track unique faculty_ids and filter the faculties
+        const uniqueFacultiesMap = new Map();
 
-          responseData.forEach((item) => {
-            facultiesMap.set(item.faculty_key, {
+        responseData.forEach((item) => {
+          if (!uniqueFacultiesMap.has(item.faculty_id)) {
+            uniqueFacultiesMap.set(item.faculty_id, {
               faculty_id: item.faculty_id,
-              faculty_key: item.faculty_key,
+              faculty_key: item.Faculty.key, // Use the Faculty.key
             });
-          });
-
-          const uniqueFaculties = Array.from(facultiesMap.values());
-          setFaculties(uniqueFaculties);
-          setDepartments(responseData);
-        })
-        .catch((error) => {
-          handleError(error);
+          }
         });
+
+        const uniqueFaculties = Array.from(uniqueFacultiesMap.values());
+        setFaculties(uniqueFaculties);
+        setDepartments(responseData);
+      } catch (error) {
+        handleError(error);
+      }
     };
 
     fetchDepartments();
   }, []);
+
   //#endregion
 
   return (
@@ -312,7 +315,7 @@ const Register = () => {
                             handleInputChange(event, "faculty")
                           }
                         >
-                          <option value="">{t("PleaseSelect")}</option>
+                          <option value="" disabled>{t("PleaseSelect")}</option>
                           {faculties.map((faculty) => (
                             <option
                               key={faculty.faculty_id}
@@ -333,7 +336,7 @@ const Register = () => {
                             handleInputChange(event, "department")
                           }
                         >
-                          <option value="">{t("PleaseSelect")}</option>
+                          <option value="" disabled>{t("PleaseSelect")}</option>
                           {departments
                             .filter(
                               (department) =>
