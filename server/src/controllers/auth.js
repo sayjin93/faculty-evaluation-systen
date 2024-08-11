@@ -4,10 +4,9 @@ const { Op } = require('sequelize');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
-const Professor = require('../models/professor');
-const Settings = require('../models/settings');
+const { Professor, Settings } = require('../models');
 
-const { capitalizeWords, lowercaseNoSpace } = require('../utils');
+const { capitalizeWords, lowercaseNoSpace } = require('../utils/helpers');
 
 exports.login = (req, res) => {
   const { username, password } = req.body;

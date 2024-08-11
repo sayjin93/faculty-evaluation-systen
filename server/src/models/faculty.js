@@ -1,12 +1,16 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../database');
+module.exports = (sequelize, DataTypes) => {
+  const Faculty = sequelize.define('Faculty', {
+    key: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  }, {
+    paranoid: true, // Enables soft delete
+  });
 
-const Faculty = sequelize.define('Faculty', {
-  key: {
-    type: DataTypes.STRING,
-  },
-}, {
-  paranoid: true, // This enables the soft delete functionality
-});
+  Faculty.associate = (models) => {
+    Faculty.hasMany(models.Department, { foreignKey: 'faculty_id' });
+  };
 
-module.exports = Faculty;
+  return Faculty;
+};

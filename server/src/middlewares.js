@@ -1,10 +1,10 @@
-const User = require('./models/professor');
+const { Professor } = require('./models');
 
 const isAdminMiddleware = async (req, res, next) => {
   const userId = req.user.id;
 
   try {
-    const user = await User.findByPk(userId);
+    const user = await Professor.findByPk(userId);
 
     if (user && user.is_admin) {
       next();

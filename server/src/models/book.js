@@ -1,29 +1,27 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../database');
+module.exports = (sequelize, DataTypes) => {
+  const Book = sequelize.define('Book', {
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    publication_house: {
+      type: DataTypes.STRING,
+    },
+    publication_year: {
+      type: DataTypes.DATEONLY,
+    },
+    academic_year_id: {
+      type: DataTypes.INTEGER,
+    },
+    professor_id: {
+      type: DataTypes.INTEGER,
+    },
+  });
 
-const Professor = require('./professor');
-const AcademicYear = require('./academicYear');
+  Book.associate = (models) => {
+    Book.belongsTo(models.AcademicYear, { foreignKey: 'academic_year_id' });
+    Book.belongsTo(models.Professor, { foreignKey: 'professor_id' });
+  };
 
-const Book = sequelize.define('Book', {
-  title: {
-    type: DataTypes.STRING,
-  },
-  publication_house: {
-    type: DataTypes.STRING,
-  },
-  publication_year: {
-    type: DataTypes.DATEONLY,
-  },
-  academic_year_id: {
-    type: DataTypes.INTEGER,
-  },
-  professor_id: {
-    type: DataTypes.INTEGER,
-  },
-});
-
-//  Associations
-Book.belongsTo(Professor, { foreignKey: 'professor_id' });
-Book.belongsTo(AcademicYear, { foreignKey: 'academic_year_id' });
-
-module.exports = Book;
+  return Book;
+};

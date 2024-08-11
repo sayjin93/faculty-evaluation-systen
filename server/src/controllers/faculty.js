@@ -1,5 +1,4 @@
-const Faculty = require('../models/faculty');
-const Department = require('../models/department');
+const { Faculty, Department } = require('../models');
 
 exports.create = async (req, res) => {
   if (!req.body.key) {

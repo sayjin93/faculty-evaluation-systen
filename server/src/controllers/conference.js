@@ -1,5 +1,4 @@
-const Conference = require('../models/conference');
-const Professor = require('../models/professor');
+const { Conference, Professor } = require('../models');
 
 exports.createConference = async (req, res) => {
   if (!req.body.name) {

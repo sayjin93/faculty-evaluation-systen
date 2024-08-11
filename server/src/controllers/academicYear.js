@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-const AcademicYear = require('../models/academicYear');
+const { AcademicYear } = require('../models');
 
 // Create a new Academic Year
 exports.createAcademicYear = async (req, res) => {
@@ -29,7 +29,7 @@ exports.createAcademicYear = async (req, res) => {
 };
 
 // Retrieve all Academic Years
-exports.listAll = async (req, res) => {
+exports.getAll = async (req, res) => {
   try {
     const result = await AcademicYear.findAll();
     if (!result) {
@@ -46,7 +46,7 @@ exports.listAll = async (req, res) => {
 };
 
 // Retrieve all active Academic Years
-exports.listActive = async (req, res) => {
+exports.getActive = async (req, res) => {
   try {
     const data = await AcademicYear.findAll({ where: { active: true } });
     res.send(data);
@@ -58,7 +58,7 @@ exports.listActive = async (req, res) => {
 };
 
 // Retrieve a single Academic Year by ID
-exports.findAcademicYearById = async (req, res) => {
+exports.getOne = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -78,7 +78,7 @@ exports.findAcademicYearById = async (req, res) => {
 };
 
 // Update an Academic Year by ID
-exports.updateAcademicYear = async (req, res) => {
+exports.update = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -100,7 +100,7 @@ exports.updateAcademicYear = async (req, res) => {
 };
 
 // Update the active status of academic years
-exports.updateActiveStatus = async (req, res) => {
+exports.updateActive = async (req, res) => {
   const activeId = req.params.id;
 
   try {
@@ -123,7 +123,7 @@ exports.updateActiveStatus = async (req, res) => {
 };
 
 // Delete an Academic Year by ID
-exports.deleteAcademicYear = async (req, res) => {
+exports.delete = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -140,23 +140,6 @@ exports.deleteAcademicYear = async (req, res) => {
   } catch (err) {
     res.status(409).send({
       message: `Could not delete Academic Year with id=${id}`,
-    });
-  }
-};
-
-// Delete all Academic Years
-exports.deleteAllAcademicYears = async (req, res) => {
-  try {
-    const nums = await AcademicYear.destroy({
-      where: {},
-      truncate: false,
-    });
-    res.send({
-      message: `${nums} Academic Years were deleted successfully!`,
-    });
-  } catch (err) {
-    res.status(500).send({
-      message: err.message || 'Some error occurred while removing all Academic Years.',
     });
   }
 };

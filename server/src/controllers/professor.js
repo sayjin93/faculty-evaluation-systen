@@ -1,19 +1,15 @@
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 
-const Professor = require('../models/professor');
-const Settings = require('../models/settings');
-const Book = require('../models/book');
-const Community = require('../models/community');
-const Conference = require('../models/conference');
-const Course = require('../models/course');
-const Paper = require('../models/paper');
+const {
+  Professor, Settings, Book, Community, Conference, Course, Paper,
+} = require('../models');
 
 const {
   capitalizeWords,
   lowercaseNoSpace,
   generateRandomPassword,
-} = require('../utils');
+} = require('../utils/helpers');
 
 exports.create = async (req, res) => {
   const {

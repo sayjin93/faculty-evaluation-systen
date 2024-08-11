@@ -1,16 +1,25 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../database');
+module.exports = (sequelize, DataTypes) => {
+  const AcademicYear = sequelize.define('AcademicYear', {
+    year: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false,
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+  }, {
+    paranoid: true, // Enables soft delete
+  });
 
-const AcademicYear = sequelize.define('Academic-Year', {
-  year: {
-    type: DataTypes.STRING,
-    unique: true,
-  },
-  active: {
-    type: DataTypes.BOOLEAN,
-  },
-}, {
-  paranoid: true, // This enables the soft delete functionality
-});
+  AcademicYear.associate = (models) => {
+    AcademicYear.hasMany(models.Course, { foreignKey: 'academic_year_id' });
+    AcademicYear.hasMany(models.Paper, { foreignKey: 'academic_year_id' });
+    AcademicYear.hasMany(models.Book, { foreignKey: 'academic_year_id' });
+    AcademicYear.hasMany(models.Conference, { foreignKey: 'academic_year_id' });
+    AcademicYear.hasMany(models.Community, { foreignKey: 'academic_year_id' });
+  };
 
-module.exports = AcademicYear;
+  return AcademicYear;
+};

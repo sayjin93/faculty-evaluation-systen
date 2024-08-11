@@ -8,12 +8,14 @@ const { isAdminMiddleware } = require('../middlewares');
 const academicYearController = require('../controllers/academicYear');
 
 router.post('/', auth, isAdminMiddleware, academicYearController.createAcademicYear);
-router.get('/', auth, academicYearController.listAll);
-router.get('/active', auth, academicYearController.listActive);
-router.get('/:id', auth, academicYearController.findAcademicYearById);
-router.put('/:id', auth, academicYearController.updateAcademicYear);
-router.put('/active/:id', auth, academicYearController.updateActiveStatus);
-router.delete('/:id', auth, isAdminMiddleware, academicYearController.deleteAcademicYear);
-router.delete('/', auth, isAdminMiddleware, academicYearController.deleteAllAcademicYears);
+
+router.get('/', auth, academicYearController.getAll);
+router.get('/active', auth, academicYearController.getActive);
+router.get('/:id', auth, academicYearController.getOne);
+
+router.put('/:id', auth, academicYearController.update);
+router.put('/active/:id', auth, academicYearController.updateActive);
+
+router.delete('/:id', auth, isAdminMiddleware, academicYearController.delete);
 
 module.exports = router;

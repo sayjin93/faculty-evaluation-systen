@@ -12,9 +12,9 @@ router.post('/', auth, bookController.createBook);
 
 router.get('/', auth, isAdminMiddleware, bookController.getAllBooks);
 router.get('/professor/:professor_id', auth, bookController.getBooksByProfessor);
-
 router.get('/academic_year/:academic_year_id', auth, bookController.getBooksByYear);
 router.get('/:id', auth, bookController.getBookById);
+
 router.put('/:id', auth, bookController.updateBook);
 
 router.delete('/:id', auth, isAdminMiddleware, bookController.deleteBook);

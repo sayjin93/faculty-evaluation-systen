@@ -1,4 +1,4 @@
-const Professor = require('../../models/professor');
+const { Professor } = require('../models');
 
 // Function to generate a random date between two dates
 function randomDate(start, end) {
@@ -7,15 +7,6 @@ function randomDate(start, end) {
 
 // Temp data
 const professorsData = [
-  {
-    first_name: 'Jurgen',
-    last_name: 'Kruja',
-    gender: 'm',
-    username: 'admin',
-    password: 'admin',
-    email: 'jurgen-kruja@live.com',
-    is_admin: 1,
-  },
   {
     first_name: 'Professor',
     last_name: 'One',
@@ -118,37 +109,55 @@ const professorsData = [
   },
 ];
 
-async function seed() {
-  const promises = professorsData.map(async (professor) => {
-    try {
-      // Generate random dates between 2015 and 2023
-      const randomCreatedAt = randomDate(new Date('2015-01-01'), new Date('2023-12-31'));
-      const randomUpdatedAt = randomDate(randomCreatedAt, new Date('2023-12-31')); // Ensure updatedAt is after createdAt
+module.exports = {
+  up: async () => {
+    const promises = professorsData.map(async (professor) => {
+      try {
+        // Generate random dates between 2015 and 2023
+        const randomCreatedAt = randomDate(new Date('2015-01-01'), new Date('2023-12-31'));
+        const randomUpdatedAt = randomDate(randomCreatedAt, new Date('2023-12-31')); // Ensure updatedAt is after createdAt
 
-      const defaultProfessorData = {
-        ...professor,
-        is_verified: 1,
-        resetPasswordToken: null,
-        resetPasswordExpires: null,
-        verificationToken: null,
-        verificationTokenExpires: null,
-        createdAt: randomCreatedAt,
-        updatedAt: randomUpdatedAt,
-      };
+        const defaultProfessorData = {
+          ...professor,
+          is_verified: true, // Use true instead of 1
+          resetPasswordToken: null,
+          resetPasswordExpires: null,
+          verificationToken: null,
+          verificationTokenExpires: null,
+          createdAt: randomCreatedAt,
+          updatedAt: randomUpdatedAt,
+        };
 
-      await Professor.findOrCreate({
-        where: {
-          first_name: professor.first_name,
-          last_name: professor.last_name,
-        },
-        defaults: defaultProfessorData,
-      });
-    } catch (error) {
-      console.error('Error seeding course:', professor, error);
-    }
-  });
+        const [created] = await Professor.findOrCreate({
+          where: {
+            first_name: professor.first_name,
+            last_name: professor.last_name,
+            email: professor.email,
+          },
+          defaults: defaultProfessorData,
+        });
 
-  await Promise.all(promises);
-}
+        if (created) {
+          console.log(`Professor "${professor.first_name} ${professor.last_name}" created.`);
+        } else {
+          console.log(`Professor "${professor.first_name} ${professor.last_name}" already exists.`);
+        }
+      } catch (error) {
+        console.error('Error seeding professor:', professor.first_name, professor.last_name, error);
+      }
+    });
 
-module.exports = seed;
+    await Promise.all(promises);
+    console.log('Professors seeding completed.');
+  },
+
+  down: async () => {
+    // Code to undo the seed, e.g., delete the professor records
+    await Professor.destroy({
+      where: {
+        email: professorsData.map((professor) => professor.email),
+      },
+    });
+    console.log('Professors seeding reverted.');
+  },
+};

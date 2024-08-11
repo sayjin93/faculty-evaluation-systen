@@ -12,9 +12,9 @@ router.post('/', auth, conferenceController.createConference);
 
 router.get('/', auth, isAdminMiddleware, conferenceController.getAllConferences);
 router.get('/professor/:professor_id', auth, conferenceController.getConferencesByProfessor);
-
 router.get('/academic_year/:academic_year_id', auth, conferenceController.getConferencesByYear);
 router.get('/:id', auth, conferenceController.getConferenceById);
+
 router.put('/:id', auth, conferenceController.updateConference);
 
 router.delete('/:id', auth, isAdminMiddleware, conferenceController.deleteConference);

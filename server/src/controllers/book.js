@@ -1,5 +1,4 @@
-const Book = require('../models/book');
-const Professor = require('../models/professor');
+const { Book, Professor } = require('../models');
 
 exports.createBook = async (req, res) => {
   if (!req.body.title) {

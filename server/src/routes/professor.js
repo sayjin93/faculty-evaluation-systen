@@ -9,10 +9,12 @@ const professorController = require('../controllers/professor');
 
 // Professor routes
 router.post('/', auth, isAdminMiddleware, professorController.create);
-router.get('/', auth, professorController.getAll);
-router.get('/:id', auth, professorController.getOne);
-router.put('/:id', auth, professorController.update);
-router.delete('/:id', auth, isAdminMiddleware, professorController.delete);
 router.post('/restore/:id', auth, isAdminMiddleware, professorController.restore);
 
+router.get('/', auth, professorController.getAll);
+router.get('/:id', auth, professorController.getOne);
+
+router.put('/:id', auth, professorController.update);
+
+router.delete('/:id', auth, isAdminMiddleware, professorController.delete);
 module.exports = router;

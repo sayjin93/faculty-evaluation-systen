@@ -12,9 +12,9 @@ router.post('/', auth, paperController.createPaper);
 
 router.get('/', auth, isAdminMiddleware, paperController.getAllPapers);
 router.get('/professor/:professor_id', auth, paperController.getPapersByProfessor);
-
 router.get('/academic_year/:academic_year_id', auth, paperController.getPapersByYear);
 router.get('/:id', auth, paperController.getPaperById);
+
 router.put('/:id', auth, paperController.updatePaper);
 
 router.delete('/:id', auth, isAdminMiddleware, paperController.deletePaper);

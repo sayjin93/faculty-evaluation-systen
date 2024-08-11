@@ -9,10 +9,13 @@ const departmentController = require('../controllers/department');
 
 // Department routes
 router.post('/', auth, isAdminMiddleware, departmentController.create);
+router.post('/restore/:id', auth, isAdminMiddleware, departmentController.restore);
+
 router.get('/', departmentController.getAll);
 router.get('/:id', auth, departmentController.getOne);
+
 router.put('/:id', auth, isAdminMiddleware, departmentController.update);
+
 router.delete('/:id', auth, isAdminMiddleware, departmentController.delete);
-router.post('/restore/:id', auth, isAdminMiddleware, departmentController.restore);
 
 module.exports = router;

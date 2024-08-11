@@ -1,32 +1,32 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../database');
+module.exports = (sequelize, DataTypes) => {
+  const Community = sequelize.define('Community', {
+    event: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING,
+    },
+    external: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    academic_year_id: {
+      type: DataTypes.INTEGER,
+    },
+    professor_id: {
+      type: DataTypes.INTEGER,
+    },
+  });
 
-const Professor = require('./professor');
-const AcademicYear = require('./academicYear');
+  Community.associate = (models) => {
+    Community.belongsTo(models.Professor, { foreignKey: 'professor_id' });
+    Community.belongsTo(models.AcademicYear, { foreignKey: 'academic_year_id' });
+  };
 
-const Community = sequelize.define('Community', {
-  event: {
-    type: DataTypes.STRING,
-  },
-  date: {
-    type: DataTypes.DATE,
-  },
-  description: {
-    type: DataTypes.STRING,
-  },
-  external: {
-    type: DataTypes.BOOLEAN,
-  },
-  academic_year_id: {
-    type: DataTypes.INTEGER,
-  },
-  professor_id: {
-    type: DataTypes.INTEGER,
-  },
-});
-
-//  Associations
-Community.belongsTo(Professor, { foreignKey: 'professor_id' });
-Community.belongsTo(AcademicYear, { foreignKey: 'academic_year_id' });
-
-module.exports = Community;
+  return Community;
+};

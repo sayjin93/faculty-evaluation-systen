@@ -9,10 +9,13 @@ const facultyController = require('../controllers/faculty');
 
 // Faculty routes
 router.post('/', auth, isAdminMiddleware, facultyController.create);
+router.post('/restore/:id', auth, isAdminMiddleware, facultyController.restore);
+
 router.get('/', auth, isAdminMiddleware, facultyController.getAll);
 router.get('/:id', auth, isAdminMiddleware, facultyController.getOne);
+
 router.put('/:id', auth, isAdminMiddleware, facultyController.update);
+
 router.delete('/:id', auth, isAdminMiddleware, facultyController.delete);
-router.post('/restore/:id', auth, isAdminMiddleware, facultyController.restore);
 
 module.exports = router;

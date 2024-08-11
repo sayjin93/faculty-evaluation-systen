@@ -1,5 +1,4 @@
-const Community = require('../models/community');
-const Professor = require('../models/professor');
+const { Community, Professor } = require('../models');
 
 exports.createCommunityService = async (req, res) => {
   if (!req.body.event) {

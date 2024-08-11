@@ -12,9 +12,9 @@ router.post('/', auth, courseController.createCourse);
 
 router.get('/', auth, isAdminMiddleware, courseController.getAllCourses);
 router.get('/professor/:professor_id', auth, courseController.getCoursesByProfessor);
-
 router.get('/academic_year/:academic_year_id', auth, courseController.getCoursesByYear);
 router.get('/:id', auth, courseController.getCourseById);
+
 router.put('/:id', auth, courseController.updateCourse);
 
 router.delete('/:id', auth, isAdminMiddleware, courseController.deleteCourse);

@@ -1,14 +1,8 @@
 const Sequelize = require('sequelize');
 
-const AcademicYear = require('../models/academicYear');
-const Book = require('../models/book');
-const Community = require('../models/community');
-const Conference = require('../models/conference');
-const Course = require('../models/course');
-const Paper = require('../models/paper');
-const Professor = require('../models/professor');
-const Department = require('../models/department');
-const Faculty = require('../models/faculty');
+const {
+  AcademicYear, Book, Community, Conference, Course, Paper, Professor, Department, Faculty,
+} = require('../models');
 
 exports.getStats = async (req, res) => {
   try {
@@ -44,8 +38,9 @@ exports.getStats = async (req, res) => {
   }
 };
 exports.getProfessorStats = async (req, res) => {
-  const { professor_id } = req.params;
   try {
+    const { professor_id } = req.params;
+
     // Find the active academic year
     const activeYear = await AcademicYear.findOne({ where: { active: true } });
     if (!activeYear) {
@@ -179,8 +174,9 @@ exports.getStatsCards = async (req, res) => {
   }
 };
 exports.getProfessorStatsCards = async (req, res) => {
-  const { professor_id } = req.params;
   try {
+    const { professor_id } = req.params;
+
     // Fetch academic years
     const academicYears = await AcademicYear.findAll({
       attributes: ['id', 'year'],
@@ -296,8 +292,9 @@ exports.getProfessorsData = async (req, res) => {
   }
 };
 exports.getProfessorData = async (req, res) => {
-  const { professor_id } = req.params;
   try {
+    const { professor_id } = req.params;
+
     // Fetch academic years
     const academicYears = await AcademicYear.findAll({
       attributes: ['id', 'year'],
@@ -346,9 +343,11 @@ exports.getProfessorData = async (req, res) => {
   }
 };
 
+// reports page
 exports.getProfessorActivityByAcademicYear = async (req, res) => {
-  const { professor_id, academic_year_id } = req.params;
   try {
+    const { professor_id, academic_year_id } = req.params;
+
     const [courses, papers, books, conferences, communities] = await Promise.all([
       Course.findAll({ where: { academic_year_id, professor_id } }),
       Paper.findAll({ where: { academic_year_id, professor_id } }),
@@ -366,11 +365,10 @@ exports.getProfessorActivityByAcademicYear = async (req, res) => {
     });
   }
 };
-
 exports.getDepartmentWiseDistribution = async (req, res) => {
-  const { academic_year_id, faculty_id } = req.params;
-
   try {
+    const { academic_year_id, faculty_id } = req.params;
+
     // Validate the academic year and faculty
     const [selectedYear, selectedFaculty] = await Promise.all([
       AcademicYear.findByPk(academic_year_id),
@@ -417,5 +415,47 @@ exports.getDepartmentWiseDistribution = async (req, res) => {
     res.status(500).send({
       message: err.message || 'Some error occurred while retrieving department-wise distribution',
     });
+  }
+};
+exports.getCourseLoadAnalysis = async (req, res) => {
+  try {
+    // Extract the academic year ID from the request parameters
+    const { academicYearId } = req.params;
+
+    // Fetch the academic year to ensure it exists
+    const academicYear = await AcademicYear.findByPk(academicYearId);
+    if (!academicYear) {
+      return res.status(404).json({ error: 'Academic year not found' });
+    }
+
+    // Fetch all professors with their courses for the specified academic year
+    const professors = await Professor.findAll({
+      include: [{
+        model: Course,
+        where: { academic_year_id: academicYearId },
+        attributes: ['name', 'week_hours', 'program'],
+      }],
+    });
+
+    // Prepare data for course load analysis
+    const courseLoadData = professors.map((professor) => {
+      const totalCourses = professor.Courses.length;
+      const totalWeekHours = professor.Courses.reduce((sum, course) => sum + course.week_hours, 0);
+      const bachelorCourses = professor.Courses.filter((course) => course.program === 'Bachelor').length;
+      const masterCourses = professor.Courses.filter((course) => course.program === 'Master').length;
+
+      return {
+        professor: `${professor.first_name} ${professor.last_name}`,
+        courses: totalCourses,
+        weekHours: totalWeekHours,
+        bachelorCourses,
+        masterCourses,
+      };
+    });
+
+    res.status(200).json(courseLoadData);
+  } catch (error) {
+    console.error('Error fetching course load analysis:', error);
+    res.status(500).json({ error: 'An error occurred while fetching course load analysis.' });
   }
 };
