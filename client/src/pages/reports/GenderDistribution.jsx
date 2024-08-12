@@ -23,7 +23,6 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 //hooks
 import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
-import { getColorForLabel } from "src/hooks";
 
 //store
 import {
@@ -205,6 +204,43 @@ const GenderDistribution = () => {
   }, [faculty, department]);
   //#endregion
 
+  // Data aggregation for the "Gender-wise Involvement in Activities" table
+  const aggregateActivityData = (activityData) => {
+    const totalMale = activityData.reduce((acc, curr) => acc + curr.male, 0);
+    const totalFemale = activityData.reduce(
+      (acc, curr) => acc + curr.female,
+      0
+    );
+    return {
+      maleParticipation: totalMale,
+      femaleParticipation: totalFemale,
+      totalParticipation: totalMale + totalFemale,
+    };
+  };
+
+  const activityParticipationData = [
+    {
+      activityType: t("Publications"),
+      ...aggregateActivityData(
+        items?.activityParticipation?.publications || []
+      ),
+    },
+    {
+      activityType: t("Conferences"),
+      ...aggregateActivityData(items?.activityParticipation?.conferences || []),
+    },
+    {
+      activityType: t("Courses Taught"),
+      ...aggregateActivityData(items?.activityParticipation?.courses || []),
+    },
+    {
+      activityType: t("Community Services"),
+      ...aggregateActivityData(
+        items?.activityParticipation?.communityServices || []
+      ),
+    },
+  ];
+
   return (
     <>
       <CCard className="mb-4">
@@ -236,7 +272,7 @@ const GenderDistribution = () => {
         </CCardBody>
       </CCard>
 
-      {isLoading || !isLoading ? (
+      {isLoading ? (
         <div className="d-flex justify-content-center align-items-center">
           <CSpinner color="primary" />
         </div>
@@ -249,36 +285,33 @@ const GenderDistribution = () => {
                 className="border-primary border-top-primary border-top-3"
               >
                 <CCardHeader>
-                  <h6 className="m-0">{t("Stats")}</h6>
+                  <h6 className="m-0">{t("DistributionAcrossDepartments")}</h6>
                 </CCardHeader>
 
                 <CCardBody className="p-0">
-                  <CustomDataGrid dataSource={items}>
+                  <CustomDataGrid dataSource={items.genderDistribution}>
                     <Column
-                      dataField="professor"
-                      caption={t("Professor")}
+                      dataField="department"
+                      caption={t("Department")}
                       dataType="string"
                     />
                     <Column
-                      dataField="courses"
-                      caption={t("Courses")}
+                      dataField="male"
+                      caption={t("Male")}
                       dataType="number"
+                      alignment="right"
                     />
                     <Column
-                      alignment="center"
-                      dataField="weekHours"
-                      caption={t("WeekHours")}
+                      dataField="female"
+                      caption={t("Female")}
                       dataType="number"
+                      alignment="right"
                     />
                     <Column
-                      dataField="bachelorCourses"
-                      caption={t("BachelorCourses")}
+                      dataField="total"
+                      caption={t("Total")}
                       dataType="number"
-                    />
-                    <Column
-                      dataField="masterCourses"
-                      caption={t("MasterCourses")}
-                      dataType="number"
+                      alignment="right"
                     />
                   </CustomDataGrid>
                 </CCardBody>
@@ -286,89 +319,161 @@ const GenderDistribution = () => {
             </CCol>
           </CRow>
 
-          <CRow xs={{ cols: 1, gutter: 3 }} lg={{ cols: 2, gutter: 3 }}>
+          <CRow
+            className="mb-4"
+            xs={{ cols: 1, gutterY: 3 }}
+            md={{ cols: 2, gutterX: 4 }}
+            lg={{ cols: 3, gutterX: 4 }}
+          >
+            {items.genderDistribution.map((item, index) => (
+              <CCol key={index}>
+                <CCard
+                  textColor="primary"
+                  className="border-primary border-top-primary border-top-3"
+                >
+                  <CCardHeader>
+                    <h6 className="m-0">{t(item.department)}</h6>
+                  </CCardHeader>
+                  <CCardBody>
+                    <CChart
+                      type="doughnut"
+                      data={{
+                        labels: [t("Male"), t("Female")],
+                        datasets: [
+                          {
+                            backgroundColor: [
+                              getStyle("--cui-info"),
+                              getStyle("--cui-warning"),
+                            ], // Colors for male and female
+                            data: [item.male, item.female], // Male and female data
+                          },
+                        ],
+                      }}
+                      options={{
+                        plugins: {
+                          legend: {
+                            labels: {
+                              color: getStyle("--cui-body-color"),
+                            },
+                          },
+                        },
+                      }}
+                    />
+                  </CCardBody>
+                </CCard>
+              </CCol>
+            ))}
+          </CRow>
+
+          <CRow xs={{ cols: 1, gutter: 3 }} lg={{ cols: 2, gutter: 4 }}>
             <CCol>
               <CCard
                 textColor="primary"
                 className="border-primary border-top-primary border-top-3"
               >
                 <CCardHeader>
-                  <h6 className="m-0">{t("CoursesDistribution")}</h6>
+                  <h6 className="m-0">
+                    {t("GenderWiseInvolvementInActivities")}
+                  </h6>
                 </CCardHeader>
 
-                <CCardBody ref={coursesChartRef}>
-                  <CChart
-                    type="bar"
-                    data={{
-                      labels: items.map((item) => item.professor),
-                      datasets: [
-                        {
-                          label: t("BachelorCourses"),
-                          backgroundColor: getColorForLabel("Courses"),
-                          data: items.map((item) => item.bachelorCourses),
-                        },
-                        {
-                          label: t("MasterCourses"),
-                          backgroundColor: getColorForLabel("Papers"),
-                          data: items.map((item) => item.masterCourses),
-                        },
-                      ],
-                    }}
-                    options={{
-                      plugins: {
-                        legend: {
-                          labels: {
-                            color: getStyle("--cui-body-color"),
-                          },
-                        },
-                      },
-                      scales: {
-                        x: {
-                          stacked: true,
-                          grid: {
-                            color: getStyle("--cui-border-color-translucent"),
-                          },
-                          ticks: {
-                            color: getStyle("--cui-body-color"),
-                          },
-                        },
-                        y: {
-                          stacked: true,
-                          grid: {
-                            color: getStyle("--cui-border-color-translucent"),
-                          },
-                          ticks: {
-                            color: getStyle("--cui-body-color"),
-                            stepSize: 1, // Set the step size to 1
-                          },
-                          min: 0, // Ensures the axis begins at 0
-                        },
-                      },
-                    }}
-                  />
+                <CCardBody className="p-0">
+                  <CustomDataGrid dataSource={activityParticipationData}>
+                    <Column
+                      dataField="activityType"
+                      caption={t("ActivityType")}
+                      dataType="string"
+                    />
+                    <Column
+                      dataField="maleParticipation"
+                      caption={t("Male")}
+                      dataType="number"
+                      alignment="right"
+                    />
+                    <Column
+                      dataField="femaleParticipation"
+                      caption={t("Female")}
+                      dataType="number"
+                      alignment="right"
+                    />
+                    <Column
+                      dataField="totalParticipation"
+                      caption={t("Total")}
+                      dataType="number"
+                      alignment="right"
+                    />
+                  </CustomDataGrid>
                 </CCardBody>
               </CCard>
             </CCol>
+
             <CCol>
               <CCard
                 textColor="primary"
                 className="border-primary border-top-primary border-top-3"
               >
                 <CCardHeader>
-                  <h6 className="m-0">{t("WeeklyHours")}</h6>
+                  <h6 className="m-0">{t("Chart")}</h6>
                 </CCardHeader>
 
-                <CCardBody ref={weeklyHoursChartRef}>
+                <CCardBody>
                   <CChart
-                    type="line"
+                    type="radar"
                     data={{
-                      labels: items.map((item) => item.professor),
+                      labels: [
+                        t("Publications"),
+                        t("Conferences"),
+                        t("Courses"),
+                        t("CommunityServices"),
+                      ],
                       datasets: [
                         {
-                          label: t("WeeklyHours"),
-                          borderColor: getColorForLabel("Books"),
-                          fill: false,
-                          data: items.map((item) => item.weekHours),
+                          label: t("Male"),
+                          backgroundColor: "rgba(54, 162, 235, 0.2)",
+                          borderColor: "rgba(54, 162, 235, 1)",
+                          pointBackgroundColor: "rgba(54, 162, 235, 1)",
+                          pointBorderColor: "#fff",
+                          pointHoverBackgroundColor: "#fff",
+                          pointHoverBorderColor: "rgba(54, 162, 235, 1)",
+                          data: [
+                            aggregateActivityData(
+                              items?.activityParticipation?.publications || []
+                            ).maleParticipation,
+                            aggregateActivityData(
+                              items?.activityParticipation?.conferences || []
+                            ).maleParticipation,
+                            aggregateActivityData(
+                              items?.activityParticipation?.courses || []
+                            ).maleParticipation,
+                            aggregateActivityData(
+                              items?.activityParticipation?.communityServices ||
+                                []
+                            ).maleParticipation,
+                          ],
+                        },
+                        {
+                          label: t("Female"),
+                          backgroundColor: "rgba(255, 99, 132, 0.2)",
+                          borderColor: "rgba(255, 99, 132, 1)",
+                          pointBackgroundColor: "rgba(255, 99, 132, 1)",
+                          pointBorderColor: "#fff",
+                          pointHoverBackgroundColor: "#fff",
+                          pointHoverBorderColor: "rgba(255, 99, 132, 1)",
+                          data: [
+                            aggregateActivityData(
+                              items?.activityParticipation?.publications || []
+                            ).femaleParticipation,
+                            aggregateActivityData(
+                              items?.activityParticipation?.conferences || []
+                            ).femaleParticipation,
+                            aggregateActivityData(
+                              items?.activityParticipation?.courses || []
+                            ).femaleParticipation,
+                            aggregateActivityData(
+                              items?.activityParticipation?.communityServices ||
+                                []
+                            ).femaleParticipation,
+                          ],
                         },
                       ],
                     }}
@@ -381,23 +486,13 @@ const GenderDistribution = () => {
                         },
                       },
                       scales: {
-                        x: {
+                        r: {
                           grid: {
                             color: getStyle("--cui-border-color-translucent"),
                           },
                           ticks: {
                             color: getStyle("--cui-body-color"),
                           },
-                        },
-                        y: {
-                          grid: {
-                            color: getStyle("--cui-border-color-translucent"),
-                          },
-                          ticks: {
-                            color: getStyle("--cui-body-color"),
-                            stepSize: 1, // Set the step size to 1
-                          },
-                          min: 0, // Ensures the axis begins at 0
                         },
                       },
                     }}

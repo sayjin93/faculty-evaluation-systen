@@ -497,11 +497,12 @@ exports.getGenderDistribution = async (req, res) => {
     }
 
     // Initialize counters for report
-    const reportData = departments.map((department) => {
+    const reportData = departments.map((department, index) => {
       const maleCount = department.Professors.filter((professor) => professor.gender === 'm').length;
       const femaleCount = department.Professors.filter((professor) => professor.gender === 'f').length;
 
       return {
+        id: index + 1, // Adding id field as index starting from 1
         department: department.key,
         male: maleCount,
         female: femaleCount,
@@ -509,32 +510,44 @@ exports.getGenderDistribution = async (req, res) => {
       };
     });
 
-    // Aggregate data for total participation in activities
+    // Initialize and populate activity stats
     const activitiesStats = {
-      publications: { male: 0, female: 0 },
-      conferences: { male: 0, female: 0 },
-      courses: { male: 0, female: 0 },
-      communityServices: { male: 0, female: 0 },
+      publications: [],
+      conferences: [],
+      courses: [],
+      communityServices: [],
     };
 
-    await Promise.all(departments.map((department) => Promise.all(department.Professors.map(async (professor) => {
+    await Promise.all(departments.map((department, departmentIndex) => Promise.all(department.Professors.map(async (professor) => {
       const gender = professor.gender === 'm' ? 'male' : 'female';
 
       // Count publications
       const publicationCount = await Paper.count({ where: { professor_id: professor.id } });
-      activitiesStats.publications[gender] += publicationCount;
+      if (!activitiesStats.publications[departmentIndex]) {
+        activitiesStats.publications[departmentIndex] = { id: departmentIndex + 1, male: 0, female: 0 };
+      }
+      activitiesStats.publications[departmentIndex][gender] += publicationCount;
 
       // Count conferences
       const conferenceCount = await Conference.count({ where: { professor_id: professor.id } });
-      activitiesStats.conferences[gender] += conferenceCount;
+      if (!activitiesStats.conferences[departmentIndex]) {
+        activitiesStats.conferences[departmentIndex] = { id: departmentIndex + 1, male: 0, female: 0 };
+      }
+      activitiesStats.conferences[departmentIndex][gender] += conferenceCount;
 
       // Count courses
       const courseCount = await Course.count({ where: { professor_id: professor.id } });
-      activitiesStats.courses[gender] += courseCount;
+      if (!activitiesStats.courses[departmentIndex]) {
+        activitiesStats.courses[departmentIndex] = { id: departmentIndex + 1, male: 0, female: 0 };
+      }
+      activitiesStats.courses[departmentIndex][gender] += courseCount;
 
       // Count community services
       const communityServiceCount = await Community.count({ where: { professor_id: professor.id } });
-      activitiesStats.communityServices[gender] += communityServiceCount;
+      if (!activitiesStats.communityServices[departmentIndex]) {
+        activitiesStats.communityServices[departmentIndex] = { id: departmentIndex + 1, male: 0, female: 0 };
+      }
+      activitiesStats.communityServices[departmentIndex][gender] += communityServiceCount;
     }))));
 
     // Respond with the aggregated data
