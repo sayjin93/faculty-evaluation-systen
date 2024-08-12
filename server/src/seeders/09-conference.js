@@ -14,6 +14,21 @@ const dummyConferenceNames = [
   'Innovations in Robotics Conference',
   'Cybersecurity and Privacy Symposium',
   'HealthTech Innovators Forum',
+  'Blockchain and Cryptocurrency Conference',
+  'Sustainable Energy and Technology Summit',
+  'Quantum Computing Forum',
+  'Next-Gen Cloud Computing Conference',
+  'Autonomous Vehicles and Mobility Expo',
+  'Smart Cities and Urban Innovation Summit',
+  'Wearable Technology Conference',
+  'Advanced Analytics and Big Data Symposium',
+  'Bioinformatics and Computational Biology Conference',
+  'Virtual and Augmented Reality Expo',
+  'FinTech Innovations Summit',
+  'EdTech and Digital Learning Forum',
+  'IoT and Connected Devices Conference',
+  'Global Supply Chain Technology Summit',
+  'Space Exploration and Technology Conference',
 ];
 const dummyLocations = [
   'New York, USA',
@@ -26,6 +41,8 @@ const dummyLocations = [
   'Toronto, Canada',
   'Seoul, South Korea',
   'Munich, Germany',
+  'Tirana, Albania',
+  'Pristina, Kosova',
 ];
 const dummyPresentTitles = [
   'Advancements in AI Research',
@@ -49,7 +66,21 @@ const dummyAuthors = [
   'James Wilson, Emma Brown',
   'Ji-hoon Kim, Min-ji Lee',
   'Alex Johnson, Sarah Miller',
-  'Petraq Papajorgji, Fatos Mustafa',
+  'Carlos Mendoza, Lucia Garcia',
+  'Elena Petrova, Ivan Ivanov',
+  'Maria Rossi, Giuseppe Bianchi',
+  'Hans Müller, Claudia Schmidt',
+  'Wei Zhang, Lian Wang',
+  'Ahmed Khan, Fatima Ahmed',
+  'Lucas Silva, Maria Oliveira',
+  'Seung-hyun Park, Ji-eun Kim',
+  'Olga Smirnova, Dmitry Petrov',
+  'Aarav Patel, Priya Sharma',
+  'Liam O’Connor, Aoife Murphy',
+  'Jean Dupont, Isabelle Martin',
+  'Nina Kovalenko, Sergey Kuznetsov',
+  'Ingrid Svensson, Lars Johansson',
+  'David Evans, Sophia Thompson',
 ];
 
 module.exports = {

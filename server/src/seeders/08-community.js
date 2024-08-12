@@ -24,6 +24,16 @@ const dummyEventNames = [
   'Animal Welfare Campaign',
   'Digital Literacy Workshop',
   'Job Fair and Skill Building',
+  'Neighborhood Watch Program',
+  'Disaster Relief Fundraiser',
+  'Clothing Donation Drive',
+  'Mental Health Awareness Day',
+  'Gardening and Urban Farming Workshop',
+  'Recycling Drive',
+  'Public Safety Awareness Campaign',
+  'Free Legal Aid Clinic',
+  'Community Talent Show',
+  'Water Conservation Workshop',
 ];
 
 module.exports = {

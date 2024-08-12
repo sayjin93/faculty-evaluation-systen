@@ -205,13 +205,14 @@ const GenderDistribution = () => {
   //#endregion
 
   // Data aggregation for the "Gender-wise Involvement in Activities" table
-  const aggregateActivityData = (activityData) => {
+  const aggregateActivityData = (activityData, index) => {
     const totalMale = activityData.reduce((acc, curr) => acc + curr.male, 0);
     const totalFemale = activityData.reduce(
       (acc, curr) => acc + curr.female,
       0
     );
     return {
+      id: index + 1,
       maleParticipation: totalMale,
       femaleParticipation: totalFemale,
       totalParticipation: totalMale + totalFemale,
@@ -220,23 +221,29 @@ const GenderDistribution = () => {
 
   const activityParticipationData = [
     {
-      activityType: t("Publications"),
-      ...aggregateActivityData(
-        items?.activityParticipation?.publications || []
-      ),
+      activityType: t("Courses"),
+      ...aggregateActivityData(items?.activityParticipation?.courses || [], 2),
+    },
+    {
+      activityType: t("Papers"),
+      ...aggregateActivityData(items?.activityParticipation?.papers || [], 0),
+    },
+    {
+      activityType: t("Books"),
+      ...aggregateActivityData(items?.activityParticipation?.books || [], 3),
     },
     {
       activityType: t("Conferences"),
-      ...aggregateActivityData(items?.activityParticipation?.conferences || []),
-    },
-    {
-      activityType: t("Courses Taught"),
-      ...aggregateActivityData(items?.activityParticipation?.courses || []),
-    },
-    {
-      activityType: t("Community Services"),
       ...aggregateActivityData(
-        items?.activityParticipation?.communityServices || []
+        items?.activityParticipation?.conferences || [],
+        1
+      ),
+    },
+    {
+      activityType: t("Communities"),
+      ...aggregateActivityData(
+        items?.activityParticipation?.communities || [],
+        4
       ),
     },
   ];
@@ -421,10 +428,11 @@ const GenderDistribution = () => {
                     type="radar"
                     data={{
                       labels: [
-                        t("Publications"),
-                        t("Conferences"),
                         t("Courses"),
-                        t("CommunityServices"),
+                        t("Papers"),
+                        t("Books"),
+                        t("Conferences"),
+                        t("Communities"),
                       ],
                       datasets: [
                         {
@@ -437,17 +445,24 @@ const GenderDistribution = () => {
                           pointHoverBorderColor: "rgba(54, 162, 235, 1)",
                           data: [
                             aggregateActivityData(
-                              items?.activityParticipation?.publications || []
+                              items?.activityParticipation?.courses || [],
+                              2
                             ).maleParticipation,
                             aggregateActivityData(
-                              items?.activityParticipation?.conferences || []
+                              items?.activityParticipation?.papers || [],
+                              0
                             ).maleParticipation,
                             aggregateActivityData(
-                              items?.activityParticipation?.courses || []
+                              items?.activityParticipation?.books || [],
+                              3
                             ).maleParticipation,
                             aggregateActivityData(
-                              items?.activityParticipation?.communityServices ||
-                                []
+                              items?.activityParticipation?.conferences || [],
+                              1
+                            ).maleParticipation,
+                            aggregateActivityData(
+                              items?.activityParticipation?.communities || [],
+                              4
                             ).maleParticipation,
                           ],
                         },
@@ -461,17 +476,25 @@ const GenderDistribution = () => {
                           pointHoverBorderColor: "rgba(255, 99, 132, 1)",
                           data: [
                             aggregateActivityData(
-                              items?.activityParticipation?.publications || []
+                              items?.activityParticipation?.courses || [],
+                              2
                             ).femaleParticipation,
                             aggregateActivityData(
-                              items?.activityParticipation?.conferences || []
+                              items?.activityParticipation?.papers || [],
+                              0
+                            ).femaleParticipation,
+
+                            aggregateActivityData(
+                              items?.activityParticipation?.books || [],
+                              3
                             ).femaleParticipation,
                             aggregateActivityData(
-                              items?.activityParticipation?.courses || []
+                              items?.activityParticipation?.conferences || [],
+                              1
                             ).femaleParticipation,
                             aggregateActivityData(
-                              items?.activityParticipation?.communityServices ||
-                                []
+                              items?.activityParticipation?.communities || [],
+                              4
                             ).femaleParticipation,
                           ],
                         },

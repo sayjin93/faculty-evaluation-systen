@@ -4,7 +4,7 @@ module.exports = {
   up: async () => {
     const academicYearsData = [];
 
-    for (let i = 2021; i <= 2024; i += 1) {
+    for (let i = 2023; i <= 2024; i += 1) {
       const academicYear = {
         year: `${i}-${i + 1}`,
         active: 0, // Set the active flag to 0 by default

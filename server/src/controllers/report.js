@@ -512,43 +512,53 @@ exports.getGenderDistribution = async (req, res) => {
 
     // Initialize and populate activity stats
     const activitiesStats = {
-      publications: [],
-      conferences: [],
+      papers: [],
+      books: [],
       courses: [],
-      communityServices: [],
+      conferences: [],
+      communities: [],
     };
 
-    await Promise.all(departments.map((department, departmentIndex) => Promise.all(department.Professors.map(async (professor) => {
-      const gender = professor.gender === 'm' ? 'male' : 'female';
+    await Promise.all(departments.map((department, departmentIndex) =>
+      Promise.all(department.Professors.map(async (professor) => {
+        const gender = professor.gender === 'm' ? 'male' : 'female';
 
-      // Count publications
-      const publicationCount = await Paper.count({ where: { professor_id: professor.id } });
-      if (!activitiesStats.publications[departmentIndex]) {
-        activitiesStats.publications[departmentIndex] = { id: departmentIndex + 1, male: 0, female: 0 };
-      }
-      activitiesStats.publications[departmentIndex][gender] += publicationCount;
+        // Count papers
+        const paperCount = await Paper.count({ where: { professor_id: professor.id } });
+        if (!activitiesStats.papers[departmentIndex]) {
+          activitiesStats.papers[departmentIndex] = { id: departmentIndex + 1, male: 0, female: 0 };
+        }
+        activitiesStats.papers[departmentIndex][gender] += paperCount;
 
-      // Count conferences
-      const conferenceCount = await Conference.count({ where: { professor_id: professor.id } });
-      if (!activitiesStats.conferences[departmentIndex]) {
-        activitiesStats.conferences[departmentIndex] = { id: departmentIndex + 1, male: 0, female: 0 };
-      }
-      activitiesStats.conferences[departmentIndex][gender] += conferenceCount;
+        // Count books
+        const bookCount = await Book.count({ where: { professor_id: professor.id } });
+        if (!activitiesStats.books[departmentIndex]) {
+          activitiesStats.books[departmentIndex] = { id: departmentIndex + 1, male: 0, female: 0 };
+        }
+        activitiesStats.books[departmentIndex][gender] += bookCount;
 
-      // Count courses
-      const courseCount = await Course.count({ where: { professor_id: professor.id } });
-      if (!activitiesStats.courses[departmentIndex]) {
-        activitiesStats.courses[departmentIndex] = { id: departmentIndex + 1, male: 0, female: 0 };
-      }
-      activitiesStats.courses[departmentIndex][gender] += courseCount;
+        // Count courses
+        const courseCount = await Course.count({ where: { professor_id: professor.id } });
+        if (!activitiesStats.courses[departmentIndex]) {
+          activitiesStats.courses[departmentIndex] = { id: departmentIndex + 1, male: 0, female: 0 };
+        }
+        activitiesStats.courses[departmentIndex][gender] += courseCount;
 
-      // Count community services
-      const communityServiceCount = await Community.count({ where: { professor_id: professor.id } });
-      if (!activitiesStats.communityServices[departmentIndex]) {
-        activitiesStats.communityServices[departmentIndex] = { id: departmentIndex + 1, male: 0, female: 0 };
-      }
-      activitiesStats.communityServices[departmentIndex][gender] += communityServiceCount;
-    }))));
+        // Count conferences
+        const conferenceCount = await Conference.count({ where: { professor_id: professor.id } });
+        if (!activitiesStats.conferences[departmentIndex]) {
+          activitiesStats.conferences[departmentIndex] = { id: departmentIndex + 1, male: 0, female: 0 };
+        }
+        activitiesStats.conferences[departmentIndex][gender] += conferenceCount;
+
+        // Count communities
+        const communityServiceCount = await Community.count({ where: { professor_id: professor.id } });
+        if (!activitiesStats.communities[departmentIndex]) {
+          activitiesStats.communities[departmentIndex] = { id: departmentIndex + 1, male: 0, female: 0 };
+        }
+        activitiesStats.communities[departmentIndex][gender] += communityServiceCount;
+      }))
+    ));
 
     // Respond with the aggregated data
     return res.status(200).json({
