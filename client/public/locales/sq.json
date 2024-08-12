@@ -256,5 +256,6 @@
   "ContentCanNotBeEmpty": "Përmbajtja nuk mund të jetë bosh",
   "CoursesDistribution": "Shpërndarja e kurseve",
   "Stats": "Statistikat",
-  "WeeklyHours": "Orët Javore"
+  "WeeklyHours": "Orët Javore",
+  "GenderDistribution": "Shpërndarja gjinore"
 }

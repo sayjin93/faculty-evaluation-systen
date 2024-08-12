@@ -141,6 +141,7 @@ export const SidebarRoutes = {
   ProfessorActivityByAcademicYear: "/reports/professor-activity",
   DepartmentWiseDistribution: "/reports/department-wise-distribution",
   CourseLoadAnalysis: "/reports/course-load-analysis",
+  GenderDistribution: "/reports/gender-distribution",
   Settings: "/settings",
   Translations: "/translations",
 

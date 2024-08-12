@@ -10,10 +10,10 @@ import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
-import { setFaculty } from "src/store";
+import { setDepartment } from "src/store";
 import { getFaculty } from "src/store/selectors";
 
-const SelectBoxFaculty = ({ className = "" }) => {
+const SelectBoxDepartment = ({ className = "" }) => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -25,30 +25,36 @@ const SelectBoxFaculty = ({ className = "" }) => {
   //#endregion
 
   //#region states
-  const [faculties, setFaculties] = useState([]);
+  const [departments, setDepartments] = useState([]);
   //#endregion
 
   //#region functions
   const handleChange = (e) => {
-    const selectedFacultyId = Number(e.target.value);
-    const selectedFaculty = faculties.find(
-      (faculty) => faculty.id === selectedFacultyId
-    );
+    const selectedDepartmentId = Number(e.target.value);
 
-    if (selectedFaculty) {
-      dispatch(
-        setFaculty({ id: selectedFaculty.id, key: selectedFaculty.key })
+    if (selectedDepartmentId === 0) {
+      dispatch(setDepartment(null));
+    } else {
+      const selectedDepartment = departments.find(
+        (department) => department.id === selectedDepartmentId
       );
+
+      if (selectedDepartment) {
+        dispatch(
+          setDepartment({
+            id: selectedDepartment.id,
+            key: selectedDepartment.key,
+          })
+        );
+      }
     }
   };
 
   const fetchFaculties = async () => {
     await api
-      .get("/faculty")
+      .get(`/department/faculty/${faculty.id}`)
       .then((response) => {
-        setFaculties(response.data);
-        const { id, key } = response.data[0]; // Destructuring id and key
-        dispatch(setFaculty({ id, key })); // Dispatching only id and key
+        setDepartments(response.data);
       })
       .catch((error) => {
         handleError(error);
@@ -59,18 +65,22 @@ const SelectBoxFaculty = ({ className = "" }) => {
   //#region useEffect
   useEffect(() => {
     fetchFaculties();
-  }, []);
+
+    return () => {
+      dispatch(setDepartment(null));
+    };
+  }, [faculty]);
   //#endregion
 
   return (
     <CInputGroup className={className}>
-      <CInputGroupText component="label">{t("Faculty")}</CInputGroupText>
-      <CFormSelect
-        className="cursor"
-        value={faculty?.id}
-        onChange={handleChange}
-      >
-        {faculties
+      <CInputGroupText component="label">{t("Department")}</CInputGroupText>
+      <CFormSelect className="cursor" defaultValue={0} onChange={handleChange}>
+        <option key={0} value={0}>
+          {t("All")}
+        </option>
+
+        {departments
           .filter(({ deletedAt }) => deletedAt === null)
           .map(({ id, key }) => (
             <option key={id} value={id}>
@@ -82,4 +92,4 @@ const SelectBoxFaculty = ({ className = "" }) => {
   );
 };
 
-export default SelectBoxFaculty;
+export default SelectBoxDepartment;

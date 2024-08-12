@@ -11,8 +11,17 @@ import { cibCodecademy } from "@coreui/icons";
 
 //react-icons
 import { LuLayoutDashboard, LuSettings2 } from "react-icons/lu";
-import { FaChalkboardTeacher, FaRegCalendarAlt, FaSitemap } from "react-icons/fa";
-import { PiBuildingsBold, PiBooksDuotone, PiArticleMediumLight } from "react-icons/pi";
+import {
+  FaChalkboardTeacher,
+  FaRegCalendarAlt,
+  FaSitemap,
+} from "react-icons/fa";
+import {
+  PiBuildingsBold,
+  PiBooksDuotone,
+  PiArticleMediumLight,
+  PiGenderIntersexDuotone,
+} from "react-icons/pi";
 import { VscSymbolClass } from "react-icons/vsc";
 import { GiVideoConference } from "react-icons/gi";
 import { RiCommunityLine } from "react-icons/ri";
@@ -33,126 +42,138 @@ export const AppSidebarNav = () => {
   //#endregion
 
   //#region data
-  const items = useMemo(() => [
-    {
-      component: CNavItem,
-      name: t("Dashboard"),
-      to: "/",
-      icon: <LuLayoutDashboard className="nav-icon" />,
-    },
-    {
-      component: CNavTitle,
-      name: t('University'),
-      admin: true,
-    },
-    {
-      component: CNavItem,
-      name: t('Faculties'),
-      to: SidebarRoutes.Faculties,
-      icon: <PiBuildingsBold className="nav-icon" />,
-      admin: true,
-    },
-    {
-      component: CNavItem,
-      name: t('Departments'),
-      to: SidebarRoutes.Departments,
-      icon: <VscSymbolClass className="nav-icon" />,
-      admin: true,
-    },
-    {
-      component: CNavTitle,
-      name: t("Components"),
-    },
-    {
-      component: CNavItem,
-      name: t("Professors"),
-      to: SidebarRoutes.Professors,
-      icon: <FaChalkboardTeacher className="nav-icon" style={{ height: "18px" }} />,
-      admin: true,
-    },
-    {
-      component: CNavItem,
-      name: t("Courses"),
-      to: SidebarRoutes.Courses,
-      icon: <CIcon icon={cibCodecademy} customClassName="nav-icon" />,
-    },
-    {
-      component: CNavItem,
-      name: t("Papers"),
-      to: SidebarRoutes.Papers,
-      icon: <PiArticleMediumLight className="nav-icon" />,
-    },
-    {
-      component: CNavItem,
-      name: t("Books"),
-      to: SidebarRoutes.Books,
-      icon: <PiBooksDuotone className="nav-icon" />,
-    },
-    {
-      component: CNavItem,
-      name: t("Conferences"),
-      to: SidebarRoutes.Conferences,
-      icon: <GiVideoConference className="nav-icon" />,
-    },
-    {
-      component: CNavItem,
-      name: t("CommunityServices"),
-      to: SidebarRoutes.Communities,
-      icon: <RiCommunityLine className="nav-icon" />,
-    },
-    {
-      component: CNavGroup,
-      name: t("Reports"),
-      icon: <TbReportSearch className="nav-icon" />,
-      badge: {
-        color: "info",
-        text: t("New").toUpperCase(),
+  const items = useMemo(
+    () => [
+      {
+        component: CNavItem,
+        name: t("Dashboard"),
+        to: "/",
+        icon: <LuLayoutDashboard className="nav-icon" />,
       },
-      items: [
-        {
-          component: CNavItem,
-          name: t("ProfessorActivity"),
-          to: SidebarRoutes.ProfessorActivityByAcademicYear,
-          icon: <FaChalkboardTeacher className="nav-icon" />,
+      {
+        component: CNavTitle,
+        name: t("University"),
+        admin: true,
+      },
+      {
+        component: CNavItem,
+        name: t("Faculties"),
+        to: SidebarRoutes.Faculties,
+        icon: <PiBuildingsBold className="nav-icon" />,
+        admin: true,
+      },
+      {
+        component: CNavItem,
+        name: t("Departments"),
+        to: SidebarRoutes.Departments,
+        icon: <VscSymbolClass className="nav-icon" />,
+        admin: true,
+      },
+      {
+        component: CNavTitle,
+        name: t("Components"),
+      },
+      {
+        component: CNavItem,
+        name: t("Professors"),
+        to: SidebarRoutes.Professors,
+        icon: (
+          <FaChalkboardTeacher
+            className="nav-icon"
+            style={{ height: "18px" }}
+          />
+        ),
+        admin: true,
+      },
+      {
+        component: CNavItem,
+        name: t("Courses"),
+        to: SidebarRoutes.Courses,
+        icon: <CIcon icon={cibCodecademy} customClassName="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: t("Papers"),
+        to: SidebarRoutes.Papers,
+        icon: <PiArticleMediumLight className="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: t("Books"),
+        to: SidebarRoutes.Books,
+        icon: <PiBooksDuotone className="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: t("Conferences"),
+        to: SidebarRoutes.Conferences,
+        icon: <GiVideoConference className="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: t("CommunityServices"),
+        to: SidebarRoutes.Communities,
+        icon: <RiCommunityLine className="nav-icon" />,
+      },
+      {
+        component: CNavGroup,
+        name: t("Reports"),
+        icon: <TbReportSearch className="nav-icon" />,
+        badge: {
+          color: "info",
+          text: t("New").toUpperCase(),
         },
-        {
-          component: CNavItem,
-          name: t("DepartmentWiseDistribution"),
-          to: SidebarRoutes.DepartmentWiseDistribution,
-          icon: <FaSitemap className="nav-icon" />,
-        },
-        {
-          component: CNavItem,
-          name: t("CourseLoadAnalysis"),
-          to: SidebarRoutes.CourseLoadAnalysis,
-          icon: <FaRegCalendarAlt className="nav-icon" />,
-        },
-      ],
-    },
-    {
-      component: CNavTitle,
-      name: t("Extras"),
-    },
-    {
-      component: CNavItem,
-      name: t("Settings"),
-      to: SidebarRoutes.Settings,
-      icon: <LuSettings2 className="nav-icon" />,
-    },
-    {
-      component: CNavItem,
-      name: t("Translations"),
-      to: SidebarRoutes.Translations,
-      icon: <HiLanguage className="nav-icon" />,
-      admin: true,
-    },
-  ], [isAdmin, i18n.language]);
+        items: [
+          {
+            component: CNavItem,
+            name: t("ProfessorActivity"),
+            to: SidebarRoutes.ProfessorActivityByAcademicYear,
+            icon: <FaChalkboardTeacher className="nav-icon" />,
+          },
+          {
+            component: CNavItem,
+            name: t("DepartmentWiseDistribution"),
+            to: SidebarRoutes.DepartmentWiseDistribution,
+            icon: <FaSitemap className="nav-icon" />,
+          },
+          {
+            component: CNavItem,
+            name: t("CourseLoadAnalysis"),
+            to: SidebarRoutes.CourseLoadAnalysis,
+            icon: <FaRegCalendarAlt className="nav-icon" />,
+          },
+          {
+            component: CNavItem,
+            name: t("GenderDistribution"),
+            to: SidebarRoutes.GenderDistribution,
+            icon: <PiGenderIntersexDuotone className="nav-icon" />,
+          },
+        ],
+      },
+      {
+        component: CNavTitle,
+        name: t("Extras"),
+      },
+      {
+        component: CNavItem,
+        name: t("Settings"),
+        to: SidebarRoutes.Settings,
+        icon: <LuSettings2 className="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: t("Translations"),
+        to: SidebarRoutes.Translations,
+        icon: <HiLanguage className="nav-icon" />,
+        admin: true,
+      },
+    ],
+    [isAdmin, i18n.language]
+  );
   //#endregion
 
   //#region functions
-  const filteredItems = isAdmin
-    ? items
-    : items.filter((item) => !item.admin);
+  const filteredItems = isAdmin ? items : items.filter((item) => !item.admin);
 
   const navLink = (name, icon, badge) => {
     return (
@@ -175,8 +196,8 @@ export const AppSidebarNav = () => {
       <Component
         {...(rest.to &&
           !rest.items && {
-          component: NavLink,
-        })}
+            component: NavLink,
+          })}
         key={index}
         {...rest}
       >
@@ -203,8 +224,10 @@ export const AppSidebarNav = () => {
   };
   //#endregion
 
-  return filteredItems &&
+  return (
+    filteredItems &&
     filteredItems.map((item, index) =>
       item.items ? navGroup(item, index) : navItem(item, index)
     )
+  );
 };

@@ -13,6 +13,7 @@ router.post('/restore/:id', auth, isAdminMiddleware, departmentController.restor
 
 router.get('/', departmentController.getAll);
 router.get('/:id', auth, departmentController.getOne);
+router.get('/faculty/:faculty_id', departmentController.getByFaculty);
 
 router.put('/:id', auth, isAdminMiddleware, departmentController.update);
 

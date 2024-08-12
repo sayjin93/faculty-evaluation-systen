@@ -39,6 +39,10 @@ export const getFaculty = createSelector(
   [selectSettings],
   (settings) => settings.faculty
 );
+export const getDepartment = createSelector(
+  [selectSettings],
+  (settings) => settings.department
+);
 
 //user
 export const getLoggedUser = createSelector(

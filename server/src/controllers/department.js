@@ -43,6 +43,32 @@ exports.getAll = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+exports.getByFaculty = async (req, res) => {
+  const { faculty_id } = req.params;
+
+  if (!faculty_id) {
+    return res.status(400).send({
+      message: 'Faculty ID can not be empty',
+    });
+  }
+
+  try {
+    const departments = await Department.findAll({
+      where: { faculty_id },
+      // attributes: ['id', 'key', 'name'], // Adjust attributes as needed
+    });
+
+    if (!departments || departments.length === 0) {
+      return res.status(404).send({ message: `No Departments found for Faculty with id=${faculty_id}` });
+    }
+
+    res.send(departments);
+  } catch (err) {
+    res.status(500).send({
+      message: `Error retrieving Departments for Faculty with id=${faculty_id}`,
+    });
+  }
+};
 exports.getOne = async (req, res) => {
   const { id } = req.params;
 

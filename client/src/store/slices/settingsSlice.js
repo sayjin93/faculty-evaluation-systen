@@ -7,6 +7,7 @@ const settingsSlice = createSlice({
     firstLogin: true,
     languages: ["en"],
     faculty: null,
+    department: null,
   },
   reducers: {
     changeAcademicYear: (state, action) => {
@@ -21,9 +22,12 @@ const settingsSlice = createSlice({
     setFaculty: (state, action) => {
       state.faculty = action.payload;
     },
+    setDepartment: (state, action) => {
+      state.department = action.payload;
+    },
   },
 });
 
-export const { changeAcademicYear, setFirstLogin, setLanguages, setFaculty } =
+export const { changeAcademicYear, setFirstLogin, setLanguages, setFaculty, setDepartment } =
   settingsSlice.actions;
 export const settingsReducer = settingsSlice.reducer;

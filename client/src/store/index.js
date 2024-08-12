@@ -15,6 +15,7 @@ import {
   setFirstLogin,
   setLanguages,
   setFaculty,
+  setDepartment
 } from "./slices/settingsSlice";
 import { sidebarReducer, changeSidebarState } from "./slices/sidebarSlice";
 import { toastReducer, showToast, hideToast } from "./slices/toastSlice";
@@ -67,5 +68,6 @@ export {
   setUser,
   setFirstLogin,
   setLanguages,
-  setFaculty
+  setFaculty,
+  setDepartment
 };
