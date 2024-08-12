@@ -15,7 +15,6 @@ import {
   CSpinner,
 } from "@coreui/react";
 import { CChart } from "@coreui/react-chartjs";
-import { getStyle } from "@coreui/utils";
 
 //react-icons
 import { FaRegCalendarAlt } from "react-icons/fa";
@@ -23,7 +22,6 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 //hooks
 import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
-import { getColorForLabel } from "src/hooks";
 
 //store
 import { getAcademicYear, getFaculty } from "src/store/selectors";
@@ -296,44 +294,32 @@ const CourseLoadAnalysis = () => {
                       datasets: [
                         {
                           label: t("BachelorCourses"),
-                          backgroundColor: getColorForLabel("Courses"),
+                          backgroundColor: "rgb(54, 162, 235, .4)",
+                          borderColor: "rgb(54, 162, 235)",
+                          borderWidth: 1,
                           data: items.map((item) => item.bachelorCourses),
                         },
                         {
                           label: t("MasterCourses"),
-                          backgroundColor: getColorForLabel("Papers"),
+                          backgroundColor: "rgb(255, 99, 132, .4)",
+                          borderColor: "rgb(255, 99, 132)",
+                          borderWidth: 1,
                           data: items.map((item) => item.masterCourses),
                         },
                       ],
                     }}
                     options={{
-                      plugins: {
-                        legend: {
-                          labels: {
-                            color: getStyle("--cui-body-color"),
-                          },
-                        },
-                      },
+                      responsive: true,
                       scales: {
                         x: {
                           stacked: true,
-                          grid: {
-                            color: getStyle("--cui-border-color-translucent"),
-                          },
-                          ticks: {
-                            color: getStyle("--cui-body-color"),
-                          },
                         },
                         y: {
                           stacked: true,
-                          grid: {
-                            color: getStyle("--cui-border-color-translucent"),
-                          },
+                          beginAtZero: true,
                           ticks: {
-                            color: getStyle("--cui-body-color"),
-                            stepSize: 1, // Set the step size to 1
+                            stepSize: 1,
                           },
-                          min: 0, // Ensures the axis begins at 0
                         },
                       },
                     }}
@@ -358,38 +344,23 @@ const CourseLoadAnalysis = () => {
                       datasets: [
                         {
                           label: t("WeeklyHours"),
-                          borderColor: getColorForLabel("Books"),
+                          backgroundColor: "rgb(75, 192, 192)",
+                          borderColor: "rgb(75, 192, 192, .2)",
+                          pointBorderWidth: 3,
+                          pointBorderColor: "rgb(75, 192, 192)",
                           fill: false,
                           data: items.map((item) => item.weekHours),
                         },
                       ],
                     }}
                     options={{
-                      plugins: {
-                        legend: {
-                          labels: {
-                            color: getStyle("--cui-body-color"),
-                          },
-                        },
-                      },
+                      responsive: true,
                       scales: {
-                        x: {
-                          grid: {
-                            color: getStyle("--cui-border-color-translucent"),
-                          },
-                          ticks: {
-                            color: getStyle("--cui-body-color"),
-                          },
-                        },
                         y: {
-                          grid: {
-                            color: getStyle("--cui-border-color-translucent"),
-                          },
+                          beginAtZero: true,
                           ticks: {
-                            color: getStyle("--cui-body-color"),
                             stepSize: 1, // Set the step size to 1
                           },
-                          min: 0, // Ensures the axis begins at 0
                         },
                       },
                     }}

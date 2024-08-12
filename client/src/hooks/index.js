@@ -115,11 +115,17 @@ export function arraysAreEqual(arr1, arr2) {
 // helpers.js (or any utility file)
 export function getColorForLabel(label) {
   const colorMap = {
-    'Courses': '#e55353',           // Red
-    'Papers': '#f9b115 ',           // Oranfe
-    'Books': '#2eb85c ',            // Green
-    'Conferences': '#321fdb ',      // Blue
-    'Communities': '#9da5b1 '       // Gray
+    'Courses': 'rgba(255, 99, 132, 1)',             // Red
+    'Papers': 'rgba(255, 159, 64, 1)',              // Orange
+    'Books': 'rgba(75, 192, 192, 1)',               // Green
+    'Conferences': 'rgba(54, 162, 235, 1)',         // Blue
+    'Communities': 'rgba(201, 203, 207, 1)',        // Gray
+
+    'CoursesOpacity': 'rgba(255, 99, 132, .4)',     // Red
+    'PapersOpacity': 'rgba(255, 159, 64, .4)',      // Orange
+    'BooksOpacity': 'rgba(75, 192, 192, .4)',       // Green
+    'ConferencesOpacity': 'rgba(54, 162, 235, .4)', // Blue
+    'CommunitiesOpacity': 'rgba(201, 203, 207, .4)' // Gray
   };
 
   return colorMap[label] || '#000000'; // Default to black if label not found

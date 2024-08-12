@@ -18,7 +18,6 @@ import {
   CSpinner,
 } from "@coreui/react";
 import { CChart } from "@coreui/react-chartjs";
-import { getStyle } from "@coreui/utils";
 
 //react-icons
 import { FaSitemap } from "react-icons/fa";
@@ -269,66 +268,59 @@ const DepartmentWiseDistribution = () => {
 
               <CCardBody ref={chartRef}>
                 <CChart
-                  id="departmentChart"
                   type="bar"
                   data={{
                     labels: items.map((item) => t(item.department)),
                     datasets: [
                       {
                         label: t("Courses"),
-                        backgroundColor: getColorForLabel("Courses"),
+                        backgroundColor: getColorForLabel("CoursesOpacity"),
+                        borderColor: getColorForLabel("Courses"),
+                        borderWidth: 1,
                         data: items.map((item) => item.courses),
                       },
                       {
                         label: t("Papers"),
-                        backgroundColor: getColorForLabel("Papers"),
+                        backgroundColor: getColorForLabel("PapersOpacity"),
+                        borderColor: getColorForLabel("Papers"),
+                        borderWidth: 1,
                         data: items.map((item) => item.papers),
                       },
                       {
                         label: t("Books"),
-                        backgroundColor: getColorForLabel("Books"),
+                        backgroundColor: getColorForLabel("BooksOpacity"),
+                        borderColor: getColorForLabel("Books"),
+                        borderWidth: 1,
                         data: items.map((item) => item.books),
                       },
                       {
                         label: t("Conferences"),
-                        backgroundColor: getColorForLabel("Conferences"),
+                        backgroundColor: getColorForLabel("ConferencesOpacity"),
+                        borderColor: getColorForLabel("Conferences"),
+                        borderWidth: 1,
                         data: items.map((item) => item.conferences),
                       },
                       {
                         label: t("CommunityServices"),
-                        backgroundColor: getColorForLabel("Communities"),
+                        backgroundColor: getColorForLabel("CommunitiesOpacity"),
+                        borderColor: getColorForLabel("Communities"),
+                        borderWidth: 1,
                         data: items.map((item) => item.communityServices),
                       },
                     ],
                   }}
                   options={{
-                    plugins: {
-                      legend: {
-                        labels: {
-                          color: getStyle("--cui-body-color"),
-                        },
-                      },
-                    },
+                    responsive: true,
                     scales: {
                       x: {
                         stacked: true,
-                        grid: {
-                          color: getStyle("--cui-border-color-translucent"),
-                        },
-                        ticks: {
-                          color: getStyle("--cui-body-color"),
-                        },
                       },
                       y: {
                         stacked: true,
-                        grid: {
-                          color: getStyle("--cui-border-color-translucent"),
-                        },
+                        beginAtZero: true,
                         ticks: {
-                          color: getStyle("--cui-body-color"),
-                          stepSize: 1, // Set the step size to 1
+                          stepSize: 1,
                         },
-                        min: 0, // Ensures the axis begins at 0
                       },
                     },
                   }}

@@ -15,7 +15,6 @@ import {
   CSpinner,
 } from "@coreui/react";
 import { CChart } from "@coreui/react-chartjs";
-import { getStyle } from "@coreui/utils";
 
 //react-icons
 import { FaRegCalendarAlt } from "react-icons/fa";
@@ -50,8 +49,9 @@ const GenderDistribution = () => {
   //#endregion
 
   //#region refs
-  const coursesChartRef = useRef(null);
-  const weeklyHoursChartRef = useRef(null);
+  // const coursesChartRef = useRef(null);
+  const chartRefs = useRef([]);
+  const involvementInActivitiesChartRef = useRef(null);
   //#endregion
 
   //#region selectors
@@ -83,15 +83,19 @@ const GenderDistribution = () => {
   };
 
   const exportPDF = () => {
-    const doc = new jsPDF();
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "px",
+      format: "a4",
+    });
     const logoWidth = 60;
     const logoHeight = 30;
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const logoXPosition = (pageWidth - logoWidth) / 2; // Center logo horizontally
+    const logoXPosition = (pageWidth - logoWidth) / 2;
     const logoYPosition = 10;
     const textYPosition = logoYPosition + logoHeight + 10;
-    const spacingBetweenTables = 10;
+    const spacingBetweenSections = 10;
     let currentY = textYPosition + 20;
 
     // Add university logo
@@ -104,7 +108,7 @@ const GenderDistribution = () => {
       logoHeight
     );
 
-    // Calculate text positions for centering
+    // Centered text for Faculty and Academic Year
     const facultyText = t(faculty.key);
     const facultyTextWidth = doc.getTextWidth(facultyText);
     const facultyTextXPosition = (pageWidth - facultyTextWidth) / 2;
@@ -113,87 +117,129 @@ const GenderDistribution = () => {
     const academicYearTextWidth = doc.getTextWidth(academicYearText);
     const academicYearTextXPosition = (pageWidth - academicYearTextWidth) / 2;
 
-    // Add faculty and academic year text, centered
     doc.text(facultyText, facultyTextXPosition, textYPosition);
     doc.text(academicYearText, academicYearTextXPosition, textYPosition + 10);
 
-    // Generate and add the table to the PDF
-    const tableData = items.map((item) => [
-      item.professor,
-      item.courses,
-      item.weekHours,
-      item.bachelorCourses,
-      item.masterCourses,
+    // Gender Distribution Table
+    currentY += spacingBetweenSections;
+    const genderTableData = items.genderDistribution.map((item) => [
+      t(item.department),
+      item.male,
+      item.female,
+      item.total,
     ]);
 
     autoTable(doc, {
-      head: [
-        [
-          t("Professor"),
-          t("Courses"),
-          t("WeekHours"),
-          t("BachelorCourses"),
-          t("MasterCourses"),
-        ],
-      ],
-      body: tableData,
+      head: [[t("Department"), t("Male"), t("Female"), t("Total")]],
+      body: genderTableData,
       startY: currentY,
       theme: "grid",
       styles: { cellPadding: 3, fontSize: 10 },
       didDrawPage: (data) => {
-        currentY = data.cursor.y + spacingBetweenTables; // Update currentY after the table
+        currentY = data.cursor.y + spacingBetweenSections;
       },
     });
 
-    // Function to add a new page if needed
+    // Check if a new page is needed
     const checkAndAddPage = (requiredHeight) => {
       if (currentY + requiredHeight > pageHeight) {
         doc.addPage();
-        currentY = 20; // reset Y position on the new page
+        currentY = 20;
       }
     };
 
-    // Capture and add the Courses Distribution chart
-    const coursesChartCanvas =
-      coursesChartRef.current.getElementsByTagName("canvas")[0];
-    if (coursesChartCanvas) {
-      const chartHeight = 80;
-      const chartWidth = pageWidth - 20;
-      checkAndAddPage(chartHeight + spacingBetweenTables);
-      const coursesChartImage = coursesChartCanvas.toDataURL("image/png");
-      doc.addImage(
-        coursesChartImage,
-        "PNG",
-        10,
-        currentY,
-        chartWidth,
-        chartHeight
-      );
-      currentY += chartHeight + spacingBetweenTables;
+    const chartWidth = (pageWidth - 30) / 2; // Calculate width for 2 charts in a row
+    const chartHeight = chartWidth; // Maintain aspect ratio
+
+    let chartsInRow = 0;
+    let startX = 10; // Initial x position for the first chart
+
+    // Courses Distribution Chart with headers
+    items.genderDistribution.forEach((item, index) => {
+      // Add card header
+      doc.setFontSize(12);
+      doc.text(t(item.department), startX, currentY);
+      currentY += 6; // Move down for chart
+
+      const chartCanvas =
+        chartRefs.current[index]?.getElementsByTagName("canvas")[0];
+      if (chartCanvas) {
+        const chartImage = chartCanvas.toDataURL("image/png", 1.0); // Max quality
+
+        // Add chart image to PDF
+        doc.addImage(
+          chartImage,
+          "PNG",
+          startX,
+          currentY,
+          chartWidth,
+          chartHeight
+        );
+
+        // Move to the next chart position
+        chartsInRow += 1;
+        startX += chartWidth + 10; // Adjust x position for the next chart
+
+        if (chartsInRow === 2) {
+          // Reset to the next row after 2 charts
+          chartsInRow = 0;
+          startX = 10;
+          currentY += chartHeight + spacingBetweenSections + 10; // Add space for next row of charts
+          checkAndAddPage(chartHeight + spacingBetweenSections + 10);
+        } else {
+          currentY -= 6; // Adjust Y position to keep headers aligned
+        }
+      }
+    });
+
+    // Handle case where an odd number of charts leaves one chart alone
+    if (chartsInRow === 1) {
+      currentY += chartHeight + spacingBetweenSections + 10; // Add space for next row of charts
     }
 
-    // Capture and add the Weekly Hours chart
-    const weeklyHoursChartCanvas =
-      weeklyHoursChartRef.current.getElementsByTagName("canvas")[0];
-    if (weeklyHoursChartCanvas) {
-      const chartHeight = 80;
-      const chartWidth = pageWidth - 20;
-      checkAndAddPage(chartHeight + spacingBetweenTables);
-      const weeklyHoursChartImage =
-        weeklyHoursChartCanvas.toDataURL("image/png");
+    // Add Gender-wise Involvement in Activities Table
+    currentY += spacingBetweenSections;
+    checkAndAddPage(30); // Check if a new page is needed before adding the table
+    autoTable(doc, {
+      head: [[t("ActivityType"), t("Male"), t("Female"), t("Total")]],
+      body: activityParticipationData.map((item) => [
+        t(item.activityType),
+        item.maleParticipation,
+        item.femaleParticipation,
+        item.totalParticipation,
+      ]),
+      startY: currentY,
+      theme: "grid",
+      styles: { cellPadding: 3, fontSize: 10 },
+      didDrawPage: (data) => {
+        currentY = data.cursor.y + spacingBetweenSections;
+      },
+    });
+
+    // Add Radar Chart (Involvement in Activities Chart)
+    const radarChartCanvas =
+      involvementInActivitiesChartRef.current?.getElementsByTagName(
+        "canvas"
+      )[0];
+    if (radarChartCanvas) {
+      const radarChartImage = radarChartCanvas.toDataURL("image/png", 1.0); // Max quality
+
+      checkAndAddPage(chartHeight + spacingBetweenSections);
       doc.addImage(
-        weeklyHoursChartImage,
+        radarChartImage,
         "PNG",
         10,
         currentY,
-        chartWidth,
-        chartHeight
+        pageWidth - 20,
+        (pageWidth - 20) * 0.6 // Maintain aspect ratio
       );
     }
 
     // Save the PDF with a filename
     doc.save(
-      `${t("CourseLoadAnalysis")}_${t(faculty.key)}_${academicYear.year}.pdf`
+      `${t("GenderDistribution")}_${t(faculty.key)}_${
+        department ? department.key : ""
+      }.pdf`
     );
   };
   //#endregion
@@ -335,6 +381,7 @@ const GenderDistribution = () => {
             {items.genderDistribution.map((item, index) => (
               <CCol key={index}>
                 <CCard
+                  ref={(el) => (chartRefs.current[index] = el)}
                   textColor="primary"
                   className="border-primary border-top-primary border-top-3"
                 >
@@ -349,21 +396,15 @@ const GenderDistribution = () => {
                         datasets: [
                           {
                             backgroundColor: [
-                              getStyle("--cui-info"),
-                              getStyle("--cui-warning"),
-                            ], // Colors for male and female
+                              "rgb(54, 162, 235)",
+                              "rgb(255, 99, 132)",
+                            ],
                             data: [item.male, item.female], // Male and female data
                           },
                         ],
                       }}
                       options={{
-                        plugins: {
-                          legend: {
-                            labels: {
-                              color: getStyle("--cui-body-color"),
-                            },
-                          },
-                        },
+                        responsive: true,
                       }}
                     />
                   </CCardBody>
@@ -423,7 +464,7 @@ const GenderDistribution = () => {
                   <h6 className="m-0">{t("Chart")}</h6>
                 </CCardHeader>
 
-                <CCardBody>
+                <CCardBody ref={involvementInActivitiesChartRef}>
                   <CChart
                     type="radar"
                     data={{
@@ -501,23 +542,7 @@ const GenderDistribution = () => {
                       ],
                     }}
                     options={{
-                      plugins: {
-                        legend: {
-                          labels: {
-                            color: getStyle("--cui-body-color"),
-                          },
-                        },
-                      },
-                      scales: {
-                        r: {
-                          grid: {
-                            color: getStyle("--cui-border-color-translucent"),
-                          },
-                          ticks: {
-                            color: getStyle("--cui-body-color"),
-                          },
-                        },
-                      },
+                      responsive: true,
                     }}
                   />
                 </CCardBody>
