@@ -420,10 +420,10 @@ exports.getDepartmentWiseDistribution = async (req, res) => {
 exports.getCourseLoadAnalysis = async (req, res) => {
   try {
     // Extract the academic year ID and faculty ID from the request parameters
-    const { academicYearId, facultyId } = req.params;
+    const { academic_year_id, faculty_id } = req.params;
 
     // Fetch the academic year to ensure it exists
-    const academicYear = await AcademicYear.findByPk(academicYearId);
+    const academicYear = await AcademicYear.findByPk(academic_year_id);
     if (!academicYear) {
       return res.status(404).json({ error: 'Academic year not found' });
     }
@@ -436,12 +436,12 @@ exports.getCourseLoadAnalysis = async (req, res) => {
       include: [
         {
           model: Department,
-          where: { faculty_id: facultyId }, // Filter by faculty through the Department association
+          where: { faculty_id }, // Filter by faculty through the Department association
           attributes: [], // We don't need any department attributes, just the filtering
         },
         {
           model: Course,
-          where: { academic_year_id: academicYearId },
+          where: { academic_year_id },
           required: false, // Ensures professors with no courses are included
           attributes: ['name', 'week_hours', 'program'],
         },
@@ -469,5 +469,81 @@ exports.getCourseLoadAnalysis = async (req, res) => {
   } catch (error) {
     console.error('Error fetching course load analysis:', error);
     res.status(500).json({ error: 'An error occurred while fetching course load analysis.' });
+  }
+};
+exports.getGenderDistribution = async (req, res) => {
+  try {
+    const { faculty_id, department_id } = req.params;
+
+    // Fetch departments based on faculty_id and department_id
+    const departmentFilter = {
+      faculty_id,
+    };
+
+    if (Number(department_id) > 0) {
+      departmentFilter.id = department_id;
+    }
+
+    const departments = await Department.findAll({
+      where: departmentFilter,
+      include: {
+        model: Professor,
+        attributes: ['id', 'gender'],
+      },
+    });
+
+    if (!departments.length) {
+      return res.status(404).json({ message: 'No departments found for the provided faculty and department IDs.' });
+    }
+
+    // Initialize counters for report
+    const reportData = departments.map((department) => {
+      const maleCount = department.Professors.filter((professor) => professor.gender === 'm').length;
+      const femaleCount = department.Professors.filter((professor) => professor.gender === 'f').length;
+
+      return {
+        department: department.key,
+        male: maleCount,
+        female: femaleCount,
+        total: maleCount + femaleCount,
+      };
+    });
+
+    // Aggregate data for total participation in activities
+    const activitiesStats = {
+      publications: { male: 0, female: 0 },
+      conferences: { male: 0, female: 0 },
+      courses: { male: 0, female: 0 },
+      communityServices: { male: 0, female: 0 },
+    };
+
+    await Promise.all(departments.map((department) => Promise.all(department.Professors.map(async (professor) => {
+      const gender = professor.gender === 'm' ? 'male' : 'female';
+
+      // Count publications
+      const publicationCount = await Paper.count({ where: { professor_id: professor.id } });
+      activitiesStats.publications[gender] += publicationCount;
+
+      // Count conferences
+      const conferenceCount = await Conference.count({ where: { professor_id: professor.id } });
+      activitiesStats.conferences[gender] += conferenceCount;
+
+      // Count courses
+      const courseCount = await Course.count({ where: { professor_id: professor.id } });
+      activitiesStats.courses[gender] += courseCount;
+
+      // Count community services
+      const communityServiceCount = await Community.count({ where: { professor_id: professor.id } });
+      activitiesStats.communityServices[gender] += communityServiceCount;
+    }))));
+
+    // Respond with the aggregated data
+    return res.status(200).json({
+      genderDistribution: reportData,
+      activityParticipation: activitiesStats,
+    });
+  } catch (error) {
+    console.error('Error generating gender distribution report:', error);
+    return res.status(500).json({ message: 'An error occurred while generating the report.' });
   }
 };

@@ -34,7 +34,7 @@ import {
   getProfessors,
   getSelectedProfessor,
   getModal,
-  getIsAdmin
+  getIsAdmin,
 } from "src/store/selectors";
 
 //components
@@ -146,7 +146,8 @@ const Courses = () => {
         dispatch(
           showToast({
             type: "success",
-            content: t("Course") + " " + courseName + " " + t("WasAddedSuccessfully"),
+            content:
+              t("Course") + " " + courseName + " " + t("WasAddedSuccessfully"),
           })
         );
       })
@@ -207,7 +208,8 @@ const Courses = () => {
         dispatch(
           showToast({
             type: "success",
-            content: t("CourseWithId") + " " + id + " " + t("DeletedSuccessfully"),
+            content:
+              t("CourseWithId") + " " + id + " " + t("DeletedSuccessfully"),
           })
         );
       })
@@ -216,8 +218,7 @@ const Courses = () => {
           dispatch(
             showToast({
               type: "danger",
-              content:
-                t("CannotDeleteItDueToForeignKeyConstraint")
+              content: t("CannotDeleteItDueToForeignKeyConstraint"),
             })
           );
         } else {
@@ -264,11 +265,7 @@ const Courses = () => {
     const { id } = data;
 
     return (
-      <CButtonGroup
-        role="group"
-        aria-label="Button Actions"
-        size="sm"
-      >
+      <CButtonGroup role="group" aria-label="Button Actions" size="sm">
         <CButton
           color="primary"
           variant="outline"
@@ -290,19 +287,19 @@ const Courses = () => {
               ...modalOptions,
               selectedId: id,
             });
-            dispatch(setModal('deleteCourse'));
+            dispatch(setModal("deleteCourse"));
           }}
         >
           <CIcon icon={cilTrash} />
         </CButton>
       </CButtonGroup>
-    )
+    );
   };
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    isAdmin ? fetchAllCourses() : fetchAllCoursesByProfessor()
+    isAdmin ? fetchAllCourses() : fetchAllCoursesByProfessor();
   }, [status]);
 
   useEffect(() => {
@@ -332,11 +329,7 @@ const Courses = () => {
           <SelectBoxProfessors className="mb-3" />
 
           <CustomDataGrid dataSource={filteredItems}>
-            <Column
-              dataField="name"
-              caption={t("Name")}
-              dataType="string"
-            />
+            <Column dataField="name" caption={t("Name")} dataType="string" />
             <Column
               dataField="number"
               caption={t("Number")}
@@ -347,7 +340,6 @@ const Courses = () => {
               dataField="semester"
               caption={t("Semester")}
               dataType="number"
-              width={80}
             />
             <Column
               alignment="center"
@@ -360,12 +352,14 @@ const Courses = () => {
               caption={t("Program")}
               cellRender={cellRenderProgram}
             />
-            {isAdmin && <Column
-              alignment="left"
-              dataField="professor_full_name"
-              caption={t("Professor")}
-              dataType="string"
-            />}
+            {isAdmin && (
+              <Column
+                alignment="left"
+                dataField="professor_full_name"
+                caption={t("Professor")}
+                dataType="string"
+              />
+            )}
             <Column
               dataField="createdAt"
               caption={t("CreatedAt")}
@@ -385,7 +379,6 @@ const Courses = () => {
               cellRender={cellRenderActions}
             />
           </CustomDataGrid>
-
         </CCardBody>
       </CCard>
 
@@ -393,7 +386,6 @@ const Courses = () => {
         id="editCourse"
         backdrop="static"
         visible={modal.isOpen && modal.id === "editCourse"}
-
         onClose={() => {
           dispatch(setModal());
           setFormData(defaultFormData);
@@ -475,28 +467,30 @@ const Courses = () => {
               <option value="Master">{t("Master")}</option>
             </CFormSelect>
 
-            {isAdmin && <CFormSelect
-              className="cursor"
-              required
-              feedbackInvalid={t("PleaseSelectAProfessor")}
-              floatingClassName="mb-3"
-              floatingLabel={t("Professor")}
-              value={formData.professor}
-              onChange={(event) => handleInputChange(event, "professor")}
-            >
-              <option value="" disabled>
-                {t("Choose") + "..."}
-              </option>
-              {professors.map((professor) => {
-                const fullName =
-                  professor.first_name + " " + professor.last_name;
-                return (
-                  <option key={professor.id} value={professor.id}>
-                    {fullName}
-                  </option>
-                );
-              })}
-            </CFormSelect>}
+            {isAdmin && (
+              <CFormSelect
+                className="cursor"
+                required
+                feedbackInvalid={t("PleaseSelectAProfessor")}
+                floatingClassName="mb-3"
+                floatingLabel={t("Professor")}
+                value={formData.professor}
+                onChange={(event) => handleInputChange(event, "professor")}
+              >
+                <option value="" disabled>
+                  {t("Choose") + "..."}
+                </option>
+                {professors.map((professor) => {
+                  const fullName =
+                    professor.first_name + " " + professor.last_name;
+                  return (
+                    <option key={professor.id} value={professor.id}>
+                      {fullName}
+                    </option>
+                  );
+                })}
+              </CFormSelect>
+            )}
           </CModalBody>
 
           <CModalFooter>
@@ -524,11 +518,8 @@ const Courses = () => {
           dispatch(setModal());
         }}
       >
-
         <CModalHeader>
-          <CModalTitle>
-            {t("Confirmation")}
-          </CModalTitle>
+          <CModalTitle>{t("Confirmation")}</CModalTitle>
         </CModalHeader>
 
         <CModalBody>
@@ -539,16 +530,18 @@ const Courses = () => {
           <CButton
             color="light"
             onClick={() => {
-              dispatch(setModal())
+              dispatch(setModal());
             }}
           >
             {t("Cancel")}
           </CButton>
-          <CButton onClick={() => deleteCourse(modalOptions.selectedId)} color="danger">
+          <CButton
+            onClick={() => deleteCourse(modalOptions.selectedId)}
+            color="danger"
+          >
             {t("Delete")}
           </CButton>
         </CModalFooter>
-
       </CModal>
     </>
   );

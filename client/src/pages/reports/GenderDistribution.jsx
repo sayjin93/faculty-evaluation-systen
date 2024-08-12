@@ -26,12 +26,15 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 import { getColorForLabel } from "src/hooks";
 
 //store
-import { getAcademicYear, getFaculty } from "src/store/selectors";
+import {
+  getAcademicYear,
+  getFaculty,
+  getDepartment,
+} from "src/store/selectors";
 
 //components
 import SelectBoxFaculty from "src/components/SelectBoxFaculty";
 import SelectBoxDepartment from "src/components/SelectBoxDepartment";
-import SelectBoxAcademicYear from "src/components/SelectBoxAcademicYear";
 import CustomDataGrid from "src/components/CustomDataGrid";
 
 //jspdf
@@ -54,6 +57,7 @@ const GenderDistribution = () => {
 
   //#region selectors
   const faculty = useSelector(getFaculty);
+  const department = useSelector(getDepartment);
   const academicYear = useSelector(getAcademicYear);
   //#endregion
 
@@ -62,10 +66,13 @@ const GenderDistribution = () => {
   const [items, setItems] = useState(null);
   //#endregion
 
+  console.log("items", items);
+
   //#region functions
   const fetchReport = async () => {
+    const departmentId = department?.id || 0;
     await api
-      .get(`/report/course-load-analysis/${academicYear.id}/${faculty.id}`)
+      .get(`/report/gender-distribution/${faculty.id}/${departmentId}`)
       .then((response) => {
         setItems(response.data);
       })
@@ -195,7 +202,7 @@ const GenderDistribution = () => {
   //#region useEffect
   useEffect(() => {
     fetchReport();
-  }, [faculty, academicYear]);
+  }, [faculty, department]);
   //#endregion
 
   return (
@@ -217,7 +224,6 @@ const GenderDistribution = () => {
           <CRow
             xs={{ cols: 1, gutterY: 3 }}
             md={{ cols: 2, gutterX: 4 }}
-            xl={{ cols: 3, gutterX: 4 }}
             className="align-items-start"
           >
             <CCol>
@@ -226,14 +232,11 @@ const GenderDistribution = () => {
             <CCol>
               <SelectBoxDepartment />
             </CCol>
-            <CCol md={12}>
-              <SelectBoxAcademicYear local />
-            </CCol>
           </CRow>
         </CCardBody>
       </CCard>
 
-      {isLoading ? (
+      {isLoading || !isLoading ? (
         <div className="d-flex justify-content-center align-items-center">
           <CSpinner color="primary" />
         </div>
