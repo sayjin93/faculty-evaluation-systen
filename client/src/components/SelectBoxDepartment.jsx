@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
@@ -10,10 +10,14 @@ import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
-import { setDepartment } from "src/store";
-import { getFaculty } from "src/store/selectors";
+import { setDepartments, setSelectedDepartment } from "src/store";
+import {
+  getSelectedFaculty,
+  getDepartments,
+  getSelectedDepartment,
+} from "src/store/selectors";
 
-const SelectBoxDepartment = ({ className = "" }) => {
+const SelectBoxDepartment = ({ className = "", showAll = true }) => {
   //#region constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -21,11 +25,9 @@ const SelectBoxDepartment = ({ className = "" }) => {
   //#endregion
 
   //#region selectors
-  const faculty = useSelector(getFaculty);
-  //#endregion
-
-  //#region states
-  const [departments, setDepartments] = useState([]);
+  const selectedFaculty = useSelector(getSelectedFaculty);
+  const departments = useSelector(getDepartments);
+  const selectedDepartment = useSelector(getSelectedDepartment);
   //#endregion
 
   //#region functions
@@ -33,7 +35,7 @@ const SelectBoxDepartment = ({ className = "" }) => {
     const selectedDepartmentId = Number(e.target.value);
 
     if (selectedDepartmentId === 0) {
-      dispatch(setDepartment(null));
+      dispatch(setSelectedDepartment({ id: 0, key: "All", faculty_id: 0 }));
     } else {
       const selectedDepartment = departments.find(
         (department) => department.id === selectedDepartmentId
@@ -41,20 +43,36 @@ const SelectBoxDepartment = ({ className = "" }) => {
 
       if (selectedDepartment) {
         dispatch(
-          setDepartment({
+          setSelectedDepartment({
             id: selectedDepartment.id,
             key: selectedDepartment.key,
+            faculty_id: selectedDepartment.faculty_id,
           })
         );
       }
     }
   };
 
-  const fetchFaculties = async () => {
+  const fetchDepartments = async () => {
     await api
-      .get(`/department/faculty/${faculty.id}`)
+      .get(`/department/faculty/${selectedFaculty.id}`)
       .then((response) => {
-        setDepartments(response.data);
+        const filteredDepartments = response.data.map(
+          ({ id, key, faculty_id, deletedAt }) => ({
+            id,
+            key,
+            faculty_id,
+            deletedAt,
+          })
+        ); // Extracting only id, key, faculty_id and deletedAt
+        dispatch(setDepartments(filteredDepartments));
+
+        if (showAll) {
+          dispatch(setSelectedDepartment({ id: 0, key: "All", faculty_id: 0 })); // Dispatching selectedDepartment
+        } else {
+          const { id, key, faculty_id } = filteredDepartments[0]; // Destructuring id, key and faculty_id from first item
+          dispatch(setSelectedDepartment({ id, key, faculty_id })); // Dispatching selectedDepartment
+        }
       })
       .catch((error) => {
         handleError(error);
@@ -64,20 +82,24 @@ const SelectBoxDepartment = ({ className = "" }) => {
 
   //#region useEffect
   useEffect(() => {
-    fetchFaculties();
+    if (selectedFaculty?.id > 0) fetchDepartments();
 
     return () => {
-      dispatch(setDepartment(null));
+      dispatch(setSelectedDepartment({ id: 0, key: "All", faculty_id: 0 }));
     };
-  }, [faculty]);
+  }, [selectedFaculty]);
   //#endregion
 
   return (
     <CInputGroup className={className}>
       <CInputGroupText component="label">{t("Department")}</CInputGroupText>
-      <CFormSelect className="cursor" defaultValue={0} onChange={handleChange}>
-        <option key={0} value={0}>
-          {t("All")}
+      <CFormSelect
+        className="cursor"
+        value={selectedDepartment.id}
+        onChange={handleChange}
+      >
+        <option value={0} disabled={!showAll}>
+          {showAll ? t("All") : t("PleaseSelect")}
         </option>
 
         {departments

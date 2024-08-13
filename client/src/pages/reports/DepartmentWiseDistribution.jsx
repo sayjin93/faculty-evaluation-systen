@@ -28,7 +28,7 @@ import useErrorHandler from "src/hooks/useErrorHandler";
 import { capitalizeWords, getColorForLabel } from "src/hooks";
 
 //store
-import { getAcademicYear, getFaculty } from "src/store/selectors";
+import { getAcademicYear, getSelectedFaculty } from "src/store/selectors";
 
 //components
 import SelectBoxFaculty from "src/components/SelectBoxFaculty";
@@ -52,7 +52,7 @@ const DepartmentWiseDistribution = () => {
   //#endregion
 
   //#region selectors
-  const faculty = useSelector(getFaculty);
+  const selectedFaculty = useSelector(getSelectedFaculty);
   const academicYear = useSelector(getAcademicYear);
   //#endregion
 
@@ -65,7 +65,7 @@ const DepartmentWiseDistribution = () => {
   const fetchReport = async () => {
     await api
       .get(
-        `/report/department-wise-distribution/${academicYear.id}/${faculty.id}`
+        `/report/department-wise-distribution/${academicYear.id}/${selectedFaculty.id}`
       )
       .then((response) => {
         setItems(response.data);
@@ -99,7 +99,7 @@ const DepartmentWiseDistribution = () => {
     );
 
     // Calculate text positions for centering
-    const facultyText = t(faculty.key);
+    const facultyText = t(selectedFaculty.key);
     const facultyTextWidth = doc.getTextWidth(facultyText);
     const facultyTextXPosition = (pageWidth - facultyTextWidth) / 2;
 
@@ -159,7 +159,7 @@ const DepartmentWiseDistribution = () => {
 
     // Save the PDF with a filename
     doc.save(
-      `${t("DepartmentWiseDistribution")}_${t(faculty.key)}_${
+      `${t("DepartmentWiseDistribution")}_${t(selectedFaculty.key)}_${
         academicYear.year
       }.pdf`
     );
@@ -168,8 +168,8 @@ const DepartmentWiseDistribution = () => {
 
   //#region useEffect
   useEffect(() => {
-    fetchReport();
-  }, [faculty, academicYear]);
+    if (selectedFaculty.id > 0) fetchReport();
+  }, [selectedFaculty, academicYear]);
   //#endregion
 
   return (

@@ -1,11 +1,8 @@
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-
 import { showToast, setFirstLogin } from "../store";
 
 const useErrorHandler = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleError = (error) => {
     if (error.code === "ERR_NETWORK") {
@@ -17,13 +14,6 @@ const useErrorHandler = () => {
         })
       );
     } else if (error.code === "ERR_BAD_REQUEST") {
-      // Remove the JWT token from the Local Storage
-      localStorage.removeItem("jwt_token");
-
-      // Redirect the user to the login page
-      navigate("/login", { replace: true });
-
-
       // Dispatches a Redux action to show a danger toast with the error message or status text.
       dispatch(
         showToast({

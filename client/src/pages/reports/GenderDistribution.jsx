@@ -24,11 +24,7 @@ import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
-import {
-  getAcademicYear,
-  getFaculty,
-  getDepartment,
-} from "src/store/selectors";
+import { getSelectedFaculty, getSelectedDepartment } from "src/store/selectors";
 
 //components
 import SelectBoxFaculty from "src/components/SelectBoxFaculty";
@@ -49,45 +45,40 @@ const GenderDistribution = () => {
   //#endregion
 
   //#region refs
-  // const coursesChartRef = useRef(null);
   const chartRefs = useRef([]);
   const involvementInActivitiesChartRef = useRef(null);
   //#endregion
 
   //#region selectors
-  const faculty = useSelector(getFaculty);
-  const department = useSelector(getDepartment);
-  const academicYear = useSelector(getAcademicYear);
+  const selectedFaculty = useSelector(getSelectedFaculty);
+  const selectedDepartment = useSelector(getSelectedDepartment);
   //#endregion
 
   //#region states
-  const [isLoading, setIsLoading] = useState(true);
   const [items, setItems] = useState(null);
   //#endregion
 
-  console.log("items", items);
-
   //#region functions
   const fetchReport = async () => {
-    const departmentId = department?.id || 0;
-    await api
-      .get(`/report/gender-distribution/${faculty.id}/${departmentId}`)
-      .then((response) => {
-        setItems(response.data);
-      })
-      .catch((error) => {
-        handleError(error);
-      });
-
-    setIsLoading(false);
+    if (
+      selectedDepartment.faculty_id === 0 ||
+      selectedDepartment.faculty_id === selectedFaculty.id
+    ) {
+      await api
+        .get(
+          `/report/gender-distribution/${selectedFaculty.id}/${selectedDepartment.id}`
+        )
+        .then((response) => {
+          setItems(response.data);
+        })
+        .catch((error) => {
+          handleError(error);
+        });
+    }
   };
 
   const exportPDF = () => {
-    const doc = new jsPDF({
-      orientation: "portrait",
-      unit: "px",
-      format: "a4",
-    });
+    const doc = new jsPDF();
     const logoWidth = 60;
     const logoHeight = 30;
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -108,26 +99,29 @@ const GenderDistribution = () => {
       logoHeight
     );
 
-    // Centered text for Faculty and Academic Year
-    const facultyText = t(faculty.key);
+    // Centered text for Faculty and Departmeny
+    const facultyText = t(selectedFaculty.key);
     const facultyTextWidth = doc.getTextWidth(facultyText);
     const facultyTextXPosition = (pageWidth - facultyTextWidth) / 2;
 
-    const academicYearText = `${t("AcademicYear")}: ${academicYear.year}`;
-    const academicYearTextWidth = doc.getTextWidth(academicYearText);
-    const academicYearTextXPosition = (pageWidth - academicYearTextWidth) / 2;
+    const departmentText = `${t("Department")}: ${
+      selectedDepartment.id > 0 ? t(selectedDepartment.key) : t("All")
+    }`;
+    const departmentTextWidth = doc.getTextWidth(departmentText);
+    const departmentTextXPosition = (pageWidth - departmentTextWidth) / 2;
 
     doc.text(facultyText, facultyTextXPosition, textYPosition);
-    doc.text(academicYearText, academicYearTextXPosition, textYPosition + 10);
+    doc.text(departmentText, departmentTextXPosition, textYPosition + 10);
 
     // Gender Distribution Table
     currentY += spacingBetweenSections;
-    const genderTableData = items.genderDistribution.map((item) => [
-      t(item.department),
-      item.male,
-      item.female,
-      item.total,
-    ]);
+    const genderTableData =
+      items?.genderDistribution?.map((item) => [
+        t(item.department),
+        item.male,
+        item.female,
+        item.total,
+      ]) || [];
 
     autoTable(doc, {
       head: [[t("Department"), t("Male"), t("Female"), t("Total")]],
@@ -237,8 +231,8 @@ const GenderDistribution = () => {
 
     // Save the PDF with a filename
     doc.save(
-      `${t("GenderDistribution")}_${t(faculty.key)}_${
-        department ? department.key : ""
+      `${t("GenderDistribution")}_${t(selectedFaculty.key)}_${
+        selectedDepartment.id > 0 ? selectedDepartment.key : ""
       }.pdf`
     );
   };
@@ -246,8 +240,8 @@ const GenderDistribution = () => {
 
   //#region useEffect
   useEffect(() => {
-    fetchReport();
-  }, [faculty, department]);
+    if (selectedFaculty.id > 0) fetchReport();
+  }, [selectedFaculty, selectedDepartment]);
   //#endregion
 
   // Data aggregation for the "Gender-wise Involvement in Activities" table
@@ -325,11 +319,7 @@ const GenderDistribution = () => {
         </CCardBody>
       </CCard>
 
-      {isLoading ? (
-        <div className="d-flex justify-content-center align-items-center">
-          <CSpinner color="primary" />
-        </div>
-      ) : items ? (
+      {items ? (
         <>
           <CRow className="mb-4">
             <CCol>

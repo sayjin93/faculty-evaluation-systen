@@ -154,6 +154,7 @@ exports.getAll = async (req, res) => {
       gender: professor.gender === 'm' ? 'Male' : 'Female',
       username: professor.username,
       email: professor.email,
+      department_id: professor.department_id,
       is_verified: professor.is_verified,
       createdAt: professor.createdAt,
       updatedAt: professor.updatedAt,

@@ -14,13 +14,12 @@ import {
   changeAcademicYear,
   setFirstLogin,
   setLanguages,
-  setFaculty,
-  setDepartment
 } from "./slices/settingsSlice";
 import { sidebarReducer, changeSidebarState } from "./slices/sidebarSlice";
 import { toastReducer, showToast, hideToast } from "./slices/toastSlice";
 import { userReducer, setUser } from "./slices/userSlice";
-
+import { facultiesReducer, setFaculties, setSelectedFaculty } from "./slices/facultySlice";
+import { departmentsReducer, setDepartments, setSelectedDepartment } from "./slices/departmentSlice";
 // Combine all your reducers using combineReducers
 const rootReducer = combineReducers({
   modal: modalReducer,
@@ -29,6 +28,8 @@ const rootReducer = combineReducers({
   sidebar: sidebarReducer,
   toast: toastReducer,
   user: userReducer,
+  faculties: facultiesReducer,
+  departments: departmentsReducer
 });
 
 // Configure redux-persist
@@ -59,15 +60,13 @@ export const persistor = persistStore(store);
 export {
   store,
   setModal,
-  setProfessors,
-  setSelectedProfessor,
+  setProfessors, setSelectedProfessor,
   changeAcademicYear,
   changeSidebarState,
-  showToast,
-  hideToast,
+  showToast, hideToast,
   setUser,
   setFirstLogin,
   setLanguages,
-  setFaculty,
-  setDepartment
+  setFaculties, setSelectedFaculty,
+  setDepartments, setSelectedDepartment
 };

@@ -24,7 +24,7 @@ import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
-import { getAcademicYear, getFaculty } from "src/store/selectors";
+import { getAcademicYear, getSelectedFaculty } from "src/store/selectors";
 
 //components
 import SelectBoxAcademicYear from "src/components/SelectBoxAcademicYear";
@@ -50,7 +50,7 @@ const CourseLoadAnalysis = () => {
   //#endregion
 
   //#region selectors
-  const faculty = useSelector(getFaculty);
+  const selectedFaculty = useSelector(getSelectedFaculty);
   const academicYear = useSelector(getAcademicYear);
   //#endregion
 
@@ -62,7 +62,9 @@ const CourseLoadAnalysis = () => {
   //#region functions
   const fetchReport = async () => {
     await api
-      .get(`/report/course-load-analysis/${academicYear.id}/${faculty.id}`)
+      .get(
+        `/report/course-load-analysis/${academicYear.id}/${selectedFaculty.id}`
+      )
       .then((response) => {
         setItems(response.data);
       })
@@ -96,7 +98,7 @@ const CourseLoadAnalysis = () => {
     );
 
     // Calculate text positions for centering
-    const facultyText = t(faculty.key);
+    const facultyText = t(selectedFaculty.key);
     const facultyTextWidth = doc.getTextWidth(facultyText);
     const facultyTextXPosition = (pageWidth - facultyTextWidth) / 2;
 
@@ -184,15 +186,17 @@ const CourseLoadAnalysis = () => {
 
     // Save the PDF with a filename
     doc.save(
-      `${t("CourseLoadAnalysis")}_${t(faculty.key)}_${academicYear.year}.pdf`
+      `${t("CourseLoadAnalysis")}_${t(selectedFaculty.key)}_${
+        academicYear.year
+      }.pdf`
     );
   };
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    fetchReport();
-  }, [faculty, academicYear]);
+    if (selectedFaculty.id > 0) fetchReport();
+  }, [selectedFaculty, academicYear]);
   //#endregion
 
   return (

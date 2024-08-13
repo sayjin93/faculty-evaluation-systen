@@ -42,6 +42,8 @@ import { getModal } from "src/store/selectors";
 
 //components
 import CustomDataGrid from "src/components/CustomDataGrid";
+import SelectBoxFaculty from "src/components/SelectBoxFaculty";
+import SelectBoxDepartment from "src/components/SelectBoxDepartment";
 
 const Professors = () => {
   //#region constants
@@ -57,7 +59,7 @@ const Professors = () => {
   const [items, setItems] = useState([]);
   const [formData, setFormData] = useState(null);
   const [validated, setValidated] = useState(false);
-  const [action, setAction] = useState(null)
+  const [action, setAction] = useState(null);
   //#endregion
 
   //#region functions
@@ -300,7 +302,7 @@ const Professors = () => {
           color="primary"
           variant="outline"
           onClick={() => {
-            const selectedProfessor = items.find(item => item.id === id);
+            const selectedProfessor = items.find((item) => item.id === id);
             setFormData(selectedProfessor);
             setAction("edit");
             dispatch(setModal("addEditProfessor"));
@@ -313,13 +315,17 @@ const Professors = () => {
           color={deletedAt ? "success" : "danger"}
           variant="outline"
           onClick={() => {
-            const selectedProfessor = items.find(item => item.id === id);
+            const selectedProfessor = items.find((item) => item.id === id);
             setFormData(selectedProfessor);
             setAction(deletedAt ? "restore" : "delete");
-            dispatch(setModal('deleteRestoreProfessor'));
+            dispatch(setModal("deleteRestoreProfessor"));
           }}
         >
-          {deletedAt ? <CIcon icon={cilMediaPlay} /> : <CIcon icon={cilTrash} />}
+          {deletedAt ? (
+            <CIcon icon={cilMediaPlay} />
+          ) : (
+            <CIcon icon={cilTrash} />
+          )}
         </CButton>
       </CButtonGroup>
     );
@@ -377,7 +383,11 @@ const Professors = () => {
                 caption={t("Username")}
                 dataType="string"
               />
-              <Column dataField="email" caption={t("Email")} dataType="string" />
+              <Column
+                dataField="email"
+                caption={t("Email")}
+                dataType="string"
+              />
               <Column
                 width={140}
                 alignment="center"
@@ -407,13 +417,18 @@ const Professors = () => {
                 dataType="string"
                 cellRender={cellRenderDeleted}
               >
-                <HeaderFilter dataSource={[{
-                  text: t('Deleted'),
-                  value: ['deletedAt', '<>', null],
-                }, {
-                  text: t('Active'),
-                  value: ['deletedAt', '=', null],
-                }]} />
+                <HeaderFilter
+                  dataSource={[
+                    {
+                      text: t("Deleted"),
+                      value: ["deletedAt", "<>", null],
+                    },
+                    {
+                      text: t("Active"),
+                      value: ["deletedAt", "=", null],
+                    },
+                  ]}
+                />
               </Column>
               <Column
                 dataField="createdAt"
@@ -461,9 +476,10 @@ const Professors = () => {
           </CModalHeader>
 
           <CModalBody>
-            <CRow>
-              <CCol xs={6} className="mb-3">
+            <CRow xs={{ cols: 2, gutter: 3 }} lg={{ cols: 3 }}>
+              <CCol>
                 <CFormInput
+                  required
                   type="text"
                   floatingLabel={t("FirstName")}
                   placeholder={t("FirstName")}
@@ -471,8 +487,9 @@ const Professors = () => {
                   onChange={(event) => handleFullName(event, "first_name")}
                 />
               </CCol>
-              <CCol xs={6} className="mb-3">
+              <CCol>
                 <CFormInput
+                  required
                   type="text"
                   floatingLabel={t("LastName")}
                   placeholder={t("LastName")}
@@ -480,21 +497,32 @@ const Professors = () => {
                   onChange={(event) => handleFullName(event, "last_name")}
                 />
               </CCol>
+              <CCol>
+                <CFormSelect
+                  floatingClassName="mb-3"
+                  floatingLabel={t("Gender")}
+                  onChange={(event) => handleInputChange(event, "gender")}
+                  value={formData?.gender}
+                >
+                  <option value="m">{t("Male")}</option>
+                  <option value="f">{t("Female")}</option>
+                </CFormSelect>
+              </CCol>
             </CRow>
 
-            <CFormSelect
-              floatingClassName="mb-3"
-              floatingLabel={t("Gender")}
-              onChange={(event) => handleInputChange(event, "gender")}
-              value={formData?.gender}
-            >
-              <option value="m">{t("Male")}</option>
-              <option value="f">{t("Female")}</option>
-            </CFormSelect>
+            <CRow xs={{ cols: 1, gutter: 3 }} className="mb-3">
+              <CCol>
+                <SelectBoxFaculty />
+              </CCol>
+              <CCol>
+                <SelectBoxDepartment showAll={false} />
+              </CCol>
+            </CRow>
 
-            <CRow>
-              <CCol xs={6} className="mb-3">
+            <CRow xs={{ cols: 2, gutter: 3 }} className="mb-3">
+              <CCol>
                 <CFormInput
+                  required
                   type="text"
                   floatingLabel={t("Username")}
                   placeholder={t("Username")}
@@ -502,8 +530,9 @@ const Professors = () => {
                   onChange={(event) => handleInputChange(event, "username")}
                 />
               </CCol>
-              <CCol xs={6} className="mb-3">
+              <CCol>
                 <CFormInput
+                  required
                   type="email"
                   floatingLabel={t("Email")}
                   placeholder={t("Email")}
@@ -514,8 +543,8 @@ const Professors = () => {
             </CRow>
 
             {action === "edit" && (
-              <CRow>
-                <CCol xs={12} className="mb-3">
+              <CRow xs={{ cols: 1, gutter: 3 }}>
+                <CCol>
                   <CFormCheck
                     type="checkbox"
                     label={t("Verified")}
@@ -562,8 +591,7 @@ const Professors = () => {
           <span>
             {action === "restore"
               ? t("AreYouSureToRestoreTheSelected") + " ?"
-              : t("AreYouSureToDeleteTheSelected") + " ?"
-            }
+              : t("AreYouSureToDeleteTheSelected") + " ?"}
           </span>
         </CModalBody>
 

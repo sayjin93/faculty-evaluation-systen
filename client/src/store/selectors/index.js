@@ -4,6 +4,8 @@ const selectModal = (state) => state.modal;
 const selectProfessors = (state) => state.professors;
 const selectSettings = (state) => state.settings;
 const selectUser = (state) => state.user;
+const selectFaculties = (state) => state.faculties;
+const selectDepartments = (state) => state.departments;
 
 //modal
 export const getModal = createSelector([selectModal], (modal) => modal);
@@ -35,10 +37,6 @@ export const getLanguages = createSelector(
   [selectSettings],
   (settings) => settings.languages
 );
-export const getFaculty = createSelector(
-  [selectSettings],
-  (settings) => settings.faculty
-);
 export const getDepartment = createSelector(
   [selectSettings],
   (settings) => settings.department
@@ -53,4 +51,24 @@ export const getLoggedUser = createSelector(
 export const getIsAdmin = createSelector(
   [selectUser],
   (user) => user.loggedUser.is_admin
+);
+
+//faculties
+export const getFaculties = createSelector(
+  [selectFaculties],
+  (faculties) => faculties.list
+);
+export const getSelectedFaculty = createSelector(
+  [selectFaculties],
+  (faculties) => faculties.selected
+);
+
+//faculties
+export const getDepartments = createSelector(
+  [selectDepartments],
+  (departments) => departments.list
+);
+export const getSelectedDepartment = createSelector(
+  [selectDepartments],
+  (departments) => departments.selected
 );

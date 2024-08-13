@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
@@ -10,8 +10,8 @@ import api from "src/hooks/api";
 import useErrorHandler from "src/hooks/useErrorHandler";
 
 //store
-import { setFaculty } from "src/store";
-import { getFaculty } from "src/store/selectors";
+import { setFaculties, setSelectedFaculty } from "src/store";
+import { getFaculties, getSelectedFaculty } from "src/store/selectors";
 
 const SelectBoxFaculty = ({ className = "" }) => {
   //#region constants
@@ -21,23 +21,24 @@ const SelectBoxFaculty = ({ className = "" }) => {
   //#endregion
 
   //#region selectors
-  const faculty = useSelector(getFaculty);
-  //#endregion
-
-  //#region states
-  const [faculties, setFaculties] = useState([]);
+  const faculties = useSelector(getFaculties);
+  const selectedFaculty = useSelector(getSelectedFaculty);
   //#endregion
 
   //#region functions
   const handleChange = (e) => {
     const selectedFacultyId = Number(e.target.value);
+
     const selectedFaculty = faculties.find(
       (faculty) => faculty.id === selectedFacultyId
     );
 
     if (selectedFaculty) {
       dispatch(
-        setFaculty({ id: selectedFaculty.id, key: selectedFaculty.key })
+        setSelectedFaculty({
+          id: selectedFaculty.id,
+          key: selectedFaculty.key,
+        })
       );
     }
   };
@@ -46,9 +47,17 @@ const SelectBoxFaculty = ({ className = "" }) => {
     await api
       .get("/faculty")
       .then((response) => {
-        setFaculties(response.data);
-        const { id, key } = response.data[0]; // Destructuring id and key
-        dispatch(setFaculty({ id, key })); // Dispatching only id and key
+        const filteredFaculties = response.data.map(
+          ({ id, key, deletedAt }) => ({
+            id,
+            key,
+            deletedAt,
+          })
+        ); // Extracting only id and key
+        dispatch(setFaculties(filteredFaculties));
+
+        const { id, key } = response.data[0];
+        dispatch(setSelectedFaculty({ id, key }));
       })
       .catch((error) => {
         handleError(error);
@@ -67,7 +76,7 @@ const SelectBoxFaculty = ({ className = "" }) => {
       <CInputGroupText component="label">{t("Faculty")}</CInputGroupText>
       <CFormSelect
         className="cursor"
-        value={faculty?.id}
+        value={selectedFaculty?.id}
         onChange={handleChange}
       >
         {faculties
