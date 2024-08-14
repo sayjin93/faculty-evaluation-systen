@@ -92,7 +92,7 @@ exports.updatePaper = async (req, res) => {
   try {
     const num = await Paper.update(req.body, { where: { id: req.params.id } });
     if (Number(num) === 1) {
-      res.send({ message: 'Paper was updated successfully' });
+      res.send({ message: 'Paper updated successfully' });
     } else {
       res.send({ message: `Cannot update Paper with id=${req.params.id}. Maybe Paper was not found or req.body is empty!` });
     }

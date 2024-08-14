@@ -82,7 +82,7 @@ const Login = () => {
         const { user, token } = response.data;
         // Set the JWT token to the Local Storage
         localStorage.setItem("jwt_token", token);
-        
+
         // Set leggedUser into redux store
         const loggedUser = {
           id: user.id,
@@ -91,7 +91,7 @@ const Login = () => {
           gender: user.gender,
           username: user.username,
           email: user.email,
-          is_admin: user.is_admin
+          is_admin: user.is_admin,
         };
         dispatch(setUser(loggedUser));
 
@@ -106,7 +106,9 @@ const Login = () => {
             showToast({
               type: status !== 500 ? "warning" : "danger",
               content:
-                status !== 500 ? t(convertToKey(data.message)) : data.message,
+                status !== 500
+                  ? t(convertToKey(data.message))
+                  : t(data.message.name),
             })
           );
         } else {

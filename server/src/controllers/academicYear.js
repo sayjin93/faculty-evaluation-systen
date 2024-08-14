@@ -85,7 +85,7 @@ exports.update = async (req, res) => {
     const num = await AcademicYear.update(req.body, { where: { id } });
     if (Number(num) === 1) {
       res.send({
-        message: 'Academic Year was updated successfully.',
+        message: 'Academic Year updated successfully.',
       });
     } else {
       res.send({

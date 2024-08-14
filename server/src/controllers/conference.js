@@ -94,7 +94,7 @@ exports.updateConference = async (req, res) => {
   try {
     const num = await Conference.update(req.body, { where: { id: req.params.id } });
     if (Number(num) === 1) {
-      res.send({ message: 'Conference was updated successfully' });
+      res.send({ message: 'Conference updated successfully' });
     } else {
       res.send({ message: `Cannot update Conference with id=${req.params.id}. Maybe Conference was not found or req.body is empty!` });
     }

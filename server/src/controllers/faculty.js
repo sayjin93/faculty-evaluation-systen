@@ -53,7 +53,7 @@ exports.update = async (req, res) => {
   try {
     const result = await Faculty.update(req.body, { where: { id } });
     if (Number(result) === 1) {
-      res.send({ message: 'Faculty was updated successfully' });
+      res.send({ message: 'Faculty updated successfully' });
     } else {
       res.send({ message: `Cannot update Faculty with id=${id}. Maybe Faculty was not found or req.body is empty!` });
     }

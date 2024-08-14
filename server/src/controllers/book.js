@@ -93,7 +93,7 @@ exports.updateBook = async (req, res) => {
   try {
     const num = await Book.update(req.body, { where: { id: req.params.id } });
     if (Number(num) === 1) {
-      res.send({ message: 'Book was updated successfully' });
+      res.send({ message: 'Book updated successfully' });
     } else {
       res.send({
         message: `Cannot update Book with id=${req.params.id}. Maybe Book was not found or req.body is empty!`,

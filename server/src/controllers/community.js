@@ -101,7 +101,7 @@ exports.updateCommunityService = async (req, res) => {
       where: { id: req.params.id },
     });
     if (Number(num) === 1) {
-      res.send({ message: 'Community Service was updated successfully' });
+      res.send({ message: 'Community Service updated successfully' });
     } else {
       res.send({
         message: `Cannot update Community Service with id=${req.params.id}. Maybe Community Service was not found or req.body is empty!`,

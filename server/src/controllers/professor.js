@@ -13,11 +13,11 @@ const {
 
 exports.create = async (req, res) => {
   const {
-    first_name, last_name, gender, username, email,
+    first_name, last_name, gender, username, email, department_id,
   } = req.body;
 
   // Validate request
-  if (!first_name || !last_name || !gender || !username || !email) {
+  if (!first_name || !last_name || !gender || !username || !email || !department_id) {
     res.status(400).send({
       message: 'Content can not be empty',
     });
@@ -55,6 +55,7 @@ exports.create = async (req, res) => {
     gender: req.body.gender,
     username: new_username,
     email: full_email,
+    department_id,
     password: newPassword,
     is_verified: 1,
     is_admin: 0,
@@ -190,6 +191,7 @@ exports.update = async (req, res) => {
     gender,
     username,
     email,
+    department_id,
     is_verified,
     currentPassword,
     newPassword,
@@ -221,25 +223,14 @@ exports.update = async (req, res) => {
           gender,
           email: new_email,
           username: new_username,
+          department_id,
           is_verified,
         };
         // Update the Professor
         Professor.update(updateObject, { where: { id } })
           .then((num) => {
             if (Number(num) === 1) {
-              // Fetch updated user data
-              Professor.findByPk(id, {
-                attributes: [
-                  'first_name',
-                  'last_name',
-                  'gender',
-                  'username',
-                  'email',
-                  'is_verified',
-                ],
-              }).then((updatedUser) => {
-                res.send(updatedUser);
-              });
+              res.send({ message: 'Professor updated successfully' });
             } else {
               res.send({
                 message: `Cannot update Professor with id=${id}. Maybe Professor was not found or req.body is empty!`,

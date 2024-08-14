@@ -94,7 +94,7 @@ exports.updateCourse = async (req, res) => {
   try {
     const num = await Course.update(req.body, { where: { id: req.params.id } });
     if (Number(num) === 1) {
-      res.send({ message: 'Course was updated successfully' });
+      res.send({ message: 'Course updated successfully' });
     } else {
       res.send({ message: `Cannot update Course with id=${req.params.id}. Maybe Course was not found or req.body is empty` });
     }

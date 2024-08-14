@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+
+//devextreme
+import DataSource from "devextreme/data/data_source";
+import { SelectBox, TextBox } from "devextreme-react";
 import { Column, HeaderFilter } from "devextreme-react/data-grid";
+import { Validator, RequiredRule } from "devextreme-react/validator";
 
 //coreUI
 import {
@@ -42,9 +47,18 @@ import { getModal } from "src/store/selectors";
 
 //components
 import CustomDataGrid from "src/components/CustomDataGrid";
-import SelectBoxFaculty from "src/components/SelectBoxFaculty";
-import SelectBoxDepartment from "src/components/SelectBoxDepartment";
+import { PiBuildingsBold } from "react-icons/pi";
 
+const defaultFormData = {
+  id: 0,
+  first_name: "",
+  last_name: "",
+  gender: "m",
+  username: "",
+  email: "",
+  department_id: null,
+  is_verified: true,
+};
 const Professors = () => {
   //#region constants
   const { t } = useTranslation();
@@ -54,15 +68,68 @@ const Professors = () => {
   const modal = useSelector(getModal);
   //#endregion
 
+  //#region refs
+  const departmentValidatorRef = useRef(null);
+  //#endregion
+
   //#region states
   const [isLoading, setIsLoading] = useState(true);
   const [items, setItems] = useState([]);
-  const [formData, setFormData] = useState(null);
+  const [formData, setFormData] = useState(defaultFormData);
+  const [faculties, setFaculties] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [validated, setValidated] = useState(false);
   const [action, setAction] = useState(null);
   //#endregion
 
+  console.log("formData", formData);
+
+  //#region memoized data
+  const fromUngroupedData = useMemo(() => {
+    return new DataSource({
+      store: {
+        type: "array",
+        data: departments,
+        key: "id",
+      },
+      group: "faculty_id",
+    });
+  }, [departments]);
+  //#endregion
+
   //#region functions
+  const fetchDepartments = async () => {
+    try {
+      const response = await api.get("/department");
+      const responseData = response.data;
+
+      // Use a Set to track unique faculty_ids and filter the faculties
+      const uniqueFacultiesMap = new Map();
+
+      responseData.forEach((item) => {
+        if (!uniqueFacultiesMap.has(item.faculty_id)) {
+          uniqueFacultiesMap.set(item.faculty_id, {
+            id: item.faculty_id,
+            key: item.Faculty.key, // Use the Faculty.key
+          });
+        }
+      });
+
+      const uniqueFaculties = Array.from(uniqueFacultiesMap.values());
+      setFaculties(uniqueFaculties);
+      setDepartments(responseData);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  //form
+  const closeForm = () => {
+    dispatch(setModal());
+    setFormData(defaultFormData);
+    setAction(null);
+    setValidated(false);
+  };
   const handleFullName = (event, fieldName) => {
     const inputValue = capitalizeWords(event.target.value);
 
@@ -88,17 +155,16 @@ const Professors = () => {
     setFormData(newUser);
   };
   const handleInputChange = (event, fieldName) => {
-    const checkboxVal = event.target.checked;
-    const inputValue = event.target.value;
-
     let newValue;
 
-    if (fieldName === "is_verified") {
+    if (fieldName === "department_id") {
+      newValue = event.value;
+    } else if (fieldName === "is_verified") {
       // Handle checkbox inputs differently for "is_verified"
-      newValue = checkboxVal;
+      newValue = event.target.checked;
     } else {
       // For other fields, use the textbox value
-      newValue = inputValue;
+      newValue = event.target.value;
     }
 
     setFormData({
@@ -110,7 +176,10 @@ const Professors = () => {
     event.preventDefault();
 
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
+    const validateDepartment =
+      departmentValidatorRef.current.instance.validate();
+
+    if (form.checkValidity() === false || !validateDepartment.isValid) {
       event.stopPropagation();
     } else {
       if (action === "edit") editProfessor();
@@ -119,8 +188,29 @@ const Professors = () => {
     }
     setValidated(true);
   };
+  //selectbox
+  const Field = (data) => {
+    return (
+      <TextBox
+        placeholder={t("SelectDepartment")}
+        defaultValue={data && t(data.key)}
+      />
+    );
+  };
+  const Item = (data) => {
+    return <div>{t(data.key)}</div>;
+  };
+  const Group = ({ key }) => {
+    const selectedFaculty = faculties.find((faculty) => faculty.id === key);
 
-  //Actions
+    return (
+      <div className="custom-icon">
+        <PiBuildingsBold className="nav-icon" /> {t(selectedFaculty.key)}
+      </div>
+    );
+  };
+
+  //Professors Actions
   const fetchProfessors = async () => {
     await api
       .get("/professor")
@@ -133,6 +223,35 @@ const Professors = () => {
 
     setIsLoading(false);
   };
+  const fetchOneProfessor = async (id) => {
+    await api
+      .get("/professor/" + id)
+      .then((response) => {
+        const { data } = response;
+
+        setFormData({
+          ...formData,
+          id: data.id,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          gender: data.gender,
+          username: data.username,
+          email: data.email,
+          department_id: data.department_id,
+          is_verified: data.is_verified,
+        });
+        setAction("edit");
+        dispatch(setModal("addEditProfessor"));
+      })
+      .catch((error) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            content: error,
+          })
+        );
+      });
+  };
   const addProfessor = async () => {
     await api
       .post("/professor", {
@@ -141,6 +260,7 @@ const Professors = () => {
         gender: formData.gender,
         username: formData.username,
         email: formData.email,
+        department_id: formData.department_id,
       })
       .then((response) => {
         const firstName = response.data.first_name;
@@ -190,11 +310,14 @@ const Professors = () => {
         gender: formData.gender,
         username: formData.username,
         email: formData.email,
+        department_id: formData.department_id,
         is_verified: formData.is_verified,
       })
       .then((response) => {
         setValidated(false);
         fetchProfessors(); // refetch professors
+
+        debugger;
         dispatch(
           showToast({
             type: "success",
@@ -301,12 +424,7 @@ const Professors = () => {
         <CButton
           color="primary"
           variant="outline"
-          onClick={() => {
-            const selectedProfessor = items.find((item) => item.id === id);
-            setFormData(selectedProfessor);
-            setAction("edit");
-            dispatch(setModal("addEditProfessor"));
-          }}
+          onClick={() => fetchOneProfessor(id)}
         >
           <CIcon icon={cilPen} />
         </CButton>
@@ -335,6 +453,7 @@ const Professors = () => {
   //#region useEffect
   useEffect(() => {
     fetchProfessors();
+    fetchDepartments();
   }, []);
   //#endregion
 
@@ -349,7 +468,9 @@ const Professors = () => {
           <CButton
             color="primary"
             className="float-right"
-            onClick={() => dispatch(setModal("addEditProfessor"))}
+            onClick={() => {
+              dispatch(setModal("addEditProfessor"));
+            }}
           >
             {t("Add")}
           </CButton>
@@ -457,11 +578,7 @@ const Professors = () => {
         id="addEditProfessor"
         backdrop="static"
         visible={modal.isOpen && modal.id === "addEditProfessor"}
-        onClose={() => {
-          dispatch(setModal());
-          setFormData(null);
-          setAction(null);
-        }}
+        onClose={closeForm}
       >
         <CForm
           className="needs-validation"
@@ -510,15 +627,6 @@ const Professors = () => {
               </CCol>
             </CRow>
 
-            <CRow xs={{ cols: 1, gutter: 3 }} className="mb-3">
-              <CCol>
-                <SelectBoxFaculty />
-              </CCol>
-              <CCol>
-                <SelectBoxDepartment showAll={false} />
-              </CCol>
-            </CRow>
-
             <CRow xs={{ cols: 2, gutter: 3 }} className="mb-3">
               <CCol>
                 <CFormInput
@@ -542,6 +650,33 @@ const Professors = () => {
               </CCol>
             </CRow>
 
+            <CRow xs={{ cols: 1, gutter: 3 }} className="mb-3">
+              <CCol>
+                <SelectBox
+                  dataSource={
+                    departments.length > 0 ? fromUngroupedData : departments
+                  }
+                  valueExpr="id"
+                  displayExpr="key"
+                  grouped={true}
+                  searchEnabled={true}
+                  searchExpr="key"
+                  fieldRender={Field}
+                  itemRender={Item}
+                  deferRendering={false}
+                  groupRender={Group}
+                  value={formData?.department_id}
+                  onValueChanged={(event) =>
+                    handleInputChange(event, "department_id")
+                  }
+                >
+                  <Validator ref={departmentValidatorRef}>
+                    <RequiredRule message={t("DepartmentIsRequired")} />
+                  </Validator>
+                </SelectBox>
+              </CCol>
+            </CRow>
+
             {action === "edit" && (
               <CRow xs={{ cols: 1, gutter: 3 }}>
                 <CCol>
@@ -559,13 +694,7 @@ const Professors = () => {
           </CModalBody>
 
           <CModalFooter>
-            <CButton
-              color="secondary"
-              onClick={() => {
-                dispatch(setModal());
-                setValidated(false);
-              }}
-            >
+            <CButton color="secondary" onClick={closeForm}>
               {t("Close")}
             </CButton>
             <CButton type="submit">
@@ -579,9 +708,7 @@ const Professors = () => {
         id="deleteRestoreProfessor"
         backdrop="static"
         visible={modal.isOpen && modal.id === "deleteRestoreProfessor"}
-        onClose={() => {
-          dispatch(setModal());
-        }}
+        onClose={closeForm}
       >
         <CModalHeader>
           <CModalTitle>{t("Confirmation")}</CModalTitle>
@@ -596,12 +723,7 @@ const Professors = () => {
         </CModalBody>
 
         <CModalFooter>
-          <CButton
-            color="light"
-            onClick={() => {
-              dispatch(setModal());
-            }}
-          >
+          <CButton color="light" onClick={closeForm}>
             {t("Cancel")}
           </CButton>
           <CButton
