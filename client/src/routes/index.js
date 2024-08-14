@@ -34,6 +34,8 @@ const DepartmentWiseDistribution = lazy(() => import("../pages/reports/Departmen
 const CourseLoadAnalysis = lazy(() => import("../pages/reports/CourseLoadAnalysis"));
 const GenderDistribution = lazy(() => import("../pages/reports/GenderDistribution"));
 
+const TextSummarizer = lazy(() => import("../pages/ai/TextSummarizer"));
+
 const Settings = lazy(() => import("../pages/Settings"));
 const Translations = lazy(() => import("../pages/Translations"));
 const Profile = lazy(() => import("../pages/Profile"));
@@ -106,6 +108,10 @@ const privateRoutes = [
       {
         path: SidebarRoutes.GenderDistribution,
         element: <GenderDistribution />,
+      },
+      {
+        path: SidebarRoutes.TextSummarizer,
+        element: <TextSummarizer />,
       },
       {
         path: SidebarRoutes.Settings,

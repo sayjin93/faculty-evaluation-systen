@@ -148,6 +148,7 @@ export const SidebarRoutes = {
   DepartmentWiseDistribution: "/reports/department-wise-distribution",
   CourseLoadAnalysis: "/reports/course-load-analysis",
   GenderDistribution: "/reports/gender-distribution",
+  TextSummarizer: "/ai/text-summarizer",
   Settings: "/settings",
   Translations: "/translations",
 

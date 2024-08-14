@@ -24,7 +24,7 @@ import {
 } from "react-icons/pi";
 import { VscSymbolClass } from "react-icons/vsc";
 import { GiVideoConference } from "react-icons/gi";
-import { RiCommunityLine } from "react-icons/ri";
+import { RiAiGenerate, RiCommunityLine } from "react-icons/ri";
 import { TbReportSearch } from "react-icons/tb";
 import { HiLanguage } from "react-icons/hi2";
 
@@ -149,6 +149,16 @@ export const AppSidebarNav = () => {
             icon: <PiGenderIntersexDuotone className="nav-icon" />,
           },
         ],
+      },
+      {
+        component: CNavTitle,
+        name: t("AiTools"),
+      },
+      {
+        component: CNavItem,
+        name: t("TextSummarizer"),
+        to: SidebarRoutes.TextSummarizer,
+        icon: <RiAiGenerate className="nav-icon" />,
       },
       {
         component: CNavTitle,
