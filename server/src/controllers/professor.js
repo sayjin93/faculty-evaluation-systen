@@ -265,7 +265,7 @@ exports.update = async (req, res) => {
             first_name: new_first_name,
             last_name: new_last_name,
             gender,
-            email: new_email,
+            // email: new_email, //not allowed to change it
             username: new_username,
           };
 

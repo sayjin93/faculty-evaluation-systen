@@ -101,53 +101,54 @@ const Profile = () => {
   const updateUserData = async () => {
     setIsLoading(true);
 
-    await api
-      .put("professor/" + currentUser.id, {
+    try {
+      const response = await api.put("professor/" + currentUser.id, {
         first_name: userData.firstName,
         last_name: userData.lastName,
         gender: userData.gender,
         username: userData.username,
         currentPassword: userData.currentPassword,
         newPassword: userData.newPassword,
-      })
-      .then((response) => {
-        const loggedUser = {
-          id: currentUser.id,
-          first_name: response.data.first_name,
-          last_name: response.data.last_name,
-          gender: response.data.gender,
-          username: response.data.username,
-          email: response.data.email,
-        };
-
-        setUserData((prevState) => {
-          dispatch(setUser(loggedUser));
-
-          dispatch(
-            showToast({
-              type: "success",
-              content: t("UserWasEditedSuccessfully"),
-            })
-          );
-
-          return {
-            ...prevState,
-            currentPassword: "",
-            newPassword: "",
-            repeatPassword: "",
-          };
-        });
-      })
-      .catch((error) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            content: t(convertToKey(error.response.data.message)),
-          })
-        );
       });
 
-    setIsLoading(false);
+      const { data } = response;
+
+      const updatedUser = {
+        id: currentUser.id,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        gender: data.gender,
+        username: data.username,
+        email: data.email,
+      };
+
+      dispatch(setUser(updatedUser));
+      dispatch(
+        showToast({
+          type: "success",
+          content: t("ProfileEditedSuccessfully"),
+        })
+      );
+
+      // Reset password fields after successful update
+      setUserData((prevState) => ({
+        ...prevState,
+        currentPassword: "",
+        newPassword: "",
+        repeatPassword: "",
+      }));
+    } catch (error) {
+      dispatch(
+        showToast({
+          type: "danger",
+          content: t(
+            convertToKey(error.response?.data?.message || error.message)
+          ),
+        })
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleUserUpdate = async (event) => {
@@ -270,7 +271,7 @@ const Profile = () => {
                   placeholder={t("Email")}
                   value={userData.email}
                   size="sm"
-                // onChange={(event) => handleInputChange(event, "email")}
+                  // onChange={(event) => handleInputChange(event, "email")}
                 />
               </CInputGroup>
             </CCol>
