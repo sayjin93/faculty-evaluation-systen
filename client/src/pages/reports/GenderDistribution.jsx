@@ -12,7 +12,6 @@ import {
   CCol,
   CRow,
   CCallout,
-  CSpinner,
 } from "@coreui/react";
 import { CChart } from "@coreui/react-chartjs";
 

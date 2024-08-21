@@ -119,10 +119,6 @@ export const AppSidebarNav = () => {
         component: CNavGroup,
         name: t("Reports"),
         icon: <TbReportSearch className="nav-icon" />,
-        badge: {
-          color: "info",
-          text: t("New").toUpperCase(),
-        },
         items: [
           {
             component: CNavItem,
@@ -159,6 +155,10 @@ export const AppSidebarNav = () => {
         name: t("TextSummarizer"),
         to: SidebarRoutes.TextSummarizer,
         icon: <RiAiGenerate className="nav-icon" />,
+        badge: {
+          color: "info",
+          text: t("New").toUpperCase(),
+        },
       },
       {
         component: CNavTitle,

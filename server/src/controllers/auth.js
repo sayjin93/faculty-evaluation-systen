@@ -43,11 +43,10 @@ exports.login = (req, res) => {
           });
         }
 
-        const jwtToken = jwt.sign(
-          { id: user.id, username: user.username },
-          process.env.JWT_SECRET,
-          { expiresIn: '12h' },
-        );
+        const userPayload = { id: user.id }; // Assuming 'user' is the user object from your database
+        const token = jwt.sign(userPayload, process.env.JWT_SECRET, {
+          expiresIn: '1d',
+        });
 
         // Return the token to the client
         res.json({
@@ -60,7 +59,7 @@ exports.login = (req, res) => {
             email: user.email,
             is_admin: user.is_admin,
           },
-          token: jwtToken,
+          token,
         });
       });
     })
@@ -133,7 +132,8 @@ exports.register = async (req, res) => {
 
         if (!response) {
           return res.status(500).json({
-            message: 'SMTP settings not found! Contact administrator to activate your account.',
+            message:
+              'SMTP settings not found! Contact administrator to activate your account.',
           });
         }
 

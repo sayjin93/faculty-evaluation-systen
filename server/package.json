@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/translate": "^8.2.0",
+    "axios": "^1.7.4",
     "bcrypt": "^5.1.1",
     "colors": "^1.4.0",
     "cors": "^2.8.5",

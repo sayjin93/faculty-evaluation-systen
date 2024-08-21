@@ -82,8 +82,6 @@ const Professors = () => {
   const [action, setAction] = useState(null);
   //#endregion
 
-  console.log("formData", formData);
-
   //#region memoized data
   const fromUngroupedData = useMemo(() => {
     return new DataSource({

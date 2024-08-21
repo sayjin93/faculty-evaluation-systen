@@ -14,25 +14,19 @@ import {
 //react-icons
 import { RiAiGenerate } from "react-icons/ri";
 
-//hooks
-import summarizeContent from "src/hooks/sumarizeContent";
-
 //devextreme
 import { TextArea } from "devextreme-react";
 import { MdDeleteOutline } from "react-icons/md";
+import api from "src/hooks/api";
 
 const TextSummarizer = () => {
   //#region constants
   const { t } = useTranslation();
   //#endregion
 
-  //#region refs
-  const textAreaRef = useRef(null);
-  //#endregion
-
   //#region states
   const [value, setValue] = useState(null);
-  const [data, setData] = useState([null]);
+  const [data, setData] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
   //#endregion
@@ -42,40 +36,43 @@ const TextSummarizer = () => {
     setValue(e.value);
   }, []);
 
-  const onHandleClear = () => {
-    textAreaRef.current._instance.clear();
-  };
-
   const onHandleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
 
-    const result = await summarizeContent(value);
+    try {
+      const response = await api.post("/ai/summarize", { content: value });
+      if (response.data) {
+        // Prepend the new summary to the existing list, ensuring prevData is always treated as an array
+        setData((prevData) => [
+          response.data,
+          ...(Array.isArray(prevData) ? prevData : []),
+        ]);
 
-    if (result) {
-      debugger;
-      localStorage.setItem(
-        "summary",
-        JSON.stringify(data?.length > 0 ? [...data, result] : [result])
-      );
-
-      fetchLocalStorage();
+        setValue(""); // Reset the input value state
+      }
+    } catch (error) {
+      console.error("Error summarizing content:", error);
+    } finally {
+      setSubmitting(false);
     }
-
-    setSubmitting(false);
   };
 
-  const fetchLocalStorage = async () => {
-    const result = await localStorage.getItem("summary");
-
-    setData(JSON.parse(result)?.reverse());
+  const fetchSummarizes = async () => {
+    try {
+      const result = await api.get("/ai/summarize");
+      setData(result?.data.reverse());
+    } catch (error) {
+      console.error("Failed to fetch summaries:", error);
+      // Optionally set an error state here to show an error message to the user
+    }
   };
 
-  async function copyTextToClipboard(text) {
+  const copyTextToClipboard = async (text) => {
     if ("clipboard" in navigator) {
       return await navigator.clipboard.writeText(text);
     }
-  }
+  };
 
   const handleCopy = (txt) => {
     copyTextToClipboard(txt)
@@ -89,18 +86,22 @@ const TextSummarizer = () => {
       .catch((err) => console.log(err));
   };
 
-  const handleDelete = (txt) => {
-    const filtered = data?.filter((d) => d !== txt);
-
-    setData(filtered);
-
-    localStorage.setItem("summary", JSON.stringify(filtered));
+  const handleDelete = (summary) => {
+    // Assuming delete makes an API call to remove by ID
+    api
+      .delete(`/ai/summarize/${summary.id}`)
+      .then(() => {
+        // Filter out the deleted summary from local state
+        const filtered = data.filter((d) => d.id !== summary.id);
+        setData(filtered);
+      })
+      .catch((err) => console.log("Error deleting summary:", err));
   };
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    fetchLocalStorage();
+    fetchSummarizes();
   }, []);
   //#endregion
 
@@ -116,9 +117,8 @@ const TextSummarizer = () => {
 
         <CCardBody>
           <TextArea
-            ref={textAreaRef}
             height={250}
-            defaultValue={value}
+            value={value}
             placeholder={t("PasteContentHere") + "..."}
             onValueChanged={onTextAreaValueChanged}
           />
@@ -128,7 +128,7 @@ const TextSummarizer = () => {
               <CButton
                 disabled={submitting}
                 color="light"
-                onClick={onHandleClear}
+                onClick={() => setValue("")}
               >
                 {t("Clear")}
               </CButton>
@@ -145,11 +145,11 @@ const TextSummarizer = () => {
       {data?.map((d, index) => (
         <CCard key={index} className="mt-4">
           <CCardBody>
-            <p>{d}</p>
+            <p>{d.content}</p> {/* Updated to render the content property */}
             <div className="flex gap-5 items-center justify-end mt-2">
               <p
                 className="text-gray-500 font-semibold cursor-pointer"
-                onClick={() => handleCopy(d)}
+                onClick={() => handleCopy(d.content)} // Update to pass content to the copy function
               >
                 {isCopy ? t("Copied") : t("Copy")}
               </p>

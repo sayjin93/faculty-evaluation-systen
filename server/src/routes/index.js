@@ -14,6 +14,7 @@ const paperApi = require('./paper');
 const professorApi = require('./professor');
 const reportApi = require('./report');
 const settingsApi = require('./settings');
+const aiApi = require('./ai');
 
 const router = express.Router();
 
@@ -36,5 +37,6 @@ router.use('/paper', paperApi);
 router.use('/professor', professorApi);
 router.use('/report', reportApi);
 router.use('/settings', settingsApi);
+router.use('/ai', aiApi);
 
 module.exports = router;
