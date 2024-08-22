@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 //coreUI
@@ -13,6 +13,7 @@ import {
 
 //react-icons
 import { RiAiGenerate } from "react-icons/ri";
+import { IoCopyOutline, IoCheckmark } from "react-icons/io5";
 
 //devextreme
 import { TextArea } from "devextreme-react";
@@ -28,7 +29,7 @@ const TextSummarizer = () => {
   const [value, setValue] = useState(null);
   const [data, setData] = useState([]);
   const [submitting, setSubmitting] = useState(false);
-  const [isCopy, setIsCopy] = useState(false);
+  const [copiedId, setCopiedId] = useState(null);
   //#endregion
 
   //#region functions
@@ -74,25 +75,25 @@ const TextSummarizer = () => {
     }
   };
 
-  const handleCopy = (txt) => {
+  const handleCopy = (txt, id) => {
     copyTextToClipboard(txt)
       .then(() => {
-        setIsCopy(true);
+        setCopiedId(id); // Set the copiedId to the ID of the card being copied
 
         setTimeout(() => {
-          setIsCopy(false);
+          setCopiedId(null); // Reset after 1.5 seconds
         }, 1500);
       })
       .catch((err) => console.log(err));
   };
 
-  const handleDelete = (summary) => {
+  const handleDelete = (id) => {
     // Assuming delete makes an API call to remove by ID
     api
-      .delete(`/ai/summarize/${summary.id}`)
+      .delete(`/ai/summarize/${id}`)
       .then(() => {
         // Filter out the deleted summary from local state
-        const filtered = data.filter((d) => d.id !== summary.id);
+        const filtered = data.filter((d) => d.id !== id);
         setData(filtered);
       })
       .catch((err) => console.log("Error deleting summary:", err));
@@ -145,18 +146,40 @@ const TextSummarizer = () => {
       {data?.map((d, index) => (
         <CCard key={index} className="mt-4">
           <CCardBody>
-            <p>{d.content}</p> {/* Updated to render the content property */}
-            <div className="flex gap-5 items-center justify-end mt-2">
-              <p
-                className="text-gray-500 font-semibold cursor-pointer"
-                onClick={() => handleCopy(d.content)} // Update to pass content to the copy function
-              >
-                {isCopy ? t("Copied") : t("Copy")}
-              </p>
-              <span className="cursor-pointer" onClick={() => handleDelete(d)}>
-                <MdDeleteOutline />
-              </span>
-            </div>
+            <p>{d.content}</p>
+
+            <CRow xs={{ cols: 2, gutter: 4 }} className="mt-2">
+              <CCol className="text-start">
+                <CButton
+                  color={copiedId === d.id ? "success" : "primary"} // Compare the ID
+                  variant="outline"
+                  shape="rounded-pill"
+                  onClick={() => handleCopy(d.content, d.id)} // Pass the ID to handleCopy
+                >
+                  {copiedId === d.id ? ( // Compare the ID
+                    <>
+                      <IoCheckmark />
+                      <span className="ms-1">{t("Copied")}</span>
+                    </>
+                  ) : (
+                    <>
+                      <IoCopyOutline />
+                      <span className="ms-1">{t("Copy")}</span>
+                    </>
+                  )}
+                </CButton>
+              </CCol>
+              <CCol className="text-end">
+                <CButton
+                  color="danger"
+                  variant="outline"
+                  shape="rounded-pill"
+                  onClick={() => handleDelete(d.id)}
+                >
+                  <MdDeleteOutline />
+                </CButton>
+              </CCol>
+            </CRow>
           </CCardBody>
         </CCard>
       ))}

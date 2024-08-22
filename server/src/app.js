@@ -22,13 +22,19 @@ app.use(helmet()); // Adds various security-related headers to responses
 app.use(cors()); // Enables CORS for all routes
 
 // Test database connection and synchronize (optional)
-db.sequelize.authenticate()
+db.sequelize
+  .authenticate()
   .then(() => {
-    console.log('Database connection has been established successfully.'.bgBlue);
+    console.log(
+      'Database connection has been established successfully.'.bgBlue,
+    );
 
     // Sync the database (only in development, use migrations in production)
     if (process.env.NODE_ENV !== 'production') {
-      db.sequelize.sync()
+      db.sequelize
+        .sync({
+          // alter: true,
+        })
         .then(() => {
           console.log('Database synchronized successfully.'.bgGreen);
         })

@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Summarize = sequelize.define('Summarize', {
     content: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     professor_id: {
       type: DataTypes.INTEGER,
