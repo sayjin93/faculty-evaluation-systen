@@ -2,11 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 //coreUI
-import {
-  CRow,
-  CCol,
-  CWidgetStatsA,
-} from "@coreui/react";
+import { CRow, CCol, CWidgetStatsA } from "@coreui/react";
 import { getStyle } from "@coreui/utils";
 import { CChartBar, CChartLine } from "@coreui/react-chartjs";
 import CIcon from "@coreui/icons-react";
@@ -40,7 +36,7 @@ const Graphs = ({ userId, isAdmin }) => {
   };
   const fetchAdminStatsCards = async () => {
     await api
-      .get("/report/statsCards")
+      .get("/report/statsCardsAll")
       .then((response) => {
         setStats(response.data);
       })
@@ -52,7 +48,7 @@ const Graphs = ({ userId, isAdmin }) => {
   };
   const fetchProfessorStats = async () => {
     await api
-      .get(`/report/statsCards/${userId}`)
+      .get("/report/statsCardsProfessor")
       .then((response) => {
         setStats(response.data);
       })
@@ -66,7 +62,7 @@ const Graphs = ({ userId, isAdmin }) => {
 
   //#region useEffect
   useEffect(() => {
-    isAdmin ? fetchAdminStatsCards() : fetchProfessorStats()
+    isAdmin ? fetchAdminStatsCards() : fetchProfessorStats();
   }, []);
   //#endregion
 

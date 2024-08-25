@@ -31,7 +31,7 @@ const ProfessorsStats = ({ userId, isAdmin }) => {
     setIsLoading(true);
 
     await api
-      .get("/report/professors-data")
+      .get("/report/professorDataAll")
       .then((response) => {
         if (stats !== response.data) {
           setStats(response.data);
@@ -48,7 +48,7 @@ const ProfessorsStats = ({ userId, isAdmin }) => {
     setIsLoading(true);
 
     await api
-      .get(`/report/professors-data/${userId}`)
+      .get("/report/professorDataProfessor")
       .then((response) => {
         if (stats !== response.data) {
           setStats(response.data);
@@ -64,7 +64,7 @@ const ProfessorsStats = ({ userId, isAdmin }) => {
 
   //#region useEffect
   useEffect(() => {
-    isAdmin ? fetchProfessorsData() : fetchProfessorData()
+    isAdmin ? fetchProfessorsData() : fetchProfessorData();
   }, []);
   //#endregion
 
@@ -73,7 +73,9 @@ const ProfessorsStats = ({ userId, isAdmin }) => {
       textColor="primary"
       className="border-primary border-top-primary border-top-3 mb-4"
     >
-      <CCardHeader>{isAdmin ? t("ProfessorsStatistics") : t("ProfessorStatistics")}</CCardHeader>
+      <CCardHeader>
+        {isAdmin ? t("ProfessorsStatistics") : t("ProfessorStatistics")}
+      </CCardHeader>
 
       <CCardBody>
         {(() => {
@@ -151,7 +153,7 @@ const ProfessorsStats = ({ userId, isAdmin }) => {
                   dataType="number"
                 />
               </CustomDataGrid>
-            )
+            );
           }
         })()}
       </CCardBody>

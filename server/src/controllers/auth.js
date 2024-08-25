@@ -43,7 +43,7 @@ exports.login = (req, res) => {
           });
         }
 
-        const userPayload = { id: user.id }; // Assuming 'user' is the user object from your database
+        const userPayload = { id: user.id, is_admin: user.is_admin }; // Assuming 'user' is the user object from your database
         const token = jwt.sign(userPayload, process.env.JWT_SECRET, {
           expiresIn: '1d',
         });

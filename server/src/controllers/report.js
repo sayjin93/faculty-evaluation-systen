@@ -4,7 +4,7 @@ const {
   AcademicYear, Book, Community, Conference, Course, Paper, Professor, Department, Faculty,
 } = require('../models');
 
-exports.getStats = async (req, res) => {
+exports.getStatsAll = async (req, res) => {
   try {
     // Find the active academic year
     const activeYear = await AcademicYear.findOne({ where: { active: true } });
@@ -37,9 +37,9 @@ exports.getStats = async (req, res) => {
     });
   }
 };
-exports.getProfessorStats = async (req, res) => {
+exports.getStatsProfessor = async (req, res) => {
   try {
-    const { professor_id } = req.params;
+    const professor_id = req.user.id;
 
     // Find the active academic year
     const activeYear = await AcademicYear.findOne({ where: { active: true } });
@@ -105,7 +105,7 @@ exports.getBigStats = async (req, res) => {
   }
 };
 
-exports.getStatsCards = async (req, res) => {
+exports.getStatsCardsAll = async (req, res) => {
   try {
     // Fetch academic years
     const academicYears = await AcademicYear.findAll({
@@ -173,9 +173,9 @@ exports.getStatsCards = async (req, res) => {
     });
   }
 };
-exports.getProfessorStatsCards = async (req, res) => {
+exports.getStatsCardsProfessor = async (req, res) => {
   try {
-    const { professor_id } = req.params;
+    const professor_id = req.user.id;
 
     // Fetch academic years
     const academicYears = await AcademicYear.findAll({
@@ -245,7 +245,7 @@ exports.getProfessorStatsCards = async (req, res) => {
   }
 };
 
-exports.getProfessorsData = async (req, res) => {
+exports.getProfessorDataAll = async (req, res) => {
   try {
     // Find the active academic year
     const activeYear = await AcademicYear.findOne({ where: { active: true } });
@@ -291,9 +291,9 @@ exports.getProfessorsData = async (req, res) => {
     });
   }
 };
-exports.getProfessorData = async (req, res) => {
+exports.getProfessorDataProfessor = async (req, res) => {
   try {
-    const { professor_id } = req.params;
+    const professor_id = req.user.id;
 
     // Fetch academic years
     const academicYears = await AcademicYear.findAll({
