@@ -30,18 +30,18 @@ db.sequelize
     );
 
     // Sync the database (only in development, use migrations in production)
-    if (process.env.NODE_ENV !== 'production') {
-      db.sequelize
-        .sync({
-          // alter: true,
-        })
-        .then(() => {
-          console.log('Database synchronized successfully.'.bgGreen);
-        })
-        .catch((err) => {
-          console.error('Error synchronizing the database:', err);
-        });
-    }
+    // if (process.env.NODE_ENV !== 'production') {
+    db.sequelize
+      .sync({
+        // alter: true,
+      })
+      .then(() => {
+        console.log('Database synchronized successfully.'.bgGreen);
+      })
+      .catch((err) => {
+        console.error('Error synchronizing the database:', err);
+      });
+    // }
   })
   .catch((err) => {
     console.error('Unable to connect to the database:', err);
