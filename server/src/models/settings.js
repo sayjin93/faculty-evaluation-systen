@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.JSON,
       allowNull: false,
     },
+  }, {
+    tableName: 'Settings', // Explicitly declare the table name
   });
 
   return Settings;

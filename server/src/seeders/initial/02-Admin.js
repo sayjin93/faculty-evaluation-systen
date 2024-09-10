@@ -1,4 +1,4 @@
-const { Professor } = require('../models');
+const { Professor } = require('../../models');
 
 // Temp data
 const adminData = [

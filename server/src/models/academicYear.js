@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: true,
     },
   }, {
+    tableName: 'AcademicYear', // Explicitly declare the table name
     paranoid: true, // Enables soft delete
   });
 

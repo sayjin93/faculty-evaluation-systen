@@ -6,6 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     professor_id: {
       type: DataTypes.INTEGER,
     },
+  }, {
+    tableName: 'Summarize', // Explicitly declare the table name
   });
 
   Summarize.associate = (models) => {

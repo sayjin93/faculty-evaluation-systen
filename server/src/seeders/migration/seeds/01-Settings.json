@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "name": "Email",
+    "settings": {
+      "smtp_host": "mail.jkruja.com",
+      "smtp_pass": "Kruja2021..",
+      "smtp_port": 465,
+      "smtp_user": "info@jkruja.com",
+      "smtp_secure": true,
+      "smtp_sender": "UET Support"
+    },
+    "createdAt": "2024-09-10T09:23:51.000Z",
+    "updatedAt": "2024-09-10T09:23:52.000Z"
+  }
+]

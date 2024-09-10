@@ -1,7 +1,7 @@
-const { Course } = require('../models');
+const { Course } = require('../../models');
 
 // Temp data
-const { professorsCount, academicYearsCount, randomInt } = require('../utils/seedersHelper');
+const { professorsCount, academicYearsCount, randomInt } = require('../../utils/seedersHelper');
 
 const dummyCourseNames = [
   'Introduction to Computer Science',

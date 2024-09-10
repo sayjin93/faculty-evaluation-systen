@@ -1,7 +1,7 @@
-const { Book } = require('../models');
+const { Book } = require('../../models');
 
 // Temp data
-const { professorsCount, academicYearsCount, randomInt } = require('../utils/seedersHelper');
+const { professorsCount, academicYearsCount, randomInt } = require('../../utils/seedersHelper');
 
 const dummyBookTitles = [
   'Introduction to Computer Science',

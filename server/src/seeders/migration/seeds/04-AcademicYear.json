@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "year": "2023-2024",
+    "active": 0,
+    "createdAt": "2024-09-10T09:23:52.000Z",
+    "updatedAt": "2024-09-10T09:23:52.000Z",
+    "deletedAt": null
+  },
+  {
+    "id": 2,
+    "year": "2024-2025",
+    "active": 1,
+    "createdAt": "2024-09-10T09:23:52.000Z",
+    "updatedAt": "2024-09-10T09:23:52.000Z",
+    "deletedAt": null
+  }
+]

@@ -1,0 +1,502 @@
+[
+  {
+    "id": 1,
+    "title": "Introduction to Computer Science",
+    "publication_house": "OMBRA GVG",
+    "publication_year": "2023-01-01",
+    "academic_year_id": 2,
+    "professor_id": 12,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 2,
+    "title": "History of Art",
+    "publication_house": "Dita 2000 sh.p.k",
+    "publication_year": "2018-01-01",
+    "academic_year_id": 2,
+    "professor_id": 12,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 3,
+    "title": "Mathematics for Engineers",
+    "publication_house": "Aferdita",
+    "publication_year": "2023-01-01",
+    "academic_year_id": 2,
+    "professor_id": 5,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 4,
+    "title": "Literary Analysis",
+    "publication_house": "Arbëria",
+    "publication_year": "2014-01-01",
+    "academic_year_id": 1,
+    "professor_id": 8,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 5,
+    "title": "Chemical Reactions and Equations",
+    "publication_house": "Uegen",
+    "publication_year": "2014-01-01",
+    "academic_year_id": 2,
+    "professor_id": 15,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 6,
+    "title": "Psychology and Behavior",
+    "publication_house": "Sh.B. e Librit Shkollor",
+    "publication_year": "2019-01-01",
+    "academic_year_id": 1,
+    "professor_id": 10,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 7,
+    "title": "Introduction to Philosophy",
+    "publication_house": "Apollonia",
+    "publication_year": "2016-01-01",
+    "academic_year_id": 1,
+    "professor_id": 5,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 8,
+    "title": "Economics for Beginners",
+    "publication_house": "Toena sh.p.k",
+    "publication_year": "2019-01-01",
+    "academic_year_id": 2,
+    "professor_id": 14,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 9,
+    "title": "Sociology: The Study of Society",
+    "publication_house": "Ideart sh.p.k",
+    "publication_year": "2022-01-01",
+    "academic_year_id": 1,
+    "professor_id": 21,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 10,
+    "title": "The Physics of Motion",
+    "publication_house": "Toena sh.p.k",
+    "publication_year": "2014-01-01",
+    "academic_year_id": 2,
+    "professor_id": 21,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 11,
+    "title": "Environmental Science and Sustainability",
+    "publication_house": "Albas",
+    "publication_year": "2022-01-01",
+    "academic_year_id": 1,
+    "professor_id": 7,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 12,
+    "title": "Creative Writing Workshop",
+    "publication_house": "Sh.B. e Librit Universitar",
+    "publication_year": "2018-01-01",
+    "academic_year_id": 2,
+    "professor_id": 23,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 13,
+    "title": "Statistics and Probability",
+    "publication_house": "Dita Group sh.a",
+    "publication_year": "2014-01-01",
+    "academic_year_id": 2,
+    "professor_id": 16,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 14,
+    "title": "Human Anatomy and Physiology",
+    "publication_house": "Ideart sh.p.k",
+    "publication_year": "2016-01-01",
+    "academic_year_id": 2,
+    "professor_id": 20,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 15,
+    "title": "Digital Marketing Strategies",
+    "publication_house": "Globus",
+    "publication_year": "2015-01-01",
+    "academic_year_id": 2,
+    "professor_id": 20,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 16,
+    "title": "Political Science: Understanding Governance",
+    "publication_house": "Dita Group sh.a",
+    "publication_year": "2017-01-01",
+    "academic_year_id": 1,
+    "professor_id": 23,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 17,
+    "title": "Introduction to Astronomy",
+    "publication_house": "Albin",
+    "publication_year": "2016-01-01",
+    "academic_year_id": 1,
+    "professor_id": 10,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 18,
+    "title": "Microbiology: The World of Microbes",
+    "publication_house": "Dudaj",
+    "publication_year": "2017-01-01",
+    "academic_year_id": 1,
+    "professor_id": 2,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 19,
+    "title": "Principles of Marketing",
+    "publication_house": "Erik",
+    "publication_year": "2020-01-01",
+    "academic_year_id": 1,
+    "professor_id": 15,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 20,
+    "title": "Artificial Intelligence and Machine Learning",
+    "publication_house": "Alb Paper",
+    "publication_year": "2015-01-01",
+    "academic_year_id": 1,
+    "professor_id": 8,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 21,
+    "title": "Fundamentals of Finance",
+    "publication_house": "Omsca I",
+    "publication_year": "2024-01-01",
+    "academic_year_id": 2,
+    "professor_id": 8,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 22,
+    "title": "Media and Communication Studies",
+    "publication_house": "Toena sh.p.k",
+    "publication_year": "2018-01-01",
+    "academic_year_id": 1,
+    "professor_id": 10,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 23,
+    "title": "Introduction to Psychology",
+    "publication_house": "Albas",
+    "publication_year": "2017-01-01",
+    "academic_year_id": 1,
+    "professor_id": 6,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 24,
+    "title": "Applied Ethics",
+    "publication_house": "Omsca I",
+    "publication_year": "2021-01-01",
+    "academic_year_id": 2,
+    "professor_id": 16,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 25,
+    "title": "Introduction to Economics",
+    "publication_house": "Ideart sh.p.k",
+    "publication_year": "2016-01-01",
+    "academic_year_id": 1,
+    "professor_id": 22,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 26,
+    "title": "Advanced Algorithms and Data Structures",
+    "publication_house": "Albin",
+    "publication_year": "2014-01-01",
+    "academic_year_id": 2,
+    "professor_id": 17,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 27,
+    "title": "Biochemistry: The Molecular Basis of Life",
+    "publication_house": "UET Press",
+    "publication_year": "2015-01-01",
+    "academic_year_id": 1,
+    "professor_id": 19,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 28,
+    "title": "World History: Ancient Civilizations",
+    "publication_house": "Albin",
+    "publication_year": "2023-01-01",
+    "academic_year_id": 1,
+    "professor_id": 6,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 29,
+    "title": "Quantum Mechanics for Scientists and Engineers",
+    "publication_house": "Sh.B. e Librit Universitar",
+    "publication_year": "2014-01-01",
+    "academic_year_id": 2,
+    "professor_id": 14,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 30,
+    "title": "Introduction to Environmental Engineering",
+    "publication_house": "Logoreci",
+    "publication_year": "2018-01-01",
+    "academic_year_id": 1,
+    "professor_id": 23,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 31,
+    "title": "The Art of Public Speaking",
+    "publication_house": "OMBRA GVG",
+    "publication_year": "2019-01-01",
+    "academic_year_id": 1,
+    "professor_id": 16,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 32,
+    "title": "Modern Physics: Concepts and Applications",
+    "publication_house": "Arbëria",
+    "publication_year": "2023-01-01",
+    "academic_year_id": 1,
+    "professor_id": 7,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 33,
+    "title": "Introduction to Machine Learning",
+    "publication_house": "Logoreci",
+    "publication_year": "2018-01-01",
+    "academic_year_id": 1,
+    "professor_id": 7,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 34,
+    "title": "Cognitive Psychology: Theory and Practice",
+    "publication_house": "Albas",
+    "publication_year": "2022-01-01",
+    "academic_year_id": 1,
+    "professor_id": 3,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 35,
+    "title": "Understanding Human Behavior",
+    "publication_house": "Sh.B. e Librit Shkollor",
+    "publication_year": "2014-01-01",
+    "academic_year_id": 1,
+    "professor_id": 9,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 36,
+    "title": "Global Economics: Theory and Practice",
+    "publication_house": "Albin",
+    "publication_year": "2016-01-01",
+    "academic_year_id": 2,
+    "professor_id": 15,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 37,
+    "title": "Cybersecurity Essentials",
+    "publication_house": "Erik",
+    "publication_year": "2018-01-01",
+    "academic_year_id": 2,
+    "professor_id": 8,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 38,
+    "title": "Introduction to Linguistics",
+    "publication_house": "Albas",
+    "publication_year": "2017-01-01",
+    "academic_year_id": 2,
+    "professor_id": 20,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 39,
+    "title": "Introduction to Sociology",
+    "publication_house": "UET Press",
+    "publication_year": "2018-01-01",
+    "academic_year_id": 1,
+    "professor_id": 22,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 40,
+    "title": "Digital Signal Processing",
+    "publication_house": "Toena sh.p.k",
+    "publication_year": "2024-01-01",
+    "academic_year_id": 1,
+    "professor_id": 20,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 41,
+    "title": "Corporate Finance: Principles and Practice",
+    "publication_house": "Apollonia",
+    "publication_year": "2021-01-01",
+    "academic_year_id": 2,
+    "professor_id": 7,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 42,
+    "title": "The Psychology of Learning and Development",
+    "publication_house": "Uegen",
+    "publication_year": "2019-01-01",
+    "academic_year_id": 1,
+    "professor_id": 21,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 43,
+    "title": "International Relations: Theory and Practice",
+    "publication_house": "Arbëria",
+    "publication_year": "2016-01-01",
+    "academic_year_id": 1,
+    "professor_id": 21,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 44,
+    "title": "Modern Art: History and Criticism",
+    "publication_house": "Grafon sh.p.k",
+    "publication_year": "2014-01-01",
+    "academic_year_id": 1,
+    "professor_id": 15,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 45,
+    "title": "Introduction to Business Analytics",
+    "publication_house": "Alb Paper",
+    "publication_year": "2018-01-01",
+    "academic_year_id": 1,
+    "professor_id": 7,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 46,
+    "title": "Behavioral Economics: Insights and Applications",
+    "publication_house": "UET Press",
+    "publication_year": "2021-01-01",
+    "academic_year_id": 2,
+    "professor_id": 6,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 47,
+    "title": "Genetics and Evolution",
+    "publication_house": "OMBRA GVG",
+    "publication_year": "2021-01-01",
+    "academic_year_id": 1,
+    "professor_id": 18,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 48,
+    "title": "The Science of Nutrition",
+    "publication_house": "Onufri",
+    "publication_year": "2017-01-01",
+    "academic_year_id": 1,
+    "professor_id": 21,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 49,
+    "title": "Introduction to Robotics",
+    "publication_house": "UET Press",
+    "publication_year": "2022-01-01",
+    "academic_year_id": 2,
+    "professor_id": 2,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  },
+  {
+    "id": 50,
+    "title": "Principles of Microeconomics",
+    "publication_house": "Dudaj",
+    "publication_year": "2014-01-01",
+    "academic_year_id": 1,
+    "professor_id": 14,
+    "createdAt": "2024-09-10T09:23:54.000Z",
+    "updatedAt": "2024-09-10T09:23:54.000Z"
+  }
+]

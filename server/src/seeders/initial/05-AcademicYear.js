@@ -1,4 +1,4 @@
-const { AcademicYear } = require('../models');
+const { AcademicYear } = require('../../models');
 
 module.exports = {
   up: async () => {

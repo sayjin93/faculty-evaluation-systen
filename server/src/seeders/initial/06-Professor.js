@@ -1,4 +1,4 @@
-const { Professor } = require('../models');
+const { Professor } = require('../../models');
 
 // Function to generate a random date between two dates
 function randomDate(start, end) {

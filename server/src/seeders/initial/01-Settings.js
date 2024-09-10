@@ -1,4 +1,4 @@
-const { Settings } = require('../models');
+const { Settings } = require('../../models');
 
 module.exports = {
   up: async () => {

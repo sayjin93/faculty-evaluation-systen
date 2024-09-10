@@ -1,7 +1,7 @@
-const { Community } = require('../models');
+const { Community } = require('../../models');
 
 // Temp data
-const { professorsCount, academicYearsCount, randomInt } = require('../utils/seedersHelper');
+const { professorsCount, academicYearsCount, randomInt } = require('../../utils/seedersHelper');
 
 const dummyEventNames = [
   'Volunteer Day',

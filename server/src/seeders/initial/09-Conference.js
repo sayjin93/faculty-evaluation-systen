@@ -1,7 +1,7 @@
-const { Conference } = require('../models');
+const { Conference } = require('../../models');
 
 // Temp data
-const { professorsCount, academicYearsCount, randomInt } = require('../utils/seedersHelper');
+const { professorsCount, academicYearsCount, randomInt } = require('../../utils/seedersHelper');
 
 const dummyConferenceNames = [
   'International Tech Symposium',

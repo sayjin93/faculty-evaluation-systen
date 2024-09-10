@@ -23,6 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     professor_id: {
       type: DataTypes.INTEGER,
     },
+  }, {
+    tableName: 'Conference', // Explicitly declare the table name
   });
 
   Conference.associate = (models) => {

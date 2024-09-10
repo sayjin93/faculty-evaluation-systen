@@ -19,6 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
 
     },
+  }, {
+    tableName: 'Paper', // Explicitly declare the table name
   });
 
   Paper.associate = (models) => {
