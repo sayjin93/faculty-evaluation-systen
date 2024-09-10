@@ -2,201 +2,201 @@
   {
     "id": 1,
     "title": "Advancements in Artificial Intelligence",
-    "journal": "Journal of Artificial Intelligence Research",
-    "publication": "2020-09-14T22:00:00.000Z",
-    "academic_year_id": 1,
-    "professor_id": 16,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "journal": "Buletini Shkencor",
+    "publication": "2021-09-07T22:00:00.000Z",
+    "academic_year_id": 2,
+    "professor_id": 12,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 2,
     "title": "Ethical Considerations in Machine Learning",
-    "journal": "International Journal of Computer Science",
-    "publication": "2023-10-03T22:00:00.000Z",
-    "academic_year_id": 2,
-    "professor_id": 22,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "journal": "Science Journal",
+    "publication": "2019-11-24T00:00:00.000Z",
+    "academic_year_id": 1,
+    "professor_id": 8,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 3,
     "title": "Future of Quantum Computing",
-    "journal": "Buletini Shkencor",
-    "publication": "2022-01-17T23:00:00.000Z",
-    "academic_year_id": 2,
-    "professor_id": 18,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "journal": "Journal of Medical Ethics",
+    "publication": "2019-12-17T00:00:00.000Z",
+    "academic_year_id": 1,
+    "professor_id": 8,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 4,
     "title": "Data Privacy and Security Measures",
     "journal": "Journal of Artificial Intelligence Research",
-    "publication": "2019-10-08T22:00:00.000Z",
-    "academic_year_id": 2,
-    "professor_id": 8,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "publication": "2023-07-08T22:00:00.000Z",
+    "academic_year_id": 1,
+    "professor_id": 12,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 5,
     "title": "Robotics and Automation Innovations",
-    "journal": "Journal of Artificial Intelligence Research",
-    "publication": "2022-06-30T22:00:00.000Z",
-    "academic_year_id": 2,
-    "professor_id": 14,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "journal": "Environmental Science and Technology",
+    "publication": "2021-05-12T22:00:00.000Z",
+    "academic_year_id": 1,
+    "professor_id": 15,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 6,
     "title": "Emerging Trends in Data Science",
-    "journal": "Environmental Science and Technology",
-    "publication": "2020-04-30T22:00:00.000Z",
-    "academic_year_id": 1,
-    "professor_id": 12,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "journal": "International Journal of Computer Science",
+    "publication": "2021-06-18T22:00:00.000Z",
+    "academic_year_id": 2,
+    "professor_id": 14,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 7,
     "title": "HealthTech Breakthroughs",
-    "journal": "Buletini Shkencor",
-    "publication": "2019-04-21T22:00:00.000Z",
-    "academic_year_id": 2,
-    "professor_id": 15,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "journal": "Journal of Business Ethics",
+    "publication": "2018-09-10T22:00:00.000Z",
+    "academic_year_id": 1,
+    "professor_id": 21,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 8,
     "title": "Cybersecurity in a Digital Age",
-    "journal": "Nature",
-    "publication": "2019-10-02T22:00:00.000Z",
-    "academic_year_id": 1,
-    "professor_id": 10,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "journal": "Journal of Business Ethics",
+    "publication": "2022-07-12T22:00:00.000Z",
+    "academic_year_id": 2,
+    "professor_id": 19,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 9,
     "title": "Innovations in Natural Language Processing",
-    "journal": "International Journal of Computer Science",
-    "publication": "2018-11-21T00:00:00.000Z",
+    "journal": "Environmental Science and Technology",
+    "publication": "2018-07-04T22:00:00.000Z",
     "academic_year_id": 1,
-    "professor_id": 23,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "professor_id": 18,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 10,
     "title": "Big Data Analytics: Trends and Insights",
-    "journal": "Another Journal",
-    "publication": "2021-02-22T23:00:00.000Z",
-    "academic_year_id": 2,
-    "professor_id": 17,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "journal": "Journal of Artificial Intelligence Research",
+    "publication": "2020-04-25T22:00:00.000Z",
+    "academic_year_id": 1,
+    "professor_id": 2,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 11,
     "title": "AI Implementation in Healthcare",
-    "journal": "Some Journal",
-    "publication": "2021-11-15T00:00:00.000Z",
-    "academic_year_id": 2,
+    "journal": "Nature",
+    "publication": "2023-07-04T22:00:00.000Z",
+    "academic_year_id": 1,
     "professor_id": 9,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 12,
     "title": "Impacts of Climate Change: A Scientific Review",
-    "journal": "Some Journal",
-    "publication": "2020-11-23T00:00:00.000Z",
-    "academic_year_id": 2,
-    "professor_id": 10,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "journal": "Journal of Medical Ethics",
+    "publication": "2019-05-04T22:00:00.000Z",
+    "academic_year_id": 1,
+    "professor_id": 6,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 13,
     "title": "Societal Implications of AI in Education",
-    "journal": "Science Journal",
-    "publication": "2018-05-21T22:00:00.000Z",
-    "academic_year_id": 2,
-    "professor_id": 17,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "journal": "Environmental Science and Technology",
+    "publication": "2020-05-17T22:00:00.000Z",
+    "academic_year_id": 1,
+    "professor_id": 3,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 14,
     "title": "Future of Work: Automation and Job Market",
-    "journal": "Some Journal",
-    "publication": "2020-07-10T22:00:00.000Z",
+    "journal": "Journal of Business Ethics",
+    "publication": "2021-06-21T22:00:00.000Z",
     "academic_year_id": 1,
-    "professor_id": 16,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "professor_id": 12,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 15,
     "title": "Global Health Challenges and Solutions",
-    "journal": "Journal of Business Ethics",
-    "publication": "2020-05-25T22:00:00.000Z",
-    "academic_year_id": 2,
-    "professor_id": 11,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "journal": "Some Journal",
+    "publication": "2023-11-20T00:00:00.000Z",
+    "academic_year_id": 1,
+    "professor_id": 10,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 16,
     "title": "Innovations in Renewable Energy Technologies",
-    "journal": "Science Journal",
-    "publication": "2023-10-08T22:00:00.000Z",
+    "journal": "Nature",
+    "publication": "2023-05-06T22:00:00.000Z",
     "academic_year_id": 2,
-    "professor_id": 18,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "professor_id": 21,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 17,
     "title": "Economic Impact of Digital Transformation",
-    "journal": "Journal of Business Ethics",
-    "publication": "2023-07-15T22:00:00.000Z",
+    "journal": "Journal of Medical Ethics",
+    "publication": "2018-01-07T23:00:00.000Z",
     "academic_year_id": 1,
-    "professor_id": 14,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "professor_id": 12,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 18,
     "title": "Cultural Influences on Technological Adoption",
-    "journal": "Journal of Medical Ethics",
-    "publication": "2021-10-05T22:00:00.000Z",
-    "academic_year_id": 1,
-    "professor_id": 4,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "journal": "Some Journal",
+    "publication": "2018-02-27T23:00:00.000Z",
+    "academic_year_id": 2,
+    "professor_id": 3,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 19,
     "title": "Advances in Medical Imaging Techniques",
-    "journal": "Some Journal",
-    "publication": "2019-10-15T00:00:00.000Z",
+    "journal": "Journal of Medical Ethics",
+    "publication": "2023-05-09T22:00:00.000Z",
     "academic_year_id": 2,
-    "professor_id": 16,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "professor_id": 5,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   },
   {
     "id": 20,
     "title": "The Future of Transportation: Smart Mobility",
-    "journal": "Nature",
-    "publication": "2020-07-03T22:00:00.000Z",
+    "journal": "Science Journal",
+    "publication": "2020-09-12T22:00:00.000Z",
     "academic_year_id": 2,
-    "professor_id": 23,
-    "createdAt": "2024-09-10T09:23:54.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z"
+    "professor_id": 8,
+    "createdAt": "2024-09-10T10:26:52.000Z",
+    "updatedAt": "2024-09-10T10:26:52.000Z"
   }
 ]

@@ -6,14 +6,14 @@ module.exports = {
     const settingsData = [
       {
         name: 'Email',
-        settings: {
+        settings: JSON.stringify({
           smtp_sender: 'UET Support',
           smtp_host: 'mail.jkruja.com',
           smtp_port: 465,
           smtp_secure: true, // Use boolean for smtp_secure
           smtp_user: 'info@jkruja.com',
           smtp_pass: 'Kruja2021..',
-        },
+        }),
       },
     ];
 

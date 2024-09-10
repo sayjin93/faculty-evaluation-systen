@@ -26,7 +26,7 @@ import {
 } from "@coreui/react";
 
 //icons
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { LuSettings2, LuLanguages } from "react-icons/lu";
 import { HiAcademicCap } from "react-icons/hi";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
@@ -90,7 +90,7 @@ const Settings = () => {
         dispatch(
           showToast({
             type: "success",
-            content: t("AcademicYearWasAddedSuccessful", { 0: year })
+            content: t("AcademicYearWasAddedSuccessful", { 0: year }),
           })
         );
       })
@@ -118,7 +118,9 @@ const Settings = () => {
       .get("/academic-year")
       .then((response) => {
         const academicYears = response.data;
-        const activeAcademicYears = academicYears.filter(academicYear => academicYear.active);
+        const activeAcademicYears = academicYears.filter(
+          (academicYear) => academicYear.active
+        );
 
         // Sort the academic years by id in descending order
         const sortedAcademicYears = academicYears.sort((a, b) => b.id - a.id);
@@ -159,20 +161,15 @@ const Settings = () => {
     await api
       .get("/settings")
       .then((response) => {
+        debugger;
         const emailSettings = response.data.find(
           (item) => item.name === "Email"
         );
         if (emailSettings) {
-          const settingsData = emailSettings.settings;
-
-          // Check if settingsData is a string before parsing
-          const settingsObject =
-            typeof settingsData === "string"
-              ? JSON.parse(settingsData)
-              : settingsData;
+          const settingsData = JSON.parse(emailSettings.settings);
 
           // Update the state
-          setSmtpConfig(settingsObject);
+          setSmtpConfig(settingsData);
         }
       })
       .catch((error) => {
@@ -236,7 +233,7 @@ const Settings = () => {
 
       <CCardBody>
         <CRow className="align-items-start">
-          {isAdmin &&
+          {isAdmin && (
             <CCol sm={6} lg={4}>
               <CCard color="white" className="mb-3">
                 <CCardHeader>
@@ -253,7 +250,7 @@ const Settings = () => {
                 </CCardBody>
               </CCard>
             </CCol>
-          }
+          )}
 
           {/* Academic Year */}
           <CCol sm={6} lg={4}>
@@ -301,7 +298,7 @@ const Settings = () => {
             </CCard>
           </CCol>
 
-          {isAdmin &&
+          {isAdmin && (
             <CCol lg={4}>
               <CCard color="white" className="mb-3">
                 <CCardHeader>
@@ -410,64 +407,79 @@ const Settings = () => {
                               handleSmtpChange(event.target.value, "smtp_pass")
                             }
                           />
-                          <CButton type="button" color="secondary" variant="outline" onClick={() => setViewPass(!viewPass)}>{viewPass ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</CButton>
+                          <CButton
+                            type="button"
+                            color="secondary"
+                            variant="outline"
+                            onClick={() => setViewPass(!viewPass)}
+                          >
+                            {viewPass ? (
+                              <AiOutlineEyeInvisible />
+                            ) : (
+                              <AiOutlineEye />
+                            )}
+                          </CButton>
                         </CInputGroup>
                       </CCol>
                     </CRow>
 
-                    <CButton type="submit" className="float-end">{t("Save")}</CButton>
+                    <CButton type="submit" className="float-end">
+                      {t("Save")}
+                    </CButton>
                   </CForm>
                 </CCardBody>
               </CCard>
             </CCol>
-          }
+          )}
         </CRow>
       </CCardBody>
 
-      {isAdmin && <CModal
-        id="addAcdemicYearAdd"
-        backdrop="static"
-        visible={modal.isOpen && modal.id === "addAcdemicYearAdd"}
-        onClose={() => {
-          dispatch(setModal());
-          setNewAcademicYear("");
-        }}
-      >
-        <CModalHeader>
-          <CModalTitle>{t("Add")}</CModalTitle>
-        </CModalHeader>
+      {isAdmin && (
+        <CModal
+          id="addAcdemicYearAdd"
+          backdrop="static"
+          visible={modal.isOpen && modal.id === "addAcdemicYearAdd"}
+          onClose={() => {
+            dispatch(setModal());
+            setNewAcademicYear("");
+          }}
+        >
+          <CModalHeader>
+            <CModalTitle>{t("Add")}</CModalTitle>
+          </CModalHeader>
 
-        <CModalBody>
-          <CFormInput
-            type="text"
-            floatingClassName="mb-3"
-            floatingLabel={t("AcademicYear")}
-            placeholder={t("AcademicYear")}
-            value={newAcademicYear}
-            onChange={(event) => setNewAcademicYear(event.target.value)}
-          />
-        </CModalBody>
+          <CModalBody>
+            <CFormInput
+              type="text"
+              floatingClassName="mb-3"
+              floatingLabel={t("AcademicYear")}
+              placeholder={t("AcademicYear")}
+              value={newAcademicYear}
+              onChange={(event) => setNewAcademicYear(event.target.value)}
+            />
+          </CModalBody>
 
-        <CModalFooter>
-          <CButton
-            color="secondary"
-            onClick={() => {
-              dispatch(setModal());
-            }}
-          >
-            {t("Close")}
-          </CButton>
-          <CButton
-            disabled={newAcademicYear.length === 0}
-            onClick={() => {
-              addAcademicYear();
-              dispatch(setModal());
-            }}
-          >
-            {t("Add")}
-          </CButton>
-        </CModalFooter>
-      </CModal>}
+          <CModalFooter>
+            <CButton
+              color="secondary"
+              onClick={() => {
+                dispatch(setModal());
+              }}
+            >
+              {t("Close")}
+            </CButton>
+            <CButton
+              disabled={newAcademicYear.length === 0}
+              onClick={() => {
+                addAcademicYear();
+                dispatch(setModal());
+              }}
+            >
+              {t("Add")}
+            </CButton>
+          </CModalFooter>
+        </CModal>
+      )}
     </>
   );
 };

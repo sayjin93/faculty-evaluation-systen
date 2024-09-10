@@ -6,7 +6,7 @@
     "gender": "m",
     "username": "admin",
     "email": "jurgen-kruja@live.com",
-    "password": "$2b$10$70nbpOxrsjt.ZcxATWlzsuBVxDS.VzJfdv6thaNKlVychzbBXfIh.",
+    "password": "$2b$10$ragDMZboxujhk1RjsXtoJuGQm1Oha/ngYp5Rivt4tBWW/cBzUm5Q6",
     "department_id": null,
     "is_admin": 1,
     "is_verified": 1,
@@ -14,8 +14,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2024-09-10T09:23:52.000Z",
-    "updatedAt": "2024-09-10T09:23:52.000Z",
+    "createdAt": "2024-09-10T10:26:49.000Z",
+    "updatedAt": "2024-09-10T10:26:49.000Z",
     "deletedAt": null
   },
   {
@@ -25,7 +25,7 @@
     "gender": "f",
     "username": "pone",
     "email": "pone@uet.edu.al",
-    "password": "$2b$10$VfqkE2aXpE/UuaZlvOyJMOJL/D5RY3qE0MbGrpL1rqHm.VbfkB/e6",
+    "password": "$2b$10$g7b0uVDdjfDuA.0eFsjG7e0FZIXMUBNQ4yJrCcq9/GRDk7f7f1/za",
     "department_id": 1,
     "is_admin": 0,
     "is_verified": 1,
@@ -33,8 +33,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2018-02-16T04:54:23.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2018-06-19T05:29:23.000Z",
+    "updatedAt": "2024-09-10T10:26:50.000Z",
     "deletedAt": null
   },
   {
@@ -44,7 +44,7 @@
     "gender": "f",
     "username": "ptwo",
     "email": "ptwo@uet.edu.al",
-    "password": "$2b$10$Nz1ksW2Htrg9AKNDS81YJ.AMJjPB7XXkivWVsl94vH5vzzWS32dla",
+    "password": "$2b$10$jjS0jLDxnldVt9q9lMkq4O96N4DpOIJcB7nMZrpOTx/WV8DlqZvni",
     "department_id": 2,
     "is_admin": 0,
     "is_verified": 1,
@@ -52,8 +52,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2016-01-07T22:43:50.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2015-05-22T12:13:11.000Z",
+    "updatedAt": "2024-09-10T10:26:50.000Z",
     "deletedAt": null
   },
   {
@@ -63,7 +63,7 @@
     "gender": "m",
     "username": "pthree",
     "email": "pthree@abozdo.edu.al",
-    "password": "$2b$10$nVwu.RiCpW9V5te/6eVwZ.RxePaJV5XzqGMIzbYVOKcuzrOpgOFNe",
+    "password": "$2b$10$1CNrPSs06Qbv6QIkSmHQle.W1EeDO7xLwDIcTsf3GzpjCMvJqRXYi",
     "department_id": 3,
     "is_admin": 0,
     "is_verified": 1,
@@ -71,8 +71,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2016-10-15T23:33:36.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2019-02-05T14:30:16.000Z",
+    "updatedAt": "2024-09-10T10:26:50.000Z",
     "deletedAt": null
   },
   {
@@ -82,7 +82,7 @@
     "gender": "m",
     "username": "pfour",
     "email": "pfour@uet.edu.al",
-    "password": "$2b$10$n09JaS1RqVruWXZV1bh6Iuw24xvPGlOFYxbpcCOHeYzdJ1UtI5IMu",
+    "password": "$2b$10$VGEfUwB4DDQjJGGHgriibumFMh5Ee7kcHjneCpgMz/vEXY5WhL7nu",
     "department_id": 4,
     "is_admin": 0,
     "is_verified": 1,
@@ -90,8 +90,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2016-07-28T06:22:54.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2016-09-18T09:03:24.000Z",
+    "updatedAt": "2024-09-10T10:26:50.000Z",
     "deletedAt": null
   },
   {
@@ -101,7 +101,7 @@
     "gender": "f",
     "username": "pfive",
     "email": "pfive@uet.edu.al",
-    "password": "$2b$10$v./LhDqQdp90rqTS3xtJnuAIqyYohq8t5p7IK6a6rQ.IjSJ0c90zq",
+    "password": "$2b$10$a/ZRTA72YucroKPkqFkrZeFlUIs20pBH5Dywx/eZ1nyEs4MXK5kG6",
     "department_id": 5,
     "is_admin": 0,
     "is_verified": 1,
@@ -109,8 +109,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2016-07-06T11:36:25.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2015-06-29T09:19:39.000Z",
+    "updatedAt": "2024-09-10T10:26:50.000Z",
     "deletedAt": null
   },
   {
@@ -120,7 +120,7 @@
     "gender": "m",
     "username": "psix",
     "email": "psix@uet.edu.al",
-    "password": "$2b$10$idutq1/gK5uQvPoo74Gbo.e932nh/9/t4.B9Rj0Gn9lGF4xELa35a",
+    "password": "$2b$10$yAR9TUJTxTTbgz1OiMXR8OahAEP.Pw5oKdykN/AsMqpRdk9WQy4Fe",
     "department_id": 6,
     "is_admin": 0,
     "is_verified": 1,
@@ -128,8 +128,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2016-10-27T11:43:36.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2015-09-29T21:01:16.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -139,7 +139,7 @@
     "gender": "f",
     "username": "pseven",
     "email": "pseven@uet.edu.al",
-    "password": "$2b$10$QDrNWWKC/wuwJs5kIhFrOO6MIPeVLtVoB7pz03rgPJVcfVUHEfsYe",
+    "password": "$2b$10$V8dpiWiWlMEd2zb0PaGk/uqif3Ns/GywC31YxxxdDtS5.Bn9a0HRC",
     "department_id": 7,
     "is_admin": 0,
     "is_verified": 1,
@@ -147,8 +147,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2022-04-17T21:37:39.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2023-03-03T08:10:04.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -158,7 +158,7 @@
     "gender": "f",
     "username": "peight",
     "email": "peight@uet.edu.al",
-    "password": "$2b$10$V1xGt9geVo3AIbv11NAeH./mDUXSdv75Ra7DimW14xl2M.wSYUQ.u",
+    "password": "$2b$10$TTWONHKlqgt3gAUaHBMdrOQCjNyTrDcaG/KDRBcKNdDoUToeDZDxu",
     "department_id": 8,
     "is_admin": 0,
     "is_verified": 1,
@@ -166,8 +166,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2023-02-09T04:34:11.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2017-08-01T20:04:05.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -177,7 +177,7 @@
     "gender": "f",
     "username": "pnine",
     "email": "pnine@uet.edu.al",
-    "password": "$2b$10$wvQYVJ.kcFLQZJDZqWet/.Qpfd3FdHq6b6.gs1s0o8kte9vSkY5RS",
+    "password": "$2b$10$Wm77e2.WOWrIYhX2pdAdTuJVTdemd6MV2Y5o29qM9kw05kvFkoVzG",
     "department_id": 9,
     "is_admin": 0,
     "is_verified": 1,
@@ -185,8 +185,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2022-09-22T21:42:44.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2020-03-18T08:12:26.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -196,7 +196,7 @@
     "gender": "m",
     "username": "pten",
     "email": "pten@uet.edu.al",
-    "password": "$2b$10$gzLiD/SFIRWc6yUBTfp2xu/xE2YSE0dL167L1lGYMAfy/Oy2bAmCW",
+    "password": "$2b$10$5GaYKCqLK6fONcHRJEceBOvi81Jnf3icewL.FzfB.JDGW16Fx.MYi",
     "department_id": 10,
     "is_admin": 0,
     "is_verified": 1,
@@ -204,8 +204,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2017-10-28T01:16:46.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2016-11-18T13:45:01.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -215,7 +215,7 @@
     "gender": "m",
     "username": "peleven",
     "email": "peleven@uet.edu.al",
-    "password": "$2b$10$CnI/66Yzvl.Zw564lJJBkOlJXUO3p98LDwSjCJpHHomqQBIVs7Isq",
+    "password": "$2b$10$x6.zMdc0gaYcuUWzFd3UGemK4iTitY6a08NnJeoRQRAARfIdZbKDW",
     "department_id": 11,
     "is_admin": 0,
     "is_verified": 1,
@@ -223,8 +223,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2019-04-19T18:36:27.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2016-10-29T06:02:28.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -234,7 +234,7 @@
     "gender": "m",
     "username": "ptwelve",
     "email": "ptwelve@uet.edu.al",
-    "password": "$2b$10$H3FWnVE0OLsbJIYXFgXQAuCnvmmYBRSYLbH/vx8lEYWaHNtmMf7dS",
+    "password": "$2b$10$qArbTreQSuFAkxpG/JiPhO1o1yDz9FgI4vJko/h1xjT10Eq2nqSA.",
     "department_id": 12,
     "is_admin": 0,
     "is_verified": 1,
@@ -242,8 +242,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2021-03-05T06:19:11.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2019-12-01T06:09:12.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -253,7 +253,7 @@
     "gender": "f",
     "username": "pthirteen",
     "email": "pthirteen@uet.edu.al",
-    "password": "$2b$10$3agybdHlVbUg6gWsEIJpYO2OOiLwnLhjJW.IJx/mqJ5QJt9TgrXr6",
+    "password": "$2b$10$C/MyOx96YVKpJLfpkaIMHuj9UdCYiKsd28rGQgCZHg.iDOgVoNfYu",
     "department_id": 13,
     "is_admin": 0,
     "is_verified": 1,
@@ -261,8 +261,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2023-08-28T22:25:23.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2023-01-24T08:31:08.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -272,7 +272,7 @@
     "gender": "m",
     "username": "pfourteen",
     "email": "pfourteen@uet.edu.al",
-    "password": "$2b$10$92r1H8JBZKDSBvPH5MXV.eED9GWx29q3omQD2DXVPueZvJE4Jtf4e",
+    "password": "$2b$10$vJ3MAr1UTkJ2xIgmIMyrFuw8Uqe8HOBqflENysWsGM7pRRppdVDn.",
     "department_id": 14,
     "is_admin": 0,
     "is_verified": 1,
@@ -280,8 +280,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2017-05-31T05:58:41.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2018-06-22T18:52:50.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -291,7 +291,7 @@
     "gender": "f",
     "username": "pfifteen",
     "email": "pfifteen@uet.edu.al",
-    "password": "$2b$10$EX1Wh3GHELRteHxrOVEJAONp6yzbTk1r7RLvWxX7Yt4RA5h2OIMNe",
+    "password": "$2b$10$6eA1.UMC8T5Iwj8BEgaX5uKddW7FeWhfA/aBKzGLHWhoDMoPKJmxW",
     "department_id": 15,
     "is_admin": 0,
     "is_verified": 1,
@@ -299,8 +299,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2022-12-12T03:32:22.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2019-11-30T18:58:06.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -310,7 +310,7 @@
     "gender": "m",
     "username": "psixteen",
     "email": "psixteen@uet.edu.al",
-    "password": "$2b$10$DmkAZQCbJMBQ5p8GyhGla.3.KmSvpgE97jMt5/YmVOh4r.hNXyz1S",
+    "password": "$2b$10$BIg7VeIrOXQsNSMIWv0RzOxNUcyds/lbuO0dk8q9IEqr7sWGTIOmi",
     "department_id": 3,
     "is_admin": 0,
     "is_verified": 1,
@@ -318,8 +318,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2019-08-25T02:07:05.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2019-11-21T16:48:36.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -329,7 +329,7 @@
     "gender": "f",
     "username": "pseventeen",
     "email": "pseventeen@uet.edu.al",
-    "password": "$2b$10$kYICeSsZE1Tkm73t47SHuuzZIFBqb4LE3j4AhsCX2F/f7WOyh5/vG",
+    "password": "$2b$10$TyJSvMpXG/RKkNVuLhA26ua.yVHHvsGoVjtcxBrpF3bfhtPtwZuh.",
     "department_id": 7,
     "is_admin": 0,
     "is_verified": 1,
@@ -337,8 +337,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2021-01-01T00:27:06.000Z",
-    "updatedAt": "2024-09-10T09:23:53.000Z",
+    "createdAt": "2021-09-08T07:52:17.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -348,7 +348,7 @@
     "gender": "m",
     "username": "peighteen",
     "email": "peighteen@uet.edu.al",
-    "password": "$2b$10$sZxRPmV5KNsSjPpmp9Q9jugV/KR.v7s5WXS7rWHVz5.RqCE7Xqn9O",
+    "password": "$2b$10$AZ7r53Fo6V4Hnki68XDeBebtXN6/57ywcrTsQx6ZQlFZh.UvK9rD2",
     "department_id": 12,
     "is_admin": 0,
     "is_verified": 1,
@@ -356,8 +356,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2022-07-13T15:00:41.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z",
+    "createdAt": "2016-03-18T03:07:16.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -367,7 +367,7 @@
     "gender": "f",
     "username": "pnineteen",
     "email": "pnineteen@uet.edu.al",
-    "password": "$2b$10$zY8uMFmtGxUjdUJKPpgALeEg7FWt1PNwuhqoQOiRZ1EJENF1fV5.K",
+    "password": "$2b$10$.CHItcxBmgQAbZjaBRQO4.PmCG5T8c2f28YYVGT54yxlVATnoh01G",
     "department_id": 10,
     "is_admin": 0,
     "is_verified": 1,
@@ -375,8 +375,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2022-05-29T07:06:22.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z",
+    "createdAt": "2017-05-30T09:23:03.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -386,7 +386,7 @@
     "gender": "m",
     "username": "ptwenty",
     "email": "ptwenty@uet.edu.al",
-    "password": "$2b$10$/Y4C8h5jHI0NJPEXfHOCte24aHZM4t/gVNGsGstqQuz.dBfXm/PcC",
+    "password": "$2b$10$Y957O.gYT.fZ.cI4kKNDZeJTINgwAB4WIeXX8UVGlWcntIHJwgYIe",
     "department_id": 1,
     "is_admin": 0,
     "is_verified": 1,
@@ -394,8 +394,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2017-11-12T05:28:21.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z",
+    "createdAt": "2018-06-20T16:32:46.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -405,7 +405,7 @@
     "gender": "f",
     "username": "ptwentyone",
     "email": "ptwentyone@uet.edu.al",
-    "password": "$2b$10$CgqihTYfKuicnNag8lXdlee3vfelq.4RwSxHfJdQuJYgcDw45PCsu",
+    "password": "$2b$10$xT476ukFCaOIPskY7d50MuvGOXRBxXhJTr.YSd8q2/P9oqChUqUey",
     "department_id": 14,
     "is_admin": 0,
     "is_verified": 1,
@@ -413,8 +413,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2015-03-30T14:37:05.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z",
+    "createdAt": "2016-09-23T03:56:24.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   },
   {
@@ -424,7 +424,7 @@
     "gender": "m",
     "username": "ptwentytwo",
     "email": "ptwentytwo@uet.edu.al",
-    "password": "$2b$10$AbRg7BswLUX7EajcVdThPeJLrygTVg//rlvflkzUV8K1w6V4y0mD6",
+    "password": "$2b$10$MXfh0SsizsGZf9jiUxcSJuw5vZSK0D8jSynAj/zJxF6avnhyiryvO",
     "department_id": 8,
     "is_admin": 0,
     "is_verified": 1,
@@ -432,8 +432,8 @@
     "resetPasswordExpires": null,
     "verificationToken": null,
     "verificationTokenExpires": null,
-    "createdAt": "2022-09-24T05:31:27.000Z",
-    "updatedAt": "2024-09-10T09:23:54.000Z",
+    "createdAt": "2017-05-09T02:26:21.000Z",
+    "updatedAt": "2024-09-10T10:26:51.000Z",
     "deletedAt": null
   }
 ]

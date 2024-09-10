@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       unique: true, // Assuming each setting name should be unique
     },
     settings: {
-      type: DataTypes.JSON,
+      type: DataTypes.STRING,
       allowNull: false,
     },
   }, {
