@@ -315,7 +315,6 @@ const Professors = () => {
         setValidated(false);
         fetchProfessors(); // refetch professors
 
-        debugger;
         dispatch(
           showToast({
             type: "success",

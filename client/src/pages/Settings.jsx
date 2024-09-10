@@ -161,7 +161,6 @@ const Settings = () => {
     await api
       .get("/settings")
       .then((response) => {
-        debugger;
         const emailSettings = response.data.find(
           (item) => item.name === "Email"
         );
