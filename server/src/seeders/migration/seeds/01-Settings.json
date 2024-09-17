@@ -1,9 +1,0 @@
-[
-  {
-    "id": 1,
-    "name": "Email",
-    "settings": "{\"smtp_sender\":\"UET Support\",\"smtp_host\":\"mail.jkruja.com\",\"smtp_port\":465,\"smtp_secure\":true,\"smtp_user\":\"info@jkruja.com\",\"smtp_pass\":\"Kruja2021..\"}",
-    "createdAt": "2024-09-17T08:30:05.000Z",
-    "updatedAt": "2024-09-17T08:30:05.000Z"
-  }
-]
