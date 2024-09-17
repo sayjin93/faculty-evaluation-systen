@@ -130,7 +130,7 @@ const dumpData = async () => {
       Professor,
       'Professor',
       '05',
-      ['active', 'is_admin', 'is_verified'], // Include all boolean fields
+      ['is_admin', 'is_verified'], // Include all boolean fields
     );
     await dumpDataAndGenerateSeed(Book, 'Book', '06');
     await dumpDataAndGenerateSeed(Community, 'Community', '07', ['external']);
