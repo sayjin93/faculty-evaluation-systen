@@ -6,7 +6,8 @@ const data = require(path.resolve(__dirname, 'seeds', '07-Community.json'));  //
 module.exports = {
   up: async (queryInterface) => {
     await queryInterface.bulkInsert('Community', data, {
-      updateOnDuplicate: ["id"]
+      conflictFields: ['id'],
+      updateOnConflict: ["event","date","description","external","academic_year_id","professor_id","createdAt","updatedAt"]
     });
   },
 

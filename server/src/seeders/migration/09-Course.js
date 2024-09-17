@@ -6,7 +6,8 @@ const data = require(path.resolve(__dirname, 'seeds', '09-Course.json'));  // Ad
 module.exports = {
   up: async (queryInterface) => {
     await queryInterface.bulkInsert('Course', data, {
-      updateOnDuplicate: ["id"]
+      conflictFields: ['id'],
+      updateOnConflict: ["name","number","semester","week_hours","program","academic_year_id","professor_id","createdAt","updatedAt"]
     });
   },
 

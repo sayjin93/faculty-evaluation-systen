@@ -6,7 +6,8 @@ const data = require(path.resolve(__dirname, 'seeds', '06-Book.json'));  // Adju
 module.exports = {
   up: async (queryInterface) => {
     await queryInterface.bulkInsert('Book', data, {
-      updateOnDuplicate: ["id"]
+      conflictFields: ['id'],
+      updateOnConflict: ["title","publication_house","publication_year","academic_year_id","professor_id","createdAt","updatedAt"]
     });
   },
 

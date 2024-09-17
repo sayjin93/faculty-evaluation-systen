@@ -6,7 +6,8 @@ const data = require(path.resolve(__dirname, 'seeds', '04-AcademicYear.json')); 
 module.exports = {
   up: async (queryInterface) => {
     await queryInterface.bulkInsert('AcademicYear', data, {
-      updateOnDuplicate: ["id"]
+      conflictFields: ['id'],
+      updateOnConflict: ["year","active","createdAt","updatedAt","deletedAt"]
     });
   },
 

@@ -6,7 +6,8 @@ const data = require(path.resolve(__dirname, 'seeds', '01-Settings.json'));  // 
 module.exports = {
   up: async (queryInterface) => {
     await queryInterface.bulkInsert('Settings', data, {
-      updateOnDuplicate: ["id"]
+      conflictFields: ['id'],
+      updateOnConflict: ["name","settings","createdAt","updatedAt"]
     });
   },
 

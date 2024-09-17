@@ -2,36 +2,36 @@
   {
     "id": 1,
     "key": "FacultyOfEconomics,BusinessAndDevelopment",
-    "createdAt": "2024-09-10T10:26:50.000Z",
-    "updatedAt": "2024-09-10T10:26:50.000Z",
+    "createdAt": "2024-09-17T08:30:06.000Z",
+    "updatedAt": "2024-09-17T08:30:06.000Z",
     "deletedAt": null
   },
   {
     "id": 2,
     "key": "FacultyOfEngineering,InformaticsAndArchitecture",
-    "createdAt": "2024-09-10T10:26:50.000Z",
-    "updatedAt": "2024-09-10T10:26:50.000Z",
+    "createdAt": "2024-09-17T08:30:06.000Z",
+    "updatedAt": "2024-09-17T08:30:06.000Z",
     "deletedAt": null
   },
   {
     "id": 3,
     "key": "FacultyOfHumanities,EducationAndLiberalArts",
-    "createdAt": "2024-09-10T10:26:50.000Z",
-    "updatedAt": "2024-09-10T10:26:50.000Z",
+    "createdAt": "2024-09-17T08:30:06.000Z",
+    "updatedAt": "2024-09-17T08:30:06.000Z",
     "deletedAt": null
   },
   {
     "id": 4,
     "key": "FacultyOfLaw,PoliticalScienceAndInternationalRelations",
-    "createdAt": "2024-09-10T10:26:50.000Z",
-    "updatedAt": "2024-09-10T10:26:50.000Z",
+    "createdAt": "2024-09-17T08:30:06.000Z",
+    "updatedAt": "2024-09-17T08:30:06.000Z",
     "deletedAt": null
   },
   {
     "id": 5,
     "key": "FacultyOfMedicalTechnicalSciences",
-    "createdAt": "2024-09-10T10:26:50.000Z",
-    "updatedAt": "2024-09-10T10:26:50.000Z",
+    "createdAt": "2024-09-17T08:30:06.000Z",
+    "updatedAt": "2024-09-17T08:30:06.000Z",
     "deletedAt": null
   }
 ]

@@ -44,16 +44,31 @@ if (!fs.existsSync(seedersDir)) {
   fs.mkdirSync(seedersDir, { recursive: true });
 }
 
-const generateSeedFileContent = (modelName, dataFileName) => `'use strict';
+// Accept command-line arguments
+const args = process.argv.slice(2); // Exclude the first two arguments
+const isPostgres = args.includes('postgres'); // Check if 'postgres' was passed
+
+const generateSeedFileContent = (modelName, dataFileName, updateFields) => {
+  let optionsString = '';
+  if (isPostgres) {
+    optionsString = `{
+      conflictFields: ['id'],
+      updateOnConflict: ${JSON.stringify(updateFields)}
+    }`;
+  } else {
+    optionsString = `{
+      updateOnDuplicate: ["id"]
+    }`;
+  }
+
+  return `'use strict';
 
 const path = require('path');
 const data = require(path.resolve(__dirname, 'seeds', '${dataFileName}'));  // Adjust the path to 'seeds' folder
 
 module.exports = {
   up: async (queryInterface) => {
-    await queryInterface.bulkInsert('${modelName}', data, {
-      updateOnDuplicate: ["id"]
-    });
+    await queryInterface.bulkInsert('${modelName}', data, ${optionsString});
   },
 
   down: async (queryInterface) => {
@@ -61,10 +76,11 @@ module.exports = {
   }
 };
 `;
+};
 
-const dumpDataAndGenerateSeed = async (Model, modelName, filePrefix) => {
+const dumpDataAndGenerateSeed = async (Model, modelName, filePrefix, booleanFields = []) => {
   try {
-    const data = await Model.findAll({ raw: true });
+    let data = await Model.findAll({ raw: true });
 
     // Check if data is empty
     if (!data || data.length === 0) {
@@ -72,14 +88,30 @@ const dumpDataAndGenerateSeed = async (Model, modelName, filePrefix) => {
       return; // Exit the function if no data is found
     }
 
+    // Convert integer booleans to actual booleans
+    data = data.map((record) => {
+      booleanFields.forEach((field) => {
+        if (Object.prototype.hasOwnProperty.call(record, field)) {
+          record[field] = Boolean(record[field]);
+        }
+      });
+      return record;
+    });
+
     const dataFileName = `${filePrefix}-${modelName}.json`;
     const seedFileName = `${filePrefix}-${modelName}.js`;
 
     // Dump data into JSON file
-    fs.writeFileSync(path.join(seedsDir, dataFileName), JSON.stringify(data, null, 2));
+    fs.writeFileSync(
+      path.join(seedsDir, dataFileName),
+      JSON.stringify(data, null, 2),
+    );
+
+    // Get fields to update on conflict (excluding 'id')
+    const updateFields = Object.keys(data[0]).filter((field) => field !== 'id');
 
     // Generate seed file
-    const seedContent = generateSeedFileContent(modelName, dataFileName);
+    const seedContent = generateSeedFileContent(modelName, dataFileName, updateFields);
     fs.writeFileSync(path.join(seedersDir, seedFileName), seedContent);
 
     console.log(`Data and seed file generated for ${modelName} successfully!`);
@@ -93,10 +125,15 @@ const dumpData = async () => {
     await dumpDataAndGenerateSeed(Settings, 'Settings', '01');
     await dumpDataAndGenerateSeed(Faculty, 'Faculty', '02');
     await dumpDataAndGenerateSeed(Department, 'Department', '03');
-    await dumpDataAndGenerateSeed(AcademicYear, 'AcademicYear', '04');
-    await dumpDataAndGenerateSeed(Professor, 'Professor', '05');
+    await dumpDataAndGenerateSeed(AcademicYear, 'AcademicYear', '04', ['active']);
+    await dumpDataAndGenerateSeed(
+      Professor,
+      'Professor',
+      '05',
+      ['active', 'is_admin', 'is_verified'], // Include all boolean fields
+    );
     await dumpDataAndGenerateSeed(Book, 'Book', '06');
-    await dumpDataAndGenerateSeed(Community, 'Community', '07');
+    await dumpDataAndGenerateSeed(Community, 'Community', '07', ['external']);
     await dumpDataAndGenerateSeed(Conference, 'Conference', '08');
     await dumpDataAndGenerateSeed(Course, 'Course', '09');
     await dumpDataAndGenerateSeed(Paper, 'Paper', '10');

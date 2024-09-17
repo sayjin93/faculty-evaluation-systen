@@ -2,17 +2,17 @@
   {
     "id": 1,
     "year": "2023-2024",
-    "active": 0,
-    "createdAt": "2024-09-10T10:26:50.000Z",
-    "updatedAt": "2024-09-10T10:26:50.000Z",
+    "active": false,
+    "createdAt": "2024-09-17T08:30:06.000Z",
+    "updatedAt": "2024-09-17T08:30:06.000Z",
     "deletedAt": null
   },
   {
     "id": 2,
     "year": "2024-2025",
-    "active": 1,
-    "createdAt": "2024-09-10T10:26:50.000Z",
-    "updatedAt": "2024-09-10T10:26:50.000Z",
+    "active": true,
+    "createdAt": "2024-09-17T08:30:06.000Z",
+    "updatedAt": "2024-09-17T08:30:06.000Z",
     "deletedAt": null
   }
 ]

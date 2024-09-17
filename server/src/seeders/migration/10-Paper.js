@@ -6,7 +6,8 @@ const data = require(path.resolve(__dirname, 'seeds', '10-Paper.json'));  // Adj
 module.exports = {
   up: async (queryInterface) => {
     await queryInterface.bulkInsert('Paper', data, {
-      updateOnDuplicate: ["id"]
+      conflictFields: ['id'],
+      updateOnConflict: ["title","journal","publication","academic_year_id","professor_id","createdAt","updatedAt"]
     });
   },
 
