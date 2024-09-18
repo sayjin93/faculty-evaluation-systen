@@ -32,10 +32,9 @@ exports.create = async (req, res) => {
       },
     );
 
-    // Example of storing the summary with the associated user ID
     const newSummary = await Summarize.create({
       content: response.data.choices[0].message.content.trim(),
-      professor_id: userId, // Assuming your model has a foreign key relation
+      professor_id: userId,
     });
 
     res.json(newSummary);
