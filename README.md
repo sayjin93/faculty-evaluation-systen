@@ -1,6 +1,6 @@
 # Faculty Evaluation System API Documentation
 
-This is the server side API for a Faculty Evaluation System. It is built with Node.js and uses Express.js as the web framework and Sequelize ORM for handling database operations with a MySQL database. It also uses JWT for authentication and authorization.
+This documentation covers both the server and client sides of the Faculty Evaluation System. The server is built with Node.js, using Express.js as the web framework and Sequelize ORM for database operations with a MySQL database. JWT is used for authentication and authorization. The client side is built using React.
 
 ## Setup and Installation
 
@@ -10,7 +10,7 @@ This is the server side API for a Faculty Evaluation System. It is built with No
 git clone https://github.com/sayjin93/faculty-evaluation-systen.git
 ```
 
-2. Navigate into the project directory:
+2. Navigate into the server directory:
 
 ```bash
 cd server
@@ -24,141 +24,87 @@ npm install
 
 4. Set up environment variables:
 
-Edit`.env` file in the project root directory and provide values for the following variables:
+Edit`.env` file in the server directory and provide values for the following variables:
 
 ```
-DB_NAME=your_db_name
-DB_USER=your_db_user
-DB_PASSWORD=your_db_password
-DB_HOST=localhost
+GOOGLE_TRANSLATE_API_KEY=your_api_key
+OPENAI_API_KEY=your_api_key
+
 DB_DIALECT=mysql
-API_PORT=4000
-JWT_SECRET=your_jwt_secret_key
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=
+DB_NAME=fc
 ```
 
 5. Run the server:
 
 ```bash
+npm run dev
+```
+
+6. Open new terminal and navigate into the client directory:
+
+```bash
+cd client
+```
+
+7. Install dependencies:
+
+```bash
+npm install
+```
+
+8. Run the client:
+
+```bash
 npm start
 ```
 
-## API Structure
+## PM2 (https://pm2.keymetrics.io/)
 
-The API is structured around resources like academic years, books, community services, conferences, courses, papers, professors, and users.
+#### Start all applications
 
-### Directory Structure
-
-The directory structure of the project is as follows:
-
-```
-- config/
-  - authenticate.js
-- controllers/
-  - academic_years.controller.js
-  - books.controller.js
-  - community_services.controller.js
-  - conferences.controller.js
-  - courses.controller.js
-  - papers.controller.js
-  - professors.controller.js
-  - users.controller.js
-- models/
-  - index.js
-  - academic_year.model.js
-  - book.model.js
-  - community_service.model.js
-  - conference.model.js
-  - course.model.js
-  - paper.model.js
-  - professor.model.js
-  - user.model.js
-- routes/
-  - academic_years.routes.js
-  - books.routes.js
-  - community_services.routes.js
-  - conferences.routes.js
-  - courses.routes.js
-  - papers.routes.js
-  - professors.routes.js
-  - users.routes.js
-- seeders/
-  - users_seed.js
-  -academic_year_seed.js
-  -professors_seed.js
-  -courses_seed.js
-  -papers_seed.js
-  -books_seed.js
-  -conferences_seed.js
-  -communities_seed.js
-- .env
-- app.js
+```bash
+pm2 start ecosystem.config.js
 ```
 
-### Models and Associations
+#### Stop all
 
-- `AcademicYear`: Represents the academic years.
-- `Book`: Represents the books authored by professors. May be associated with `Professors` and `AcademicYears`.
-- `CommunityService`: Represents the community services done by professors. May be associated with `Professors` and `AcademicYears`.
-- `Conference`: Represents the conferences attended by professors. May be associated with `Professors` and `AcademicYears`.
-- `Course`: Represents the courses taught by professors. May be associated with `Professors` and `AcademicYears`.
-- `Paper`: Represents the research papers published by professors. May be associated with `Professors` and `AcademicYears`.
-- `Professor`: Represents the professors.
-- `User`: Represents the system users.
+```bash
+pm2 stop ecosystem.config.js
+```
 
-## Endpoints
+#### Restart all
 
-### Academic Years
+```bash
+pm2 restart ecosystem.config.js
+```
 
-- `GET /api/academic_years`: Get all academic years.
-- `GET /api/academic_years/:id`: Get a specific academic year.
-- `POST /api/academic_years`: Create a new academic year.
-- `PUT /api/academic_years/:id`: Update a specific academic year.
-- `DELETE /api/academic_years/:id`: Delete a specific academic year.
+#### Reload all
 
-### Books
+```bash
+pm2 reload ecosystem.config.js
+```
 
-- `GET /api/books`: Get all books.
-- `GET /api/books/:id`: Get a specific book.
-- `POST /api/books`: Create a new book.
-- `PUT /api/books/:id`: Update a specific book.
-- `DELETE /api/books/:id`: Delete a specific book.
+#### Delete all
 
-(Note: Replace `books` with other resources like `community_services`, `conferences`, `courses`, `papers`, `professors`, `users` to access those respective endpoints)
+```bash
+pm2 delete ecosystem.config.js
+```
+
+#### Generating a Startup Script
+
+```bash
+pm2 startup
+```
+
+[PM2] You have to run this command as root. Execute the following command:
+
+```bash
+sudo env PATH=$PATH:/usr/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u jkruja --hp /home/jkruja
+```
 
 ## License
 
 This project is licensed under the ISC License.
-
-
-## Fix passenger
-/etc/apache2/conf.d/userdata/ssl/2_4/jkruja/uetapi.jkruja.com
-/etc/apache2/conf.d/userdata/std/2_4/jkruja
-
-add this 2 lines:
-		PassengerAppType node
-		PassengerStartupFile "/home/jkruja/public_html/uet/server/src/index.js"
-
-
-## PM2 (https://pm2.keymetrics.io/)
-
-### Start all applications
-pm2 start ecosystem.config.js
-
-### Stop all
-pm2 stop ecosystem.config.js
-
-### Restart all
-pm2 restart ecosystem.config.js
-
-### Reload all
-pm2 reload ecosystem.config.js
-
-### Delete all
-pm2 delete ecosystem.config.js
-
-### Generating a Startup Script
-pm2 startup
-
-[PM2] You have to run this command as root. Execute the following command:
-
-sudo env PATH=$PATH:/usr/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u jkruja --hp /home/jkruja
